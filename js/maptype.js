@@ -1,0 +1,11 @@
+var MapType = {
+    OPENSTREETMAP: 0,        
+    OPENTOPOMAP: 1,
+    
+    STAMEN_TERRAIN: 2,
+
+    GOOGLE_ROADMAP: 3,
+    GOOGLE_SATELLITE: 4,
+    GOOGLE_HYBRID: 5,
+    GOOGLE_TERRAIN: 6,
+};

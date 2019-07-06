@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DualMap</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js"></script>
+    </head>
+
+    <body>
+        <div id="layout">
+            <div id="sidebar-controls">
+                <div class="sidebar-control">
+                    <a href="#" class="sidebar-control-button" id="btn-layers" data-container="#sidebar-layers">
+                        <i class="fas fa-layer-group"></i>
+                    </a>
+                </div>
+
+                <div class="sidebar-control">
+                    <a href="#" class="sidebar-control-button" id="btn-markers" data-container="#sidebar-markers">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </a>
+                </div>
+
+                <div class="sidebar-control">
+                    <a href="#" class="sidebar-control-button" id="btn-lines" data-container="#sidebar-lines">
+                        <i class="fas fa-ruler"></i>
+                    </a>
+                </div>
+
+                <div class="sidebar-control">
+                    <a href="#" class="sidebar-control-button" id="btn-tools" data-container="#sidebar-tools">
+                        <i class="fas fa-tools"></i>
+                    </a>
+                </div>
+
+                <div class="sidebar-control">
+                    <a href="#" class="sidebar-control-button" id="btn-info" data-container="#sidebar-info">
+                        <i class="fas fa-question-circle"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div id="sidebar">
+                <div class="sidebar-container" id="sidebar-layers">
+                    <div class="sidebar-header">
+                        <span class="close"><i class="fas fa-times"></i></span>
+                        <h2>Layers</h2>
+                    </div>
+
+                    <div class="dropdown is-hoverable">
+                        <div class="dropdown-trigger">
+                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>Map Style</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a href="#" class="dropdown-item" id="btn-openstreetmap">OpenStreetMap</a>
+                                <a href="#" class="dropdown-item" id="btn-opentopomap">OpenTopoMap</a>
+                                <a href="#" class="dropdown-item" id="btn-stamen-terrain">Stamen Terrain</a>
+                                <hr class="dropdown-divider">
+                                <a href="#" class="dropdown-item" id="btn-google-roadmap">Google Roadmap</a>
+                                <a href="#" class="dropdown-item" id="btn-google-satellite">Google Satellite</a>
+                                <a href="#" class="dropdown-item" id="btn-google-hybrid">Google Hybrid</a>
+                                <a href="#" class="dropdown-item" id="btn-google-terrain">Google Terrain</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-container" id="sidebar-markers">
+                    <div class="sidebar-header">
+                        <span class="close"><i class="fas fa-times"></i></span>
+                        <h2>Markers</h2>
+                    </div>
+                    
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <a id="btn-add-marker" class="button is-success">Add</a>
+                        </p>
+                        <p class="control">
+                            <a id="btn-delete-markers" class="button is-danger">Delete All</a>
+                        </p>
+                    </div>
+
+                    <ul id="markers">
+                    </ul>
+                </div>
+
+                <div class="sidebar-container" id="sidebar-lines">
+                    <div class="sidebar-header">
+                        <span class="close"><i class="fas fa-times"></i></span>
+                        <h2>Lines</h2>
+                    </div>
+                </div>
+
+                <div class="sidebar-container" id="sidebar-tools">
+                    <div class="sidebar-header">
+                        <span class="close"><i class="fas fa-times"></i></span>
+                        <h2>Tools</h2>
+                    </div>
+                </div>
+
+                <div class="sidebar-container" id="sidebar-info">
+                    <div class="sidebar-header">
+                        <span class="close"><i class="fas fa-times"></i></span>
+                        <h2>Info</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div id="map-container-leaflet" class="map-container"></div>
+            <div id="map-container-google" class="map-container"></div>
+        </div>
+        
+        <script src=".secrets.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/mapstate.js"></script>
+        <script src="js/maptype.js"></script>
+        <script src="js/sidebar.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
