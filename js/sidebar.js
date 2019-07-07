@@ -57,4 +57,8 @@ class Sidebar {
             this.map.update_geometry();
         }
     }
+
+    update_from(map_state) {
+        
+    }
 }

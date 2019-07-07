@@ -17,6 +17,7 @@ $(document).ready(() => {
     ]);
 
     sidebar.set_map(dualmap);
+    dualmap.set_sidebar(sidebar);
 });
 
 function initialize_google_map() {
