@@ -19,4 +19,8 @@ class Coordinates {
     to_leaflet() {
         return L.latLng(this.lat, this.lng)
     }
+
+    to_text() {
+        return this.lat + " " + this.lng;
+    }
 }

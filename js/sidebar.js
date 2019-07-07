@@ -3,6 +3,7 @@ class Sidebar {
         var self = this;
         
         this.map = null;
+        this.map_state = null;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;
         this.controls = controls;
@@ -20,10 +21,10 @@ class Sidebar {
 
     set_map(map) {
         this.map = map;
+        this.map_state = map.map_state;
     }
 
     toggle (toggle_control_id) {
-        var self = this;
         var show_sidebar = false;
 
         this.controls.forEach((control_id) => {
@@ -58,7 +59,39 @@ class Sidebar {
         }
     }
 
-    update_from(map_state) {
-        
+    update_state() {
+        /* update and add markers */
+        this.map_state.markers.forEach((marker) => {
+            if ($("#marker-" + marker.id).length > 0) {
+                $("#marker-" + marker.id + " .coordinates").text(marker.coordinates.to_text());
+            } else {
+                var m = $("<li>");
+                m.attr('class', 'marker');
+                m.attr('id', "marker-" + marker.id);
+                m.append($('<span class="coordinates">' + marker.coordinates.to_text() + '</span>'));
+                $("#markers").append(m);
+            }
+        });
+
+        /* remove spurious markers */
+        var markers = $("#markers").children();
+        if (markers.length > this.map_state.markers.length) {
+            var ids = new Set();
+            this.map_state.markers.forEach((marker) => {
+                ids.add(marker.id);
+            });
+            
+            var deleted_ids = [];
+            markers.each((i, m) => {
+                var id = parseInt(m.id.substring(7));
+                if (!ids.has(id)) {
+                    deleted_ids.push(id);
+                }
+            })
+
+            deleted_ids.forEach((id) => {
+                $("#marker-" + id).remove();
+            });
+        }
     }
 }

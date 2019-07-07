@@ -27,15 +27,42 @@ class LeafletWrapper {
             this.layer_stamen_terrain,
         ];
 
+
+        this.markers = new Map();
+
         var self = this;
         this.map.on('zoom', function() { self.view_changed(); });
         this.map.on('move', function() { self.view_changed(); });
     }
 
     activate() {
-        this.map.setView(this.map_state.get_center().to_leaflet(), this.map_state.zoom, {'animate': false});
-        this.set_map_type(this.map_state.map_type);
+        var layer = null;
+        switch (this.map_state.map_type) {
+            case MapType.OPENSTREETMAP:
+                layer = this.layer_openstreetmap;
+                break;
+            case MapType.OPENTOPOMAP:
+                layer = this.layer_opentopomap;
+                break;
+            case MapType.STAMEN_TERRAIN:
+                layer = this.layer_stamen_terrain;
+                break;
+            default:
+                break;
+        }
 
+        if (layer && !this.map.hasLayer(layer)) {
+            var self = this;
+            this.layers.forEach((otherLayer) => {
+                if (otherLayer != layer) {
+                    self.map.removeLayer(otherLayer);
+                }
+            })
+            this.map.addLayer(layer);
+        }
+        
+        this.update_state();
+        
         this.active = true;
     }
 
@@ -47,44 +74,51 @@ class LeafletWrapper {
         this.map.invalidateSize();
     }
 
-    set_map_type(map_type) {
-        var layer = null;
-        switch (map_type) {
-            case MapType.OPENSTREETMAP:
-                layer = this.layer_openstreetmap;
-                break;
-            case MapType.OPENTOPOMAP:
-                layer = this.layer_opentopomap;
-                break;
-            case MapType.STAMEN_TERRAIN:
-                layer = this.layer_stamen_terrain;
-                break;
-            default:
-                return;
-        }
-
-        if (!layer) {
-            return;
-        }
-    
-        if (this.map.hasLayer(layer)) {
-            return;
-        }
-
-        var self = this;
-        this.layers.forEach((otherLayer) => {
-            if (otherLayer != layer) {
-                self.map.removeLayer(otherLayer);
-            }
-        })
-        this.map.addLayer(layer);
-    }
-
     view_changed() {
         if (!this.active) {
             return;
         }
         this.map_state.set_center(Coordinates.from_leaflet(this.map.getCenter()));
         this.map_state.set_zoom(this.map.getZoom());
+    }
+
+    update_state() {
+        var self = this;
+
+        /* update view */
+        this.map.setView(this.map_state.center.to_leaflet(), this.map_state.zoom, {'animate': false});
+
+        /* update and add markers */
+        this.map_state.markers.forEach((marker) => {
+            if (self.markers.has(marker.id)) {
+                var m = self.markers.get(marker.id);
+                m.setLatLng(marker.coordinates.to_leaflet());
+            } else {
+                var m = L.marker(marker.coordinates.to_leaflet());
+                self.markers.set(marker.id, m);
+                m.addTo(self.map);
+            }
+        });
+
+        /* remove spurious markers */
+        if (this.markers.size > this.map_state.markers.length) {
+            var ids = new Set();
+            this.map_state.markers.forEach((marker) => {
+                ids.add(marker.id);
+            });
+            
+            var deleted_ids = [];
+            this.markers.forEach((marker, id, map) => {
+                if (!ids.has(id)) {
+                    deleted_ids.push(id);
+                }
+            });
+
+            deleted_ids.forEach((id) => {
+                var m = self.markers.get(id);
+                self.map.removeLayer(m);
+                self.markers.delete(id)
+            });
+        }
     }
 }

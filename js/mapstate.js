@@ -27,9 +27,6 @@ class MapState {
         this.zoom = zoom;
     }
 
-    get_center() {
-        return this.center;
-    }
     set_center(coordinates) {
         if (!this.updates_enabled) {
             return;
@@ -37,21 +34,15 @@ class MapState {
         this.center = coordinates;
     }
 
-    add_marker() {
-        var marker = new Marker(this.center);
-        this.markers.push(marker);
+    add_marker(coordinates) {
+        if (!coordinates) {
+            this.markers.push(new Marker(this.center));
+        } else {
+            this.markers.push(new Marker(coordinates));
+        }
     }
 
     delete_all_markers() {
         this.markers = [];
-    }
-
-    apply_to_leaflet(leaflet_map) {
-        leaflet_map.setView(this.center.to_leaflet(), this.zoom, {'animate': false});
-    }
-
-    apply_to_google(google_map) {
-        google_map.setCenter(this.center.to_google());
-        google_map.setZoom(this.zoom);
     }
 }

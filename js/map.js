@@ -106,4 +106,22 @@ class DualMap {
     update_geometry() {
         this.leaflet.invalidate_size();
     }
+
+    update_state() {
+        this.sidebar.update_state();
+        this.leaflet.update_state();
+        if (this.google) {
+            this.google.update_state();
+        }
+    }
+
+    add_marker() {
+        this.map_state.add_marker(this.map_state.center);
+        this.update_state();
+    }
+
+    delete_all_markers() {
+        this.map_state.delete_all_markers();
+        this.update_state();
+    }
 }
