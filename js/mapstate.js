@@ -42,6 +42,12 @@ class MapState {
         }
     }
 
+    delete_marker(id) {
+        this.markers = this.markers.filter((marker, index, arr) => {
+            return marker.id != id;
+        });
+    }
+
     delete_all_markers() {
         this.markers = [];
     }

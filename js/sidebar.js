@@ -60,6 +60,7 @@ class Sidebar {
     }
 
     update_state() {
+        var self = this;
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($("#marker-" + marker.id).length > 0) {
@@ -69,7 +70,10 @@ class Sidebar {
                 m.attr('class', 'marker');
                 m.attr('id', "marker-" + marker.id);
                 m.append($('<span class="coordinates">' + marker.coordinates.to_text() + '</span>'));
+                m.append($('<a class="delete-button button is-danger">Delete</button>'));
                 $("#markers").append(m);
+
+                $("#marker-" + marker.id + " .delete-button").click(() => { self.map.delete_marker(marker.id); } );
             }
         });
 

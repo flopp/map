@@ -120,6 +120,11 @@ class DualMap {
         this.update_state();
     }
 
+    delete_marker(id) {
+        this.map_state.delete_marker(id);
+        this.update_state();
+    }
+
     delete_all_markers() {
         this.map_state.delete_all_markers();
         this.update_state();
