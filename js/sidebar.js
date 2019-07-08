@@ -1,19 +1,30 @@
 class Sidebar {
-    constructor(sidebar_selector, sidebar_controls_selector, controls) {
+    constructor(sidebar_selector, sidebar_controls_selector) {
         var self = this;
         
         this.map = null;
         this.map_state = null;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;
-        this.controls = controls;
 
+        this.controls = [];
+        $(".sidebar-control-button").each((index, button) => {
+            var id = button.id;
+            button.addEventListener('click', () => { self.toggle(id); });
+            var close_button = $(button.dataset.container + " > .sidebar-header > .close");
+            close_button.click(() => { self.toggle(null); });
+
+            self.controls.push(button);
+        });
+
+        /*
         controls.forEach((control_id) => {
             var control = $(control_id);
             control.click(() => {self.toggle(control_id); });
             var close_button = $(control.data("container") + " > .sidebar-header > .close");
             close_button.click(() => {self.toggle(null); });
         });
+        */
 
         $("#btn-add-marker").click(() => { self.map.add_marker(); });
         $("#btn-delete-markers").click(() => { self.map.delete_all_markers(); });
@@ -27,21 +38,21 @@ class Sidebar {
     toggle (toggle_control_id) {
         var show_sidebar = false;
 
-        this.controls.forEach((control_id) => {
-            var control = $(control_id);
-            var parent = control.parent();
-            var container = $(control.data("container"));
-            if (toggle_control_id == control_id) {
-                if (parent.hasClass('active')) {
-                    parent.removeClass('active');
+        this.controls.forEach((control) => {
+            //var control = $(control_id);
+            var parent = control.parentElement;
+            var container = $(control.dataset.container);
+            if (toggle_control_id == control.id) {
+                if (parent.classList.contains('active')) {
+                    parent.classList.remove('active');
                     container.removeClass('active');
                 } else {
                     show_sidebar = true;
-                    parent.addClass('active');
+                    parent.classList.add('active');
                     container.addClass('active');
                 }
             } else {
-                parent.removeClass('active');
+                parent.classList.remove('active');
                 container.removeClass('active');
             }
         });

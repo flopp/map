@@ -12,9 +12,7 @@ $(document).ready(() => {
         {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },    
     ]);
 
-    sidebar = new Sidebar("#sidebar", "#sidebar-controls", [
-        '#btn-layers',  '#btn-markers', '#btn-lines', '#btn-tools', '#btn-info'
-    ]);
+    sidebar = new Sidebar("#sidebar", "#sidebar-controls");
 
     sidebar.set_map(dualmap);
     dualmap.set_sidebar(sidebar);

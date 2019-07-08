@@ -71,23 +71,28 @@ body {
     display: block;
 }
 
-.sidebar-header {
+.sidebar-container > .header {
     position: relative;
     padding: 10px 20px;
     background-color: hsl(204, 86%, 53%);
     color: #ffffff;
 }
 
-.sidebar-header > .close {
+.sidebar-container > .header > .close {
     float: right;
     cursor: pointer;
 }
-.sidebar-header > h4 {
+.sidebar-container > .header > h4 {
     margin: 0;
     padding: 0;
     border: 0;
     font-size: 100%;
 }
+
+.sidebar-container > .content {
+    margin: 8px;
+}
+
 .map-container {
     height: 100%;
     overflow: hidden;
