@@ -1,7 +1,8 @@
 class GoogleWrapper {
-    constructor(div_id, map_state) {
+    constructor(div_id, app, map_state) {
         this.active = false;
         this.div_id = div_id;
+        this.app = app;
         this.map_state = map_state;
         
         this.map = new google.maps.Map(
@@ -75,7 +76,11 @@ class GoogleWrapper {
             } else {
                 var m = new google.maps.Marker({
                     position: marker.coordinates.to_google(),
-                    map: self.map
+                    map: self.map,
+                    draggable: true
+                });
+                google.maps.event.addListener(m, "drag", function () {
+                    self.app.move_marker(marker.id, Coordinates.from_google(m.getPosition()));
                 });
                 self.markers.set(marker.id, m);
             }

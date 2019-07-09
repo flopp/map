@@ -6,6 +6,7 @@ class MapState {
         this.center = null;
 
         this.markers = [];
+        this.markers_hash = new Map();
     }
 
     enable() {
@@ -35,20 +36,29 @@ class MapState {
     }
 
     add_marker(coordinates) {
+        var marker = null;
         if (!coordinates) {
-            this.markers.push(new Marker(this.center));
+            marker = new Marker(this.center);
         } else {
-            this.markers.push(new Marker(coordinates));
+            marker = new Marker(coordinates);
         }
+        this.markers.push(marker);
+        this.markers_hash.set(marker.id, marker);
     }
 
     delete_marker(id) {
         this.markers = this.markers.filter((marker, index, arr) => {
             return marker.id != id;
         });
+        this.markers_hash.delete(id);
     }
 
     delete_all_markers() {
         this.markers = [];
+        this.markers_hash.clear();
+    }
+
+    set_marker_coordinates(id, coordinates) {
+        this.markers_hash.get(id).coordinates = coordinates;
     }
 }

@@ -1,7 +1,8 @@
 class LeafletWrapper {
-    constructor(div_id, map_state) {
+    constructor(div_id, app, map_state) {
         this.active = false;
         this.div_id = div_id;
+        this.app = app;
         this.map_state = map_state;
         this.map = L.map(this.div_id);
 
@@ -94,7 +95,10 @@ class LeafletWrapper {
                 var m = self.markers.get(marker.id);
                 m.setLatLng(marker.coordinates.to_leaflet());
             } else {
-                var m = L.marker(marker.coordinates.to_leaflet());
+                var m = L.marker(marker.coordinates.to_leaflet(), {draggable: true, autoPan: true});
+                m.on('drag', (event) => {
+                    self.app.move_marker(marker.id, Coordinates.from_leaflet(m.getLatLng()));    
+                });
                 self.markers.set(marker.id, m);
                 m.addTo(self.map);
             }

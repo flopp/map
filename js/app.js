@@ -19,7 +19,7 @@ class App {
 
         $('#' + this.id_google).hide();
 
-        this.leaflet = new LeafletWrapper(id_leaflet, this.map_state);
+        this.leaflet = new LeafletWrapper(id_leaflet, this, this.map_state);
         this.google = null;
         this.google_loading = false;
 
@@ -32,7 +32,7 @@ class App {
 
     initialize_google_map() {
         this.show_google_div();
-        this.google = new GoogleWrapper(this.id_google, this.map_state);
+        this.google = new GoogleWrapper(this.id_google, this, this.map_state);
         this.google.activate();
         this.google_loading = false;
     }
@@ -167,6 +167,11 @@ class App {
 
     delete_all_markers() {
         this.map_state.delete_all_markers();
+        this.update_state();
+    }
+
+    move_marker(id, coordinates) {
+        this.map_state.set_marker_coordinates(id, coordinates);
         this.update_state();
     }
 }
