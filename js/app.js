@@ -132,6 +132,29 @@ class App {
         };
     }
 
+    search_location(location_string) {
+        if (location_string.length == 0) {
+            return;
+        }
+
+        // TODO: try to parse location_string as coordinates first
+
+        var self = this;
+        var url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + location_string;
+        $.get(url)
+            .done((data) => {
+                if (data.length > 0) {
+                    self.map_state.set_center(new Coordinates(data[0].lat, data[0].lon));
+                    this.update_state();
+                } else {
+                    alert("Cannot find location");
+                }
+            })
+            .fail(() => {
+                alert("Contacting nominatimg server failed");
+            });
+    }
+
     add_marker() {
         this.map_state.add_marker(this.map_state.center);
         this.update_state();

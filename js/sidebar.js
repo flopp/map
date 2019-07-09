@@ -11,7 +11,7 @@ class Sidebar {
         $(".sidebar-control-button").each((index, button) => {
             var id = button.id;
             button.addEventListener('click', () => { self.toggle(id); });
-            var close_button = $(button.dataset.container + " > .sidebar-header > .close");
+            var close_button = $(button.dataset.container + " > .header > .close");
             close_button.click(() => { self.toggle(null); });
 
             self.controls.push(button);
@@ -19,6 +19,10 @@ class Sidebar {
 
         /* location */
         $("#btn-locate").click(() => { self.app.locate_me(); });
+        $("#btn-search").click(() => {
+            var location_string = $("#input-search").val();
+            self.app.search_location(location_string);
+        });
 
         /* markers */
         $("#btn-add-marker").click(() => { self.app.add_marker(); });
