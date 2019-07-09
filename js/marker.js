@@ -8,6 +8,6 @@ class Marker {
     }
 
     name() {
-        return this.id;
+        return "MARKER " + this.id;
     }
 }

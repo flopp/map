@@ -77,7 +77,8 @@ class GoogleWrapper {
                 const m = new google.maps.Marker({
                     position: marker.coordinates.to_google(),
                     map: self.map,
-                    draggable: true
+                    draggable: true,
+                    icon: self.app.icon_factory.google_icon(marker.name(), "FF0000"),
                 });
                 google.maps.event.addListener(m, "drag", function () {
                     self.app.move_marker(marker.id, Coordinates.from_google(m.getPosition()));

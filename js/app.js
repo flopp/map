@@ -14,6 +14,8 @@ class App {
         this.map_state.set_center(new Coordinates(48, 8));
         this.map_type = MapType.STAMEN_TERRAIN;
 
+        this.icon_factory = new IconFactory();
+    
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
 
