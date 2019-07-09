@@ -76,16 +76,24 @@ class Sidebar {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($("#marker-" + marker.id).length > 0) {
-                $("#marker-" + marker.id + " .coordinates").text(marker.coordinates.to_text());
+                $("#marker-" + marker.id + " .marker-name").text(marker.name());
+                $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
             } else {
                 var m = $("<li>");
                 m.attr('class', 'marker');
                 m.attr('id', "marker-" + marker.id);
-                m.append($('<span class="coordinates">' + marker.coordinates.to_text() + '</span>'));
-                m.append($('<a class="delete-button button is-danger">Delete</button>'));
+                m.append($('<div class="marker-name">' + marker.name() + '</div>'));
+                m.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
+                var buttons = $('<div class="marker-buttons buttons has-addons"></div>');
+                buttons.append($('<a class="marker-locate-button button is-info"><i class="fas fa-search-location"></i></a>'));
+                buttons.append($('<a class="marker-delete-button button is-danger"><i class="fas fa-trash"></i></a>'));
+                m.append(buttons);
                 $("#markers").append(m);
 
-                $("#marker-" + marker.id + " .delete-button").click(() => {
+                $("#marker-" + marker.id + " .marker-locate-button").click(() => {
+                    self.app.set_center(marker.coordinates);
+                });
+                $("#marker-" + marker.id + " .marker-delete-button").click(() => {
                     self.app.delete_marker(marker.id);
                 });
             }

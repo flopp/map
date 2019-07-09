@@ -21,7 +21,6 @@ body {
     width: 250px;
     height: 100%;
     background: white;
-    overflow: auto;
 }
 
 #sidebar.active {
@@ -92,6 +91,11 @@ body {
 .sidebar-container > .content {
     margin: 8px;
 }
+
+#markers {
+    list-style: none;
+    margin-left: 0;
+} 
 
 .map-container {
     height: 100%;

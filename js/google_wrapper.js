@@ -21,7 +21,7 @@ class GoogleWrapper {
 
         this.markers = new Map();
 
-        var self = this;
+        const self = this;
         google.maps.event.addListener(this.map, 'center_changed', function () { self.view_changed(); });
         google.maps.event.addListener(this.map, 'zoom_changed', function () { self.view_changed(); });
     }
@@ -62,7 +62,7 @@ class GoogleWrapper {
     }
 
     update_state() {
-        var self = this;
+        const self = this;
 
         /* update view */
         this.map.setCenter(this.map_state.center.to_google());
@@ -71,10 +71,10 @@ class GoogleWrapper {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if (self.markers.has(marker.id)) {
-                var m = self.markers.get(marker.id);
+                const m = self.markers.get(marker.id);
                 m.setPosition(marker.coordinates.to_google());
             } else {
-                var m = new google.maps.Marker({
+                const m = new google.maps.Marker({
                     position: marker.coordinates.to_google(),
                     map: self.map,
                     draggable: true
@@ -88,12 +88,12 @@ class GoogleWrapper {
 
         /* remove spurious markers */
         if (this.markers.size > this.map_state.markers.length) {
-            var ids = new Set();
+            const ids = new Set();
             this.map_state.markers.forEach((marker) => {
                 ids.add(marker.id);
             });
             
-            var deleted_ids = [];
+            const deleted_ids = [];
             this.markers.forEach((marker, id, map) => {
                 if (!ids.has(id)) {
                     deleted_ids.push(id);
@@ -101,7 +101,7 @@ class GoogleWrapper {
             });
 
             deleted_ids.forEach((id) => {
-                var m = self.markers.get(id);
+                const m = self.markers.get(id);
                 m.setMap(null);
                 self.markers.delete(id)
             });

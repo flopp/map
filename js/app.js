@@ -12,7 +12,7 @@ class App {
         this.map_state = new MapState();
         this.map_state.set_zoom(13);
         this.map_state.set_center(new Coordinates(48, 8));
-        this.map_type = MapType.OPENSTREETMAP;
+        this.map_type = MapType.STAMEN_TERRAIN;
 
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
@@ -23,7 +23,7 @@ class App {
         this.google = null;
         this.google_loading = false;
 
-        this.switch_map(MapType.OPENSTREETMAP);
+        this.switch_map(MapType.STAMEN_TERRAIN);
     }
 
     set_sidebar(sidebar) {
@@ -115,13 +115,17 @@ class App {
         }
     }
 
+    set_center(coordinates) {
+        this.map_state.set_center(coordinates);
+        this.update_state();
+    }
+
     locate_me() {
         var self = this;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (location) => {
-                    self.map_state.set_center(new Coordinates(location.coords.latitude, location.coords.longitude));
-                    self.update_state();
+                    self.set_center(new Coordinates(location.coords.latitude, location.coords.longitude));
                 },
                 (error) => {
                     alert(error.message);
@@ -144,8 +148,7 @@ class App {
         $.get(url)
             .done((data) => {
                 if (data.length > 0) {
-                    self.map_state.set_center(new Coordinates(data[0].lat, data[0].lon));
-                    this.update_state();
+                    self.set_center(new Coordinates(data[0].lat, data[0].lon));
                 } else {
                     alert("Cannot find location");
                 }

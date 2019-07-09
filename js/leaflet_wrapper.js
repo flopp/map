@@ -31,13 +31,13 @@ class LeafletWrapper {
 
         this.markers = new Map();
 
-        var self = this;
+        const self = this;
         this.map.on('zoom', function() { self.view_changed(); });
         this.map.on('move', function() { self.view_changed(); });
     }
 
     activate() {
-        var layer = null;
+        let layer = null;
         switch (this.map_state.map_type) {
             case MapType.OPENSTREETMAP:
                 layer = this.layer_openstreetmap;
@@ -53,7 +53,7 @@ class LeafletWrapper {
         }
 
         if (layer && !this.map.hasLayer(layer)) {
-            var self = this;
+            const self = this;
             this.layers.forEach((otherLayer) => {
                 if (otherLayer != layer) {
                     self.map.removeLayer(otherLayer);
@@ -84,7 +84,7 @@ class LeafletWrapper {
     }
 
     update_state() {
-        var self = this;
+        const self = this;
 
         /* update view */
         this.map.setView(this.map_state.center.to_leaflet(), this.map_state.zoom, {'animate': false});
@@ -92,10 +92,10 @@ class LeafletWrapper {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if (self.markers.has(marker.id)) {
-                var m = self.markers.get(marker.id);
+                const m = self.markers.get(marker.id);
                 m.setLatLng(marker.coordinates.to_leaflet());
             } else {
-                var m = L.marker(marker.coordinates.to_leaflet(), {draggable: true, autoPan: true});
+                const m = L.marker(marker.coordinates.to_leaflet(), {draggable: true, autoPan: true});
                 m.on('drag', (event) => {
                     self.app.move_marker(marker.id, Coordinates.from_leaflet(m.getLatLng()));    
                 });
@@ -106,12 +106,12 @@ class LeafletWrapper {
 
         /* remove spurious markers */
         if (this.markers.size > this.map_state.markers.length) {
-            var ids = new Set();
+            const ids = new Set();
             this.map_state.markers.forEach((marker) => {
                 ids.add(marker.id);
             });
             
-            var deleted_ids = [];
+            const deleted_ids = [];
             this.markers.forEach((marker, id, map) => {
                 if (!ids.has(id)) {
                     deleted_ids.push(id);
@@ -119,7 +119,7 @@ class LeafletWrapper {
             });
 
             deleted_ids.forEach((id) => {
-                var m = self.markers.get(id);
+                const m = self.markers.get(id);
                 self.map.removeLayer(m);
                 self.markers.delete(id)
             });
