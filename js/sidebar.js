@@ -2,7 +2,7 @@ class Sidebar {
     constructor(sidebar_selector, sidebar_controls_selector) {
         var self = this;
         
-        this.map = null;
+        this.app = null;
         this.map_state = null;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;
@@ -17,29 +17,25 @@ class Sidebar {
             self.controls.push(button);
         });
 
-        /*
-        controls.forEach((control_id) => {
-            var control = $(control_id);
-            control.click(() => {self.toggle(control_id); });
-            var close_button = $(control.data("container") + " > .sidebar-header > .close");
-            close_button.click(() => {self.toggle(null); });
-        });
-        */
+        /* location */
+        $("#btn-locate").click(() => { self.app.locate_me(); });
 
-        $("#btn-add-marker").click(() => { self.map.add_marker(); });
-        $("#btn-delete-markers").click(() => { self.map.delete_all_markers(); });
+        /* markers */
+        $("#btn-add-marker").click(() => { self.app.add_marker(); });
+        $("#btn-delete-markers").click(() => { self.app.delete_all_markers(); });
+
+        /* lines */
     }
 
-    set_map(map) {
-        this.map = map;
-        this.map_state = map.map_state;
+    set_app(app) {
+        this.app = app;
+        this.map_state = app.map_state;
     }
 
     toggle (toggle_control_id) {
         var show_sidebar = false;
 
         this.controls.forEach((control) => {
-            //var control = $(control_id);
             var parent = control.parentElement;
             var container = $(control.dataset.container);
             if (toggle_control_id == control.id) {
@@ -65,13 +61,14 @@ class Sidebar {
             $(this.sidebar_controls_selector).removeClass('active');
         }
 
-        if (this.map) {
-            this.map.update_geometry();
+        if (this.app) {
+            this.app.update_geometry();
         }
     }
 
     update_state() {
         var self = this;
+
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($("#marker-" + marker.id).length > 0) {
@@ -84,7 +81,9 @@ class Sidebar {
                 m.append($('<a class="delete-button button is-danger">Delete</button>'));
                 $("#markers").append(m);
 
-                $("#marker-" + marker.id + " .delete-button").click(() => { self.map.delete_marker(marker.id); } );
+                $("#marker-" + marker.id + " .delete-button").click(() => {
+                    self.app.delete_marker(marker.id);
+                });
             }
         });
 

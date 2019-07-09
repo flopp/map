@@ -1,4 +1,4 @@
-class DualMap {
+class App {
     constructor(id_leaflet, id_google, map_type_activators) {
         var self = this;
 
@@ -113,6 +113,23 @@ class DualMap {
         if (this.google) {
             this.google.update_state();
         }
+    }
+
+    locate_me() {
+        var self = this;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (location) => {
+                    self.map_state.set_center(new Coordinates(location.coords.latitude, location.coords.longitude));
+                    self.update_state();
+                },
+                (error) => {
+                    alert(error.message);
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        };
     }
 
     add_marker() {

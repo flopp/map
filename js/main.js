@@ -1,8 +1,7 @@
-var dualmap = null;
-var sidebar = null;
+var app = null;
 
 $(document).ready(() => {
-    dualmap = new DualMap('map-container-leaflet', 'map-container-google', [
+    app = new App('map-container-leaflet', 'map-container-google', [
         {selector: '#btn-openstreetmap',    type: MapType.OPENSTREETMAP   },
         {selector: '#btn-opentopomap',      type: MapType.OPENTOPOMAP     },
         {selector: '#btn-stamen-terrain',   type: MapType.STAMEN_TERRAIN  },
@@ -12,12 +11,12 @@ $(document).ready(() => {
         {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },    
     ]);
 
-    sidebar = new Sidebar("#sidebar", "#sidebar-controls");
+    var sidebar = new Sidebar("#sidebar", "#sidebar-controls");
+    sidebar.set_app(app);
 
-    sidebar.set_map(dualmap);
-    dualmap.set_sidebar(sidebar);
+    app.set_sidebar(sidebar);
 });
 
 function initialize_google_map() {
-    dualmap.initialize_google_map();
+    app.initialize_google_map();
 }
