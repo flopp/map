@@ -1,8 +1,6 @@
 class App {
     constructor(id_leaflet, id_google) {        
         this.map_state = new MapState();
-        this.map_state.set_view(new Coordinates(48, 8), 13);
-        this.map_type = MapType.STAMEN_TERRAIN;
         
         this.icon_factory = new IconFactory();
         
@@ -17,7 +15,7 @@ class App {
         this.google = null;
         this.google_loading = false;
 
-        this.switch_map(MapType.STAMEN_TERRAIN);
+        this.switch_map(this.map_state.map_type);
     }
 
     set_sidebar(sidebar) {
