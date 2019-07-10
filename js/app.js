@@ -2,26 +2,25 @@ class App {
     constructor(id_leaflet, id_google, map_type_activators) {
         var self = this;
 
-        this.sidebar = null;
-
         map_type_activators.forEach((activator) => {
             $(activator.selector).click(() => {self.switch_map(activator.type); });
         });
         this.map_type_activators = map_type_activators;
-
+        
         this.map_state = new MapState();
-        this.map_state.set_zoom(13);
-        this.map_state.set_center(new Coordinates(48, 8));
+        this.map_state.set_view(new Coordinates(48, 8), 13);
         this.map_type = MapType.STAMEN_TERRAIN;
-
+        
         this.icon_factory = new IconFactory();
-    
+        
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
-
+        
         $('#' + this.id_google).hide();
-
-        this.leaflet = new LeafletWrapper(id_leaflet, this, this.map_state);
+        
+        this.sidebar = new Sidebar("#sidebar", "#sidebar-controls", this);
+        
+        this.leaflet = new LeafletWrapper(id_leaflet, this);
         this.google = null;
         this.google_loading = false;
 
@@ -34,7 +33,7 @@ class App {
 
     initialize_google_map() {
         this.show_google_div();
-        this.google = new GoogleWrapper(this.id_google, this, this.map_state);
+        this.google = new GoogleWrapper(this.id_google, this);
         this.google.activate();
         this.google_loading = false;
     }
@@ -109,25 +108,12 @@ class App {
         this.leaflet.invalidate_size();
     }
 
-    update_state() {
-        this.sidebar.update_state();
-        this.leaflet.update_state();
-        if (this.google) {
-            this.google.update_state();
-        }
-    }
-
-    set_center(coordinates) {
-        this.map_state.set_center(coordinates);
-        this.update_state();
-    }
-
     locate_me() {
         var self = this;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (location) => {
-                    self.set_center(new Coordinates(location.coords.latitude, location.coords.longitude));
+                    self.map_state.set_center(new Coordinates(location.coords.latitude, location.coords.longitude), null);
                 },
                 (error) => {
                     alert(error.message);
@@ -150,7 +136,7 @@ class App {
         $.get(url)
             .done((data) => {
                 if (data.length > 0) {
-                    self.set_center(new Coordinates(data[0].lat, data[0].lon));
+                    self.map_state.set_center(new Coordinates(data[0].lat, data[0].lon), null);
                 } else {
                     alert("Cannot find location");
                 }
@@ -158,25 +144,5 @@ class App {
             .fail(() => {
                 alert("Contacting nominatimg server failed");
             });
-    }
-
-    add_marker() {
-        this.map_state.add_marker(this.map_state.center);
-        this.update_state();
-    }
-
-    delete_marker(id) {
-        this.map_state.delete_marker(id);
-        this.update_state();
-    }
-
-    delete_all_markers() {
-        this.map_state.delete_all_markers();
-        this.update_state();
-    }
-
-    move_marker(id, coordinates) {
-        this.map_state.set_marker_coordinates(id, coordinates);
-        this.update_state();
     }
 }

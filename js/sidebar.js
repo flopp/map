@@ -1,9 +1,10 @@
-class Sidebar {
-    constructor(sidebar_selector, sidebar_controls_selector) {
+class Sidebar extends MapStateObserver {
+    constructor(sidebar_selector, sidebar_controls_selector, app) {
+        super(app.map_state);
+
         var self = this;
         
         this.app = null;
-        this.map_state = null;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;
 
@@ -18,22 +19,34 @@ class Sidebar {
         });
 
         /* location */
-        $("#btn-locate").click(() => { self.app.locate_me(); });
+        $("#btn-locate").click(() => {
+            self.app.locate_me();
+        });
         $("#btn-search").click(() => {
             var location_string = $("#input-search").val();
             self.app.search_location(location_string);
         });
 
+        /* layers */
+        this.map_type_activators = [
+            {selector: '#btn-openstreetmap',    type: MapType.OPENSTREETMAP   },
+            {selector: '#btn-opentopomap',      type: MapType.OPENTOPOMAP     },
+            {selector: '#btn-stamen-terrain',   type: MapType.STAMEN_TERRAIN  },
+            {selector: '#btn-google-roadmap',   type: MapType.GOOGLE_ROADMAP  },
+            {selector: '#btn-google-satellite', type: MapType.GOOGLE_SATELLITE},
+            {selector: '#btn-google-hybrid',    type: MapType.GOOGLE_HYBRID   },
+            {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },
+        ];
+
         /* markers */
-        $("#btn-add-marker").click(() => { self.app.add_marker(); });
-        $("#btn-delete-markers").click(() => { self.app.delete_all_markers(); });
+        $("#btn-add-marker").click(() => {
+            self.map_state.add_marker();
+        });
+        $("#btn-delete-markers").click(() => {
+            self.map_state.delete_all_markers();
+        });
 
         /* lines */
-    }
-
-    set_app(app) {
-        this.app = app;
-        this.map_state = app.map_state;
     }
 
     toggle (toggle_control_id) {
@@ -91,10 +104,10 @@ class Sidebar {
                 $("#markers").append(m);
 
                 $("#marker-" + marker.id + " .marker-locate-button").click(() => {
-                    self.app.set_center(marker.coordinates);
+                    self.map_state.set_center(marker.coordinates, null);
                 });
                 $("#marker-" + marker.id + " .marker-delete-button").click(() => {
-                    self.app.delete_marker(marker.id);
+                    self.map_state.delete_marker(marker.id, null);
                 });
             }
         });

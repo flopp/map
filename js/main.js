@@ -7,14 +7,9 @@ $(document).ready(() => {
         {selector: '#btn-stamen-terrain',   type: MapType.STAMEN_TERRAIN  },
         {selector: '#btn-google-roadmap',   type: MapType.GOOGLE_ROADMAP  },
         {selector: '#btn-google-satellite', type: MapType.GOOGLE_SATELLITE},
-        {selector: '#btn-google-hybrid',    type: MapType.GOOGLE_HYBRID   },  
-        {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },    
+        {selector: '#btn-google-hybrid',    type: MapType.GOOGLE_HYBRID   },
+        {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },
     ]);
-
-    var sidebar = new Sidebar("#sidebar", "#sidebar-controls");
-    sidebar.set_app(app);
-
-    app.set_sidebar(sidebar);
 });
 
 function initialize_google_map() {

@@ -1,9 +1,10 @@
-class LeafletWrapper {
-    constructor(div_id, app, map_state) {
+class LeafletWrapper extends MapStateObserver {
+    constructor(div_id, app) {
+        super(app.map_state);
+
         this.active = false;
         this.div_id = div_id;
         this.app = app;
-        this.map_state = map_state;
         this.map = L.map(this.div_id);
 
         this.layer_openstreetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -79,8 +80,7 @@ class LeafletWrapper {
         if (!this.active) {
             return;
         }
-        this.map_state.set_center(Coordinates.from_leaflet(this.map.getCenter()));
-        this.map_state.set_zoom(this.map.getZoom());
+        this.map_state.set_view(Coordinates.from_leaflet(this.map.getCenter()), this.map.getZoom(), this);
     }
 
     update_state() {
@@ -101,7 +101,7 @@ class LeafletWrapper {
                     icon: self.app.icon_factory.leaflet_icon(marker.name(), "FF0000")
                 });
                 m.on('drag', (event) => {
-                    self.app.move_marker(marker.id, Coordinates.from_leaflet(m.getLatLng()));    
+                    self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);    
                 });
                 self.markers.set(marker.id, m);
                 m.addTo(self.map);

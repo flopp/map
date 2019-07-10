@@ -1,9 +1,10 @@
-class GoogleWrapper {
-    constructor(div_id, app, map_state) {
+class GoogleWrapper extends MapStateObserver {
+    constructor(div_id, app) {
+        super(app.map_state);
+
         this.active = false;
         this.div_id = div_id;
         this.app = app;
-        this.map_state = map_state;
         
         this.map = new google.maps.Map(
             document.getElementById(div_id), {
@@ -57,8 +58,7 @@ class GoogleWrapper {
         if (!this.active) {
             return;
         }
-        this.map_state.set_center(Coordinates.from_google(this.map.getCenter()));
-        this.map_state.set_zoom(this.map.getZoom());
+        this.map_state.set_view(Coordinates.from_google(this.map.getCenter()), this.map.getZoom(), this);
     }
 
     update_state() {
@@ -81,7 +81,7 @@ class GoogleWrapper {
                     icon: self.app.icon_factory.google_icon(marker.name(), "FF0000"),
                 });
                 google.maps.event.addListener(m, "drag", function () {
-                    self.app.move_marker(marker.id, Coordinates.from_google(m.getPosition()));
+                    self.map_state.set_marker_coordinates(marker.id, Coordinates.from_google(m.getPosition()), self);
                 });
                 self.markers.set(marker.id, m);
             }
