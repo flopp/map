@@ -36,6 +36,7 @@ class MapState {
 
     set_map_type(map_type) {
         this.map_type = map_type;
+        this.update_observers(null);
     }
 
     set_view(center, zoom, sender) {

@@ -4,7 +4,7 @@ class Sidebar extends MapStateObserver {
 
         var self = this;
         
-        this.app = null;
+        this.app = app;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;
 
@@ -37,6 +37,9 @@ class Sidebar extends MapStateObserver {
             {selector: '#btn-google-hybrid',    type: MapType.GOOGLE_HYBRID   },
             {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },
         ];
+        this.map_type_activators.forEach((activator) => {
+            $(activator.selector).click(() => {self.app.switch_map(activator.type); });
+        });
 
         /* markers */
         $("#btn-add-marker").click(() => {
@@ -85,6 +88,15 @@ class Sidebar extends MapStateObserver {
 
     update_state() {
         var self = this;
+
+        /* layers */
+        this.map_type_activators.forEach((activator) => {
+            if (self.map_state.map_type == activator.type) {
+                $(activator.selector).addClass("is-active");
+            } else {
+                $(activator.selector).removeClass("is-active");
+            }
+        });
 
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {

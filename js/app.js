@@ -1,12 +1,5 @@
 class App {
-    constructor(id_leaflet, id_google, map_type_activators) {
-        var self = this;
-
-        map_type_activators.forEach((activator) => {
-            $(activator.selector).click(() => {self.switch_map(activator.type); });
-        });
-        this.map_type_activators = map_type_activators;
-        
+    constructor(id_leaflet, id_google) {        
         this.map_state = new MapState();
         this.map_state.set_view(new Coordinates(48, 8), 13);
         this.map_type = MapType.STAMEN_TERRAIN;
@@ -40,13 +33,6 @@ class App {
 
     switch_map (type) {
         this.map_state.set_map_type(type);
-        this.map_type_activators.forEach((activator) => {
-            if (type == activator.type) {
-                $(activator.selector).addClass("is-active");
-            } else {
-                $(activator.selector).removeClass("is-active");
-            }
-        });
 
         switch (type) {
             case MapType.OPENSTREETMAP:
