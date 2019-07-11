@@ -113,10 +113,16 @@ class App {
             return;
         }
 
-        // TODO: try to parse location_string as coordinates first
+        // try to parse "location_string" as coordinates
+        const coordinates = Coordinates.from_string(location_string);
+        if (coordinates) {
+            this.map_state.set_center(coordinates, null);
+            return;
+        }
 
-        var self = this;
-        var url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + location_string;
+        // try to resolve "location_string" via a nominatim search
+        const self = this;
+        const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + location_string;
         $.get(url)
             .done((data) => {
                 if (data.length > 0) {

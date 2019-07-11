@@ -61,13 +61,15 @@ class Storage {
     }
     get_coordinates(key, default_value) {
         const s = this.get(key, null);
-        if (s !== null) {
-            const lat_lng = s.split(";");
-            if (lat_lng.length != 2) {
-                return default_value;
-            }
-            return new Coordinates(parseFloat(lat_lng[0]), parseFloat(lat_lng[1]));
+        if (s === null) {
+            return default_value;
         }
-        return default_value;
+
+        const c = Coordinates.from_string(s);
+        if (c === null) {
+            return default_value;
+        }
+
+        return c;
     }
 }
