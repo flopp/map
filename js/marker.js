@@ -2,12 +2,11 @@ var _next_marker_id = 0;
 
 class Marker {
     constructor(coordinates) {
-        this.coordinates = coordinates;
         this.id = _next_marker_id;
-        _next_marker_id += 1;
-    }
+        this.coordinates = coordinates;
+        this.name = "MARKER " + this.id;
+        this.color = (Math.random().toString(16) + '000000').slice(2, 8);
 
-    name() {
-        return "MARKER " + this.id;
+        _next_marker_id += 1;
     }
 }

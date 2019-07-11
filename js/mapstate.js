@@ -1,15 +1,3 @@
-const MapType = {
-    OPENSTREETMAP: 0,        
-    OPENTOPOMAP: 1,
-    
-    STAMEN_TERRAIN: 2,
-
-    GOOGLE_ROADMAP: 3,
-    GOOGLE_SATELLITE: 4,
-    GOOGLE_HYBRID: 5,
-    GOOGLE_TERRAIN: 6,
-};
-
 class MapState {
     constructor() {
         this.map_type = null;
@@ -26,37 +14,27 @@ class MapState {
         this.restore();
     }
 
-    static string2maptype(s) {
-        switch (s.toUpperCase()) {
-            case "OPENSTREETMAP": return MapType.OPENSTREETMAP;
-            case "OPENTOPOMAP": return MapType.OPENTOPOMAP;
-            case "STAMEN_TERRAIN": return MapType.STAMEN_TERRAIN;
-            case "GOOGLE_ROADMAP": return MapType.GOOGLE_ROADMAP;
-            case "GOOGLE_SATELLITE": return MapType.GOOGLE_SATELLITE;
-            case "GOOGLE_HYBRID": return MapType.GOOGLE_HYBRID;
-            case "GOOGLE_TERRAIN": return MapType.GOOGLE_TERRAIN;
-        }
-        return MapType.STAMEN_TERRAIN;
-    }
-
-    static maptype2string(m) {
-        switch (m) {
-            case MapType.OPENSTREETMAP: return "OPENSTREETMAP";
-            case MapType.OPENTOPOMAP: return "OPENTOPOMAP";
-            case MapType.STAMEN_TERRAIN: return "STAMEN_TERRAIN";
-            case MapType.GOOGLE_ROADMAP: return "GOOGLE_ROADMAP";
-            case MapType.GOOGLE_SATELLITE: return "GOOGLE_SATELLITE";
-            case MapType.GOOGLE_HYBRID: return "GOOGLE_HYBRID";
-            case MapType.GOOGLE_TERRAIN: return "GOOGLE_TERRAIN";
-        }
-    }
-
     restore() {
+        // map view
         this.set_view(
             this.storage.get_coordinates("center", new Coordinates(48, 8)),
             this.storage.get_int("zoom", 13));
-        this.set_map_type(MapState.string2maptype(
-            this.storage.get("map_type", "STAMEN_TERRAIN")));
+        this.set_map_type(string2maptype(
+            this.storage.get("map_type", maptype2string(MapType.STAMEN_TERRAIN))));
+
+        // markers
+        this.storage.get("markers", "").split(";").forEach((id) => {
+            const coordinates = this.storage.get_coordinates("marker;" + id + ";coordinates", null);
+            const name        = this.storage.get("marker;" + id + ";name", id);
+            const color       = this.storage.get("marker;" + id + ";color", "FF0000");
+            if (coordinates) {
+                const marker = new Marker(coordinates);
+                marker.name = name;
+                marker.color = color;
+                this.markers.push(marker);
+                this.markers_hash.set(marker.id, marker);
+            }
+        });
     }
 
     register_observer(observer) {
@@ -73,7 +51,7 @@ class MapState {
 
     set_map_type(map_type) {
         this.map_type = map_type;
-        this.storage.set("map_type", MapState.maptype2string(this.map_type));
+        this.storage.set("map_type", maptype2string(this.map_type));
         this.update_observers(null);
     }
 
@@ -106,6 +84,10 @@ class MapState {
         }
         this.markers.push(marker);
         this.markers_hash.set(marker.id, marker);
+        this.storage.set("marker;" + marker.id + ";name", marker.name);
+        this.storage.set("marker;" + marker.id + ";color", marker.color);
+        this.storage.set_coordinates("marker;" + marker.id + ";coordinates", marker.coordinates);
+        this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(null);
     }
 
@@ -114,18 +96,35 @@ class MapState {
             return marker.id != id;
         });
         this.markers_hash.delete(id);
+        this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(null);
     }
 
     delete_all_markers() {
         this.markers = [];
         this.markers_hash.clear();
+        this.storage.set("markers", null);
         this.update_observers(null);
     }
 
     set_marker_coordinates(id, coordinates, sender) {
         this.markers_hash.get(id).coordinates = coordinates;
+        this.storage.set_coordinates("marker;" + id + ";coordinates", coordinates);
         this.update_observers(sender);
+    }
+    set_marker_name(id, name, sender) {
+        this.markers_hash.get(id).name = name;
+        this.storage.set("marker;" + id + ";name", name);
+        this.update_observers(sender);
+    }
+    set_marker_color(id, color, sender) {
+        this.markers_hash.get(id).color = color;
+        this.storage.set("marker;" + id + ";color", color);
+        this.update_observers(sender);
+    }
+
+    get_marker_ids_string() {
+        return this.markers.map(m => m.id).join(";");
     }
 }
 

@@ -78,7 +78,7 @@ class GoogleWrapper extends MapStateObserver {
                     position: marker.coordinates.to_google(),
                     map: self.map,
                     draggable: true,
-                    icon: self.app.icon_factory.google_icon(marker.name(), "FF0000"),
+                    icon: self.app.icon_factory.google_icon(marker.name, marker.color),
                 });
                 google.maps.event.addListener(m, "drag", function () {
                     self.map_state.set_marker_coordinates(marker.id, Coordinates.from_google(m.getPosition()), self);

@@ -98,7 +98,7 @@ class LeafletWrapper extends MapStateObserver {
                 const m = L.marker(marker.coordinates.to_leaflet(), {
                     draggable: true, 
                     autoPan: true, 
-                    icon: self.app.icon_factory.leaflet_icon(marker.name(), "FF0000")
+                    icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color)
                 });
                 m.on('drag', (event) => {
                     self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);    

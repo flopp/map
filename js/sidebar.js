@@ -101,13 +101,13 @@ class Sidebar extends MapStateObserver {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($("#marker-" + marker.id).length > 0) {
-                $("#marker-" + marker.id + " .marker-name").text(marker.name());
+                $("#marker-" + marker.id + " .marker-name").text(marker.name);
                 $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
             } else {
                 var m = $("<li>");
                 m.attr('class', 'marker');
                 m.attr('id', "marker-" + marker.id);
-                m.append($('<div class="marker-name">' + marker.name() + '</div>'));
+                m.append($('<div class="marker-name">' + marker.name + '</div>'));
                 m.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
                 var buttons = $('<div class="marker-buttons buttons has-addons"></div>');
                 buttons.append($('<a class="marker-locate-button button is-info"><i class="fas fa-search-location"></i></a>'));
