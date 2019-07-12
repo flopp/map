@@ -101,19 +101,30 @@ class Sidebar extends MapStateObserver {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($("#marker-" + marker.id).length > 0) {
+                $("#marker-" + marker.id + " .marker-color").css("background-color", "#" + marker.color);
                 $("#marker-" + marker.id + " .marker-name").text(marker.name);
                 $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
             } else {
                 var m = $("<li>");
                 m.attr('class', 'marker');
                 m.attr('id', "marker-" + marker.id);
-                m.append($('<div class="marker-name">' + marker.name + '</div>'));
-                m.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
-                var buttons = $('<div class="marker-buttons buttons has-addons"></div>');
-                buttons.append($('<a class="marker-locate-button button is-info"><i class="fas fa-search-location"></i></a>'));
-                buttons.append($('<a class="marker-delete-button button is-danger"><i class="fas fa-trash"></i></a>'));
-                m.append(buttons);
                 $("#markers").append(m);
+
+                const left   = $('<div class="marker-left"></div>');
+                left.append($('<div class="marker-color" style="background-color: #' + marker.color + '"></div>'));
+                m.append(left);
+                
+                const center = $('<div class="marker-center"></div>');
+                center.append($('<div class="marker-name">' + marker.name + '</div>'));
+                center.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
+                m.append(center);
+                
+                const right  = $('<div class="marker-right"></div>');
+                const buttons = $('<div class="marker-buttons buttons has-addons is-vertical"></div>');
+                buttons.append($('<a class="marker-locate-button button is-small is-info"><i class="fas fa-search-location"></i></a>'));
+                buttons.append($('<a class="marker-delete-button button is-small is-danger"><i class="fas fa-trash"></i></a>'));
+                right.append(buttons);
+                m.append(right);
 
                 $("#marker-" + marker.id + " .marker-locate-button").click(() => {
                     self.map_state.set_center(marker.coordinates, null);

@@ -97,7 +97,59 @@ body {
     margin-left: 0;
 } 
 
+.marker {
+    align-items: stretch;
+    display: flex;
+    text-align: left;
+}
+.marker > .marker-left {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+.marker > .marker-left > .marker-color{
+    width: 16px;
+    height: 100%;
+}
+.marker > .marker-center {
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: left;
+}
+.marker > .marker-right {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
 .map-container {
     height: 100%;
     overflow: hidden;
+}
+
+
+.buttons.has-addons.is-vertical {
+    flex-direction: column;
+}
+
+.buttons.has-addons.is-vertical .button {
+    margin-bottom: .5rem;
+    margin-right: 0px;
+    border-radius: 4px;
+}
+
+.buttons.has-addons.is-vertical .button:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.buttons.has-addons.is-vertical .button:not(:last-child) {
+    margin-bottom: 0px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.buttons.has-addons.is-vertical .button i {
+    width: 12px;
 }
