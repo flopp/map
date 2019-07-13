@@ -11,9 +11,14 @@ class Sidebar extends MapStateObserver {
         this.controls = [];
         $(".sidebar-control-button").each((index, button) => {
             var id = button.id;
-            button.addEventListener('click', () => { self.toggle(id); });
+            button.addEventListener('click', () => {
+                self.toggle(id);
+            });
+
             var close_button = $(button.dataset.container + " > .header > .close");
-            close_button.click(() => { self.toggle(null); });
+            close_button.click(() => {
+                self.toggle(null);
+            });
 
             self.controls.push(button);
         });
@@ -38,7 +43,9 @@ class Sidebar extends MapStateObserver {
             {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },
         ];
         this.map_type_activators.forEach((activator) => {
-            $(activator.selector).click(() => {self.app.switch_map(activator.type); });
+            $(activator.selector).click(() => {
+                self.app.switch_map(activator.type);
+            });
         });
 
         /* markers */
@@ -76,11 +83,15 @@ class Sidebar extends MapStateObserver {
         if (show_sidebar) {
             $(this.sidebar_selector).addClass('sidebar-open');
             $(this.sidebar_controls_selector).addClass('sidebar-open');
-            $(".map-container").addClass('sidebar-open');
+            $(".map-container").each((index, obj) => {
+                obj.classList.add('sidebar-open');
+            });
         } else {
             $(this.sidebar_selector).removeClass('sidebar-open');
             $(this.sidebar_controls_selector).removeClass('sidebar-open');
-            $(".map-container").removeClass('sidebar-open');
+            $(".map-container").each((index, obj) => {
+                obj.classList.emove('sidebar-open');
+            });
         }
 
         if (this.app) {
@@ -100,11 +111,18 @@ class Sidebar extends MapStateObserver {
             }
         });
 
+        this.update_markers_section();
+    }
+
+    update_markers_section() {
+        const self = this;
+
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($("#marker-" + marker.id).length > 0) {
                 $("#marker-" + marker.id + " .marker-color").css("background-color", "#" + marker.color);
                 $("#marker-" + marker.id + " .marker-name").text(marker.name);
+                $("#marker-" + marker.id + " .marker-radius").text(marker.radius);
                 $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
             } else {
                 var m = $("<div class=\"marker\">");
@@ -118,6 +136,7 @@ class Sidebar extends MapStateObserver {
                 const center = $('<div class="marker-center"></div>');
                 center.append($('<div class="marker-name">' + marker.name + '</div>'));
                 center.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
+                center.append($('<div class="marker-radius">' + marker.radius + '</div>'));
                 m.append(center);
                 
                 const right  = $('<div class="marker-right"></div>');

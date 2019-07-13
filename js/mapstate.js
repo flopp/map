@@ -27,10 +27,12 @@ class MapState {
             const coordinates = this.storage.get_coordinates("marker;" + id + ";coordinates", null);
             const name        = this.storage.get("marker;" + id + ";name", id);
             const color       = this.storage.get("marker;" + id + ";color", "FF0000");
+            const radius      = this.storage.get_float("marker;" + id + ";radius", 0);
             if (coordinates) {
                 const marker = new Marker(coordinates);
                 marker.name = name;
                 marker.color = color;
+                marker.radius = radius;
                 this.markers.push(marker);
                 this.markers_hash.set(marker.id, marker);
             }
@@ -86,6 +88,7 @@ class MapState {
         this.markers_hash.set(marker.id, marker);
         this.storage.set("marker;" + marker.id + ";name", marker.name);
         this.storage.set("marker;" + marker.id + ";color", marker.color);
+        this.storage.set("marker;" + marker.id + ";radius", marker.radius);
         this.storage.set_coordinates("marker;" + marker.id + ";coordinates", marker.coordinates);
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(null);
@@ -121,6 +124,11 @@ class MapState {
     set_marker_color(id, color, sender) {
         this.markers_hash.get(id).color = color;
         this.storage.set("marker;" + id + ";color", color);
+        this.update_observers(sender);
+    }
+    set_marker_radius(id, radius, sender) {
+        this.markers_hash.get(id).color = color;
+        this.storage.set("marker;" + id + ";radius", radius);
         this.update_observers(sender);
     }
 

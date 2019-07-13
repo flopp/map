@@ -6,6 +6,7 @@ class Marker {
         this.coordinates = coordinates;
         this.name = "MARKER " + this.id;
         this.color = (Math.random().toString(16) + '000000').slice(2, 8);
+        this.radius = Math.random() * 1000;
 
         _next_marker_id += 1;
     }

@@ -92,19 +92,9 @@ class LeafletWrapper extends MapStateObserver {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if (self.markers.has(marker.id)) {
-                const m = self.markers.get(marker.id);
-                m.setLatLng(marker.coordinates.to_leaflet());
+                self.update_marker_object(self.markers.get(marker.id), marker);
             } else {
-                const m = L.marker(marker.coordinates.to_leaflet(), {
-                    draggable: true, 
-                    autoPan: true, 
-                    icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color)
-                });
-                m.on('drag', (event) => {
-                    self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);    
-                });
-                self.markers.set(marker.id, m);
-                m.addTo(self.map);
+                self.create_marker_object(marker);
             }
         });
 
@@ -123,10 +113,70 @@ class LeafletWrapper extends MapStateObserver {
             });
 
             deleted_ids.forEach((id) => {
-                const m = self.markers.get(id);
-                self.map.removeLayer(m);
+                self.delete_marker_object(self.markers.get(id));
                 self.markers.delete(id)
             });
         }
+    }
+
+    create_marker_object(marker) {
+        const self = this;
+
+        const m = L.marker(marker.coordinates.to_leaflet(), {
+            draggable: true, 
+            autoPan: true, 
+            icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color)
+        }).addTo(this.map);
+
+        m.last_name = marker.name;
+        m.last_color = marker.color;
+        m.circle = null;
+        
+        m.on('drag', (event) => {
+            self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);
+            if (m.circle) {
+                m.circle.setLatLng(m.getLatLng());
+            }
+        });
+        this.markers.set(marker.id, m);
+
+        this.update_marker_object(m, marker);
+    }
+
+    update_marker_object(m, marker) {
+        m.setLatLng(marker.coordinates.to_leaflet());
+        if (marker.radius > 0) {
+            if (m.circle) {
+                m.circle.setLatLng(marker.coordinates.to_leaflet());
+                m.circle.setRadius(marker.radius);
+            } else {
+                m.circle = L.circle(marker.coordinates.to_leaflet(), {
+                    radius: marker.radius,
+                    color: "#" + marker.color,
+                    weight: 1,
+                    interactive: false
+                }).addTo(this.map);
+            }
+        } else if (m.circle) {
+            this.map.removeLayer(m.circle);
+            m.circle = null;
+        }
+
+        if ((marker.color !== m.last_color) || (marker.name !== m.last_name)) {
+            m.setIcon(this.app.icon_factory.leaflet_icon(marker.name, marker.color));
+        }
+        if (m.circle && (marker.color !== m.last_color)) {
+            m.circle.setStyle({color: "#" + marker.color});
+        }
+
+        m.last_color = marker.color;
+        m.last_name = marker.name;
+    }
+
+    delete_marker_object(m) {
+        if (m.circle) {
+            this.map.removeLayer(m.circle);
+        }
+        this.map.removeLayer(m);
     }
 }

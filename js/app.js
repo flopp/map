@@ -18,10 +18,6 @@ class App {
         this.switch_map(this.map_state.map_type);
     }
 
-    set_sidebar(sidebar) {
-        this.sidebar = sidebar;
-    }
-
     initialize_google_map() {
         this.show_google_div();
         this.google = new GoogleWrapper(this.id_google, this);
