@@ -90,7 +90,7 @@ class Sidebar extends MapStateObserver {
             $(this.sidebar_selector).removeClass('sidebar-open');
             $(this.sidebar_controls_selector).removeClass('sidebar-open');
             $(".map-container").each((index, obj) => {
-                obj.classList.emove('sidebar-open');
+                obj.classList.remove('sidebar-open');
             });
         }
 
