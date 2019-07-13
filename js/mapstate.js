@@ -101,6 +101,7 @@ class MapState {
     }
 
     delete_all_markers() {
+        Marker.reset_ids();
         this.markers = [];
         this.markers_hash.clear();
         this.storage.set("markers", null);

@@ -74,11 +74,13 @@ class Sidebar extends MapStateObserver {
         });
 
         if (show_sidebar) {
-            $(this.sidebar_selector).addClass('active');
-            $(this.sidebar_controls_selector).addClass('active');
+            $(this.sidebar_selector).addClass('sidebar-open');
+            $(this.sidebar_controls_selector).addClass('sidebar-open');
+            $(".map-container").addClass('sidebar-open');
         } else {
-            $(this.sidebar_selector).removeClass('active');
-            $(this.sidebar_controls_selector).removeClass('active');
+            $(this.sidebar_selector).removeClass('sidebar-open');
+            $(this.sidebar_controls_selector).removeClass('sidebar-open');
+            $(".map-container").removeClass('sidebar-open');
         }
 
         if (this.app) {
@@ -105,8 +107,7 @@ class Sidebar extends MapStateObserver {
                 $("#marker-" + marker.id + " .marker-name").text(marker.name);
                 $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
             } else {
-                var m = $("<li>");
-                m.attr('class', 'marker');
+                var m = $("<div class=\"marker\">");
                 m.attr('id', "marker-" + marker.id);
                 $("#markers").append(m);
 

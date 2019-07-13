@@ -9,4 +9,8 @@ class Marker {
 
         _next_marker_id += 1;
     }
+
+    static reset_ids() {
+        _next_marker_id = 0;
+    }
 }

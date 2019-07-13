@@ -1,3 +1,7 @@
+html {
+    overflow: hidden;
+}
+
 body {
     margin: 0px;
     padding: 0px;
@@ -16,29 +20,29 @@ body {
 
 #sidebar {
     display: none;
-    position: relative;
-    float: right;
-    width: 250px;
-    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 300px;
     background: white;
 }
-
-#sidebar.active {
-    display: block;
+#sidebar.sidebar-open {
+    display: flex;
+    flex-direction: column;
 }
 
 #sidebar-controls {
     display: block;
-    position: absolute;
+    position: fixed;
     right: 0px;
     top: 0px;
-    height: 100%;
+    bottom: 0;
     z-index: 1000;
     overflow: hidden;
 }
-
-#sidebar-controls.active {
-    right: 250px;
+#sidebar-controls.sidebar-open {
+    right: 300px;
 }
 
 .sidebar-control {
@@ -64,19 +68,22 @@ body {
 
 .sidebar-container {
     display: none;
+    width: 100%;
 }
 
 .sidebar-container.active {
-    display: block;
+    display: flex;
+    flex-direction: column;    
+    flex-grow: 1;
+    /* for Firefox */
+    min-height: 0;
 }
 
 .sidebar-container > .header {
-    position: relative;
     padding: 10px 20px;
     background-color: hsl(204, 86%, 53%);
     color: #ffffff;
 }
-
 .sidebar-container > .header > .close {
     float: right;
     cursor: pointer;
@@ -92,15 +99,25 @@ body {
     margin: 8px;
 }
 
+.sidebar-container > .scrollable-content {
+    flex-grow: 1;
+    overflow: auto;
+    
+    /* for Firefox */
+    min-height: 0;
+}
+
 #markers {
     list-style: none;
-    margin-left: 0;
+    padding: 0;
+    display: block;
 } 
 
 .marker {
     align-items: stretch;
     display: flex;
     text-align: left;
+    border-bottom: 1px solid #e6e6e6;
 }
 .marker > .marker-left {
     flex-basis: auto;
@@ -124,10 +141,17 @@ body {
 }
 
 .map-container {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 100%;
     overflow: hidden;
 }
-
+.map-container.sidebar-open {
+    right: 300px;
+}
 
 .buttons.has-addons.is-vertical {
     flex-direction: column;
