@@ -64,6 +64,7 @@ class App {
         if (this.google) {
             this.show_google_div();
             this.google.activate();
+            this.google.invalidate_size();
             return;
         }
 
@@ -86,6 +87,9 @@ class App {
 
     update_geometry() {
         this.leaflet.invalidate_size();
+        if (this.google) {
+            this.google.invalidate_size();
+        }
     }
 
     locate_me() {

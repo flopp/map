@@ -1,11 +1,10 @@
-class GoogleWrapper extends MapStateObserver {
+class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
-        super(app.map_state);
+        super(div_id, app);
+    }
 
-        this.active = false;
-        this.div_id = div_id;
-        this.app = app;
-        
+    create_map_object (div_id) {
+        const self = this;
         this.map = new google.maps.Map(
             document.getElementById(div_id), {
                 clickableIcons: false,
@@ -20,15 +19,21 @@ class GoogleWrapper extends MapStateObserver {
                 }
             });
 
-        this.markers = new Map();
+        google.maps.event.addListener(this.map, 'center_changed', function () {
+            if (self.active) {
+                self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
+            }
+        });
 
-        const self = this;
-        google.maps.event.addListener(this.map, 'center_changed', function () { self.view_changed(); });
-        google.maps.event.addListener(this.map, 'zoom_changed', function () { self.view_changed(); });
+        google.maps.event.addListener(this.map, 'zoom_changed', function () {
+            if (self.active) {
+                self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
+            }
+        });
     }
 
-    activate() {
-        switch (this.map_state.map_type) {
+    set_map_type(map_type) {
+        switch (map_type) {
             case MapType.GOOGLE_ROADMAP:
                 this.map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
                 break;
@@ -44,60 +49,13 @@ class GoogleWrapper extends MapStateObserver {
             default:
                 break;
         }
-        
-        this.update_state();
-        
-        this.active = true;
-    }
-
-    deactivate() {
-        this.active = false;
-    }
-
-    view_changed() {
-        if (!this.active) {
-            return;
-        }
-        this.map_state.set_view(Coordinates.from_google(this.map.getCenter()), this.map.getZoom(), this);
-    }
-
-    update_state() {
-        const self = this;
-
-        /* update view */
-        this.map.setCenter(this.map_state.center.to_google());
-        this.map.setZoom(this.map_state.zoom);
-
-        /* update and add markers */
-        this.map_state.markers.forEach((marker) => {
-            if (self.markers.has(marker.id)) {
-                self.update_marker_object(self.markers.get(marker.id), marker);
-            } else {
-                self.create_marker_object(marker);
-            }
-        });
-
-        /* remove spurious markers */
-        if (this.markers.size > this.map_state.markers.length) {
-            const ids = new Set();
-            this.map_state.markers.forEach((marker) => {
-                ids.add(marker.id);
-            });
-            
-            const deleted_ids = [];
-            this.markers.forEach((marker, id, map) => {
-                if (!ids.has(id)) {
-                    deleted_ids.push(id);
-                }
-            });
-
-            deleted_ids.forEach((id) => {
-                self.delete_marker_object(self.markers.get(id));
-                self.markers.delete(id)
-            });
-        }
     }
     
+    set_map_view(center, zoom) {
+        this.map.setCenter(center.to_google());
+        this.map.setZoom(zoom);
+    }
+
     create_marker_object(marker) {
         const self = this;
 

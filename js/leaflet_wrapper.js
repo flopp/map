@@ -1,11 +1,12 @@
-class LeafletWrapper extends MapStateObserver {
+class LeafletWrapper extends MapWrapper {
     constructor(div_id, app) {
-        super(app.map_state);
+        super(div_id, app);
+    }
 
-        this.active = false;
-        this.div_id = div_id;
-        this.app = app;
-        this.map = L.map(this.div_id);
+    create_map_object (div_id) {
+        const self = this;
+
+        this.map = L.map(div_id);
 
         this.layer_openstreetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map tiles by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
@@ -29,17 +30,22 @@ class LeafletWrapper extends MapStateObserver {
             this.layer_stamen_terrain,
         ];
 
+        this.map.on('zoom', function () {
+            if (self.active) {
+                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom(), self);
+            }
+        });
 
-        this.markers = new Map();
-
-        const self = this;
-        this.map.on('zoom', function() { self.view_changed(); });
-        this.map.on('move', function() { self.view_changed(); });
+        this.map.on('move', function () {
+            if (self.active) {
+                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom(), self);
+            }
+        });
     }
 
-    activate() {
+    set_map_type(map_type) {
         let layer = null;
-        switch (this.map_state.map_type) {
+        switch (map_type) {
             case MapType.OPENSTREETMAP:
                 layer = this.layer_openstreetmap;
                 break;
@@ -62,61 +68,14 @@ class LeafletWrapper extends MapStateObserver {
             })
             this.map.addLayer(layer);
         }
-        
-        this.update_state();
-        
-        this.active = true;
     }
-
-    deactivate() {
-        this.active = false;
+    
+    set_map_view(center, zoom) {
+        this.map.setView(center.to_leaflet(), zoom, {'animate': false});
     }
-
+    
     invalidate_size() {
         this.map.invalidateSize();
-    }
-
-    view_changed() {
-        if (!this.active) {
-            return;
-        }
-        this.map_state.set_view(Coordinates.from_leaflet(this.map.getCenter()), this.map.getZoom(), this);
-    }
-
-    update_state() {
-        const self = this;
-
-        /* update view */
-        this.map.setView(this.map_state.center.to_leaflet(), this.map_state.zoom, {'animate': false});
-
-        /* update and add markers */
-        this.map_state.markers.forEach((marker) => {
-            if (self.markers.has(marker.id)) {
-                self.update_marker_object(self.markers.get(marker.id), marker);
-            } else {
-                self.create_marker_object(marker);
-            }
-        });
-
-        /* remove spurious markers */
-        if (this.markers.size > this.map_state.markers.length) {
-            const ids = new Set();
-            this.map_state.markers.forEach((marker) => {
-                ids.add(marker.id);
-            });
-            
-            const deleted_ids = [];
-            this.markers.forEach((marker, id, map) => {
-                if (!ids.has(id)) {
-                    deleted_ids.push(id);
-                }
-            });
-
-            deleted_ids.forEach((id) => {
-                self.delete_marker_object(self.markers.get(id));
-                self.markers.delete(id)
-            });
-        }
     }
 
     create_marker_object(marker) {
