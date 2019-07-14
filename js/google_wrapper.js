@@ -95,9 +95,9 @@ class GoogleWrapper extends MapWrapper {
                 m.circle = new google.maps.Circle({
                     center: position,
                     map: this.map,
-                    strokeColor: "#" + marker.color,
+                    strokeColor: `#${marker.color}`,
                     strokeOpacity: 1,
-                    fillColor: "#" + marker.color,
+                    fillColor: `#${marker.color}`,
                     fillOpacity: 0.2,
                     strokeWeight: 1,
                     radius: marker.radius
@@ -112,7 +112,10 @@ class GoogleWrapper extends MapWrapper {
             m.setIcon(this.app.icon_factory.google_icon(marker.name, marker.color));
         }
         if (m.circle && (marker.color !== m.last_color)) {
-            m.circle.setOptions({strokeColor: "#" + marker.color, fillColor: "#" + marker.color});
+            m.circle.setOptions({
+                strokeColor: `#${marker.color}`,
+                fillColor: `#${marker.color}`
+            });
         }
 
         m.last_color = marker.color;

@@ -71,7 +71,7 @@ class App {
         console.log("ON DEMAND LOADING OF THE GOOGLE MAPS API");
         this.google_loading = true;
     
-        var url = "https://maps.googleapis.com/maps/api/js?key=" + GOOGLE_API_KEY + "&callback=initialize_google_map";
+        var url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=initialize_google_map`;
         $.getScript(url);
     }
 
@@ -122,7 +122,7 @@ class App {
 
         // try to resolve "location_string" via a nominatim search
         const self = this;
-        const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + location_string;
+        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${location_string}`;
         $.get(url)
             .done((data) => {
                 if (data.length > 0) {

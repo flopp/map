@@ -17,11 +17,15 @@ class SidebarMarkers extends MapStateObserver {
 
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
-            if ($("#marker-" + marker.id).length > 0) {
-                $("#marker-" + marker.id + " .marker-color").css("background-color", "#" + marker.color);
-                $("#marker-" + marker.id + " .marker-name").text(marker.name);
-                $("#marker-" + marker.id + " .marker-radius").text(marker.radius);
-                $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
+            if ($(`#marker-${marker.id}`).length > 0) {
+                $(`#marker-${marker.id} .marker-color`).css("background-color", `#${marker.color}`);
+                $(`#marker-${marker.id} .marker-name`).text(marker.name);
+                if (marker.radius <= 0) {
+                    $(`#marker-${marker.id} .marker-radius`).text("No circle.");
+                } else {
+                    $(`#marker-${marker.id} .marker-radius`).text(`Circle: ${marker.radius.toFixed(2)} m`);
+                }
+                $(`#marker-${marker.id} .marker-coordinates`).text(marker.coordinates.to_string());
             } else {
                 $("#markers").append(self.create_marker_div(marker));
             }
@@ -44,24 +48,27 @@ class SidebarMarkers extends MapStateObserver {
             })
 
             deleted_ids.forEach((id) => {
-                $("#marker-" + id).remove();
+                $(`#marker-${id}`).remove();
             });
         }
     }
 
     create_marker_div(marker) {
         const self = this;
-        const m = $("<div class=\"marker\">");
-        m.attr('id', "marker-" + marker.id);
+        const m = $(`<div id="marker-${marker.id}" class="marker">`);
 
         const left   = $('<div class="marker-left"></div>');
-        left.append($('<div class="marker-color" style="background-color: #' + marker.color + '"></div>'));
+        left.append($(`<div class="marker-color" style="background-color: #${marker.color}"></div>`));
         m.append(left);
         
         const center = $('<div class="marker-center"></div>');
-        center.append($('<div class="marker-name">' + marker.name + '</div>'));
-        center.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
-        center.append($('<div class="marker-radius">' + marker.radius + '</div>'));
+        center.append($(`<div class="marker-name">${marker.name}</div>`));
+        center.append($(`<div class="marker-coordinates">${marker.coordinates.to_string()}</div>`));
+        if (marker.radius <= 0) {
+            center.append($('<div class="marker-radius">No circle.</div>'));
+        } else {
+            center.append($(`<div class="marker-radius">Circle: ${marker.radius} m</div>`));
+        }
         m.append(center);
         
         const right  = $('<div class="marker-right"></div>');
@@ -78,21 +85,21 @@ class SidebarMarkers extends MapStateObserver {
     create_marker_dropdown(marker_id) {
         const self = this;
 
-        const menu_id = 'dropdown-marker-' + marker_id;
+        const menu_id = `dropdown-marker-${marker_id}`;
         const dropdown = $('<div class="dropdown is-right">');
         dropdown.click((event) => {
             event.stopPropagation();
-            $("#marker-" + marker_id + " .dropdown").toggleClass('is-active');
+            $(`#marker-${marker_id} .dropdown`).toggleClass('is-active');
         });
 
         const dropdown_trigger = $('<div class="dropdown-trigger">');
         dropdown.append(dropdown_trigger);
-        const dropdown_button = $('<button class="button is-white" aria-haspopup="true" aria-controls="' + menu_id +'">' +
-        '            <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>' +
-        '        </button>');
+        const dropdown_button = $(`<button class="button is-white" aria-haspopup="true" aria-controls="${menu_id}">
+            <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>
+        </button>`);
         dropdown_trigger.append(dropdown_button);
 
-        const dropdown_menu =$('<div class="dropdown-menu" id="' + menu_id + '" role="menu">');
+        const dropdown_menu =$(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
         dropdown.append(dropdown_menu);
         const dropdown_menu_content = $('<div class="dropdown-content">');
         dropdown_menu.append(dropdown_menu_content);

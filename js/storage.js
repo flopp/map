@@ -2,7 +2,7 @@ class Storage {
     constructor() {
         this.ok = true;
         try {
-            const x = '__Persist_test__';
+            const x = '__storage_test__';
             window.localStorage.setItem(x, x);
             window.localStorage.removeItem(x);
         } catch (e) {
@@ -42,7 +42,7 @@ class Storage {
         this.set(key, String(value));
     }
     set_coordinates(key, value) {
-        this.set(key, value.lat + ";" + value.lng);
+        this.set(key, `${value.lat};${value.lng}`);
     }
 
     get_int(key, default_value) {

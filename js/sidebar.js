@@ -15,7 +15,7 @@ class Sidebar extends MapStateObserver {
                 self.toggle(id);
             });
 
-            const close_button = $(button.dataset.container + " > .header > .close");
+            const close_button = $(`${button.dataset.container} > .header > .close`);
             close_button.click(() => {
                 self.toggle(null);
             });
