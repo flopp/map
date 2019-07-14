@@ -1,5 +1,7 @@
 class MapState {
     constructor() {
+        this.sidebar_open = null;
+
         this.map_type = null;
         this.zoom = null;
         this.center = null;
@@ -15,6 +17,10 @@ class MapState {
     }
 
     restore() {
+        // sidebar
+        this.set_sidebar_open(
+            this.storage.get("sidebar_open", null));
+
         // map view
         this.set_view(
             this.storage.get_coordinates("center", new Coordinates(48, 8)),
@@ -49,6 +55,12 @@ class MapState {
                 observer.update_state();
             }
         });
+    }
+
+    set_sidebar_open(section) {
+        this.sidebar_open = section;
+        this.storage.set("sidebar_open", section);
+        this.update_observers(null);
     }
 
     set_map_type(map_type) {

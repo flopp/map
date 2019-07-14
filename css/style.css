@@ -129,6 +129,8 @@ body {
 .marker > .marker-left > .marker-color{
     width: 16px;
     height: 100%;
+    margin-left: 1px;
+    margin-right: 4px;
 }
 .marker > .marker-center {
     flex-basis: auto;
