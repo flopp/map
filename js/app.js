@@ -1,5 +1,5 @@
 class App {
-    constructor(id_leaflet, id_google) {        
+    constructor(id_leaflet, id_google) {
         this.map_state = new MapState();
         
         this.icon_factory = new IconFactory();

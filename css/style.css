@@ -119,6 +119,7 @@ body {
     display: flex;
     text-align: left;
     border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
 }
 .marker > .marker-left {
     flex-basis: auto;

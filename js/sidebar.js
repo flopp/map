@@ -125,33 +125,7 @@ class Sidebar extends MapStateObserver {
                 $("#marker-" + marker.id + " .marker-radius").text(marker.radius);
                 $("#marker-" + marker.id + " .marker-coordinates").text(marker.coordinates.to_string());
             } else {
-                var m = $("<div class=\"marker\">");
-                m.attr('id', "marker-" + marker.id);
-                $("#markers").append(m);
-
-                const left   = $('<div class="marker-left"></div>');
-                left.append($('<div class="marker-color" style="background-color: #' + marker.color + '"></div>'));
-                m.append(left);
-                
-                const center = $('<div class="marker-center"></div>');
-                center.append($('<div class="marker-name">' + marker.name + '</div>'));
-                center.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
-                center.append($('<div class="marker-radius">' + marker.radius + '</div>'));
-                m.append(center);
-                
-                const right  = $('<div class="marker-right"></div>');
-                const buttons = $('<div class="marker-buttons buttons has-addons is-vertical"></div>');
-                buttons.append($('<a class="marker-locate-button button is-small is-info"><i class="fas fa-search-location"></i></a>'));
-                buttons.append($('<a class="marker-delete-button button is-small is-danger"><i class="fas fa-trash"></i></a>'));
-                right.append(buttons);
-                m.append(right);
-
-                $("#marker-" + marker.id + " .marker-locate-button").click(() => {
-                    self.map_state.set_center(marker.coordinates, null);
-                });
-                $("#marker-" + marker.id + " .marker-delete-button").click(() => {
-                    self.map_state.delete_marker(marker.id, null);
-                });
+                $("#markers").append(self.create_marker_div(marker));
             }
         });
 
@@ -175,5 +149,87 @@ class Sidebar extends MapStateObserver {
                 $("#marker-" + id).remove();
             });
         }
+    }
+
+    create_marker_div(marker) {
+        const self = this;
+        const m = $("<div class=\"marker\">");
+        m.attr('id', "marker-" + marker.id);
+
+        const left   = $('<div class="marker-left"></div>');
+        left.append($('<div class="marker-color" style="background-color: #' + marker.color + '"></div>'));
+        m.append(left);
+        
+        const center = $('<div class="marker-center"></div>');
+        center.append($('<div class="marker-name">' + marker.name + '</div>'));
+        center.append($('<div class="marker-coordinates">' + marker.coordinates.to_string() + '</div>'));
+        center.append($('<div class="marker-radius">' + marker.radius + '</div>'));
+        m.append(center);
+        
+        const right  = $('<div class="marker-right"></div>');
+        right.append(this.create_marker_dropdown(marker.id));
+        m.append(right);
+        
+        m.click(() => {
+            self.map_state.set_center(marker.coordinates, null);
+        });
+
+        return m;
+    }
+    
+    create_marker_dropdown(marker_id) {
+        const self = this;
+
+        const menu_id = 'dropdown-marker-' + marker_id;
+        const dropdown = $('<div class="dropdown is-right">');
+        dropdown.click((event) => {
+            event.stopPropagation();
+            $("#marker-" + marker_id + " .dropdown").toggleClass('is-active');
+        });
+
+        const dropdown_trigger = $('<div class="dropdown-trigger">');
+        dropdown.append(dropdown_trigger);
+        const dropdown_button = $('<button class="button is-white" aria-haspopup="true" aria-controls="' + menu_id +'">' +
+        '            <span class="icon is-small"><i class="fas fa-ellipsis-h aria-hidden="true"></i></span>' +
+        '        </button>');
+        dropdown_trigger.append(dropdown_button);
+
+        const dropdown_menu =$('<div class="dropdown-menu" id="' + menu_id + '" role="menu">');
+        dropdown.append(dropdown_menu);
+        const dropdown_menu_content = $('<div class="dropdown-content">');
+        dropdown_menu.append(dropdown_menu_content);
+
+        const menu_edit = $('<a href="#" class="marker-edit dropdown-item">Edit</a>');
+        menu_edit.click(() => {});
+        dropdown_menu_content.append(menu_edit);
+        
+        const menu_project = $('<a href="#" class="marker-project dropdown-item">Waypoint Projection</a>');
+        menu_project.click(() => {});
+        dropdown_menu_content.append(menu_project);
+        
+        const menu_delete = $('<a href="#" class="marker-delete dropdown-item">Delete</a>');
+        menu_delete.click(() => {
+            self.map_state.delete_marker(marker_id, null);
+        });
+        dropdown_menu_content.append(menu_delete);
+        
+        return dropdown;
+
+        return $('<div class="dropdown is-right">' +
+                 '    <div class="dropdown-trigger">' +
+                 '        <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-marker-' + marker_id + '">' +
+                 '            <span class="icon is-small">' +
+                 '                <i class="fas fa-ellipsis-h aria-hidden="true"></i>' +
+                 '            </span>' +
+                 '        </button>' +
+                 '    </div>' +
+                 '    <div class="dropdown-menu" id="dropdown-marker-' + marker_id + '" role="menu">' +
+                 '        <div class="dropdown-content">' +
+                 '            <a href="#" class="marker-edit dropdown-item">Edit</a>' +
+                 '            <a href="#" class="marker-project dropdown-item">Waypoint Projection</a>' +
+                 '            <a href="#" class="marker-delete dropdown-item">Delete</a>' +
+                 '        </div>' +
+                 '    </div>' +
+                 '</div>');
     }
 }
