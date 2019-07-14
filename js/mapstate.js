@@ -144,6 +144,6 @@ class MapStateObserver {
     }
 
     update_state() {
-
+        throw new Error('not implemented');
     }
 }

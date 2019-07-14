@@ -2,7 +2,7 @@ class Storage {
     constructor() {
         this.ok = true;
         try {
-            var x = '__Persist_test__';
+            const x = '__Persist_test__';
             window.localStorage.setItem(x, x);
             window.localStorage.removeItem(x);
         } catch (e) {
