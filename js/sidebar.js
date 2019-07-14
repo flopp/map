@@ -33,19 +33,28 @@ class Sidebar extends MapStateObserver {
         });
 
         /* layers */
+        $("#baselayer-dropdown").click((event) => {
+            event.stopPropagation();
+            $("#baselayer-dropdown").toggleClass('is-active');
+        });
+        
         this.map_type_activators = [
-            {selector: '#btn-openstreetmap',    type: MapType.OPENSTREETMAP   },
-            {selector: '#btn-opentopomap',      type: MapType.OPENTOPOMAP     },
-            {selector: '#btn-stamen-terrain',   type: MapType.STAMEN_TERRAIN  },
-            {selector: '#btn-google-roadmap',   type: MapType.GOOGLE_ROADMAP  },
-            {selector: '#btn-google-satellite', type: MapType.GOOGLE_SATELLITE},
-            {selector: '#btn-google-hybrid',    type: MapType.GOOGLE_HYBRID   },
-            {selector: '#btn-google-terrain',   type: MapType.GOOGLE_TERRAIN  },
+            {type: MapType.OPENSTREETMAP,    name: "OpenStreetMap"},
+            {type: MapType.OPENTOPOMAP,      name: "OpenTopoMap"},
+            {type: MapType.STAMEN_TERRAIN,   name: "Stamen Terrain"},
+            {type: MapType.GOOGLE_ROADMAP,   name: "Google Roadmap"},
+            {type: MapType.GOOGLE_SATELLITE, name: "Google Satellite"},
+            {type: MapType.GOOGLE_HYBRID,    name: "Google Hybrid"},
+            {type: MapType.GOOGLE_TERRAIN,   name: "Google Terrain"},
         ];
+        const baselayer_menu = $("#baselayer-dropdown .dropdown-content");
         this.map_type_activators.forEach((activator) => {
-            $(activator.selector).click(() => {
-                self.app.switch_map(activator.type);
-            });
+            activator.a = $('<a href="#" class="dropdown-item">')
+                .text(activator.name)
+                .click(() => {
+                    self.app.switch_map(activator.type);
+                });
+            baselayer_menu.append(activator.a);
         });
 
         /* markers */
@@ -100,18 +109,22 @@ class Sidebar extends MapStateObserver {
     }
 
     update_state() {
+        this.update_layers_section();
+        this.update_markers_section();
+    }
+
+    update_layers_section() {
         var self = this;
 
         /* layers */
         this.map_type_activators.forEach((activator) => {
             if (self.map_state.map_type == activator.type) {
-                $(activator.selector).addClass("is-active");
+                activator.a.addClass("is-active");
+                $("#baselayer-name").text(activator.name);
             } else {
-                $(activator.selector).removeClass("is-active");
+                activator.a.removeClass("is-active");
             }
         });
-
-        this.update_markers_section();
     }
 
     update_markers_section() {
@@ -190,7 +203,7 @@ class Sidebar extends MapStateObserver {
         const dropdown_trigger = $('<div class="dropdown-trigger">');
         dropdown.append(dropdown_trigger);
         const dropdown_button = $('<button class="button is-white" aria-haspopup="true" aria-controls="' + menu_id +'">' +
-        '            <span class="icon is-small"><i class="fas fa-ellipsis-h aria-hidden="true"></i></span>' +
+        '            <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>' +
         '        </button>');
         dropdown_trigger.append(dropdown_button);
 
@@ -214,22 +227,5 @@ class Sidebar extends MapStateObserver {
         dropdown_menu_content.append(menu_delete);
         
         return dropdown;
-
-        return $('<div class="dropdown is-right">' +
-                 '    <div class="dropdown-trigger">' +
-                 '        <button class="button is-white" aria-haspopup="true" aria-controls="dropdown-marker-' + marker_id + '">' +
-                 '            <span class="icon is-small">' +
-                 '                <i class="fas fa-ellipsis-h aria-hidden="true"></i>' +
-                 '            </span>' +
-                 '        </button>' +
-                 '    </div>' +
-                 '    <div class="dropdown-menu" id="dropdown-marker-' + marker_id + '" role="menu">' +
-                 '        <div class="dropdown-content">' +
-                 '            <a href="#" class="marker-edit dropdown-item">Edit</a>' +
-                 '            <a href="#" class="marker-project dropdown-item">Waypoint Projection</a>' +
-                 '            <a href="#" class="marker-delete dropdown-item">Delete</a>' +
-                 '        </div>' +
-                 '    </div>' +
-                 '</div>');
     }
 }

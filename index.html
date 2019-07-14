@@ -88,25 +88,21 @@
                     </div>
 
                     <div class="content">
-                        <div class="dropdown is-hoverable">
-                            <div class="dropdown-trigger">
-                                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                    <span>Map Style</span>
-                                    <span class="icon is-small">
-                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                    </span>
-                                </button>
-                            </div>
-                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                <div class="dropdown-content">
-                                    <a href="#" class="dropdown-item" id="btn-openstreetmap">OpenStreetMap</a>
-                                    <a href="#" class="dropdown-item" id="btn-opentopomap">OpenTopoMap</a>
-                                    <a href="#" class="dropdown-item" id="btn-stamen-terrain">Stamen Terrain</a>
-                                    <hr class="dropdown-divider">
-                                    <a href="#" class="dropdown-item" id="btn-google-roadmap">Google Roadmap</a>
-                                    <a href="#" class="dropdown-item" id="btn-google-satellite">Google Satellite</a>
-                                    <a href="#" class="dropdown-item" id="btn-google-hybrid">Google Hybrid</a>
-                                    <a href="#" class="dropdown-item" id="btn-google-terrain">Google Terrain</a>
+                        <div class="field">
+                            <label class="label">Base Layer:</label>
+                            <div class="control">
+                                <div id="baselayer-dropdown" class="dropdown">
+                                    <div class="dropdown-trigger">
+                                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                            <span id="baselayer-name">Map Style</span>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                        <div class="dropdown-content"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
