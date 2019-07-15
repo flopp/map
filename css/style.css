@@ -83,17 +83,18 @@ body {
     padding: 10px 20px;
     background-color: hsl(204, 86%, 53%);
     color: #ffffff;
-    text-transform: uppercase;
 }
 .sidebar-container > .header > .close {
     float: right;
     cursor: pointer;
 }
-.sidebar-container > .header > h4 {
+.sidebar-container > .header > h2 {
     margin: 0;
     padding: 0;
     border: 0;
     font-size: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .sidebar-container > .content {
@@ -138,10 +139,22 @@ body {
     flex-shrink: 1;
     text-align: left;
 }
+.marker > .marker-center > .marker-name {
+    font-weight: bold;
+}
 .marker > .marker-right {
     flex-basis: auto;
     flex-grow: 0;
     flex-shrink: 0;
+}
+
+.edit {
+    display: none;
+    padding: 8px;
+}
+
+.edit.show-edit {
+    display: block;
 }
 
 .map-container {

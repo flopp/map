@@ -106,6 +106,10 @@ class MapState {
         this.update_observers(null);
     }
 
+    get_marker(id) {
+        return this.markers_hash.get(id);
+    }
+
     delete_marker(id) {
         this.markers = this.markers.filter((marker, index, arr) => {
             return marker.id != id;
