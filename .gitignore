@@ -1,3 +1,4 @@
 node_modules
 bundle.js
 .secrets.js
+package-lock.json
