@@ -43,7 +43,7 @@ export class SidebarMarkers extends MapStateObserver {
             this.map_state.markers.forEach((marker) => {
                 ids.add(marker.id);
             });
-            
+
             var deleted_ids = [];
             markers.each((i, m) => {
                 var id = parseInt(m.id.substring(7));
@@ -66,7 +66,7 @@ export class SidebarMarkers extends MapStateObserver {
         const left   = $('<div class="marker-left"></div>');
         left.append($(`<div class="marker-color" style="background-color: #${marker.color}"></div>`));
         m.append(left);
-        
+
         const center = $('<div class="marker-center"></div>');
         center.append($(`<div class="marker-name">${marker.name}</div>`));
         center.append($(`<div class="marker-coordinates">${marker.coordinates.to_string()}</div>`));
@@ -76,11 +76,11 @@ export class SidebarMarkers extends MapStateObserver {
             center.append($(`<div class="marker-radius">Circle: ${marker.radius.toFixed(2)} m</div>`));
         }
         m.append(center);
-        
+
         const right  = $('<div class="marker-right"></div>');
         right.append(this.create_marker_dropdown(marker));
         m.append(right);
-        
+
         m.click(() => {
             self.map_state.set_center(marker.coordinates, null);
         });
@@ -135,7 +135,7 @@ export class SidebarMarkers extends MapStateObserver {
 
         return m;
     }
-    
+
     create_marker_dropdown(marker) {
         const self = this;
 
@@ -165,19 +165,19 @@ export class SidebarMarkers extends MapStateObserver {
 
         });
         dropdown_menu_content.append(menu_edit);
-        
+
         const menu_project = $('<a href="#" class="marker-project dropdown-item">Waypoint Projection</a>');
         menu_project.click(() => {
             console.log("not implemented");
         });
         dropdown_menu_content.append(menu_project);
-        
+
         const menu_delete = $('<a href="#" class="marker-delete dropdown-item">Delete</a>');
         menu_delete.click(() => {
             self.map_state.delete_marker(marker.id, null);
         });
         dropdown_menu_content.append(menu_delete);
-        
+
         return dropdown;
     }
 
@@ -205,7 +205,7 @@ export class SidebarMarkers extends MapStateObserver {
             marker.coordinates = coordinates;
             marker.radius = radius;
             marker.color = color;
-            
+
             this.map_state.update_observers(null);
         }
         $(`#marker-edit-${marker.id}`).removeClass("show-edit");

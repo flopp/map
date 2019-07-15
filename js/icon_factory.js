@@ -25,7 +25,7 @@ export class IconFactory {
             anchor: new google.maps.Point(icon.anchor[0], icon.anchor[1]),
         };
     }
-    
+
     create_map_icon(text, hex_color) {
         const w = Math.max(33.0, 16.0 + this.compute_text_width(text, this.font)),
               w2 = 0.5 * w,
@@ -67,19 +67,18 @@ export class IconFactory {
         if (!this.canvas) {
             this.canvas = document.createElement("canvas");
         }
-    
+
         const context = this.canvas.getContext("2d");
         context.font = this.font;
-    
+
         return context.measureText(text).width;
     }
-    
+
     static compute_luma(hex_color) {
         const rgb = parseInt(hex_color, 16), // convert rrggbb to decimal
-                r = (rgb >> 16) & 0xff,     // extract red
-                g = (rgb >> 8) & 0xff,     // extract green
-                b = (rgb >> 0) & 0xff,     // extract blue
-                luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
-        return luma;
+                r = (rgb >> 16) & 0xff,      // extract red
+                g = (rgb >> 8) & 0xff,       // extract green
+                b = (rgb >> 0) & 0xff;       // extract blue
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b; // luma, per ITU-R BT.709
     }
 }

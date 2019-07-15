@@ -9,16 +9,16 @@ import {Sidebar} from "./sidebar.js";
 export class App {
     constructor(id_leaflet, id_google) {
         this.map_state = new MapState();
-        
+
         this.icon_factory = new IconFactory();
-        
+
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
-        
+
         $('#' + this.id_google).hide();
-        
+
         this.sidebar = new Sidebar("#sidebar", "#sidebar-controls", this);
-        
+
         this.leaflet = new LeafletWrapper(id_leaflet, this);
         this.google = null;
         this.google_loading = false;
@@ -67,7 +67,7 @@ export class App {
         if (this.google_loading) {
             return;
         }
-        
+
         this.leaflet.deactivate();
 
         if (this.google) {

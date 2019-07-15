@@ -10,7 +10,7 @@ export class SidebarLayers extends MapStateObserver {
             event.stopPropagation();
             $("#baselayer-dropdown").toggleClass('is-active');
         });
-        
+
         this.baselayers = [
             {type: MapType.OPENSTREETMAP,    name: "OpenStreetMap"},
             {type: MapType.OPENTOPOMAP,      name: "OpenTopoMap"},

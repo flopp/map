@@ -8,7 +8,7 @@ export class Sidebar extends MapStateObserver {
         super(app.map_state);
 
         const self = this;
-        
+
         this.app = app;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;

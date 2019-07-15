@@ -1,8 +1,14 @@
-export const CoordinatesFormat = {
+const CoordinatesFormat = {
     D: 0,
-    DM: 1,        
+    DM: 1,
     DMS: 2,
 };
+
+if (Object.freeze) {
+    Object.freeze(CoordinatesFormat);
+}
+
+export {CoordinatesFormat};
 
 let coordinates_format = CoordinatesFormat.DM;
 
@@ -12,17 +18,21 @@ export class Coordinates {
         this.lng = lng;
     }
 
+    static set_coordinates_format(format) {
+        coordinates_format = format;
+    }
+
     static from_google(latlng) {
         return new Coordinates(latlng.lat(), latlng.lng());
     }
-    
+
     static from_leaflet(latlng) {
         return new Coordinates(latlng.lat, latlng.lng);
     }
 
-    static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {    
+    static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {
         let c1, c2, lat, lng;
-    
+
         if ((h1 !== '+') && (d1 < 0)) {
             return null;
         }
@@ -33,7 +43,7 @@ export class Coordinates {
         if (s1 < 0 || s1 >= 61) {
             return null;
         }
-    
+
         if (h2 !== '+' && d2 < 0) {
             return null;
         }
@@ -43,10 +53,10 @@ export class Coordinates {
         if (s2 < 0 || s2 >= 61) {
             return null;
         }
-    
+
         c1 = d1 + (m1 / 60.0) + (s1 / 3600.0);
         c2 = d2 + (m2 / 60.0) + (s2 / 3600.0);
-    
+
         if (h1 === '+' && h2 === '+') {
             lat = c1;
             lng = c2;
@@ -71,7 +81,7 @@ export class Coordinates {
         } else {
             return null;
         }
-    
+
         return new Coordinates(lat, lng);
     }
 
@@ -170,7 +180,7 @@ export class Coordinates {
             lng_deg,
             lng_min,
             lng_mmin;
-    
+
         lat_deg = Math.floor(lat);
         lat = lat - lat_deg;
         lat_min = Math.floor(lat * 60);
@@ -180,7 +190,7 @@ export class Coordinates {
             lat_mmin -= 1000;
             lat_min += 1;
         }
-    
+
         lng_deg = Math.floor(lng);
         lng = lng - lng_deg;
         lng_min = Math.floor(lng * 60);
@@ -190,7 +200,7 @@ export class Coordinates {
             lng_mmin -= 1000;
             lng_min += 1;
         }
-    
+
         return Coordinates.NS(this.lat) +
                 " " +
                 Coordinates.zeropad(lat_deg, 2) +
@@ -207,8 +217,8 @@ export class Coordinates {
                 "." +
                 Coordinates.zeropad(lng_mmin, 3);
     }
-    
-    
+
+
     to_string_DMS() {
         let lat = Math.abs(this.lat),
             lat_deg,
@@ -218,19 +228,19 @@ export class Coordinates {
             lng_deg,
             lng_min,
             lng_sec;
-    
+
         lat_deg = Math.floor(lat);
         lat = lat - lat_deg;
         lat_min = Math.floor(lat * 60);
         lat = lat * 60 - lat_min;
         lat_sec = lat * 60.0;
-    
+
         lng_deg = Math.floor(lng);
         lng = lng - lng_deg;
         lng_min = Math.floor(lng * 60);
         lng = lng * 60 - lng_min;
         lng_sec = lng * 60.0;
-    
+
         return Coordinates.NS(this.lat) +
                 " " +
                 Coordinates.zeropad(lat_deg, 2) +
@@ -247,11 +257,11 @@ export class Coordinates {
                 " " +
                 Coordinates.zeropad(lng_sec.toFixed(2), 5);
     }
-    
+
     to_string_D() {
         const lat = Math.abs(this.lat),
               lng = Math.abs(this.lng);
-    
+
         return Coordinates.NS(this.lat) +
                 " " +
                 lat.toFixed(6) +
@@ -267,8 +277,8 @@ export class Coordinates {
         }
         return 'S';
     }
-    
-    static EW(lng) {    
+
+    static EW(lng) {
         if (lng >= 0) {
             return 'E';
         }

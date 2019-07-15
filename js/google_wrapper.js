@@ -56,7 +56,7 @@ export class GoogleWrapper extends MapWrapper {
                 break;
         }
     }
-    
+
     set_map_view(center, zoom) {
         this.map.setCenter(center.to_google());
         this.map.setZoom(zoom);
@@ -71,7 +71,7 @@ export class GoogleWrapper extends MapWrapper {
             draggable: true,
             icon: self.app.icon_factory.google_icon(marker.name, marker.color),
         });
-        
+
         m.last_name = marker.name;
         m.last_color = marker.color;
         m.circle = null;

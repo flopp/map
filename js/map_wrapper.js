@@ -19,7 +19,7 @@ export class MapWrapper extends MapStateObserver {
     set_map_type(_map_type) {
         throw new Error('not implemented');
     }
-    
+
     set_map_view(_center, _zoom) {
         throw new Error('not implemented');
     }
@@ -69,7 +69,7 @@ export class MapWrapper extends MapStateObserver {
             this.map_state.markers.forEach((marker) => {
                 ids.add(marker.id);
             });
-            
+
             const deleted_ids = [];
             this.markers.forEach((_marker, id, _map) => {
                 if (!ids.has(id)) {

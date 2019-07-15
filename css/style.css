@@ -48,7 +48,7 @@ body {
 .sidebar-control {
     margin-right: 0px;
     margin-top: 10px;
-    
+
     background-color: rgba(0,0,0,0.6);
     text-align: center;
 }
@@ -73,7 +73,7 @@ body {
 
 .sidebar-container.active {
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;
     flex-grow: 1;
     /* for Firefox */
     min-height: 0;
@@ -104,7 +104,7 @@ body {
 .sidebar-container > .scrollable-content {
     flex-grow: 1;
     overflow: auto;
-    
+
     /* for Firefox */
     min-height: 0;
 }
@@ -113,7 +113,7 @@ body {
     list-style: none;
     padding: 0;
     display: block;
-} 
+}
 
 .marker {
     align-items: stretch;

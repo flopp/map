@@ -75,11 +75,11 @@ export class LeafletWrapper extends MapWrapper {
             this.map.addLayer(layer);
         }
     }
-    
+
     set_map_view(center, zoom) {
         this.map.setView(center.to_leaflet(), zoom, {'animate': false});
     }
-    
+
     invalidate_size() {
         this.map.invalidateSize();
     }
@@ -88,15 +88,15 @@ export class LeafletWrapper extends MapWrapper {
         const self = this;
 
         const m = L.marker(marker.coordinates.to_leaflet(), {
-            draggable: true, 
-            autoPan: true, 
+            draggable: true,
+            autoPan: true,
             icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color)
         }).addTo(this.map);
 
         m.last_name = marker.name;
         m.last_color = marker.color;
         m.circle = null;
-        
+
         m.on('drag', () => {
             self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);
             if (m.circle) {
