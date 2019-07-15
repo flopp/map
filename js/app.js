@@ -86,7 +86,7 @@ export class App {
             const timeoutId = setTimeout(function () {
                 // Set the on load callback to a no-op
                 window[callbackName] = () => {};
-                reject(new Error('Could not load the Google Maps API'))
+                reject(new Error('Could not load the Google Maps API'));
             }, 10000);
 
             window[callbackName] = () => {
@@ -94,7 +94,7 @@ export class App {
                     clearTimeout(timeoutId);
                 }
                 resolve();
-                window.deleteProperty(callbackName);
+                Reflect.deleteProperty(window, callbackName);
             };
 
             /* global GOOGLE_API_KEY */

@@ -79,7 +79,7 @@ export class MapWrapper extends MapStateObserver {
 
             deleted_ids.forEach((id) => {
                 self.delete_marker_object(self.markers.get(id));
-                self.markers.delete(id)
+                self.markers.delete(id);
             });
         }
     }

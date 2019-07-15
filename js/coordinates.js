@@ -31,7 +31,7 @@ export class Coordinates {
     }
 
     static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {
-        let c1, c2, lat, lng;
+        let lat, lng;
 
         if ((h1 !== '+') && (d1 < 0)) {
             return null;
@@ -54,8 +54,8 @@ export class Coordinates {
             return null;
         }
 
-        c1 = d1 + (m1 / 60.0) + (s1 / 3600.0);
-        c2 = d2 + (m2 / 60.0) + (s2 / 3600.0);
+        const c1 = d1 + (m1 / 60.0) + (s1 / 3600.0);
+        const c2 = d2 + (m2 / 60.0) + (s2 / 3600.0);
 
         if (h1 === '+' && h2 === '+') {
             lat = c1;
@@ -115,7 +115,7 @@ export class Coordinates {
         function mm(match, index) {
             if (typeof index === 'number') {
                 if (index > 0) {
-                    let mi = match[index];
+                    const mi = match[index];
                     if (mi === '+' || mi === 'N' || mi === 'E' || mi === 'W' || mi === 'S') {
                         return mi;
                     }
@@ -125,7 +125,7 @@ export class Coordinates {
             return index;
         }
 
-        for (let i = 0; i < patterns.length; i = i + 1) {
+        for (let i = 0; i < patterns.length; i += 1) {
             const p = patterns[i];
             const m = s.match(p[0]);
             if (m) {
@@ -151,12 +151,12 @@ export class Coordinates {
 
     to_google() {
         /* global google */
-        return new google.maps.LatLng(this.lat, this.lng)
+        return new google.maps.LatLng(this.lat, this.lng);
     }
 
     to_leaflet() {
         /* global L */
-        return L.latLng(this.lat, this.lng)
+        return L.latLng(this.lat, this.lng);
     }
 
     to_string() {
@@ -173,16 +173,14 @@ export class Coordinates {
 
     to_string_DM() {
         let lat = Math.abs(this.lat),
-            lat_deg,
             lat_min,
             lat_mmin,
             lng = Math.abs(this.lng),
-            lng_deg,
             lng_min,
             lng_mmin;
 
-        lat_deg = Math.floor(lat);
-        lat = lat - lat_deg;
+        const lat_deg = Math.floor(lat);
+        lat -= lat_deg;
         lat_min = Math.floor(lat * 60);
         lat = lat * 60 - lat_min;
         lat_mmin = Math.floor(Math.round(lat * 1000));
@@ -191,8 +189,8 @@ export class Coordinates {
             lat_min += 1;
         }
 
-        lng_deg = Math.floor(lng);
-        lng = lng - lng_deg;
+        const lng_deg = Math.floor(lng);
+        lng -= lng_deg;
         lng_min = Math.floor(lng * 60);
         lng = lng * 60 - lng_min;
         lng_mmin = Math.floor(Math.round(lng * 1000));
@@ -221,25 +219,19 @@ export class Coordinates {
 
     to_string_DMS() {
         let lat = Math.abs(this.lat),
-            lat_deg,
-            lat_min,
-            lat_sec,
-            lng = Math.abs(this.lng),
-            lng_deg,
-            lng_min,
-            lng_sec;
+            lng = Math.abs(this.lng);
 
-        lat_deg = Math.floor(lat);
-        lat = lat - lat_deg;
-        lat_min = Math.floor(lat * 60);
+        const lat_deg = Math.floor(lat);
+        lat -= lat_deg;
+        const lat_min = Math.floor(lat * 60);
         lat = lat * 60 - lat_min;
-        lat_sec = lat * 60.0;
+        const lat_sec = lat * 60.0;
 
-        lng_deg = Math.floor(lng);
-        lng = lng - lng_deg;
-        lng_min = Math.floor(lng * 60);
+        const lng_deg = Math.floor(lng);
+        lng -= lng_deg;
+        const lng_min = Math.floor(lng * 60);
         lng = lng * 60 - lng_min;
-        lng_sec = lng * 60.0;
+        const lng_sec = lng * 60.0;
 
         return Coordinates.NS(this.lat) +
                 " " +
@@ -298,7 +290,7 @@ export class Coordinates {
             commas = 0,
             periods = 0;
 
-        for (let i = 0; i < s.length; i = i + 1) {
+        for (let i = 0; i < s.length; i += 1) {
             if ((s[i] === 'o') || (s[i] === 'O')) {
                 // map 'O'/'o' to 'E' (German 'Ost' = 'East')
                 sanitized += 'E';

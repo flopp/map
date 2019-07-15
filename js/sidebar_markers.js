@@ -46,11 +46,11 @@ export class SidebarMarkers extends MapStateObserver {
 
             var deleted_ids = [];
             markers.each((i, m) => {
-                var id = parseInt(m.id.substring(7));
+                var id = parseInt(m.id.substring(7), 10);
                 if (!ids.has(id)) {
                     deleted_ids.push(id);
                 }
-            })
+            });
 
             deleted_ids.forEach((id) => {
                 $(`#marker-${id}`).remove();
@@ -153,7 +153,7 @@ export class SidebarMarkers extends MapStateObserver {
         </button>`);
         dropdown_trigger.append(dropdown_button);
 
-        const dropdown_menu =$(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
+        const dropdown_menu = $(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
         dropdown.append(dropdown_menu);
         const dropdown_menu_content = $('<div class="dropdown-content">');
         dropdown_menu.append(dropdown_menu_content);

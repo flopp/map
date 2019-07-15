@@ -102,7 +102,7 @@ module.exports = {
             "error",
             "beside"
         ],
-        "indent": "off",
+        "indent": "error",
         "indent-legacy": "off",
         "init-declarations": "off",
         "jsx-quotes": "error",
@@ -216,7 +216,7 @@ module.exports = {
         "no-trailing-spaces": "error",
         "no-undef-init": "error",
         "no-undefined": "error",
-        "no-underscore-dangle": "off",
+        "no-underscore-dangle": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": "error",
         "no-unused-expressions": "error",
@@ -249,7 +249,7 @@ module.exports = {
             "error",
             "initializations"
         ],
-        "operator-assignment": "off",
+        "operator-assignment": "error",
         "operator-linebreak": [
             "error",
             null
@@ -257,7 +257,7 @@ module.exports = {
         "padded-blocks": "off",
         "padding-line-between-statements": "error",
         "prefer-arrow-callback": "off",
-        "prefer-const": "off",
+        "prefer-const": "error",
         "prefer-destructuring": "off",
         "prefer-named-capture-group": "off",
         "prefer-numeric-literals": "error",
@@ -269,12 +269,12 @@ module.exports = {
         "prefer-template": "off",
         "quote-props": "off",
         "quotes": "off",
-        "radix": "off",
+        "radix": "error",
         "require-await": "error",
         "require-jsdoc": "off",
         "require-unicode-regexp": "off",
         "rest-spread-spacing": "error",
-        "semi": "off",
+        "semi": "error",
         "semi-spacing": [
             "error",
             {
@@ -294,7 +294,7 @@ module.exports = {
             "error",
             "never"
         ],
-        "space-infix-ops": "off",
+        "space-infix-ops": "error",
         "space-unary-ops": "error",
         "spaced-comment": [
             "error",

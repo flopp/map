@@ -1,6 +1,6 @@
 import {Coordinates} from "./coordinates.js";
 import {MapType} from "./maptype.js";
-import {MapWrapper} from "./map_wrapper.js"
+import {MapWrapper} from "./map_wrapper.js";
 
 /* global google */
 

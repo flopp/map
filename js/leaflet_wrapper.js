@@ -71,7 +71,7 @@ export class LeafletWrapper extends MapWrapper {
                 if (otherLayer != layer) {
                     self.map.removeLayer(otherLayer);
                 }
-            })
+            });
             this.map.addLayer(layer);
         }
     }
