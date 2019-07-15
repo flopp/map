@@ -1,4 +1,7 @@
-class SidebarMarkers extends MapStateObserver {
+import {Coordinates} from "./coordinates.js";
+import {MapStateObserver} from "./mapstate.js";
+
+export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
         super(app.map_state);
 

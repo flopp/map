@@ -1,6 +1,6 @@
 var _next_marker_id = 0;
 
-class Marker {
+export class Marker {
     constructor(coordinates) {
         this.id = _next_marker_id;
         this.coordinates = coordinates;

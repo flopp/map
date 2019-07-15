@@ -12,11 +12,11 @@ if (Object.freeze) {
     Object.freeze(MapType);
 }
 
-maptype2string = (type) => {
+const maptype2string = (type) => {
     return type;
 };
 
-string2maptype = (s) => {
+const string2maptype = (s) => {
     switch (s.toUpperCase()) {
         case MapType.OPENSTREETMAP:    return MapType.OPENSTREETMAP;
         case MapType.OPENTOPOMAP:      return MapType.OPENTOPOMAP;
@@ -28,3 +28,5 @@ string2maptype = (s) => {
     }
     return null;
 };
+
+export {MapType, maptype2string, string2maptype};

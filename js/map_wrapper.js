@@ -1,4 +1,6 @@
-class MapWrapper extends MapStateObserver {
+import {MapStateObserver} from "./mapstate.js";
+
+export class MapWrapper extends MapStateObserver {
     constructor(div_id, app) {
         super(app.map_state);
 
@@ -10,30 +12,30 @@ class MapWrapper extends MapStateObserver {
         this.create_map_object(div_id);
     }
 
-    create_map_object (div_id) {
-        throw new Error('not implemented: create_map_object');
+    create_map_object (_div_id) {
+        throw new Error('not implemented');
     }
 
-    set_map_type(map_type) {
-        throw new Error('not implemented: set_map_type');
+    set_map_type(_map_type) {
+        throw new Error('not implemented');
     }
     
-    set_map_view(center, zoom) {
-        throw new Error('not implemented: set_map_zoom');
+    set_map_view(_center, _zoom) {
+        throw new Error('not implemented');
     }
 
     invalidate_size() {}
 
-    create_marker_object(marker) {
-        throw new Error('not implemented: create_marker_object');
+    create_marker_object(_marker) {
+        throw new Error('not implemented');
     }
 
-    update_marker_object(obj, marker) {
-        throw new Error('not implemented: update_marker_object');
+    update_marker_object(_obj, _marker) {
+        throw new Error('not implemented');
     }
 
-    delete_marker_object(obj) {
-        throw new Error('not implemented: delete_marker_object');
+    delete_marker_object(_obj) {
+        throw new Error('not implemented');
     }
 
     activate() {
@@ -69,7 +71,7 @@ class MapWrapper extends MapStateObserver {
             });
             
             const deleted_ids = [];
-            this.markers.forEach((marker, id, map) => {
+            this.markers.forEach((_marker, id, _map) => {
                 if (!ids.has(id)) {
                     deleted_ids.push(id);
                 }

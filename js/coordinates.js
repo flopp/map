@@ -1,4 +1,4 @@
-const CoordinatesFormat = {
+export const CoordinatesFormat = {
     D: 0,
     DM: 1,        
     DMS: 2,
@@ -6,7 +6,7 @@ const CoordinatesFormat = {
 
 let coordinates_format = CoordinatesFormat.DM;
 
-class Coordinates {
+export class Coordinates {
     constructor(lat, lng) {
         this.lat = lat;
         this.lng = lng;
@@ -134,16 +134,18 @@ class Coordinates {
                     return c;
                 }
             }
-        };
+        }
 
         return null;
     }
 
     to_google() {
+        /* global google */
         return new google.maps.LatLng(this.lat, this.lng)
     }
 
     to_leaflet() {
+        /* global L */
         return L.latLng(this.lat, this.lng)
     }
 
@@ -290,7 +292,7 @@ class Coordinates {
             if ((s[i] === 'o') || (s[i] === 'O')) {
                 // map 'O'/'o' to 'E' (German 'Ost' = 'East')
                 sanitized += 'E';
-            } else if (s[i].match(/[a-z0-9\-]/i)) {
+            } else if (s[i].match(/[a-z0-9-]/i)) {
                 sanitized += s[i].toUpperCase();
             } else if (s[i] === '.') {
                 periods += 1;

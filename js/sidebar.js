@@ -1,4 +1,9 @@
-class Sidebar extends MapStateObserver {
+import {MapStateObserver} from "./mapstate.js";
+import {SidebarLayers} from "./sidebar_layers.js";
+import {SidebarLocation} from "./sidebar_location.js";
+import {SidebarMarkers} from "./sidebar_markers.js";
+
+export class Sidebar extends MapStateObserver {
     constructor(sidebar_selector, sidebar_controls_selector, app) {
         super(app.map_state);
 

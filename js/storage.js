@@ -1,4 +1,6 @@
-class Storage {
+import {Coordinates} from "./coordinates.js";
+
+export class Storage {
     constructor() {
         this.ok = true;
         try {

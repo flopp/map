@@ -1,4 +1,8 @@
-class SidebarLayers extends MapStateObserver {
+import {MapStateObserver} from "./mapstate.js";
+import {MapType} from "./maptype.js";
+
+
+export class SidebarLayers extends MapStateObserver {
     constructor(app) {
         super(app.map_state);
 

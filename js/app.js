@@ -1,4 +1,12 @@
-class App {
+import {Coordinates} from "./coordinates.js";
+import {GoogleWrapper} from "./google_wrapper.js";
+import {IconFactory} from "./icon_factory.js";
+import {LeafletWrapper} from "./leaflet_wrapper.js";
+import {MapState} from "./mapstate.js";
+import {MapType} from "./maptype.js";
+import {Sidebar} from "./sidebar.js";
+
+export class App {
     constructor(id_leaflet, id_google) {
         this.map_state = new MapState();
         
@@ -55,6 +63,7 @@ class App {
     }
 
     switch_to_google() {
+        const self = this;
         if (this.google_loading) {
             return;
         }
@@ -70,9 +79,34 @@ class App {
 
         console.log("ON DEMAND LOADING OF THE GOOGLE MAPS API");
         this.google_loading = true;
-    
-        var url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=initialize_google_map`;
-        $.getScript(url);
+
+        const promise = new Promise((resolve, reject) => {
+            const callbackName = '__googleMapsApiOnLoadCallback';
+            // Reject the promise after a timeout
+            const timeoutId = setTimeout(function () {
+                // Set the on load callback to a no-op
+                window[callbackName] = () => {};
+                reject(new Error('Could not load the Google Maps API'))
+            }, 10000);
+
+            window[callbackName] = () => {
+                if (timeoutId !== null) {
+                    clearTimeout(timeoutId);
+                }
+                resolve();
+                window.deleteProperty(callbackName);
+            };
+
+            /* global GOOGLE_API_KEY */
+            const url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=${callbackName}`;
+            $.getScript(url);
+        });
+
+        promise.then(() => {
+            self.initialize_google_map();
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     show_leaflet_div() {
@@ -105,7 +139,7 @@ class App {
             );
         } else {
             alert("Geolocation is not supported by this browser.");
-        };
+        }
     }
 
     search_location(location_string) {
@@ -136,3 +170,4 @@ class App {
             });
     }
 }
+

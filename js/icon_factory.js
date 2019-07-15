@@ -1,10 +1,11 @@
-class IconFactory {
+export class IconFactory {
     constructor() {
         this.font = "16px sans";
         this.canvas = null;
     }
 
     leaflet_icon(text, hex_color) {
+        /* global L */
         const icon = this.create_map_icon(text, hex_color);
         return L.icon({
             iconUrl: icon.url,
@@ -14,6 +15,7 @@ class IconFactory {
     }
 
     google_icon(text, hex_color) {
+        /* global google */
         const icon = this.create_map_icon(text, hex_color);
         return {
             url: icon.url,
@@ -79,5 +81,5 @@ class IconFactory {
                 b = (rgb >> 0) & 0xff,     // extract blue
                 luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
         return luma;
-    };
+    }
 }

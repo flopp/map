@@ -1,4 +1,10 @@
-class GoogleWrapper extends MapWrapper {
+import {Coordinates} from "./coordinates.js";
+import {MapType} from "./maptype.js";
+import {MapWrapper} from "./map_wrapper.js"
+
+/* global google */
+
+export class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
     }

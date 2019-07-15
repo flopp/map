@@ -1,0 +1,27 @@
+{
+    "name": "dualmap",
+    "version": "1.0.0",
+    "description": "",
+    "main": "js/main.js",
+    "scripts": {
+        "webpack": "webpack js/main.js -o ./bundle.js",
+        "start": "http-server",
+        "lint": "eslint js/*.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/flopp/dualmap.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/flopp/dualmap/issues"
+    },
+    "homepage": "https://github.com/flopp/dualmap#readme",
+    "devDependencies": {
+        "eslint": "^6.0.1",
+        "http-server": "^0.11.1",
+        "webpack": "^4.35.3",
+        "webpack-cli": "^3.3.6"
+    }
+}

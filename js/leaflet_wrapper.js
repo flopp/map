@@ -1,4 +1,10 @@
-class LeafletWrapper extends MapWrapper {
+import {Coordinates} from "./coordinates.js";
+import {MapType} from "./maptype.js";
+import {MapWrapper} from "./map_wrapper.js";
+
+/* global L */
+
+export class LeafletWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
     }
@@ -91,7 +97,7 @@ class LeafletWrapper extends MapWrapper {
         m.last_color = marker.color;
         m.circle = null;
         
-        m.on('drag', (event) => {
+        m.on('drag', () => {
             self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);
             if (m.circle) {
                 m.circle.setLatLng(m.getLatLng());

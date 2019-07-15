@@ -1,4 +1,9 @@
-class MapState {
+import {Coordinates} from "./coordinates.js";
+import {Marker} from "./marker.js";
+import {Storage} from "./storage.js";
+import {MapType, maptype2string, string2maptype} from "./maptype.js";
+
+export class MapState {
     constructor() {
         this.sidebar_open = null;
 
@@ -111,7 +116,7 @@ class MapState {
     }
 
     delete_marker(id) {
-        this.markers = this.markers.filter((marker, index, arr) => {
+        this.markers = this.markers.filter((marker, _index, _arr) => {
             return marker.id != id;
         });
         this.markers_hash.delete(id);
@@ -143,7 +148,7 @@ class MapState {
         this.update_observers(sender);
     }
     set_marker_radius(id, radius, sender) {
-        this.markers_hash.get(id).color = color;
+        this.markers_hash.get(id).radius = radius;
         this.storage.set(`marker;${id};radius`, radius);
         this.update_observers(sender);
     }
@@ -153,7 +158,7 @@ class MapState {
     }
 }
 
-class MapStateObserver {
+export class MapStateObserver {
     constructor(map_state) {
         this.map_state = map_state;
         map_state.register_observer(this);

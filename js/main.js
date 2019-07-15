@@ -1,9 +1,6 @@
-var app = null;
+import {App} from "./app.js";
 
 $(document).ready(() => {
-    app = new App('map-container-leaflet', 'map-container-google');
+    window.app = new App('map-container-leaflet', 'map-container-google');
 });
 
-function initialize_google_map() {
-    app.initialize_google_map();
-}
