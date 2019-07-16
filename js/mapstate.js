@@ -156,6 +156,21 @@ export class MapState {
     get_marker_ids_string() {
         return this.markers.map(m => m.id).join(";");
     }
+
+    to_json() {
+        const data = {
+            "maptype": this.map_type,
+            "center": this.center.to_string_D(),
+            "zoom": this.zoom,
+            "markers": []
+        };
+
+        this.markers.forEach((m) => {
+            data.markers.push(m.to_json());
+        });
+
+        return data;
+    }
 }
 
 export class MapStateObserver {

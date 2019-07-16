@@ -14,4 +14,13 @@ export class Marker {
     static reset_ids() {
         next_marker_id = 0;
     }
+
+    to_json() {
+        return {
+            "coordinates": this.coordinates.to_string_D(),
+            "name": this.name,
+            "color": this.color,
+            "radius": this.radius
+        };
+    }
 }

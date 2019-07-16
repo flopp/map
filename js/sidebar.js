@@ -2,6 +2,7 @@ import {MapStateObserver} from "./mapstate.js";
 import {SidebarLayers} from "./sidebar_layers.js";
 import {SidebarLocation} from "./sidebar_location.js";
 import {SidebarMarkers} from "./sidebar_markers.js";
+import {SidebarTools} from "./sidebar_tools.js";
 
 export class Sidebar extends MapStateObserver {
     constructor(sidebar_selector, sidebar_controls_selector, app) {
@@ -31,6 +32,7 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_location = new SidebarLocation(app);
         this.sidebar_layers = new SidebarLayers(app);
         this.sidebar_markers = new SidebarMarkers(app);
+        this.sidebar_tools = new SidebarTools(app);
     }
 
     toggle (toggle_control_id) {
