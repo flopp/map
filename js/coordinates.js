@@ -86,8 +86,9 @@ export class Coordinates {
     }
 
     static from_string(str) {
-        const s = Coordinates.sanitize_string(str),
-              patterns = [
+        const
+            s = Coordinates.sanitize_string(str),
+            patterns = [
                 // DM / H D M
                 [/^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/, 1, 2, 3, 0, 4, 5, 6, 0],
                 // DM / D H M
@@ -251,8 +252,9 @@ export class Coordinates {
     }
 
     to_string_D() {
-        const lat = Math.abs(this.lat),
-              lng = Math.abs(this.lng);
+        const
+            lat = Math.abs(this.lat),
+            lng = Math.abs(this.lng);
 
         return Coordinates.NS(this.lat) +
                 " " +

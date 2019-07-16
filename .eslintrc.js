@@ -102,7 +102,14 @@ module.exports = {
             "error",
             "beside"
         ],
-        "indent": "error",
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1, // indent case statements
+                "VariableDeclarator": 1
+            }
+        ],
         "indent-legacy": "off",
         "init-declarations": "off",
         "jsx-quotes": "error",
