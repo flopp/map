@@ -4,7 +4,7 @@
     "description": "",
     "main": "js/main.js",
     "scripts": {
-        "webpack": "webpack js/main.js -o ./bundle.js",
+        "webpack": "webpack js/main.js --mode development -o ./bundle.js",
         "start": "http-server",
         "lint": "eslint js/*.js"
     },
@@ -12,8 +12,8 @@
         "type": "git",
         "url": "git+https://github.com/flopp/dualmap.git"
     },
-    "author": "",
-    "license": "ISC",
+    "author": "Florian Pigorsch <mail@florian-pigorsch.de>",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/flopp/dualmap/issues"
     },

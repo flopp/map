@@ -6,7 +6,7 @@ export class Marker {
         this.coordinates = coordinates;
         this.name = `Marker ${this.id}`;
         this.color = (Math.random().toString(16) + '000000').slice(2, 8);
-        this.radius = Math.random() * 1000;
+        this.radius = 0;
 
         next_marker_id += 1;
     }
@@ -17,6 +17,7 @@ export class Marker {
 
     to_json() {
         return {
+            "id": this.id,
             "coordinates": this.coordinates.to_string_D(),
             "name": this.name,
             "color": this.color,

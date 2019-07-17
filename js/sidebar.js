@@ -1,5 +1,6 @@
 import {MapStateObserver} from "./mapstate.js";
 import {SidebarLayers} from "./sidebar_layers.js";
+import {SidebarLines} from "./sidebar_lines.js";
 import {SidebarLocation} from "./sidebar_location.js";
 import {SidebarMarkers} from "./sidebar_markers.js";
 import {SidebarTools} from "./sidebar_tools.js";
@@ -32,6 +33,7 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_location = new SidebarLocation(app);
         this.sidebar_layers = new SidebarLayers(app);
         this.sidebar_markers = new SidebarMarkers(app);
+        this.sidebar_lines = new SidebarLines(app);
         this.sidebar_tools = new SidebarTools(app);
     }
 
