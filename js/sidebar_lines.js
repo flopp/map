@@ -15,5 +15,155 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_state() {
+        const self = this;
+
+        /* update and add lines */
+        this.map_state.lines.forEach((line) => {
+            if ($(`#line-${line.id}`).length > 0) {
+                $(`#line-${line.id} .line-color`).css("background-color", `#${line.color}`);
+                $(`#line-${line.id} .line-marker1`).text(line.marker1);
+                $(`#line-${line.id} .line-marker2`).text(line.marker2);
+                $(`#line-${line.id} .line-distance`).text("n/a");
+                $(`#line-${line.id} .line-bearing`).text("n/a");
+            } else {
+                $("#lines").append(self.create_div(line));
+                $("#lines").append(self.create_edit_div(line));
+            }
+            self.update_edit_values(line);
+        });
+
+        /* remove spurious lines */
+        var lines = $("#lines > .line");
+        if (lines.length > this.map_state.lines.length) {
+            var ids = new Set();
+            this.map_state.lines.forEach((line) => {
+                ids.add(line.id);
+            });
+
+            var deleted_ids = [];
+            lines.each((i, m) => {
+                var id = parseInt(m.id.substring(5), 10);
+                if (!ids.has(id)) {
+                    deleted_ids.push(id);
+                }
+            });
+
+            deleted_ids.forEach((id) => {
+                $(`#line-${id}`).remove();
+                $(`#line-edit-${id}`).remove();
+            });
+        }
+    }
+
+    create_div(line) {
+        const self = this;
+        const m = $(`<div id="line-${line.id}" class="line">`);
+
+        const left   = $('<div class="line-left"></div>');
+        left.append($(`<div class="line-color" style="background-color: #${line.color}"></div>`));
+        m.append(left);
+
+        const center = $('<div class="line-center"></div>');
+        center.append($(`<div class="line-marker1">${line.marker1}</div>`));
+        center.append($(`<div class="line-marker2">${line.marker2}</div>`));
+        center.append($(`<div class="line-distance">n/a</div>`));
+        center.append($(`<div class="line-bearing">n/a</div>`));
+        m.append(center);
+
+        const right  = $('<div class="line-right"></div>');
+        right.append(this.create_line_dropdown(line));
+        m.append(right);
+
+        m.click(() => {
+            // const coordinates = ...
+            // self.map_state.set_center(coordinates, null);
+        });
+
+        return m;
+    }
+
+    create_edit_div(line) {
+        const self = this;
+        const m = $(`<div id="line-edit-${line.id}" class="edit">`);
+
+        const line1 = $(`<div class="field">
+            <label class="label">From</label>
+            <div class="control">
+                <input class="input line-edit-line1" type="text" placeholder="From">
+            </div>
+        </div>`);
+
+        const line2 = $(`<div class="field">
+            <label class="label">To</label>
+            <div class="control">
+                <input class="input line-edit-line2" type="text" placeholder="To">
+            </div>
+        </div>`);
+
+        const color = $(`<div class="field">
+            <label class="label">Color</label>
+            <div class="control">
+                <input class="input line-edit-color" type="text" placeholder="Color">
+            </div>
+        </div>`);
+
+        const submit_button = $('<button class="button">Submit</button>').click(() => {
+            self.submit_edit(line.id);
+        });
+        const cancel_button = $('<button class="button">Cancel</button>').click(() => {
+            $(`#line-edit-${line.id}`).removeClass("show-edit");
+        });
+        const buttons = $('<div class="field is-grouped">')
+            .append($('<div class="control">').append(submit_button))
+            .append($('<div class="control">').append(cancel_button));
+
+        m.append(line1).append(line2).append(color).append(buttons);
+
+        return m;
+    }
+
+    create_line_dropdown(line) {
+        const self = this;
+
+        const menu_id = `dropdown-line-${line.id}`;
+        const dropdown = $('<div class="dropdown is-right">');
+        dropdown.click((event) => {
+            event.stopPropagation();
+            $(`#line-${line.id} .dropdown`).toggleClass('is-active');
+        });
+
+        const dropdown_trigger = $('<div class="dropdown-trigger">');
+        dropdown.append(dropdown_trigger);
+        const dropdown_button = $(`<button class="button is-white" aria-haspopup="true" aria-controls="${menu_id}">
+            <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>
+        </button>`);
+        dropdown_trigger.append(dropdown_button);
+
+        const dropdown_menu = $(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
+        dropdown.append(dropdown_menu);
+        const dropdown_menu_content = $('<div class="dropdown-content">');
+        dropdown_menu.append(dropdown_menu_content);
+
+        const menu_edit = $('<a href="#" class="line-edit dropdown-item">Edit</a>');
+        menu_edit.click(() => {
+            self.update_edit_values(line);
+            $(`#line-edit-${line.id}`).addClass("show-edit");
+
+        });
+        dropdown_menu_content.append(menu_edit);
+
+        const menu_delete = $('<a href="#" class="line-delete dropdown-item">Delete</a>');
+        menu_delete.click(() => {
+            self.map_state.delete_line(line.id, null);
+        });
+        dropdown_menu_content.append(menu_delete);
+
+        return dropdown;
+    }
+
+    update_edit_values(line) {
+        $(`#line-edit-${line.id} .line-edit-marker1`).val(line.marker1);
+        $(`#line-edit-${line.id} .line-edit-marker2`).val(line.marker2);
+        $(`#line-edit-${line.id} .line-edit-color`).val(line.color);
     }
 }

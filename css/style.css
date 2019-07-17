@@ -148,6 +148,42 @@ body {
     flex-shrink: 0;
 }
 
+#lines {
+    list-style: none;
+    padding: 0;
+    display: block;
+}
+
+.line {
+    align-items: stretch;
+    display: flex;
+    text-align: left;
+    border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
+}
+.line > .line-left {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+.line > .line-left > .line-color{
+    width: 16px;
+    height: 100%;
+    margin-left: 1px;
+    margin-right: 4px;
+}
+.line > .line-center {
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: left;
+}
+.line > .line-right {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
 .edit {
     display: none;
     padding: 8px;
