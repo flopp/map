@@ -21,6 +21,21 @@ export class MapState {
         this.restore();
     }
 
+    store() {
+        const self = this;
+        this.storage.set("sidebar_open", this.sidebar_open);
+        this.storage.set_coordinates("center", this.center);
+        this.storage.set_int("zoom", this.zoom);
+        this.storage.set("map_type", maptype2string(this.map_type));
+        this.storage.set("markers", this.get_marker_ids_string());
+        this.markers.forEach((marker) => {
+            self.storage.set(`marker;${marker.id};name`, marker.name);
+            self.storage.set(`marker;${marker.id};color`, marker.color);
+            self.storage.set(`marker;${marker.id};radius`, marker.radius);
+            self.storage.set_coordinates(`marker;${marker.id};coordinates`, marker.coordinates);
+        });
+    }
+
     restore() {
         // sidebar
         this.set_sidebar_open(
@@ -170,6 +185,73 @@ export class MapState {
         });
 
         return data;
+    }
+
+    from_json(data) {
+        const self = this;
+
+        if ("maptype" in data) {
+            const map_type = string2maptype(data.maptype);
+            if (map_type) {
+                this.map_type = map_type;
+            }
+        }
+        if ("zoom" in data) {
+            const zoom = parseInt(data.zoom, 10);
+            if (zoom !== null) {
+                this.zoom = zoom;
+            }
+        }
+        if ("center" in data) {
+            const center = Coordinates.from_string(data.center);
+            if (center !== null) {
+                this.center = center;
+            }
+        }
+
+        if (("markers" in data) && Array.isArray(data.markers)) {
+            this.markers = [];
+            this.markers_hash.clear();
+            data.markers.forEach((m) => {
+                let coordinates = null;
+                let name = null;
+                let color = null;
+                let radius = null;
+                if ("coordinates" in m) {
+                    coordinates = Coordinates.from_string(m.coordinates);
+                }
+                if ("name" in m) {
+                    name = String(m.name);
+                }
+                if ("color" in m) {
+                    if (RegExp('^[0-9A-Fa-f]{6}$').test(m.color)) {
+                        color = m.color;
+                    }
+                }
+                if ("radius" in m) {
+                    radius = parseFloat(m.radius);
+                }
+
+                if (coordinates) {
+                    const marker = new Marker(coordinates);
+                    self.markers.push(marker);
+                    self.markers_hash.set(marker.id, marker);
+
+                    if (name) {
+                        marker.name = name;
+                    }
+                    if (color) {
+                        marker.color = color;
+                    }
+                    if (radius !== null) {
+                        marker.radius = radius;
+                    }
+                }
+            });
+        }
+
+        this.store();
+        this.update_observers(null);
     }
 }
 

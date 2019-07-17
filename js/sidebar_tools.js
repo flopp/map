@@ -18,7 +18,6 @@ export class SidebarTools extends MapStateObserver {
         $("#inp-import-json").change((event) => {
             self.import_json(event.target.files[0]);
         });
-        
     }
 
     update_state() {
@@ -36,13 +35,14 @@ export class SidebarTools extends MapStateObserver {
         document.body.removeChild(element);
     }
 
-    import_json(file) {        
+    import_json(file) {
+        const self = this;
         const reader = new FileReader();
         reader.readAsText(file);
         reader.onloadend = () => {
             const data = JSON.parse(reader.result);
-            console.log(data);
-            // TODO: restore map state
+            self.map_state.from_json(data);
+            self.app.switch_map(self.map_state.map_type);
         };
 
         // reset file input
