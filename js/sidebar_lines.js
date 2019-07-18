@@ -22,8 +22,9 @@ export class SidebarLines extends MapStateObserver {
         this.map_state.lines.forEach((line) => {
             if ($(`#line-${line.id}`).length > 0) {
                 $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
-                $(`#line-${line.id} .line-from`).text(line.marker1);
-                $(`#line-${line.id} .line-to`).text(line.marker2);
+                console.log("update line", line.id, "from", line.marker1, self.marker_name(line.marker1));
+                $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
+                $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
                 $(`#line-${line.id} .line-distance`).text("n/a");
                 $(`#line-${line.id} .line-bearing`).text("n/a");
             } else {
@@ -60,18 +61,20 @@ export class SidebarLines extends MapStateObserver {
         // const self = this;
         const m = $(`<div id="line-${line.id}" class="line">`);
 
-        const left   = $('<div class="line-left"></div>');
+        const left = $('<div class="line-left"></div>');
         left.append($(`<div class="line-color" style="background-color: ${line.color.to_hash_string()}"></div>`));
         m.append(left);
-
+        console.log("create line", line.id, "from", line.marker1, this.marker_name(line.marker1));
+        const from_name = this.marker_name(line.marker1);
+        const to_name = this.marker_name(line.marker2);
         const center = $('<div class="line-center"></div>');
-        center.append($(`<div class="line-from">${line.marker1}</div>`));
-        center.append($(`<div class="line-to">${line.marker2}</div>`));
+        center.append($(`<div class="line-from">${from_name}</div>`));
+        center.append($(`<div class="line-to">${to_name}</div>`));
         center.append($(`<div class="line-distance">n/a</div>`));
         center.append($(`<div class="line-bearing">n/a</div>`));
         m.append(center);
 
-        const right  = $('<div class="line-right"></div>');
+        const right = $('<div class="line-right"></div>');
         right.append(this.create_line_dropdown(line));
         m.append(right);
 
@@ -80,6 +83,19 @@ export class SidebarLines extends MapStateObserver {
         });
 
         return m;
+    }
+
+    marker_name(id) {
+        if (id == -1) {
+            return "n/a";
+        }
+
+        const marker = this.map_state.get_marker(id);
+        if (marker) {
+            return marker.name;
+        }
+
+        return `n/a (id=${id})`;
     }
 
     create_edit_div(line) {

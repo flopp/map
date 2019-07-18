@@ -73,7 +73,7 @@ export class MapState {
                 marker.radius = radius;
                 self.markers.push(marker);
                 self.markers_hash.set(marker.id, marker);
-                marker_ids.set(id, marker.id);
+                marker_ids.set(parseInt(id, 10), marker.id);
             }
         });
 

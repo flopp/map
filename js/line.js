@@ -9,6 +9,7 @@ export class Line {
         this.marker2 = marker_id2;
         this.color = Color.random();
 
+        console.log("constructor", this.id, "from", this.marker1);
         next_line_id += 1;
     }
 
