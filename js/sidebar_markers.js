@@ -1,3 +1,4 @@
+import {Color} from './color.js';
 import {Coordinates} from "./coordinates.js";
 import {MapStateObserver} from "./mapstate.js";
 
@@ -21,7 +22,7 @@ export class SidebarMarkers extends MapStateObserver {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($(`#marker-${marker.id}`).length > 0) {
-                $(`#marker-${marker.id} .marker-color`).css("background-color", `#${marker.color}`);
+                $(`#marker-${marker.id} .marker-color`).css("background-color", marker.color.to_hash_string());
                 $(`#marker-${marker.id} .marker-name`).text(marker.name);
                 if (marker.radius <= 0) {
                     $(`#marker-${marker.id} .marker-radius`).text("No circle.");
@@ -30,8 +31,8 @@ export class SidebarMarkers extends MapStateObserver {
                 }
                 $(`#marker-${marker.id} .marker-coordinates`).text(marker.coordinates.to_string());
             } else {
-                $("#markers").append(self.create_marker_div(marker));
-                $("#markers").append(self.create_marker_edit_div(marker));
+                $("#markers").append(self.create_div(marker));
+                $("#markers").append(self.create_edit_div(marker));
             }
             self.update_edit_values(marker);
         });
@@ -59,12 +60,12 @@ export class SidebarMarkers extends MapStateObserver {
         }
     }
 
-    create_marker_div(marker) {
+    create_div(marker) {
         const self = this;
         const m = $(`<div id="marker-${marker.id}" class="marker">`);
 
         const left   = $('<div class="marker-left"></div>');
-        left.append($(`<div class="marker-color" style="background-color: #${marker.color}"></div>`));
+        left.append($(`<div class="marker-color" style="background-color: ${marker.color.to_hash_string()}"></div>`));
         m.append(left);
 
         const center = $('<div class="marker-center"></div>');
@@ -88,7 +89,7 @@ export class SidebarMarkers extends MapStateObserver {
         return m;
     }
 
-    create_marker_edit_div(marker) {
+    create_edit_div(marker) {
         const self = this;
         const m = $(`<div id="marker-edit-${marker.id}" class="edit">`);
 
@@ -122,7 +123,7 @@ export class SidebarMarkers extends MapStateObserver {
         </div>`);
 
         const submit_button = $('<button class="button">Submit</button>').click(() => {
-            self.submit_marker_edit(marker.id);
+            self.submit_edit(marker.id);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
             $(`#marker-edit-${marker.id}`).removeClass("show-edit");
@@ -185,18 +186,18 @@ export class SidebarMarkers extends MapStateObserver {
         $(`#marker-edit-${marker.id} .marker-edit-name`).val(marker.name);
         $(`#marker-edit-${marker.id} .marker-edit-coordinates`).val(marker.coordinates.to_string());
         $(`#marker-edit-${marker.id} .marker-edit-radius`).val(marker.radius);
-        $(`#marker-edit-${marker.id} .marker-edit-color`).val(marker.color);
+        $(`#marker-edit-${marker.id} .marker-edit-color`).val(marker.color.to_string());
     }
 
-    submit_marker_edit(marker_id) {
-        const marker = this.map_state.get_marker(marker_id);
+    submit_edit(object_id) {
+        const marker = this.map_state.get_marker(object_id);
         if (marker) {
             const name = $(`#marker-edit-${marker.id} .marker-edit-name`).val();
             const coordinates = Coordinates.from_string($(`#marker-edit-${marker.id} .marker-edit-coordinates`).val());
             const radius = parseFloat($(`#marker-edit-${marker.id} .marker-edit-radius`).val());
-            const color = $(`#marker-edit-${marker.id} .marker-edit-color`).val();
+            const color = Color.from_string($(`#marker-edit-${marker.id} .marker-edit-color`).val());
 
-            if ((name.length == 0) || (!coordinates) || (radius === null) || (!RegExp('^[0-9A-Fa-f]{6}$').test(color))) {
+            if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
                 alert('bad values.');
                 return;
             }
@@ -205,7 +206,7 @@ export class SidebarMarkers extends MapStateObserver {
             marker.coordinates = coordinates;
             marker.radius = radius;
             marker.color = color;
-
+            this.map_state.update_marker_storage(marker);
             this.map_state.update_observers(null);
         }
         $(`#marker-edit-${marker.id}`).removeClass("show-edit");

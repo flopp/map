@@ -117,7 +117,7 @@ export class LeafletWrapper extends MapWrapper {
             } else {
                 m.circle = L.circle(marker.coordinates.to_leaflet(), {
                     radius: marker.radius,
-                    color: `#${marker.color}`,
+                    color: marker.color.to_hash_string(),
                     weight: 1,
                     interactive: false
                 }).addTo(this.map);
@@ -127,11 +127,11 @@ export class LeafletWrapper extends MapWrapper {
             m.circle = null;
         }
 
-        if ((marker.color !== m.last_color) || (marker.name !== m.last_name)) {
+        if (!marker.color.equals(m.last_color) || (marker.name !== m.last_name)) {
             m.setIcon(this.app.icon_factory.leaflet_icon(marker.name, marker.color));
         }
-        if (m.circle && (marker.color !== m.last_color)) {
-            m.circle.setStyle({color: `#${marker.color}`});
+        if (m.circle && !marker.color.equals(m.last_color)) {
+            m.circle.setStyle({color: marker.color.to_hash_string()});
         }
 
         m.last_color = marker.color;

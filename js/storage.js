@@ -1,3 +1,4 @@
+import {Color} from "./color.js";
 import {Coordinates} from "./coordinates.js";
 
 export class Storage {
@@ -43,6 +44,9 @@ export class Storage {
     set_float(key, value) {
         this.set(key, String(value));
     }
+    set_color(key, value) {
+        this.set(key, value.to_string());
+    }
     set_coordinates(key, value) {
         this.set(key, `${value.lat};${value.lng}`);
     }
@@ -60,6 +64,19 @@ export class Storage {
             return parseFloat(s);
         }
         return default_value;
+    }
+    get_color(key, default_value) {
+        const s = this.get(key, null);
+        if (s === null) {
+            return default_value;
+        }
+
+        const c = Color.from_string(s);
+        if (c === null) {
+            return default_value;
+        }
+
+        return c;
     }
     get_coordinates(key, default_value) {
         const s = this.get(key, null);

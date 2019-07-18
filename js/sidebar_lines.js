@@ -1,3 +1,4 @@
+import {Color} from './color.js';
 import {MapStateObserver} from "./mapstate.js";
 
 export class SidebarLines extends MapStateObserver {
@@ -20,9 +21,9 @@ export class SidebarLines extends MapStateObserver {
         /* update and add lines */
         this.map_state.lines.forEach((line) => {
             if ($(`#line-${line.id}`).length > 0) {
-                $(`#line-${line.id} .line-color`).css("background-color", `#${line.color}`);
-                $(`#line-${line.id} .line-marker1`).text(line.marker1);
-                $(`#line-${line.id} .line-marker2`).text(line.marker2);
+                $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
+                $(`#line-${line.id} .line-from`).text(line.marker1);
+                $(`#line-${line.id} .line-to`).text(line.marker2);
                 $(`#line-${line.id} .line-distance`).text("n/a");
                 $(`#line-${line.id} .line-bearing`).text("n/a");
             } else {
@@ -56,16 +57,16 @@ export class SidebarLines extends MapStateObserver {
     }
 
     create_div(line) {
-        const self = this;
+        // const self = this;
         const m = $(`<div id="line-${line.id}" class="line">`);
 
         const left   = $('<div class="line-left"></div>');
-        left.append($(`<div class="line-color" style="background-color: #${line.color}"></div>`));
+        left.append($(`<div class="line-color" style="background-color: ${line.color.to_hash_string()}"></div>`));
         m.append(left);
 
         const center = $('<div class="line-center"></div>');
-        center.append($(`<div class="line-marker1">${line.marker1}</div>`));
-        center.append($(`<div class="line-marker2">${line.marker2}</div>`));
+        center.append($(`<div class="line-from">${line.marker1}</div>`));
+        center.append($(`<div class="line-to">${line.marker2}</div>`));
         center.append($(`<div class="line-distance">n/a</div>`));
         center.append($(`<div class="line-bearing">n/a</div>`));
         m.append(center);
@@ -75,7 +76,6 @@ export class SidebarLines extends MapStateObserver {
         m.append(right);
 
         m.click(() => {
-            // const coordinates = ...
             // self.map_state.set_center(coordinates, null);
         });
 
@@ -89,14 +89,14 @@ export class SidebarLines extends MapStateObserver {
         const line1 = $(`<div class="field">
             <label class="label">From</label>
             <div class="control">
-                <input class="input line-edit-line1" type="text" placeholder="From">
+                <input class="input line-edit-from" type="text" placeholder="From">
             </div>
         </div>`);
 
         const line2 = $(`<div class="field">
             <label class="label">To</label>
             <div class="control">
-                <input class="input line-edit-line2" type="text" placeholder="To">
+                <input class="input line-edit-to" type="text" placeholder="To">
             </div>
         </div>`);
 
@@ -162,8 +162,29 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_edit_values(line) {
-        $(`#line-edit-${line.id} .line-edit-marker1`).val(line.marker1);
-        $(`#line-edit-${line.id} .line-edit-marker2`).val(line.marker2);
-        $(`#line-edit-${line.id} .line-edit-color`).val(line.color);
+        $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
+        $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
+        $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_string());
+    }
+
+    submit_edit(object_id) {
+        const line = this.map_state.get_line(object_id);
+        if (line) {
+            const marker1 = parseInt($(`#line-edit-${line.id} .line-edit-from`).val(), 10);
+            const marker2 = parseInt($(`#line-edit-${line.id} .line-edit-to`).val(), 10);
+            const color = Color.from_string($(`#line-edit-${line.id} .line-edit-color`).val());
+
+            if (!color) {
+                alert('bad values.');
+                return;
+            }
+
+            line.marker1 = marker1;
+            line.marker2 = marker2;
+            line.color = color;
+            this.map_state.update_line_storage(line);
+            this.map_state.update_observers(null);
+        }
+        $(`#line-edit-${line.id}`).removeClass("show-edit");
     }
 }

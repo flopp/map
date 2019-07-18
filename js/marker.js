@@ -1,3 +1,5 @@
+import {Color} from './color.js';
+
 var next_marker_id = 0;
 
 export class Marker {
@@ -5,7 +7,7 @@ export class Marker {
         this.id = next_marker_id;
         this.coordinates = coordinates;
         this.name = `Marker ${this.id}`;
-        this.color = (Math.random().toString(16) + '000000').slice(2, 8);
+        this.color = Color.random();
         this.radius = 0;
 
         next_marker_id += 1;
@@ -20,7 +22,7 @@ export class Marker {
             "id": this.id,
             "coordinates": this.coordinates.to_string_D(),
             "name": this.name,
-            "color": this.color,
+            "color": this.color.to_string(),
             "radius": this.radius
         };
     }

@@ -4,9 +4,9 @@ export class IconFactory {
         this.canvas = null;
     }
 
-    leaflet_icon(text, hex_color) {
+    leaflet_icon(text, color) {
         /* global L */
-        const icon = this.create_map_icon(text, hex_color);
+        const icon = this.create_map_icon(text, color);
         return L.icon({
             iconUrl: icon.url,
             iconSize: icon.size,
@@ -14,9 +14,9 @@ export class IconFactory {
         });
     }
 
-    google_icon(text, hex_color) {
+    google_icon(text, color) {
         /* global google */
-        const icon = this.create_map_icon(text, hex_color);
+        const icon = this.create_map_icon(text, color);
         return {
             url: icon.url,
             size: new google.maps.Size(icon.size[0], icon.size[1]),
@@ -26,11 +26,11 @@ export class IconFactory {
         };
     }
 
-    create_map_icon(text, hex_color) {
+    create_map_icon(text, color) {
         const
             w = Math.max(33.0, 16.0 + this.compute_text_width(text, this.font)),
             w2 = 0.5 * w,
-            text_color = IconFactory.text_color(hex_color),
+            text_color = color.text_color().to_hash_string(),
             svg = `<svg\n
                        xmlns:svg="http://www.w3.org/2000/svg"\n
                        xmlns="http://www.w3.org/2000/svg"\n
@@ -45,11 +45,11 @@ export class IconFactory {
                        </filter>\n
                      </defs>\n
                        <path\n
-                         fill="#${hex_color}" stroke="#000000"\n
+                         fill="${color.to_hash_string()}" stroke="#000000"\n
                          d="M 4 4 L 4 26 L ${w2 - 4.0} 26 L ${w2} 33 L ${w2 + 4.0} 26 L ${w - 4.0} 26 L ${w - 4.0} 4 L 4 4 z"\n
                          filter="url(#shadow)" />\n
                        <text\n
-                         style="text-anchor:middle;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-weight:normal;font-size:16px;line-height:100%;font-family:sans;letter-spacing:0px;word-spacing:0px;fill:#${text_color};fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"\n
+                         style="text-anchor:middle;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-weight:normal;font-size:16px;line-height:100%;font-family:sans;letter-spacing:0px;word-spacing:0px;fill:${text_color};fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"\n
                          x="${w2}" y="21">${text}</text>\n
                    </svg>`,
             url = `data:image/svg+xml;charset=UTF-8;base64,${window.btoa(svg)}`;
@@ -71,21 +71,5 @@ export class IconFactory {
         context.font = this.font;
 
         return context.measureText(text).width;
-    }
-
-    static compute_luma(hex_color) {
-        const
-            rgb = parseInt(hex_color, 16), // convert rrggbb to decimal
-            r = (rgb >> 16) & 0xff,        // extract red
-            g = (rgb >> 8) & 0xff,         // extract green
-            b = (rgb >> 0) & 0xff;         // extract blue
-        return 0.2126 * r + 0.7152 * g + 0.0722 * b; // luma, per ITU-R BT.709
-    }
-
-    static text_color(background_hex_color) {
-        if (IconFactory.compute_luma(background_hex_color) >= 128) {
-            return "000000";
-        }
-        return "FFFFFF";
     }
 }
