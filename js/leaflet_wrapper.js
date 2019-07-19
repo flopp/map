@@ -98,7 +98,6 @@ export class LeafletWrapper extends MapWrapper {
         m.circle = null;
 
         m.on('drag', () => {
-            //self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), self);
             self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), null);
             if (m.circle) {
                 m.circle.setLatLng(m.getLatLng());
@@ -159,23 +158,18 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     update_line_object(m, line) {
-        const marker1 = this.map_state.get_marker(line.marker1);
-        const marker2 = this.map_state.get_marker(line.marker2);
-        const coordinates1 = marker1 ? marker1.coordinates.to_leaflet() : null;
-        const coordinates2 = marker2 ? marker2.coordinates.to_leaflet() : null;
-
-        let path = [];
-        if (coordinates1 && coordinates2) {
-            path = [coordinates1, coordinates2];
+        if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
+            m.setLatLngs([this.get_marker_object(line.marker1).getLatLng(), this.get_marker_object(line.marker2).getLatLng()]);
+        } else {
+            m.setLatLngs([]);
         }
-        m.setLatLngs(path);
 
         if (!line.color.equals(m.last_color)) {
             m.setStyle({
                 color: line.color.to_hash_string()
             });
+            m.last_color = line.color;
         }
-        m.last_color = line.color;
     }
 
     delete_line_object(m) {

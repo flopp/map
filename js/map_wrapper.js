@@ -39,6 +39,14 @@ export class MapWrapper extends MapStateObserver {
         throw new Error('not implemented');
     }
 
+    has_marker_object(id) {
+        return (id >= 0) && this.markers.has(id);
+    }
+
+    get_marker_object(id) {
+        return this.markers.get(id);
+    }
+
     create_line_object(_line) {
         throw new Error('not implemented');
     }

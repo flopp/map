@@ -77,7 +77,7 @@ export class GoogleWrapper extends MapWrapper {
         m.circle = null;
 
         google.maps.event.addListener(m, "drag", function () {
-            self.map_state.set_marker_coordinates(marker.id, Coordinates.from_google(m.getPosition()), self);
+            self.map_state.set_marker_coordinates(marker.id, Coordinates.from_google(m.getPosition()));
             if (m.circle) {
                 m.circle.setCenter(m.getPosition());
             }
@@ -133,6 +133,41 @@ export class GoogleWrapper extends MapWrapper {
             m.circle.setMap(null);
             m.circle = null;
         }
+        m.setMap(null);
+    }
+
+    create_line_object(line) {
+        var m = new google.maps.Polyline({
+            map: this.map,
+            path: [],
+            geodesic: true,
+            strokeColor: line.color.to_hash_string(),
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+
+        m.last_color = line.color;
+
+        this.lines.set(line.id, m);
+        this.update_line_object(m, line);
+    }
+
+    update_line_object(m, line) {
+        if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
+            m.setPath([this.get_marker_object(line.marker1).getPosition(), this.get_marker_object(line.marker2).getPosition()]);
+        } else {
+            m.setPath([]);
+        }
+
+        if (!line.color.equals(m.last_color)) {
+            m.setOptions({
+                strokeColor: line.color.to_hash_string()
+            });
+            m.last_color = line.color;
+        }
+    }
+
+    delete_line_object(m) {
         m.setMap(null);
     }
 }

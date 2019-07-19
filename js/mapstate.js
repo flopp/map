@@ -182,25 +182,25 @@ export class MapState {
         this.update_observers(null);
     }
 
-    set_marker_coordinates(id, coordinates, sender) {
+    set_marker_coordinates(id, coordinates) {
         this.markers_hash.get(id).coordinates = coordinates;
         this.storage.set_coordinates(`marker;${id};coordinates`, coordinates);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
-    set_marker_name(id, name, sender) {
+    set_marker_name(id, name) {
         this.markers_hash.get(id).name = name;
         this.storage.set(`marker;${id};name`, name);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
-    set_marker_color(id, color, sender) {
+    set_marker_color(id, color) {
         this.markers_hash.get(id).color = color;
         this.storage.set_color(`marker;${id};color`, color);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
-    set_marker_radius(id, radius, sender) {
+    set_marker_radius(id, radius) {
         this.markers_hash.get(id).radius = radius;
         this.storage.set_float(`marker;${id};radius`, radius);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
     update_marker_storage(marker) {
         this.storage.set_coordinates(`marker;${marker.id};coordinates`, marker.coordinates);
@@ -243,20 +243,20 @@ export class MapState {
         this.update_observers(null);
     }
 
-    set_line_marker1(id, marker_id, sender) {
+    set_line_marker1(id, marker_id) {
         this.lines_hash.get(id).marker1 = marker_id;
         this.storage.set_int(`line;${id};marker1`, marker_id);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
-    set_line_marker2(id, marker_id, sender) {
+    set_line_marker2(id, marker_id) {
         this.lines_hash.get(id).marker2 = marker_id;
         this.storage.set_int(`line;${id};marker2`, marker_id);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
-    set_line_color(id, color, sender) {
+    set_line_color(id, color) {
         this.lines_hash.get(id).color = color;
         this.storage.set_color(`line;${id};color`, color);
-        this.update_observers(sender);
+        this.update_observers(null);
     }
     update_line_storage(line) {
         this.storage.set_int(`line;${line.id};marker1`, line.marker1);
