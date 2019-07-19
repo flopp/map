@@ -8,6 +8,7 @@ export class MapWrapper extends MapStateObserver {
         this.div_id = div_id;
         this.app = app;
         this.markers = new Map();
+        this.lines = new Map();
 
         this.create_map_object(div_id);
     }
@@ -35,6 +36,18 @@ export class MapWrapper extends MapStateObserver {
     }
 
     delete_marker_object(_obj) {
+        throw new Error('not implemented');
+    }
+
+    create_line_object(_line) {
+        throw new Error('not implemented');
+    }
+
+    update_line_object(_obj, _line) {
+        throw new Error('not implemented');
+    }
+
+    delete_line_object(_obj) {
         throw new Error('not implemented');
     }
 
@@ -80,6 +93,35 @@ export class MapWrapper extends MapStateObserver {
             deleted_ids.forEach((id) => {
                 self.delete_marker_object(self.markers.get(id));
                 self.markers.delete(id);
+            });
+        }
+
+        /* update and add lines */
+        this.map_state.lines.forEach((line) => {
+            if (self.lines.has(line.id)) {
+                self.update_line_object(self.lines.get(line.id), line);
+            } else {
+                self.create_line_object(line);
+            }
+        });
+
+        /* remove spurious lines */
+        if (this.lines.size > this.map_state.lines.length) {
+            const ids = new Set();
+            this.map_state.lines.forEach((line) => {
+                ids.add(line.id);
+            });
+
+            const deleted_ids = [];
+            this.lines.forEach((_line, id, _map) => {
+                if (!ids.has(id)) {
+                    deleted_ids.push(id);
+                }
+            });
+
+            deleted_ids.forEach((id) => {
+                self.delete_line_object(self.lines.get(id));
+                self.lines.delete(id);
             });
         }
     }

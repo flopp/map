@@ -22,7 +22,6 @@ export class SidebarLines extends MapStateObserver {
         this.map_state.lines.forEach((line) => {
             if ($(`#line-${line.id}`).length > 0) {
                 $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
-                console.log("update line", line.id, "from", line.marker1, self.marker_name(line.marker1));
                 $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
                 $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
                 $(`#line-${line.id} .line-distance`).text("n/a");
