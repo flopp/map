@@ -130,7 +130,7 @@ export class SidebarLines extends MapStateObserver {
         const color = $(`<div class="field">
             <label class="label">Color</label>
             <div class="control">
-                <input class="input line-edit-color" type="text" placeholder="Color">
+                <input class="input line-edit-color" type="color" placeholder="Color">
             </div>
         </div>`);
 
@@ -195,7 +195,7 @@ export class SidebarLines extends MapStateObserver {
         }
         $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
         $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
-        $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_string());
+        $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_hash_string());
     }
 
     submit_edit(object_id) {

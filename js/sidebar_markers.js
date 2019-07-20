@@ -120,7 +120,7 @@ export class SidebarMarkers extends MapStateObserver {
         const color = $(`<div class="field">
             <label class="label">Color</label>
             <div class="control">
-                <input class="input marker-edit-color" type="text" placeholder="Color">
+                <input class="input marker-edit-color" type="color" placeholder="Color">
             </div>
         </div>`);
 
@@ -192,7 +192,7 @@ export class SidebarMarkers extends MapStateObserver {
         $(`#marker-edit-${marker.id} .marker-edit-name`).val(marker.name);
         $(`#marker-edit-${marker.id} .marker-edit-coordinates`).val(marker.coordinates.to_string());
         $(`#marker-edit-${marker.id} .marker-edit-radius`).val(marker.radius);
-        $(`#marker-edit-${marker.id} .marker-edit-color`).val(marker.color.to_string());
+        $(`#marker-edit-${marker.id} .marker-edit-color`).val(marker.color.to_hash_string());
     }
 
     submit_edit(object_id) {
