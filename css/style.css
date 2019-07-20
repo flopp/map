@@ -189,10 +189,6 @@ body {
     padding: 8px;
 }
 
-.edit.show-edit {
-    display: block;
-}
-
 .map-container {
     position: fixed !important;
     top: 0;
