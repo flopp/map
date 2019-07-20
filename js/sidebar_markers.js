@@ -25,17 +25,19 @@ export class SidebarMarkers extends MapStateObserver {
 
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
-            if ($(`#marker-${marker.id}`).length > 0) {
-                const circle = (marker.radius > 0)
-                    ? `Circle: ${marker.radius.toFixed(2)} m`
-                    : "No circle";
-                $(`#marker-${marker.id} .marker-color`).css("background-color", marker.color.to_hash_string());
-                $(`#marker-${marker.id} .marker-name`).text(marker.name);
-                $(`#marker-${marker.id} .marker-radius`).text(circle);
-                $(`#marker-${marker.id} .marker-coordinates`).text(marker.coordinates.to_string());
-            } else {
+            if ($(`#marker-${marker.id}`).length == 0) {
                 $("#markers").append(self.create_div(marker));
             }
+
+            const circle = (marker.radius > 0)
+                ? `Circle: ${marker.radius.toFixed(2)} m`
+                : "No circle";
+
+            $(`#marker-${marker.id} .marker-color`).css("background-color", marker.color.to_hash_string());
+            $(`#marker-${marker.id} .marker-name`).text(marker.name);
+            $(`#marker-${marker.id} .marker-radius`).text(circle);
+            $(`#marker-${marker.id} .marker-coordinates`).text(marker.coordinates.to_string());
+
             self.update_edit_values(marker);
         });
 
@@ -66,18 +68,16 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
         const m = $(`<div id="marker-${marker.id}" class="marker">`);
 
-        const left   = $('<div class="marker-left"></div>');
-        left.append($(`<div class="marker-color" style="background-color: ${marker.color.to_hash_string()}"></div>`));
+        const left = $(`<div class="marker-left">
+            <div class="marker-color"></div>
+        </div>`);
         m.append(left);
 
-        const circle = (marker.radius > 0)
-            ? `Circle: ${marker.radius.toFixed(2)} m`
-            : "No circle";
-
-        const center = $('<div class="marker-center"></div>');
-        center.append($(`<div class="marker-name">${marker.name}</div>`));
-        center.append($(`<div class="marker-coordinates">${marker.coordinates.to_string()}</div>`));
-        center.append($(`<div class="marker-radius">${circle}</div>`));
+        const center = $(`<div class="marker-center">
+            <div class="marker-name"></div>
+            <div class="marker-coordinates"></div>
+            <div class="marker-radius"></div>
+        </div>`);
         m.append(center);
 
         const right  = $('<div class="marker-right"></div>');

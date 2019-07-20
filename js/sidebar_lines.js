@@ -71,8 +71,9 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
         const m = $(`<div id="line-${line.id}" class="line">`);
 
-        const left = $('<div class="line-left"></div>');
-        left.append($(`<div class="line-color"></div>`));
+        const left = $(`<div class="line-left">
+            <div class="line-color"></div>
+        </div>`);
         m.append(left);
 
         const center = $('<div class="line-center"></div>');
@@ -81,7 +82,7 @@ export class SidebarLines extends MapStateObserver {
             <tr><td>To:</td><td class="line-to"></td></tr>
             <tr><td>Length:</td><td class="line-distance"></td></tr>
             <tr><td>Bearing:</td><td class="line-bearing"></td></tr>
-            </table>`));
+        </table>`));
         m.append(center);
 
         const right = $('<div class="line-right"></div>');
