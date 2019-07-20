@@ -159,7 +159,10 @@ export class LeafletWrapper extends MapWrapper {
 
     update_line_object(m, line) {
         if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
-            m.setLatLngs([this.get_marker_object(line.marker1).getLatLng(), this.get_marker_object(line.marker2).getLatLng()]);
+            const path = this.map_state.get_marker(line.marker1).coordinates.interpolate_geodesic_line(this.map_state.get_marker(line.marker2).coordinates, this.map_state.zoom);
+            const leaflet_path = Coordinates.to_leaflet_path(path);
+            // [this.get_marker_object(line.marker1).getLatLng(), this.get_marker_object(line.marker2).getLatLng()]
+            m.setLatLngs(leaflet_path);
         } else {
             m.setLatLngs([]);
         }

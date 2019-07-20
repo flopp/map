@@ -65,7 +65,7 @@ export class SidebarLines extends MapStateObserver {
     }
 
     create_div(line) {
-        // const self = this;
+        const self = this;
         const m = $(`<div id="line-${line.id}" class="line">`);
 
         const left = $('<div class="line-left"></div>');
@@ -74,14 +74,16 @@ export class SidebarLines extends MapStateObserver {
         const from_name = this.marker_name(line.marker1);
         const to_name = this.marker_name(line.marker2);
         const center = $('<div class="line-center"></div>');
-        center.append($(`<div class="line-from">${from_name}</div>`));
-        center.append($(`<div class="line-to">${to_name}</div>`));
+        const table = $('<table></table>');
+        table.append($(`<tr><td>From:</td><td class="line-from">${from_name}</td></tr>`));
+        table.append($(`<tr><td>To:</td><td class="line-to">${to_name}</td></tr>`));
         if (line.length !== null) {
-            center.append($(`<div class="line-distance">${line.length.toFixed(2)} m</div>`));
+            table.append($(`<tr><td>Length:</td><td class="line-distance">${line.length.toFixed(2)} m</td></tr>`));
         } else {
-            center.append($(`<div class="line-distance">n/a</div>`));
+            table.append($(`<tr><td>Length:</td><td class="line-distance">n/a</td></tr>`));
         }
-        center.append($(`<div class="line-bearing">n/a</div>`));
+        table.append($(`<tr><td>Bearing:</td><td class="line-bearing">n/a</td></tr>`));
+        center.append(table);
         m.append(center);
 
         const right = $('<div class="line-right"></div>');
@@ -89,7 +91,7 @@ export class SidebarLines extends MapStateObserver {
         m.append(right);
 
         m.click(() => {
-            // self.map_state.set_center(coordinates, null);
+            self.map_state.show_line(line);
         });
 
         return m;

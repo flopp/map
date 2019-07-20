@@ -163,6 +163,14 @@ export class Coordinates {
         return L.latLng(this.lat, this.lng);
     }
 
+    static to_leaflet_path(path) {
+        const leaflet_path = [];
+        path.forEach((coordinates) => {
+            leaflet_path.push(coordinates.to_leaflet());
+        });
+        return leaflet_path;
+    }
+
     to_string() {
         switch (coordinates_format) {
             case CoordinatesFormat.D:
@@ -280,12 +288,33 @@ export class Coordinates {
         while (r.azi1 < 0) {
             r.azi1 += 360.0;
         }
-        return {dist: r.s12, angle: r.azi1};
+        return {distance: r.s12, bearing: r.azi1};
     }
 
     project(angle, distance) {
-        var r = this.m_geod.Direct(this.lat, this.lng, angle, distance);
+        const geod = GeographicLib.Geodesic.WGS84;
+        const r = geod.Direct(this.lat, this.lng, angle, distance);
         return new Coordinates(r.lat2, r.lon2);
+    }
+
+    interpolate_geodesic_line(other, _zoom) {
+        const maxk = 50;
+        const geod = GeographicLib.Geodesic.WGS84;
+        const t = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
+
+        const k = maxk;
+        const points = new Array(k + 1);
+        points[0] = this;
+        points[k] = other;
+        if (k > 1) {
+            const line = geod.InverseLine(this.lat, this.lng, other.lat, other.lng, GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE);
+            const da12 = t.a12 / k;
+            for (let i = 1; i < k; i += 1) {
+                const point = line.GenPosition(true, i * da12, GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE);
+                points[i] = new Coordinates(point.lat2, point.lon2);
+            }
+        }
+        return points;
     }
 
     static NS(lat) {

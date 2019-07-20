@@ -311,6 +311,25 @@ export class MapState {
         return this.lines.map(line => line.id).join(";");
     }
 
+    show_line(line) {
+        const marker1 = this.get_marker(line.marker1);
+        const marker2 = this.get_marker(line.marker2);
+
+        if (marker1) {
+            if (marker2 && (marker1 !== marker2)) {
+                const distance_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
+                const center = marker1.coordinates.project(distance_bearing.bearing, distance_bearing.distance * 0.5);
+                this.set_center(center);
+            } else {
+                this.set_center(marker1.coordinates);
+            }
+        } else if (marker2) {
+            this.set_center(marker2.coordinates);
+        } else {
+            // nothing
+        }
+    }
+
     to_json() {
         const data = {
             "maptype": this.map_type,
