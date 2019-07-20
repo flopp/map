@@ -135,7 +135,7 @@ export class SidebarLines extends MapStateObserver {
         </div>`);
 
         const submit_button = $('<button class="button">Submit</button>').click(() => {
-            self.submit_edit(line.id);
+            self.submit_edit(line);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
             $(`#line-edit-${line.id}`).remove();
@@ -193,29 +193,28 @@ export class SidebarLines extends MapStateObserver {
         if ($(`#line-edit-${line.id}`).length == 0) {
             return;
         }
+
         $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
         $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
         $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_hash_string());
     }
 
-    submit_edit(object_id) {
-        const line = this.map_state.get_line(object_id);
-        if (line) {
-            const marker1 = parseInt($(`#line-edit-${line.id} .line-edit-from`).val(), 10);
-            const marker2 = parseInt($(`#line-edit-${line.id} .line-edit-to`).val(), 10);
-            const color = Color.from_string($(`#line-edit-${line.id} .line-edit-color`).val());
+    submit_edit(line) {
+        const marker1 = parseInt($(`#line-edit-${line.id} .line-edit-from`).val(), 10);
+        const marker2 = parseInt($(`#line-edit-${line.id} .line-edit-to`).val(), 10);
+        const color = Color.from_string($(`#line-edit-${line.id} .line-edit-color`).val());
 
-            if (!color) {
-                alert('bad values.');
-                return;
-            }
-
-            line.marker1 = marker1;
-            line.marker2 = marker2;
-            line.color = color;
-            this.map_state.update_line_storage(line);
-            this.map_state.update_observers(MapStateChange.LINES);
+        if (!color) {
+            alert('bad values.');
+            return;
         }
+
         $(`#line-edit-${line.id}`).remove();
+
+        line.marker1 = marker1;
+        line.marker2 = marker2;
+        line.color = color;
+        this.map_state.update_line_storage(line);
+        this.map_state.update_observers(MapStateChange.LINES);
     }
 }

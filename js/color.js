@@ -46,6 +46,9 @@ export class Color {
     }
 
     equals(other) {
+        if (other === null) {
+            return false;
+        }
         return this.hex.toLowerCase() == other.hex.toLowerCase();
     }
 }

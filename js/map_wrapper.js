@@ -60,8 +60,8 @@ export class MapWrapper extends MapStateObserver {
     }
 
     activate() {
-        this.update_state(MapStateChange.EVERYTHING);
         this.active = true;
+        this.update_state(MapStateChange.EVERYTHING);
     }
 
     deactivate() {

@@ -125,7 +125,7 @@ export class SidebarMarkers extends MapStateObserver {
         </div>`);
 
         const submit_button = $('<button class="button">Submit</button>').click(() => {
-            self.submit_edit(marker.id);
+            self.submit_edit(marker);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
             $(`#marker-edit-${marker.id}`).remove();
@@ -195,26 +195,24 @@ export class SidebarMarkers extends MapStateObserver {
         $(`#marker-edit-${marker.id} .marker-edit-color`).val(marker.color.to_hash_string());
     }
 
-    submit_edit(object_id) {
-        const marker = this.map_state.get_marker(object_id);
-        if (marker) {
-            const name = $(`#marker-edit-${marker.id} .marker-edit-name`).val();
-            const coordinates = Coordinates.from_string($(`#marker-edit-${marker.id} .marker-edit-coordinates`).val());
-            const radius = parseFloat($(`#marker-edit-${marker.id} .marker-edit-radius`).val());
-            const color = Color.from_string($(`#marker-edit-${marker.id} .marker-edit-color`).val());
+    submit_edit(marker) {
+        const name = $(`#marker-edit-${marker.id} .marker-edit-name`).val();
+        const coordinates = Coordinates.from_string($(`#marker-edit-${marker.id} .marker-edit-coordinates`).val());
+        const radius = parseFloat($(`#marker-edit-${marker.id} .marker-edit-radius`).val());
+        const color = Color.from_string($(`#marker-edit-${marker.id} .marker-edit-color`).val());
 
-            if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
-                alert('bad values.');
-                return;
-            }
-
-            marker.name = name;
-            marker.coordinates = coordinates;
-            marker.radius = radius;
-            marker.color = color;
-            this.map_state.update_marker_storage(marker);
-            this.map_state.update_observers(MapStateChange.MARKERS);
+        if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
+            alert('bad values.');
+            return;
         }
+
         $(`#marker-edit-${marker.id}`).remove();
+
+        marker.name = name;
+        marker.coordinates = coordinates;
+        marker.radius = radius;
+        marker.color = color;
+        this.map_state.update_marker_storage(marker);
+        this.map_state.update_observers(MapStateChange.MARKERS);
     }
 }

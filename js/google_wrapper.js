@@ -72,11 +72,10 @@ export class GoogleWrapper extends MapWrapper {
             position: marker.coordinates.to_google(),
             map: self.map,
             draggable: true,
-            icon: self.app.icon_factory.google_icon(marker.name, marker.color),
         });
 
-        m.last_name = marker.name;
-        m.last_color = marker.color;
+        m.last_name = null;
+        m.last_color = null;
         m.circle = null;
 
         google.maps.event.addListener(m, "drag", function () {
@@ -106,9 +105,9 @@ export class GoogleWrapper extends MapWrapper {
                     map: this.map,
                     strokeColor: marker.color.to_hash_string(),
                     strokeOpacity: 1,
+                    strokeWeight: 1,
                     fillColor: marker.color.to_hash_string(),
                     fillOpacity: 0.2,
-                    strokeWeight: 1,
                     radius: marker.radius
                 });
             }
@@ -122,8 +121,11 @@ export class GoogleWrapper extends MapWrapper {
         }
         if (m.circle && !marker.color.equals(m.last_color)) {
             m.circle.setOptions({
-                strokeColor: marker.color.to_hash_string,
-                fillColor: marker.color.to_hash_string
+                strokeColor: marker.color.to_hash_string(),
+                strokeOpacity: 1,
+                strokeWeight: 1,
+                fillColor: marker.color.to_hash_string(),
+                fillOpacity: 0.2
             });
         }
 
