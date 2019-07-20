@@ -24,22 +24,23 @@ export class SidebarLines extends MapStateObserver {
 
         /* update and add lines */
         this.map_state.lines.forEach((line) => {
-            if ($(`#line-${line.id}`).length > 0) {
-                const length = (line.length !== null)
-                    ? `${line.length.toFixed(2)} m`
-                    : "n/a";
-                const bearing = (line.bearing !== null)
-                    ? `${line.bearing.toFixed(2)}°`
-                    : "n/a";
-        
-                $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
-                $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
-                $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
-                $(`#line-${line.id} .line-distance`).text(length);
-                $(`#line-${line.id} .line-bearing`).text(bearing);
-            } else {
+            if ($(`#line-${line.id}`).length == 0) {
                 $("#lines").append(self.create_div(line));
             }
+
+            const length = (line.length !== null)
+                ? `${line.length.toFixed(2)} m`
+                : "n/a";
+            const bearing = (line.bearing !== null)
+                ? `${line.bearing.toFixed(2)}°`
+                : "n/a";
+
+            $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
+            $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
+            $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
+            $(`#line-${line.id} .line-distance`).text(length);
+            $(`#line-${line.id} .line-bearing`).text(bearing);
+
             self.update_edit_values(line);
         });
 
@@ -71,25 +72,16 @@ export class SidebarLines extends MapStateObserver {
         const m = $(`<div id="line-${line.id}" class="line">`);
 
         const left = $('<div class="line-left"></div>');
-        left.append($(`<div class="line-color" style="background-color: ${line.color.to_hash_string()}"></div>`));
+        left.append($(`<div class="line-color"></div>`));
         m.append(left);
 
-        const from_name = this.marker_name(line.marker1);
-        const to_name = this.marker_name(line.marker2);
-        const length = (line.length !== null)
-            ? `${line.length.toFixed(2)} m`
-            : "n/a";
-        const bearing = (line.bearing !== null)
-            ? `${line.bearing.toFixed(2)}°`
-            : "n/a";
-
         const center = $('<div class="line-center"></div>');
-        const table = $('<table></table>');
-        table.append($(`<tr><td>From:</td><td class="line-from">${from_name}</td></tr>`));
-        table.append($(`<tr><td>To:</td><td class="line-to">${to_name}</td></tr>`));
-        table.append($(`<tr><td>Length:</td><td class="line-distance">${length}</td></tr>`));
-        table.append($(`<tr><td>Bearing:</td><td class="line-bearing">${bearing}</td></tr>`));
-        center.append(table);
+        center.append($(`<table>
+            <tr><td>From:</td><td class="line-from"></td></tr>
+            <tr><td>To:</td><td class="line-to"></td></tr>
+            <tr><td>Length:</td><td class="line-distance"></td></tr>
+            <tr><td>Bearing:</td><td class="line-bearing"></td></tr>
+            </table>`));
         m.append(center);
 
         const right = $('<div class="line-right"></div>');
@@ -197,11 +189,12 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_edit_values(line) {
-        if ($(`#line-edit-${line.id}`).length > 0) {
-            $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
-            $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
-            $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_string());
+        if ($(`#line-edit-${line.id}`).length == 0) {
+            return;
         }
+        $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
+        $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
+        $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_string());
     }
 
     submit_edit(object_id) {
