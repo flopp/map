@@ -1,3 +1,5 @@
+const GeographicLib = require("geographiclib");
+
 const CoordinatesFormat = {
     D: 0,
     DM: 1,
@@ -263,6 +265,12 @@ export class Coordinates {
                 Coordinates.EW(this.lng) +
                 " " +
                 lng.toFixed(6);
+    }
+
+    distance(other) {
+        const geod = GeographicLib.Geodesic.WGS84;
+        const r = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
+        return r.s12;
     }
 
     static NS(lat) {

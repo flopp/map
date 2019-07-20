@@ -24,7 +24,8 @@ export class SidebarLines extends MapStateObserver {
                 $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
                 $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
                 $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
-                $(`#line-${line.id} .line-distance`).text("n/a");
+                const distance = (line.length !== null) ? `${line.length.toFixed(2)} m` : 'n/a';
+                $(`#line-${line.id} .line-distance`).text(distance);
                 $(`#line-${line.id} .line-bearing`).text("n/a");
             } else {
                 $("#lines").append(self.create_div(line));
@@ -66,10 +67,11 @@ export class SidebarLines extends MapStateObserver {
         console.log("create line", line.id, "from", line.marker1, this.marker_name(line.marker1));
         const from_name = this.marker_name(line.marker1);
         const to_name = this.marker_name(line.marker2);
+        const distance = (line.length !== null) ? `${line.length.toFixed(2)} m` : 'n/a';
         const center = $('<div class="line-center"></div>');
         center.append($(`<div class="line-from">${from_name}</div>`));
         center.append($(`<div class="line-to">${to_name}</div>`));
-        center.append($(`<div class="line-distance">n/a</div>`));
+        center.append($(`<div class="line-distance">${distance}</div>`));
         center.append($(`<div class="line-bearing">n/a</div>`));
         m.append(center);
 

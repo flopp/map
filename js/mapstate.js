@@ -5,6 +5,18 @@ import {Marker} from "./marker.js";
 import {Storage} from "./storage.js";
 import {MapType, maptype2string, string2maptype} from "./maptype.js";
 
+
+export const MapStateChange = {
+    NOTHING: 0,
+    CENTER: 1,
+    ZOOM: 2,
+    VIEW: 3,
+    MARKERS: 4,
+    LINES: 8,
+    EVERYTHING: 15
+};
+
+
 export class MapState {
     constructor() {
         this.sidebar_open = null;
@@ -101,6 +113,8 @@ export class MapState {
             self.lines.push(line);
             self.lines_hash.set(line.id, line);
         });
+
+        this.recompute();
     }
 
     register_observer(observer) {
@@ -108,9 +122,24 @@ export class MapState {
     }
 
     update_observers(sender) {
+        this.recompute();
+
         this.observers.forEach((observer) => {
             if (observer !== sender) {
                 observer.update_state();
+            }
+        });
+    }
+
+    recompute() {
+        const self = this;
+        this.lines.forEach((line) => {
+            const marker1 = self.get_marker(line.marker1);
+            const marker2 = self.get_marker(line.marker2);
+            if (marker1 && marker2) {
+                line.length = marker1.coordinates.distance(marker2.coordinates);
+            } else {
+                line.length = -1;
             }
         });
     }

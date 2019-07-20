@@ -4,7 +4,7 @@
     "description": "",
     "main": "js/main.js",
     "scripts": {
-        "webpack": "webpack js/main.js --mode development -o ./bundle.js",
+        "webpack": "webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./bundle.js",
         "start": "http-server",
         "lint": "eslint js/*.js"
     },
@@ -20,8 +20,10 @@
     "homepage": "https://github.com/flopp/dualmap#readme",
     "devDependencies": {
         "eslint": "^6.0.1",
+        "geographiclib": "^1.49.0",
         "http-server": "^0.11.1",
         "webpack": "^4.35.3",
         "webpack-cli": "^3.3.6"
-    }
+    },
+    "dependencies": {}
 }
