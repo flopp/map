@@ -8,12 +8,14 @@ import {MapType, maptype2string, string2maptype} from "./maptype.js";
 
 export const MapStateChange = {
     NOTHING: 0,
-    CENTER: 1,
-    ZOOM: 2,
-    VIEW: 3,
-    MARKERS: 4,
-    LINES: 8,
-    EVERYTHING: 15
+    SIDEBAR: 1,
+    MAPTYPE: 2,
+    CENTER: 4,
+    ZOOM: 8,
+    VIEW: 12,
+    MARKERS: 16,
+    LINES: 32,
+    EVERYTHING: 63
 };
 
 
@@ -114,66 +116,78 @@ export class MapState {
             self.lines_hash.set(line.id, line);
         });
 
-        this.recompute();
+        this.recompute_lines();
     }
 
     register_observer(observer) {
         this.observers.push(observer);
     }
 
-    update_observers(sender) {
-        this.recompute();
-
-        this.observers.forEach((observer) => {
-            if (observer !== sender) {
-                observer.update_state();
+    update_observers(changes) {
+        let updatedChanges = changes;
+        if (changes & (MapStateChange.MARKERS | MapStateChange.LINES)) {
+            if (this.recompute_lines()) {
+                updatedChanges = changes | MapStateChange.LINES;
             }
+        }
+        this.observers.forEach((observer) => {
+            observer.update_state(updatedChanges);
         });
     }
 
-    recompute() {
+    recompute_lines() {
         const self = this;
+        let changed = false;
         this.lines.forEach((line) => {
             const marker1 = self.get_marker(line.marker1);
             const marker2 = self.get_marker(line.marker2);
             if (marker1 && marker2) {
-                line.length = marker1.coordinates.distance(marker2.coordinates);
+                const newLength = marker1.coordinates.distance(marker2.coordinates);
+                if (newLength != line.length) {
+                    changed = true;
+                    line.length = newLength;
+                }
             } else {
+                if (line.length != -1) {
+                    changed = true;
+                }
                 line.length = -1;
             }
         });
+
+        return changed;
     }
 
     set_sidebar_open(section) {
         this.sidebar_open = section;
         this.storage.set("sidebar_open", section);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.SIDEBAR);
     }
 
     set_map_type(map_type) {
         this.map_type = map_type;
         this.storage.set("map_type", maptype2string(this.map_type));
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MAPSTATE);
     }
 
-    set_view(center, zoom, sender) {
+    set_view(center, zoom) {
         this.center = center;
         this.zoom = zoom;
         this.storage.set_coordinates("center", this.center);
         this.storage.set_int("zoom", this.zoom);
-        this.update_observers(sender);
+        this.update_observers(MapStateChange.VIEW);
     }
 
-    set_zoom(zoom, sender) {
+    set_zoom(zoom) {
         this.zoom = zoom;
         this.storage.set_int("zoom", this.zoom);
-        this.update_observers(sender);
+        this.update_observers(MapStateChange.ZOOM);
     }
 
-    set_center(coordinates, sender) {
+    set_center(coordinates) {
         this.center = coordinates;
         this.storage.set_coordinates("center", this.center);
-        this.update_observers(sender);
+        this.update_observers(MapStateChange.CENTER);
     }
 
     add_marker(coordinates) {
@@ -187,7 +201,7 @@ export class MapState {
         this.markers_hash.set(marker.id, marker);
         this.update_marker_storage(marker);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
 
     get_marker(id) {
@@ -200,7 +214,7 @@ export class MapState {
         });
         this.markers_hash.delete(id);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
 
     delete_all_markers() {
@@ -208,28 +222,28 @@ export class MapState {
         this.markers = [];
         this.markers_hash.clear();
         this.storage.set("markers", null);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
 
     set_marker_coordinates(id, coordinates) {
         this.markers_hash.get(id).coordinates = coordinates;
         this.storage.set_coordinates(`marker;${id};coordinates`, coordinates);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
     set_marker_name(id, name) {
         this.markers_hash.get(id).name = name;
         this.storage.set(`marker;${id};name`, name);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
     set_marker_color(id, color) {
         this.markers_hash.get(id).color = color;
         this.storage.set_color(`marker;${id};color`, color);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
     set_marker_radius(id, radius) {
         this.markers_hash.get(id).radius = radius;
         this.storage.set_float(`marker;${id};radius`, radius);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.MARKERS);
     }
     update_marker_storage(marker) {
         this.storage.set_coordinates(`marker;${marker.id};coordinates`, marker.coordinates);
@@ -248,7 +262,7 @@ export class MapState {
         this.lines_hash.set(line.id, line);
         this.update_line_storage(line);
         this.storage.set("lines", this.get_line_ids_string());
-        this.update_observers(null);
+        this.update_observers(MapStateChange.LINES);
     }
 
     get_line(id) {
@@ -261,7 +275,7 @@ export class MapState {
         });
         this.lines_hash.delete(id);
         this.storage.set("lines", this.get_line_ids_string());
-        this.update_observers(null);
+        this.update_observers(MapStateChange.LINES);
     }
 
     delete_all_lines() {
@@ -269,23 +283,23 @@ export class MapState {
         this.lines = [];
         this.lines_hash.clear();
         this.storage.set("lines", null);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.LINES);
     }
 
     set_line_marker1(id, marker_id) {
         this.lines_hash.get(id).marker1 = marker_id;
         this.storage.set_int(`line;${id};marker1`, marker_id);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.LINES);
     }
     set_line_marker2(id, marker_id) {
         this.lines_hash.get(id).marker2 = marker_id;
         this.storage.set_int(`line;${id};marker2`, marker_id);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.LINES);
     }
     set_line_color(id, color) {
         this.lines_hash.get(id).color = color;
         this.storage.set_color(`line;${id};color`, color);
-        this.update_observers(null);
+        this.update_observers(MapStateChange.LINES);
     }
     update_line_storage(line) {
         this.storage.set_int(`line;${line.id};marker1`, line.marker1);
@@ -422,7 +436,7 @@ export class MapState {
         }
 
         this.store();
-        this.update_observers(null);
+        this.update_observers(MapStateChange.EVERYTHING);
     }
 }
 
@@ -432,7 +446,7 @@ export class MapStateObserver {
         map_state.register_observer(this);
     }
 
-    update_state() {
+    update_state(_changes) {
         throw new Error('not implemented');
     }
 }

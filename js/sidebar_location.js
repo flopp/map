@@ -16,7 +16,7 @@ export class SidebarLocation extends MapStateObserver {
         });
     }
 
-    update_state() {
+    update_state(_changes) {
         // nothing
     }
 }

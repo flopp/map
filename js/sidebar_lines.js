@@ -1,5 +1,5 @@
 import {Color} from './color.js';
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateChange, MapStateObserver} from "./mapstate.js";
 
 export class SidebarLines extends MapStateObserver {
     constructor(app) {
@@ -15,7 +15,11 @@ export class SidebarLines extends MapStateObserver {
         });
     }
 
-    update_state() {
+    update_state(changes) {
+        if ((changes & MapStateChange.LINES) == MapStateChange.NOTHING) {
+            return;
+        }
+
         const self = this;
 
         /* update and add lines */
@@ -24,8 +28,11 @@ export class SidebarLines extends MapStateObserver {
                 $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
                 $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
                 $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
-                const distance = (line.length !== null) ? `${line.length.toFixed(2)} m` : 'n/a';
-                $(`#line-${line.id} .line-distance`).text(distance);
+                if (line.length !== null) {
+                    $(`#line-${line.id} .line-distance`).text(`${line.length.toFixed(2)} m`);
+                } else {
+                    $(`#line-${line.id} .line-distance`).text("n/a");
+                }
                 $(`#line-${line.id} .line-bearing`).text("n/a");
             } else {
                 $("#lines").append(self.create_div(line));
@@ -64,14 +71,16 @@ export class SidebarLines extends MapStateObserver {
         const left = $('<div class="line-left"></div>');
         left.append($(`<div class="line-color" style="background-color: ${line.color.to_hash_string()}"></div>`));
         m.append(left);
-        console.log("create line", line.id, "from", line.marker1, this.marker_name(line.marker1));
         const from_name = this.marker_name(line.marker1);
         const to_name = this.marker_name(line.marker2);
-        const distance = (line.length !== null) ? `${line.length.toFixed(2)} m` : 'n/a';
         const center = $('<div class="line-center"></div>');
         center.append($(`<div class="line-from">${from_name}</div>`));
         center.append($(`<div class="line-to">${to_name}</div>`));
-        center.append($(`<div class="line-distance">${distance}</div>`));
+        if (line.length !== null) {
+            center.append($(`<div class="line-distance">${line.length.toFixed(2)} m</div>`));
+        } else {
+            center.append($(`<div class="line-distance">n/a</div>`));
+        }
         center.append($(`<div class="line-bearing">n/a</div>`));
         m.append(center);
 

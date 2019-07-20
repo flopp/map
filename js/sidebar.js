@@ -1,4 +1,4 @@
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateChange, MapStateObserver} from "./mapstate.js";
 import {SidebarLayers} from "./sidebar_layers.js";
 import {SidebarLines} from "./sidebar_lines.js";
 import {SidebarLocation} from "./sidebar_location.js";
@@ -45,7 +45,11 @@ export class Sidebar extends MapStateObserver {
         }
     }
 
-    update_state() {
+    update_state(changes) {
+        if ((changes & MapStateChange.SIDEBAR) == MapStateChange.NOTHING) {
+            return;
+        }
+
         const section = this.map_state.sidebar_open;
 
         if (!section) {

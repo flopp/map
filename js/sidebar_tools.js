@@ -20,7 +20,7 @@ export class SidebarTools extends MapStateObserver {
         });
     }
 
-    update_state() {
+    update_state(_changes) {
         // nothing
     }
 

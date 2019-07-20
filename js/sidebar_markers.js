@@ -1,6 +1,6 @@
 import {Color} from './color.js';
 import {Coordinates} from "./coordinates.js";
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateChange, MapStateObserver} from "./mapstate.js";
 
 export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
@@ -16,7 +16,11 @@ export class SidebarMarkers extends MapStateObserver {
         });
     }
 
-    update_state() {
+    update_state(changes) {
+        if ((changes & MapStateChange.MARKERS) == MapStateChange.NOTHING) {
+            return;
+        }
+
         const self = this;
 
         /* update and add markers */

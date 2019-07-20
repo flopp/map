@@ -1,4 +1,4 @@
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateObserver, MapStateChange} from "./mapstate.js";
 import {MapType} from "./maptype.js";
 
 
@@ -31,7 +31,11 @@ export class SidebarLayers extends MapStateObserver {
         });
     }
 
-    update_state() {
+    update_state(changes) {
+        if ((changes & MapStateChange.MAPTYPE) == MapStateChange.NOTHING) {
+            return;
+        }
+
         var self = this;
 
         /* baselayer */

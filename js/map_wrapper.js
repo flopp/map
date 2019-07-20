@@ -1,4 +1,4 @@
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateObserver, MapStateChange} from "./mapstate.js";
 
 export class MapWrapper extends MapStateObserver {
     constructor(div_id, app) {
@@ -60,7 +60,7 @@ export class MapWrapper extends MapStateObserver {
     }
 
     activate() {
-        this.update_state();
+        this.update_state(MapStateChange.EVERYTHING);
         this.active = true;
     }
 
@@ -68,69 +68,81 @@ export class MapWrapper extends MapStateObserver {
         this.active = false;
     }
 
-    update_state() {
+    update_state(changes) {
+        if (!this.active) {
+            return;
+        }
+
         const self = this;
 
         /* update view */
-        this.set_map_type(this.map_state.map_type);
-        this.set_map_view(this.map_state.center, this.map_state.zoom);
-
-        /* update and add markers */
-        this.map_state.markers.forEach((marker) => {
-            if (self.markers.has(marker.id)) {
-                self.update_marker_object(self.markers.get(marker.id), marker);
-            } else {
-                self.create_marker_object(marker);
-            }
-        });
-
-        /* remove spurious markers */
-        if (this.markers.size > this.map_state.markers.length) {
-            const ids = new Set();
-            this.map_state.markers.forEach((marker) => {
-                ids.add(marker.id);
-            });
-
-            const deleted_ids = [];
-            this.markers.forEach((_marker, id, _map) => {
-                if (!ids.has(id)) {
-                    deleted_ids.push(id);
-                }
-            });
-
-            deleted_ids.forEach((id) => {
-                self.delete_marker_object(self.markers.get(id));
-                self.markers.delete(id);
-            });
+        if (changes & MapStateChange.MAPTYPE) {
+            this.set_map_type(this.map_state.map_type);
+        }
+        if (changes & MapStateChange.VIEW) {
+            this.set_map_view(this.map_state.center, this.map_state.zoom);
         }
 
-        /* update and add lines */
-        this.map_state.lines.forEach((line) => {
-            if (self.lines.has(line.id)) {
-                self.update_line_object(self.lines.get(line.id), line);
-            } else {
-                self.create_line_object(line);
-            }
-        });
-
-        /* remove spurious lines */
-        if (this.lines.size > this.map_state.lines.length) {
-            const ids = new Set();
-            this.map_state.lines.forEach((line) => {
-                ids.add(line.id);
-            });
-
-            const deleted_ids = [];
-            this.lines.forEach((_line, id, _map) => {
-                if (!ids.has(id)) {
-                    deleted_ids.push(id);
+        if (changes & MapStateChange.MARKERS) {
+            // update and add markers
+            this.map_state.markers.forEach((marker) => {
+                if (self.markers.has(marker.id)) {
+                    self.update_marker_object(self.markers.get(marker.id), marker);
+                } else {
+                    self.create_marker_object(marker);
                 }
             });
 
-            deleted_ids.forEach((id) => {
-                self.delete_line_object(self.lines.get(id));
-                self.lines.delete(id);
+            /* remove spurious markers */
+            if (this.markers.size > this.map_state.markers.length) {
+                const ids = new Set();
+                this.map_state.markers.forEach((marker) => {
+                    ids.add(marker.id);
+                });
+
+                const deleted_ids = [];
+                this.markers.forEach((_marker, id, _map) => {
+                    if (!ids.has(id)) {
+                        deleted_ids.push(id);
+                    }
+                });
+
+                deleted_ids.forEach((id) => {
+                    self.delete_marker_object(self.markers.get(id));
+                    self.markers.delete(id);
+                });
+            }
+        }
+
+        if (changes & MapStateChange.LINES) {
+            // update and add lines
+            this.map_state.lines.forEach((line) => {
+                if (self.lines.has(line.id)) {
+                    self.update_line_object(self.lines.get(line.id), line);
+                } else {
+                    self.create_line_object(line);
+                }
             });
+
+            /* remove spurious lines */
+            if (this.lines.size > this.map_state.lines.length) {
+                const ids = new Set();
+                this.map_state.lines.forEach((line) => {
+                    ids.add(line.id);
+                });
+
+                const deleted_ids = [];
+                this.lines.forEach((_line, id, _map) => {
+                    if (!ids.has(id)) {
+                        deleted_ids.push(id);
+                    }
+                });
+
+                deleted_ids.forEach((id) => {
+                    self.delete_line_object(self.lines.get(id));
+                    self.lines.delete(id);
+                });
+            }
         }
     }
 }

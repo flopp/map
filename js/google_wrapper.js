@@ -7,6 +7,7 @@ import {MapWrapper} from "./map_wrapper.js";
 export class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
+        this.automatic_event = false;
     }
 
     create_map_object (div_id) {
@@ -26,13 +27,13 @@ export class GoogleWrapper extends MapWrapper {
             });
 
         google.maps.event.addListener(this.map, 'center_changed', function () {
-            if (self.active) {
+            if (self.active && !self.automatic_event) {
                 self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
             }
         });
 
         google.maps.event.addListener(this.map, 'zoom_changed', function () {
-            if (self.active) {
+            if (self.active && !self.automatic_event) {
                 self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
             }
         });
@@ -58,8 +59,10 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     set_map_view(center, zoom) {
+        this.automatic_event = true;
         this.map.setCenter(center.to_google());
         this.map.setZoom(zoom);
+        this.automatic_event = false;
     }
 
     create_marker_object(marker) {

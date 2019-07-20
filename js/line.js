@@ -11,7 +11,6 @@ export class Line {
 
         this.length = -1;
 
-        console.log("constructor", this.id, "from", this.marker1);
         next_line_id += 1;
     }
 

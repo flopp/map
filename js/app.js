@@ -2,7 +2,7 @@ import {Coordinates} from "./coordinates.js";
 import {GoogleWrapper} from "./google_wrapper.js";
 import {IconFactory} from "./icon_factory.js";
 import {LeafletWrapper} from "./leaflet_wrapper.js";
-import {MapState} from "./mapstate.js";
+import {MapState, MapStateChange} from "./mapstate.js";
 import {MapType} from "./maptype.js";
 import {Sidebar} from "./sidebar.js";
 
@@ -30,6 +30,7 @@ export class App {
         this.show_google_div();
         this.google = new GoogleWrapper(this.id_google, this);
         this.google.activate();
+        this.map_state.update_observers(MapStateChange.EVERYTHING);
         this.google_loading = false;
     }
 
@@ -59,6 +60,7 @@ export class App {
         }
         this.show_leaflet_div();
         this.leaflet.activate();
+        this.map_state.update_observers(MapStateChange.EVERYTHING);
         this.leaflet.invalidate_size();
     }
 
@@ -73,6 +75,7 @@ export class App {
         if (this.google) {
             this.show_google_div();
             this.google.activate();
+            this.map_state.update_observers(MapStateChange.EVERYTHING);
             this.google.invalidate_size();
             return;
         }
