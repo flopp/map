@@ -298,10 +298,12 @@ export class Coordinates {
     }
 
     interpolate_geodesic_line(other, _zoom) {
+        // const d = 6000000 / Math.pow(2, zoom);
         const maxk = 50;
         const geod = GeographicLib.Geodesic.WGS84;
         const t = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
 
+        // const k = Math.min(maxk, Math.max(1, Math.ceil(t.s12 / d)));
         const k = maxk;
         const points = new Array(k + 1);
         points[0] = this;

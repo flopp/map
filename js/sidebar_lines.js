@@ -211,7 +211,7 @@ export class SidebarLines extends MapStateObserver {
             line.marker2 = marker2;
             line.color = color;
             this.map_state.update_line_storage(line);
-            this.map_state.update_observers(null);
+            this.map_state.update_observers(MapStateChange.LINES);
         }
         $(`#line-edit-${line.id}`).removeClass("show-edit");
     }

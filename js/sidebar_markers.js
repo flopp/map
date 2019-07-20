@@ -211,7 +211,7 @@ export class SidebarMarkers extends MapStateObserver {
             marker.radius = radius;
             marker.color = color;
             this.map_state.update_marker_storage(marker);
-            this.map_state.update_observers(null);
+            this.map_state.update_observers(MapStateChange.MARKERS);
         }
         $(`#marker-edit-${marker.id}`).removeClass("show-edit");
     }
