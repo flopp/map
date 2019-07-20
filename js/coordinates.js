@@ -1,4 +1,5 @@
-const GeographicLib = require("geographiclib");
+/* global require */
+const GeographicLib = require("../node_modules/geographiclib/geographiclib.min.js");
 
 const CoordinatesFormat = {
     D: 0,
@@ -271,6 +272,20 @@ export class Coordinates {
         const geod = GeographicLib.Geodesic.WGS84;
         const r = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
         return r.s12;
+    }
+
+    distance_bearing(other) {
+        const geod = GeographicLib.Geodesic.WGS84;
+        const r = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
+        while (r.azi1 < 0) {
+            r.azi1 += 360.0;
+        }
+        return {dist: r.s12, angle: r.azi1};
+    }
+
+    project(angle, distance) {
+        var r = this.m_geod.Direct(this.lat, this.lng, angle, distance);
+        return new Coordinates(r.lat2, r.lon2);
     }
 
     static NS(lat) {
