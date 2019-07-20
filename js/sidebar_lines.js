@@ -25,18 +25,20 @@ export class SidebarLines extends MapStateObserver {
         /* update and add lines */
         this.map_state.lines.forEach((line) => {
             if ($(`#line-${line.id}`).length > 0) {
+                const length = (line.length !== null)
+                    ? `${line.length.toFixed(2)} m`
+                    : "n/a";
+                const bearing = (line.bearing !== null)
+                    ? `${line.bearing.toFixed(2)}°`
+                    : "n/a";
+        
                 $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
                 $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
                 $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
-                if (line.length !== null) {
-                    $(`#line-${line.id} .line-distance`).text(`${line.length.toFixed(2)} m`);
-                } else {
-                    $(`#line-${line.id} .line-distance`).text("n/a");
-                }
-                $(`#line-${line.id} .line-bearing`).text("n/a");
+                $(`#line-${line.id} .line-distance`).text(length);
+                $(`#line-${line.id} .line-bearing`).text(bearing);
             } else {
                 $("#lines").append(self.create_div(line));
-                $("#lines").append(self.create_edit_div(line));
             }
             self.update_edit_values(line);
         });
@@ -71,18 +73,22 @@ export class SidebarLines extends MapStateObserver {
         const left = $('<div class="line-left"></div>');
         left.append($(`<div class="line-color" style="background-color: ${line.color.to_hash_string()}"></div>`));
         m.append(left);
+
         const from_name = this.marker_name(line.marker1);
         const to_name = this.marker_name(line.marker2);
+        const length = (line.length !== null)
+            ? `${line.length.toFixed(2)} m`
+            : "n/a";
+        const bearing = (line.bearing !== null)
+            ? `${line.bearing.toFixed(2)}°`
+            : "n/a";
+
         const center = $('<div class="line-center"></div>');
         const table = $('<table></table>');
         table.append($(`<tr><td>From:</td><td class="line-from">${from_name}</td></tr>`));
         table.append($(`<tr><td>To:</td><td class="line-to">${to_name}</td></tr>`));
-        if (line.length !== null) {
-            table.append($(`<tr><td>Length:</td><td class="line-distance">${line.length.toFixed(2)} m</td></tr>`));
-        } else {
-            table.append($(`<tr><td>Length:</td><td class="line-distance">n/a</td></tr>`));
-        }
-        table.append($(`<tr><td>Bearing:</td><td class="line-bearing">n/a</td></tr>`));
+        table.append($(`<tr><td>Length:</td><td class="line-distance">${length}</td></tr>`));
+        table.append($(`<tr><td>Bearing:</td><td class="line-bearing">${bearing}</td></tr>`));
         center.append(table);
         m.append(center);
 
@@ -139,7 +145,7 @@ export class SidebarLines extends MapStateObserver {
             self.submit_edit(line.id);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
-            $(`#line-edit-${line.id}`).removeClass("show-edit");
+            $(`#line-edit-${line.id}`).remove();
         });
         const buttons = $('<div class="field is-grouped">')
             .append($('<div class="control">').append(submit_button))
@@ -174,9 +180,10 @@ export class SidebarLines extends MapStateObserver {
 
         const menu_edit = $('<a href="#" class="line-edit dropdown-item">Edit</a>');
         menu_edit.click(() => {
-            self.update_edit_values(line);
-            $(`#line-edit-${line.id}`).addClass("show-edit");
-
+            if ($(`#line-edit-${line.id}`).length == 0) {
+                self.create_edit_div(line).insertAfter(`#line-${line.id}`);
+                self.update_edit_values(line);
+            }
         });
         dropdown_menu_content.append(menu_edit);
 
@@ -190,9 +197,11 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_edit_values(line) {
-        $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
-        $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
-        $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_string());
+        if ($(`#line-edit-${line.id}`).length > 0) {
+            $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
+            $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
+            $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_string());
+        }
     }
 
     submit_edit(object_id) {
@@ -213,6 +222,6 @@ export class SidebarLines extends MapStateObserver {
             this.map_state.update_line_storage(line);
             this.map_state.update_observers(MapStateChange.LINES);
         }
-        $(`#line-edit-${line.id}`).removeClass("show-edit");
+        $(`#line-edit-${line.id}`).remove();
     }
 }

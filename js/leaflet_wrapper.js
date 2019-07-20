@@ -147,7 +147,8 @@ export class LeafletWrapper extends MapWrapper {
 
     create_line_object(line) {
         const m = L.polyline([], {
-            color: line.color.to_hash_string()
+            color: line.color.to_hash_string(),
+            weight: 2
         }).addTo(this.map);
 
         m.last_color = line.color;

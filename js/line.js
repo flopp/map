@@ -9,7 +9,8 @@ export class Line {
         this.marker2 = marker_id2;
         this.color = Color.random();
 
-        this.length = -1;
+        this.length = null;
+        this.bearing = null;
 
         next_line_id += 1;
     }

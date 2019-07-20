@@ -142,16 +142,38 @@ export class MapState {
             const marker1 = self.get_marker(line.marker1);
             const marker2 = self.get_marker(line.marker2);
             if (marker1 && marker2) {
-                const newLength = marker1.coordinates.distance(marker2.coordinates);
-                if (newLength != line.length) {
+                const db = marker1.coordinates.distance_bearing(marker2.coordinates);
+                if (db.distance != line.length) {
                     changed = true;
-                    line.length = newLength;
+                    line.length = db.distance;
+                }
+                if (db.distance < 1.0) {
+                    if (line.bearing !== null) {
+                        changed = true;
+                        line.bearing = null;
+                    }
+                } else if (db.bearing !== line.bearing) {
+                    changed = true;
+                    line.bearing = db.bearing;
                 }
             } else {
-                if (line.length != -1) {
+                if (line.length !== null) {
                     changed = true;
+                    line.length = null;
                 }
-                line.length = -1;
+                if (line.bearing !== null) {
+                    changed = true;
+                    line.bearing = null;
+                }
+            }
+
+            if (!marker1 && (line.marker1 >= 0)) {
+                changed = true;
+                line.marker1 = -1;
+            }
+            if (!marker2 && (line.marker2 >= 0)) {
+                changed = true;
+                line.marker2 = -1;
             }
         });
 

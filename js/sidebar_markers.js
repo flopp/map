@@ -26,17 +26,15 @@ export class SidebarMarkers extends MapStateObserver {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($(`#marker-${marker.id}`).length > 0) {
+                const circle = (marker.radius > 0)
+                    ? `Circle: ${marker.radius.toFixed(2)} m`
+                    : "No circle";
                 $(`#marker-${marker.id} .marker-color`).css("background-color", marker.color.to_hash_string());
                 $(`#marker-${marker.id} .marker-name`).text(marker.name);
-                if (marker.radius <= 0) {
-                    $(`#marker-${marker.id} .marker-radius`).text("No circle.");
-                } else {
-                    $(`#marker-${marker.id} .marker-radius`).text(`Circle: ${marker.radius.toFixed(2)} m`);
-                }
+                $(`#marker-${marker.id} .marker-radius`).text(circle);
                 $(`#marker-${marker.id} .marker-coordinates`).text(marker.coordinates.to_string());
             } else {
                 $("#markers").append(self.create_div(marker));
-                $("#markers").append(self.create_edit_div(marker));
             }
             self.update_edit_values(marker);
         });
@@ -72,14 +70,14 @@ export class SidebarMarkers extends MapStateObserver {
         left.append($(`<div class="marker-color" style="background-color: ${marker.color.to_hash_string()}"></div>`));
         m.append(left);
 
+        const circle = (marker.radius > 0)
+            ? `Circle: ${marker.radius.toFixed(2)} m`
+            : "No circle";
+
         const center = $('<div class="marker-center"></div>');
         center.append($(`<div class="marker-name">${marker.name}</div>`));
         center.append($(`<div class="marker-coordinates">${marker.coordinates.to_string()}</div>`));
-        if (marker.radius <= 0) {
-            center.append($('<div class="marker-radius">No circle.</div>'));
-        } else {
-            center.append($(`<div class="marker-radius">Circle: ${marker.radius.toFixed(2)} m</div>`));
-        }
+        center.append($(`<div class="marker-radius">${circle}</div>`));
         m.append(center);
 
         const right  = $('<div class="marker-right"></div>');
@@ -130,7 +128,7 @@ export class SidebarMarkers extends MapStateObserver {
             self.submit_edit(marker.id);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
-            $(`#marker-edit-${marker.id}`).removeClass("show-edit");
+            $(`#marker-edit-${marker.id}`).remove();
         });
         const buttons = $('<div class="field is-grouped">')
             .append($('<div class="control">').append(submit_button))
@@ -165,9 +163,10 @@ export class SidebarMarkers extends MapStateObserver {
 
         const menu_edit = $('<a href="#" class="marker-edit dropdown-item">Edit</a>');
         menu_edit.click(() => {
-            self.update_edit_values(marker);
-            $(`#marker-edit-${marker.id}`).addClass("show-edit");
-
+            if ($(`#marker-edit-${marker.id}`).length == 0) {
+                self.create_edit_div(marker).insertAfter(`#marker-${marker.id}`);
+                self.update_edit_values(marker);
+            }
         });
         dropdown_menu_content.append(menu_edit);
 
@@ -187,6 +186,9 @@ export class SidebarMarkers extends MapStateObserver {
     }
 
     update_edit_values(marker) {
+        if ($(`#marker-edit-${marker.id}`).length == 0) {
+            return;
+        }
         $(`#marker-edit-${marker.id} .marker-edit-name`).val(marker.name);
         $(`#marker-edit-${marker.id} .marker-edit-coordinates`).val(marker.coordinates.to_string());
         $(`#marker-edit-${marker.id} .marker-edit-radius`).val(marker.radius);
@@ -213,6 +215,6 @@ export class SidebarMarkers extends MapStateObserver {
             this.map_state.update_marker_storage(marker);
             this.map_state.update_observers(MapStateChange.MARKERS);
         }
-        $(`#marker-edit-${marker.id}`).removeClass("show-edit");
+        $(`#marker-edit-${marker.id}`).remove();
     }
 }
