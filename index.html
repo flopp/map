@@ -175,6 +175,65 @@
 
             <div id="map-container-leaflet" class="map-container"></div>
             <div id="map-container-google" class="map-container"></div>
+
+            <div id="projection-dialog" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <h2 class="modal-card-title">Waypoint Projection</h2>
+                        <button class="delete projection-cancel" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <h3 class="is-size-4">Projection Data</h3>
+                        <div class="field">
+                            <div class="control">
+                                <input data-distance class="input" type="text" placeholder="Distance (m)">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input data-bearing class="input" type="text" placeholder="Bearing (°)">
+                            </div>
+                        </div>
+
+                        <h3 class="is-size-4">Created Marker</h3>
+                        <div class="field">
+                            <div class="control">
+                                <input data-targetname class="input" type="text" placeholder="Name of created marker">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input data-targetcolor class="input" type="color" placeholder="Color radius of created marker">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input data-targetradius class="input" type="text" placeholder="Circle radius of created marker">
+                            </div>
+                        </div>
+
+                        <h3 class="is-size-4">Created Line</h3>
+                        <div class="field">
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input data-line type="checkbox">
+                                    Create line?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input data-linecolor class="input" type="color" placeholder="Color of created line">
+                            </div>
+                        </div>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success projection-perform">Perform Projection</button>
+                        <button class="button projection-cancel">Cancel</button>
+                    </footer>
+                </div>
+            </div>
         </div>
 
         <script src="./.secrets.js"></script>

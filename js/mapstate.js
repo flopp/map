@@ -224,6 +224,8 @@ export class MapState {
         this.update_marker_storage(marker);
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
+
+        return marker;
     }
 
     get_marker(id) {
@@ -285,6 +287,8 @@ export class MapState {
         this.update_line_storage(line);
         this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES);
+
+        return line;
     }
 
     get_line(id) {

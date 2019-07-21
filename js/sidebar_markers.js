@@ -6,6 +6,8 @@ export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
         super(app.map_state);
 
+        this.app = app;
+
         const self = this;
 
         $("#btn-add-marker").click(() => {
@@ -172,7 +174,7 @@ export class SidebarMarkers extends MapStateObserver {
 
         const menu_project = $('<a href="#" class="marker-project dropdown-item">Waypoint Projection</a>');
         menu_project.click(() => {
-            console.log("not implemented");
+            self.app.show_projection_dialog(marker);
         });
         dropdown_menu_content.append(menu_project);
 

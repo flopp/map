@@ -24,7 +24,7 @@ body {
     bottom: 0;
     right: 0;
     width: 300px;
-    z-index: 1000;
+    z-index: 30;
     background: white;
 }
 #sidebar.sidebar-open {
@@ -38,7 +38,7 @@ body {
     right: 0px;
     top: 0px;
     bottom: 0;
-    z-index: 1000;
+    z-index: 30;
     overflow: hidden;
 }
 #sidebar-controls.sidebar-open {
