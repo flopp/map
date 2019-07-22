@@ -28,6 +28,7 @@ export class MultiMarkersDialog {
 
     show() {
         $("#multi-markers-dialog").addClass("is-active");
+        $("#multi-markers-dialog [data-common-color]").val(Color.random_from_palette().to_hash_string());
         this.update_description();
     }
 
@@ -71,8 +72,6 @@ export class MultiMarkersDialog {
         let marker_index = 1;
         $("#multi-markers-dialog [data-marker-data]").val().split("\n").forEach((line) => {
             line_index += 1;
-
-            console.log(`Line: <${line}>`);
 
             if (line.trim() == "") {
                 return;

@@ -7,7 +7,7 @@ export class Marker {
         this.id = next_marker_id;
         this.coordinates = coordinates;
         this.name = `Marker ${this.id}`;
-        this.color = Color.random();
+        this.color = Color.random_from_palette();
         this.radius = 0;
 
         next_marker_id += 1;

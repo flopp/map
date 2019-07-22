@@ -61,7 +61,7 @@ export class IconFactory {
         return {
             url: url,
             size: [w, 37],
-            anchor: [w2, 37 - 2.0],
+            anchor: [w2, 37 - 4.0],
         };
     }
 

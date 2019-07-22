@@ -1,3 +1,5 @@
+let last_random_color = null;
+
 export class Color {
     constructor(hex) {
         if (!RegExp('^[0-9A-Fa-f]{6}$').test(hex)) {
@@ -18,6 +20,25 @@ export class Color {
 
     static random() {
         return new Color((Math.random().toString(16) + '000000').slice(2, 8));
+    }
+
+    static random_from_palette() {
+        const colors = [
+            "FF3860", // bulma red
+            "FFDD57", // bulma yellow
+            "23D160", // bulma green
+            "3273DC", // bulma dark blue
+            "209CEE", // bulma light blue
+            "00D1B2"  // bulma teal
+        ];
+
+        let hex = null;
+        do {
+            hex = colors[Math.floor(Math.random() * colors.length)];
+        } while (hex == last_random_color);
+        last_random_color = hex;
+
+        return new Color(hex);
     }
 
     to_string() {

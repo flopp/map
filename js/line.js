@@ -7,7 +7,7 @@ export class Line {
         this.id = next_line_id;
         this.marker1 = marker_id1;
         this.marker2 = marker_id2;
-        this.color = Color.random();
+        this.color = Color.random_from_palette();
 
         this.length = null;
         this.bearing = null;
