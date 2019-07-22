@@ -7,6 +7,7 @@ import {MapWrapper} from "./map_wrapper.js";
 export class LeafletWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
+        this.automatic_event = false;
     }
 
     create_map_object (div_id) {
@@ -37,13 +38,13 @@ export class LeafletWrapper extends MapWrapper {
         ];
 
         this.map.on('zoom', function () {
-            if (self.active) {
+            if (self.active && !self.automatic_event) {
                 self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom(), self);
             }
         });
 
         this.map.on('move', function () {
-            if (self.active) {
+            if (self.active && !self.automatic_event) {
                 self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom(), self);
             }
         });
@@ -77,7 +78,9 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     set_map_view(center, zoom) {
+        this.automatic_event = true;
         this.map.setView(center.to_leaflet(), zoom, {'animate': false});
+        this.automatic_event = false;
     }
 
     invalidate_size() {
