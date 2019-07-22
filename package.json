@@ -4,9 +4,9 @@
     "description": "",
     "main": "js/main.js",
     "scripts": {
-        "webpack": "webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./bundle.js",
-        "start": "http-server",
-        "lint": "eslint js/*.js"
+        "lint": "eslint js/*.js",
+        "build": "mkdir -p build && cp index.html css/style.css .secrets.js build && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./build/bundle.js",
+        "start": "http-server build"
     },
     "repository": {
         "type": "git",
