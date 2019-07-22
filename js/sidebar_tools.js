@@ -18,6 +18,10 @@ export class SidebarTools extends MapStateObserver {
         $("#inp-import-json").change((event) => {
             self.import_json(event.target.files[0]);
         });
+
+        $("#btn-multi-markers").click(() => {
+            self.app.show_multi_markers_dialog();
+        });
     }
 
     update_state(_changes) {

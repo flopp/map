@@ -159,6 +159,8 @@
 
                         <input id="inp-import-json" style="display:none" type="file" name="files" />
                         <a id="btn-import-json" class="button">Import Full Map State (JSON)</a>
+
+                        <a id="btn-multi-markers" class="button">Create Multiple Markers</a>
                     </div>
                 </div>
 
@@ -231,6 +233,67 @@
                     <footer class="modal-card-foot">
                         <button class="button is-success projection-perform">Perform Projection</button>
                         <button class="button projection-cancel">Cancel</button>
+                    </footer>
+                </div>
+            </div>
+        
+            <div id="multi-markers-dialog" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <h2 class="modal-card-title">Create Multiple Markers</h2>
+                        <button class="delete" data-cancel aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <h3 class="is-size-4">Common Marker Attributes</h3>
+
+                        <div class="columns">
+                            <div class="column">
+                                <label class="checkbox">
+                                    <input type="checkbox" data-use-common-name>
+                                    Name Prefix
+                                </label>
+                                <div class="field">
+                                    <div class="control">
+                                        <input data-common-name class="input" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="checkbox">
+                                    <input type="checkbox" data-use-common-color>
+                                    Color
+                                </label>
+                                <div class="field">
+                                    <div class="control">
+                                        <input data-common-color class="input" type="color">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <label class="checkbox">
+                                    <input type="checkbox" data-use-common-radius>
+                                    Circle Radius
+                                </label>
+                                <div class="field">
+                                    <div class="control">
+                                        <input data-common-radius class="input" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="is-size-4">Marker Data</h3>
+                        <p>
+                            Data format per line:<br />
+                            <span data-format class="is-family-code"></span>
+                        </p>
+
+                        <textarea data-marker-data class="textarea is-family-code" placeholder="Marker Data"></textarea>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success" data-go>Create Markers</button>
+                        <button class="button" data-cancel>Cancel</button>
                     </footer>
                 </div>
             </div>

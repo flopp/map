@@ -1,5 +1,6 @@
 import {Color} from './color.js';
 import {MapStateChange} from './mapstate.js';
+import {parse_float} from './utilities.js';
 
 export class ProjectionDialog {
     constructor (map_state) {
@@ -11,7 +12,7 @@ export class ProjectionDialog {
             self.hide();
         });
         $("#projection-dialog .projection-perform").click(() => {
-            self.perform_projection();
+            self.go();
         });
     }
 
@@ -30,22 +31,12 @@ export class ProjectionDialog {
         $("#projection-dialog").removeClass("is-active");
     }
 
-    parse_float(str) {
-        if (!((/[0-9]/).test(str))) {
-            return null;
-        }
-        if (!((/^-?[0-9]*\.?[0-9]*$/).test(str))) {
-            return null;
-        }
-        return parseFloat(str);
-    }
-
-    perform_projection() {
-        const distance = this.parse_float($("#projection-dialog [data-distance]").val());
-        const bearing = this.parse_float($("#projection-dialog [data-bearing]").val());
+    go() {
+        const distance = parse_float($("#projection-dialog [data-distance]").val());
+        const bearing = parse_float($("#projection-dialog [data-bearing]").val());
         const target_name = $("#projection-dialog [data-targetname]").val();
         const target_color = Color.from_string($("#projection-dialog [data-targetcolor]").val());
-        const target_radius = this.parse_float($("#projection-dialog [data-targetradius").val());
+        const target_radius = parse_float($("#projection-dialog [data-targetradius").val());
         const create_line = $("#projection-dialog [data-line]").is(":checked");
         const line_color = Color.from_string($("#projection-dialog [data-linecolor]").val());
 

@@ -4,6 +4,7 @@ import {IconFactory} from "./icon_factory.js";
 import {LeafletWrapper} from "./leaflet_wrapper.js";
 import {MapState, MapStateChange} from "./mapstate.js";
 import {MapType} from "./maptype.js";
+import {MultiMarkersDialog} from "./multi_markers_dialog.js";
 import {ProjectionDialog} from "./projection_dialog.js";
 import {Sidebar} from "./sidebar.js";
 
@@ -13,6 +14,7 @@ export class App {
 
         this.icon_factory = new IconFactory();
         this.projection_dialog = new ProjectionDialog(this.map_state);
+        this.multi_markers_dialog = new MultiMarkersDialog(this.map_state);
 
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
@@ -177,6 +179,10 @@ export class App {
 
     show_projection_dialog(marker) {
         this.projection_dialog.show(marker);
+    }
+
+    show_multi_markers_dialog() {
+        this.multi_markers_dialog.show();
     }
 }
 
