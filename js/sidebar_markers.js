@@ -27,7 +27,7 @@ export class SidebarMarkers extends MapStateObserver {
 
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
-            if ($(`#marker-${marker.id}`).length == 0) {
+            if ($(`#marker-${marker.get_id()}`).length == 0) {
                 $("#markers").append(self.create_div(marker));
             }
 
@@ -35,10 +35,10 @@ export class SidebarMarkers extends MapStateObserver {
                 ? `Circle: ${marker.radius.toFixed(2)} m`
                 : "No circle";
 
-            $(`#marker-${marker.id} .marker-color`).css("background-color", marker.color.to_hash_string());
-            $(`#marker-${marker.id} .marker-name`).text(marker.name);
-            $(`#marker-${marker.id} .marker-radius`).text(circle);
-            $(`#marker-${marker.id} .marker-coordinates`).text(marker.coordinates.to_string());
+            $(`#marker-${marker.get_id()} .marker-color`).css("background-color", marker.color.to_hash_string());
+            $(`#marker-${marker.get_id()} .marker-name`).text(marker.name);
+            $(`#marker-${marker.get_id()} .marker-radius`).text(circle);
+            $(`#marker-${marker.get_id()} .marker-coordinates`).text(marker.coordinates.to_string());
 
             self.update_edit_values(marker);
         });
@@ -48,7 +48,7 @@ export class SidebarMarkers extends MapStateObserver {
         if (markers.length > this.map_state.markers.length) {
             var ids = new Set();
             this.map_state.markers.forEach((marker) => {
-                ids.add(marker.id);
+                ids.add(marker.get_id());
             });
 
             var deleted_ids = [];
@@ -68,7 +68,7 @@ export class SidebarMarkers extends MapStateObserver {
 
     create_div(marker) {
         const self = this;
-        const m = $(`<div id="marker-${marker.id}" class="marker">`);
+        const m = $(`<div id="marker-${marker.get_id()}" class="marker">`);
 
         const left = $(`<div class="marker-left">
             <div class="marker-color"></div>
@@ -95,7 +95,7 @@ export class SidebarMarkers extends MapStateObserver {
 
     create_edit_div(marker) {
         const self = this;
-        const m = $(`<div id="marker-edit-${marker.id}" class="edit">`);
+        const m = $(`<div id="marker-edit-${marker.get_id()}" class="edit">`);
 
         const name = $(`
         <div class="field">
@@ -130,7 +130,7 @@ export class SidebarMarkers extends MapStateObserver {
             self.submit_edit(marker);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
-            $(`#marker-edit-${marker.id}`).remove();
+            $(`#marker-edit-${marker.get_id()}`).remove();
         });
         const buttons = $('<div class="field is-grouped">')
             .append($('<div class="control">').append(submit_button))
@@ -144,11 +144,11 @@ export class SidebarMarkers extends MapStateObserver {
     create_marker_dropdown(marker) {
         const self = this;
 
-        const menu_id = `dropdown-marker-${marker.id}`;
+        const menu_id = `dropdown-marker-${marker.get_id()}`;
         const dropdown = $('<div class="dropdown is-right">');
         dropdown.click((event) => {
             event.stopPropagation();
-            $(`#marker-${marker.id} .dropdown`).toggleClass('is-active');
+            $(`#marker-${marker.get_id()} .dropdown`).toggleClass('is-active');
         });
 
         const dropdown_trigger = $('<div class="dropdown-trigger">');
@@ -165,8 +165,8 @@ export class SidebarMarkers extends MapStateObserver {
 
         const menu_edit = $('<a href="#" class="marker-edit dropdown-item">Edit</a>');
         menu_edit.click(() => {
-            if ($(`#marker-edit-${marker.id}`).length == 0) {
-                self.create_edit_div(marker).insertAfter(`#marker-${marker.id}`);
+            if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
+                self.create_edit_div(marker).insertAfter(`#marker-${marker.get_id()}`);
                 self.update_edit_values(marker);
             }
         });
@@ -180,7 +180,7 @@ export class SidebarMarkers extends MapStateObserver {
 
         const menu_delete = $('<a href="#" class="marker-delete dropdown-item">Delete</a>');
         menu_delete.click(() => {
-            self.map_state.delete_marker(marker.id, null);
+            self.map_state.delete_marker(marker.get_id());
         });
         dropdown_menu_content.append(menu_delete);
 
@@ -188,27 +188,27 @@ export class SidebarMarkers extends MapStateObserver {
     }
 
     update_edit_values(marker) {
-        if ($(`#marker-edit-${marker.id}`).length == 0) {
+        if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
             return;
         }
-        $(`#marker-edit-${marker.id} .marker-edit-name`).val(marker.name);
-        $(`#marker-edit-${marker.id} .marker-edit-coordinates`).val(marker.coordinates.to_string());
-        $(`#marker-edit-${marker.id} .marker-edit-radius`).val(marker.radius);
-        $(`#marker-edit-${marker.id} .marker-edit-color`).val(marker.color.to_hash_string());
+        $(`#marker-edit-${marker.get_id()} .marker-edit-name`).val(marker.name);
+        $(`#marker-edit-${marker.get_id()} .marker-edit-coordinates`).val(marker.coordinates.to_string());
+        $(`#marker-edit-${marker.get_id()} .marker-edit-radius`).val(marker.radius);
+        $(`#marker-edit-${marker.get_id()} .marker-edit-color`).val(marker.color.to_hash_string());
     }
 
     submit_edit(marker) {
-        const name = $(`#marker-edit-${marker.id} .marker-edit-name`).val();
-        const coordinates = Coordinates.from_string($(`#marker-edit-${marker.id} .marker-edit-coordinates`).val());
-        const radius = parseFloat($(`#marker-edit-${marker.id} .marker-edit-radius`).val());
-        const color = Color.from_string($(`#marker-edit-${marker.id} .marker-edit-color`).val());
+        const name = $(`#marker-edit-${marker.get_id()} .marker-edit-name`).val();
+        const coordinates = Coordinates.from_string($(`#marker-edit-${marker.get_id()} .marker-edit-coordinates`).val());
+        const radius = parseFloat($(`#marker-edit-${marker.get_id()} .marker-edit-radius`).val());
+        const color = Color.from_string($(`#marker-edit-${marker.get_id()} .marker-edit-color`).val());
 
         if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
             alert('bad values.');
             return;
         }
 
-        $(`#marker-edit-${marker.id}`).remove();
+        $(`#marker-edit-${marker.get_id()}`).remove();
 
         marker.name = name;
         marker.coordinates = coordinates;

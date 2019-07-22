@@ -101,12 +101,12 @@ export class LeafletWrapper extends MapWrapper {
         m.circle = null;
 
         m.on('drag', () => {
-            self.map_state.set_marker_coordinates(marker.id, Coordinates.from_leaflet(m.getLatLng()), null);
+            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_leaflet(m.getLatLng()), null);
             if (m.circle) {
                 m.circle.setLatLng(m.getLatLng());
             }
         });
-        this.markers.set(marker.id, m);
+        this.markers.set(marker.get_id(), m);
 
         this.update_marker_object(m, marker);
     }
@@ -156,7 +156,7 @@ export class LeafletWrapper extends MapWrapper {
 
         m.last_color = line.color;
 
-        this.lines.set(line.id, m);
+        this.lines.set(line.get_id(), m);
 
         this.update_line_object(m, line);
     }

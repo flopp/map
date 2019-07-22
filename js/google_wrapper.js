@@ -79,13 +79,13 @@ export class GoogleWrapper extends MapWrapper {
         m.circle = null;
 
         google.maps.event.addListener(m, "drag", function () {
-            self.map_state.set_marker_coordinates(marker.id, Coordinates.from_google(m.getPosition()));
+            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_google(m.getPosition()));
             if (m.circle) {
                 m.circle.setCenter(m.getPosition());
             }
         });
 
-        this.markers.set(marker.id, m);
+        this.markers.set(marker.get_id(), m);
 
         this.update_marker_object(m, marker);
     }
@@ -153,7 +153,7 @@ export class GoogleWrapper extends MapWrapper {
 
         m.last_color = line.color;
 
-        this.lines.set(line.id, m);
+        this.lines.set(line.get_id(), m);
         this.update_line_object(m, line);
     }
 

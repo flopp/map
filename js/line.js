@@ -4,7 +4,7 @@ var next_line_id = 0;
 
 export class Line {
     constructor(marker_id1, marker_id2) {
-        this.id = next_line_id;
+        this.line_id = next_line_id;
         this.marker1 = marker_id1;
         this.marker2 = marker_id2;
         this.color = Color.random_from_palette();
@@ -17,6 +17,10 @@ export class Line {
 
     static reset_ids() {
         next_line_id = 0;
+    }
+
+    get_id() {
+        return this.line_id;
     }
 
     to_json() {

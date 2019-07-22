@@ -86,8 +86,8 @@ export class MapWrapper extends MapStateObserver {
         if (changes & MapStateChange.MARKERS) {
             // update and add markers
             this.map_state.markers.forEach((marker) => {
-                if (self.markers.has(marker.id)) {
-                    self.update_marker_object(self.markers.get(marker.id), marker);
+                if (self.markers.has(marker.get_id())) {
+                    self.update_marker_object(self.markers.get(marker.get_id()), marker);
                 } else {
                     self.create_marker_object(marker);
                 }
@@ -97,7 +97,7 @@ export class MapWrapper extends MapStateObserver {
             if (this.markers.size > this.map_state.markers.length) {
                 const ids = new Set();
                 this.map_state.markers.forEach((marker) => {
-                    ids.add(marker.id);
+                    ids.add(marker.get_id());
                 });
 
                 const deleted_ids = [];
@@ -117,8 +117,8 @@ export class MapWrapper extends MapStateObserver {
         if (changes & MapStateChange.LINES) {
             // update and add lines
             this.map_state.lines.forEach((line) => {
-                if (self.lines.has(line.id)) {
-                    self.update_line_object(self.lines.get(line.id), line);
+                if (self.lines.has(line.get_id())) {
+                    self.update_line_object(self.lines.get(line.get_id()), line);
                 } else {
                     self.create_line_object(line);
                 }
@@ -128,7 +128,7 @@ export class MapWrapper extends MapStateObserver {
             if (this.lines.size > this.map_state.lines.length) {
                 const ids = new Set();
                 this.map_state.lines.forEach((line) => {
-                    ids.add(line.id);
+                    ids.add(line.get_id());
                 });
 
                 const deleted_ids = [];

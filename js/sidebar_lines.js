@@ -16,60 +16,61 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_state(changes) {
-        if ((changes & MapStateChange.LINES) == MapStateChange.NOTHING) {
-            return;
+        const self = this;
+        if (changes & MapStateChange.LINES) {
+            // update and add lines
+            this.map_state.lines.forEach((line) => {
+                if ($(`#line-${line.get_id()}`).length == 0) {
+                    $("#lines").append(self.create_div(line));
+                }
+
+                const length = (line.length !== null)
+                    ? `${line.length.toFixed(2)} m`
+                    : "n/a";
+                const bearing = (line.bearing !== null)
+                    ? `${line.bearing.toFixed(2)}°`
+                    : "n/a";
+
+                $(`#line-${line.get_id()} .line-color`).css("background-color", line.color.to_hash_string());
+                $(`#line-${line.get_id()} .line-from`).text(self.marker_name(line.marker1));
+                $(`#line-${line.get_id()} .line-to`).text(self.marker_name(line.marker2));
+                $(`#line-${line.get_id()} .line-distance`).text(length);
+                $(`#line-${line.get_id()} .line-bearing`).text(bearing);
+            });
+
+            /* remove spurious lines */
+            var lines = $("#lines > .line");
+            if (lines.length > this.map_state.lines.length) {
+                var ids = new Set();
+                this.map_state.lines.forEach((line) => {
+                    ids.add(line.get_id());
+                });
+
+                var deleted_ids = [];
+                lines.each((i, m) => {
+                    var id = parseInt(m.id.substring(5), 10);
+                    if (!ids.has(id)) {
+                        deleted_ids.push(id);
+                    }
+                });
+
+                deleted_ids.forEach((id) => {
+                    $(`#line-${id}`).remove();
+                    $(`#line-edit-${id}`).remove();
+                });
+            }
         }
 
-        const self = this;
-
-        /* update and add lines */
-        this.map_state.lines.forEach((line) => {
-            if ($(`#line-${line.id}`).length == 0) {
-                $("#lines").append(self.create_div(line));
-            }
-
-            const length = (line.length !== null)
-                ? `${line.length.toFixed(2)} m`
-                : "n/a";
-            const bearing = (line.bearing !== null)
-                ? `${line.bearing.toFixed(2)}°`
-                : "n/a";
-
-            $(`#line-${line.id} .line-color`).css("background-color", line.color.to_hash_string());
-            $(`#line-${line.id} .line-from`).text(self.marker_name(line.marker1));
-            $(`#line-${line.id} .line-to`).text(self.marker_name(line.marker2));
-            $(`#line-${line.id} .line-distance`).text(length);
-            $(`#line-${line.id} .line-bearing`).text(bearing);
-
-            self.update_edit_values(line);
-        });
-
-        /* remove spurious lines */
-        var lines = $("#lines > .line");
-        if (lines.length > this.map_state.lines.length) {
-            var ids = new Set();
+        if (changes & (MapStateChange.MARKERS | MapStateChange.LINES)) {
             this.map_state.lines.forEach((line) => {
-                ids.add(line.id);
-            });
-
-            var deleted_ids = [];
-            lines.each((i, m) => {
-                var id = parseInt(m.id.substring(5), 10);
-                if (!ids.has(id)) {
-                    deleted_ids.push(id);
-                }
-            });
-
-            deleted_ids.forEach((id) => {
-                $(`#line-${id}`).remove();
-                $(`#line-edit-${id}`).remove();
+                self.update_edit_values(line);
             });
         }
     }
 
     create_div(line) {
         const self = this;
-        const m = $(`<div id="line-${line.id}" class="line">`);
+        const m = $(`<div id="line-${line.get_id()}" class="line">`);
 
         const left = $(`<div class="line-left">
             <div class="line-color"></div>
@@ -98,7 +99,7 @@ export class SidebarLines extends MapStateObserver {
 
     marker_name(id) {
         if (id == -1) {
-            return "n/a";
+            return "<NONE>";
         }
 
         const marker = this.map_state.get_marker(id);
@@ -106,24 +107,28 @@ export class SidebarLines extends MapStateObserver {
             return marker.name;
         }
 
-        return `n/a (id=${id})`;
+        return `<NONE>`;
     }
 
     create_edit_div(line) {
         const self = this;
-        const m = $(`<div id="line-edit-${line.id}" class="edit">`);
+        const m = $(`<div id="line-edit-${line.get_id()}" class="edit">`);
 
         const line1 = $(`<div class="field">
             <label class="label">From</label>
             <div class="control">
-                <input class="input line-edit-from" type="text" placeholder="From">
+                <div class="select">
+                    <select class="line-edit-from"></select>
+                </div>
             </div>
         </div>`);
 
         const line2 = $(`<div class="field">
             <label class="label">To</label>
             <div class="control">
-                <input class="input line-edit-to" type="text" placeholder="To">
+                <div class="select">
+                    <select class="line-edit-to"></select>
+                </div>
             </div>
         </div>`);
 
@@ -138,7 +143,7 @@ export class SidebarLines extends MapStateObserver {
             self.submit_edit(line);
         });
         const cancel_button = $('<button class="button">Cancel</button>').click(() => {
-            $(`#line-edit-${line.id}`).remove();
+            $(`#line-edit-${line.get_id()}`).remove();
         });
         const buttons = $('<div class="field is-grouped">')
             .append($('<div class="control">').append(submit_button))
@@ -152,11 +157,11 @@ export class SidebarLines extends MapStateObserver {
     create_line_dropdown(line) {
         const self = this;
 
-        const menu_id = `dropdown-line-${line.id}`;
+        const menu_id = `dropdown-line-${line.get_id()}`;
         const dropdown = $('<div class="dropdown is-right">');
         dropdown.click((event) => {
             event.stopPropagation();
-            $(`#line-${line.id} .dropdown`).toggleClass('is-active');
+            $(`#line-${line.get_id()} .dropdown`).toggleClass('is-active');
         });
 
         const dropdown_trigger = $('<div class="dropdown-trigger">');
@@ -173,8 +178,8 @@ export class SidebarLines extends MapStateObserver {
 
         const menu_edit = $('<a href="#" class="line-edit dropdown-item">Edit</a>');
         menu_edit.click(() => {
-            if ($(`#line-edit-${line.id}`).length == 0) {
-                self.create_edit_div(line).insertAfter(`#line-${line.id}`);
+            if ($(`#line-edit-${line.get_id()}`).length == 0) {
+                self.create_edit_div(line).insertAfter(`#line-${line.get_id()}`);
                 self.update_edit_values(line);
             }
         });
@@ -182,7 +187,7 @@ export class SidebarLines extends MapStateObserver {
 
         const menu_delete = $('<a href="#" class="line-delete dropdown-item">Delete</a>');
         menu_delete.click(() => {
-            self.map_state.delete_line(line.id, null);
+            self.map_state.delete_line(line.get_id());
         });
         dropdown_menu_content.append(menu_delete);
 
@@ -190,30 +195,63 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_edit_values(line) {
-        if ($(`#line-edit-${line.id}`).length == 0) {
+        if ($(`#line-edit-${line.get_id()}`).length == 0) {
             return;
         }
 
-        $(`#line-edit-${line.id} .line-edit-from`).val(line.marker1);
-        $(`#line-edit-${line.id} .line-edit-to`).val(line.marker2);
-        $(`#line-edit-${line.id} .line-edit-color`).val(line.color.to_hash_string());
+        const markers = [{name: "<NONE>", id: -1}];
+        this.map_state.markers.forEach((marker) => {
+            markers.push({name: marker.name, id: marker.get_id()});
+        });
+        markers.sort((a, b) => {
+            if (a.id < 0) {
+                return -1;
+            }
+            if (b.id < 0) {
+                return +1;
+            }
+            return a.name.localeCompare(b.name);
+        });
+
+        $(`#line-edit-${line.get_id()} .line-edit-from`).empty();
+        markers.forEach((name_id) => {
+            const option = $(`<option value="${name_id.id}"></option>`);
+            option.text(name_id.name);
+            if (line.marker1 == name_id.id) {
+                option.prop("selected", true);
+            }
+            $(`#line-edit-${line.get_id()} .line-edit-from`).append(option);
+        });
+
+        $(`#line-edit-${line.get_id()} .line-edit-to`).empty();
+        markers.forEach((name_id) => {
+            const option = $(`<option value="${name_id.id}"></option>`);
+            option.text(name_id.name);
+            if (line.marker2 == name_id.id) {
+                option.prop("selected", true);
+            }
+            $(`#line-edit-${line.get_id()} .line-edit-to`).append(option);
+        });
+
+        $(`#line-edit-${line.get_id()} .line-edit-color`).val(line.color.to_hash_string());
     }
 
     submit_edit(line) {
-        const marker1 = parseInt($(`#line-edit-${line.id} .line-edit-from`).val(), 10);
-        const marker2 = parseInt($(`#line-edit-${line.id} .line-edit-to`).val(), 10);
-        const color = Color.from_string($(`#line-edit-${line.id} .line-edit-color`).val());
+        const marker1 = parseInt($(`#line-edit-${line.get_id()} .line-edit-from`).val(), 10);
+        const marker2 = parseInt($(`#line-edit-${line.get_id()} .line-edit-to`).val(), 10);
+        const color = Color.from_string($(`#line-edit-${line.get_id()} .line-edit-color`).val());
 
         if (!color) {
             alert('bad values.');
             return;
         }
 
-        $(`#line-edit-${line.id}`).remove();
+        $(`#line-edit-${line.get_id()}`).remove();
 
         line.marker1 = marker1;
         line.marker2 = marker2;
         line.color = color;
+
         this.map_state.update_line_storage(line);
         this.map_state.update_observers(MapStateChange.LINES);
     }

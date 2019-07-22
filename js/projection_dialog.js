@@ -62,8 +62,8 @@ export class ProjectionDialog {
 
         if (create_line) {
             const line = this.map_state.add_line();
-            line.marker1 = this.marker.id;
-            line.marker2 = target_marker.id;
+            line.marker1 = this.marker.get_id();
+            line.marker2 = target_marker.get_id();
             line.color = (line_color !== null)
                 ? line_color
                 : this.marker.color;
