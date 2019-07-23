@@ -146,9 +146,18 @@ export class GoogleWrapper extends MapWrapper {
             map: this.map,
             path: [],
             geodesic: true,
+            clickable: false,
             strokeColor: line.color.to_hash_string(),
             strokeOpacity: 1.0,
-            strokeWeight: 2
+            strokeWeight: 2,
+            icons: [
+                {
+                    icon: {
+                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+                    },
+                    offset: '100%'
+                }
+            ]
         });
 
         m.last_color = line.color;

@@ -155,10 +155,42 @@ export class LeafletWrapper extends MapWrapper {
         }).addTo(this.map);
 
         m.last_color = line.color;
+        m.arrow = L.polyline([], {
+            color: line.color.to_hash_string(),
+            weight: 2
+        }).addTo(this.map);
 
         this.lines.set(line.get_id(), m);
 
         this.update_line_object(m, line);
+    }
+
+    arrow_head (dirPoint, heading) {
+        if (heading === null) {
+            return [];
+        }
+
+        const headAngle = 60;
+        const pixelSize = 10;
+        const d2r = Math.PI / 180;
+        const tipPoint = this.map.project(dirPoint);
+        const direction = (-(heading - 90)) * d2r;
+        const radianArrowAngle = headAngle / 2 * d2r;
+
+        const headAngle1 = direction + radianArrowAngle;
+        const headAngle2 = direction - radianArrowAngle;
+        const arrowHead1 = L.point(
+            tipPoint.x - pixelSize * Math.cos(headAngle1),
+            tipPoint.y + pixelSize * Math.sin(headAngle1));
+        const arrowHead2 = L.point(
+            tipPoint.x - pixelSize * Math.cos(headAngle2),
+            tipPoint.y + pixelSize * Math.sin(headAngle2));
+
+        return [
+            this.map.unproject(arrowHead1),
+            dirPoint,
+            this.map.unproject(arrowHead2)
+        ];
     }
 
     update_line_object(m, line) {
@@ -166,12 +198,17 @@ export class LeafletWrapper extends MapWrapper {
             const path = this.map_state.get_marker(line.marker1).coordinates.interpolate_geodesic_line(this.map_state.get_marker(line.marker2).coordinates, this.map_state.zoom);
             const leaflet_path = Coordinates.to_leaflet_path(path);
             m.setLatLngs(leaflet_path);
+            m.arrow.setLatLngs(this.arrow_head(leaflet_path[leaflet_path.length - 1], line.bearing));
         } else {
             m.setLatLngs([]);
+            m.arrow.setLatLngs([]);
         }
 
         if (!line.color.equals(m.last_color)) {
             m.setStyle({
+                color: line.color.to_hash_string()
+            });
+            m.arrow.setStyle({
                 color: line.color.to_hash_string()
             });
             m.last_color = line.color;
@@ -179,6 +216,7 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     delete_line_object(m) {
+        this.map.removeLayer(m.arrow);    
         this.map.removeLayer(m);
     }
 }
