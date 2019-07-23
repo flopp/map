@@ -114,8 +114,8 @@ export class MapWrapper extends MapStateObserver {
             }
         }
 
-        if (changes & MapStateChange.LINES) {
-            // update and add lines
+        if (changes & (MapStateChange.LINES | MapStateChange.ZOOM)) {
+            // update and add lines; also update lines on zoom to redraw arrow heads!
             this.map_state.lines.forEach((line) => {
                 if (self.lines.has(line.get_id())) {
                     self.update_line_object(self.lines.get(line.get_id()), line);

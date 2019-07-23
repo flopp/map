@@ -39,13 +39,13 @@ export class LeafletWrapper extends MapWrapper {
 
         this.map.on('zoom', function () {
             if (self.active && !self.automatic_event) {
-                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom(), self);
+                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
             }
         });
 
         this.map.on('move', function () {
             if (self.active && !self.automatic_event) {
-                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom(), self);
+                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
             }
         });
     }
