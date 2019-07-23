@@ -48,7 +48,7 @@ export class Storage {
         this.set(key, value.to_string());
     }
     set_coordinates(key, value) {
-        this.set(key, `${value.lat};${value.lng}`);
+        this.set(key, `${value.lat()};${value.lng()}`);
     }
 
     get_int(key, default_value) {

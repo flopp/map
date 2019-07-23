@@ -17,9 +17,36 @@ let coordinates_format = CoordinatesFormat.DM;
 
 export class Coordinates {
     constructor(lat, lng) {
-        this.lat = lat;
-        this.lng = lng;
+        this.raw_lat = lat;
+        this.raw_lng = lng;
     }
+
+    lat() {
+        return this.raw_lat;
+    }
+
+    lng() {
+        let lng = this.raw_lng;
+        while (lng < -180) {
+            lng += 360;
+        }
+        while (lng > 180) {
+            lng -= 360;
+        }
+        return lng;
+    }
+
+    next_lng(other) {
+        let lng = this.raw_lng;
+        while (lng < other - 180) {
+            lng += 360;
+        }
+        while (lng > other + 180) {
+            lng -= 360;
+        }
+        return lng;
+    }
+
 
     static set_coordinates_format(format) {
         coordinates_format = format;
@@ -155,12 +182,12 @@ export class Coordinates {
 
     to_google() {
         /* global google */
-        return new google.maps.LatLng(this.lat, this.lng);
+        return new google.maps.LatLng(this.raw_lat, this.raw_lng);
     }
 
     to_leaflet() {
         /* global L */
-        return L.latLng(this.lat, this.lng);
+        return L.latLng(this.raw_lat, this.raw_lng);
     }
 
     static to_leaflet_path(path) {
@@ -184,13 +211,14 @@ export class Coordinates {
     }
 
     to_string_DM() {
-        let lat = Math.abs(this.lat),
+        let lat = Math.abs(this.lat()),
             lat_min,
             lat_mmin,
-            lng = Math.abs(this.lng),
+            lng = Math.abs(this.lng()),
             lng_min,
             lng_mmin;
 
+        const ns = Coordinates.NS(lat);
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
         lat_min = Math.floor(lat * 60);
@@ -201,6 +229,7 @@ export class Coordinates {
             lat_min += 1;
         }
 
+        const ew = Coordinates.NS(lng);
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         lng_min = Math.floor(lng * 60);
@@ -211,7 +240,7 @@ export class Coordinates {
             lng_min += 1;
         }
 
-        return Coordinates.NS(this.lat) +
+        return ns +
                 " " +
                 Coordinates.zeropad(lat_deg, 2) +
                 " " +
@@ -219,7 +248,7 @@ export class Coordinates {
                 "." +
                 Coordinates.zeropad(lat_mmin, 3) +
                 " " +
-                Coordinates.EW(this.lng) +
+                ew +
                 " " +
                 Coordinates.zeropad(lng_deg, 3) +
                 " " +
@@ -230,22 +259,24 @@ export class Coordinates {
 
 
     to_string_DMS() {
-        let lat = Math.abs(this.lat),
-            lng = Math.abs(this.lng);
+        let lat = Math.abs(this.lat()),
+            lng = Math.abs(this.lng());
 
+        const ns = Coordinates.NS(lat);
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
         const lat_min = Math.floor(lat * 60);
         lat = lat * 60 - lat_min;
         const lat_sec = lat * 60.0;
 
+        const ew = Coordinates.NS(lng);
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         const lng_min = Math.floor(lng * 60);
         lng = lng * 60 - lng_min;
         const lng_sec = lng * 60.0;
 
-        return Coordinates.NS(this.lat) +
+        return ns +
                 " " +
                 Coordinates.zeropad(lat_deg, 2) +
                 " " +
@@ -253,7 +284,7 @@ export class Coordinates {
                 " " +
                 Coordinates.zeropad(lat_sec.toFixed(2), 5) +
                 " " +
-                Coordinates.EW(this.lng) +
+                ew +
                 " " +
                 Coordinates.zeropad(lng_deg, 3) +
                 " " +
@@ -264,36 +295,31 @@ export class Coordinates {
 
     to_string_D() {
         const
-            lat = Math.abs(this.lat),
-            lng = Math.abs(this.lng);
+            lat = Math.abs(this.lat()),
+            lng = Math.abs(this.lng()),
+            ns = Coordinates.NS(lat),
+            ew = Coordinates.EW(lng);
 
-        return Coordinates.NS(this.lat) +
-                " " +
-                lat.toFixed(6) +
-                " " +
-                Coordinates.EW(this.lng) +
-                " " +
-                lng.toFixed(6);
+        return ns + " " + lat.toFixed(6) +
+            " " +
+            ew + " " + lng.toFixed(6);
     }
 
     distance(other) {
         const geod = GeographicLib.Geodesic.WGS84;
-        const r = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
+        const r = geod.Inverse(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.DISTANCE | GeographicLib.Geodesic.LONG_UNROLL);
         return r.s12;
     }
 
     distance_bearing(other) {
         const geod = GeographicLib.Geodesic.WGS84;
-        const r = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
-        while (r.azi1 < 0) {
-            r.azi1 += 360.0;
-        }
+        const r = geod.Inverse(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.DISTANCE | GeographicLib.Geodesic.AZIMUTH | GeographicLib.Geodesic.LONG_UNROLL);
         return {distance: r.s12, bearing: r.azi1};
     }
 
     project(angle, distance) {
         const geod = GeographicLib.Geodesic.WGS84;
-        const r = geod.Direct(this.lat, this.lng, angle, distance);
+        const r = geod.Direct(this.lat(), this.lng(), angle, distance, GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONG_UNROLL);
         return new Coordinates(r.lat2, r.lon2);
     }
 
@@ -301,21 +327,23 @@ export class Coordinates {
         // const d = 6000000 / Math.pow(2, zoom);
         const maxk = 50;
         const geod = GeographicLib.Geodesic.WGS84;
-        const t = geod.Inverse(this.lat, this.lng, other.lat, other.lng);
+        const t = geod.Inverse(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.DISTANCE | GeographicLib.Geodesic.LONG_UNROLL);
 
         // const k = Math.min(maxk, Math.max(1, Math.ceil(t.s12 / d)));
         const k = maxk;
         const points = new Array(k + 1);
         points[0] = this;
-        points[k] = other;
+        points[k] = new Coordinates(other.raw_lat, other.next_lng(this.raw_lng));
+        
         if (k > 1) {
-            const line = geod.InverseLine(this.lat, this.lng, other.lat, other.lng, GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE);
+            const line = geod.InverseLine(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LONG_UNROLL);
             const da12 = t.a12 / k;
             for (let i = 1; i < k; i += 1) {
-                const point = line.GenPosition(true, i * da12, GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE);
+                const point = line.GenPosition(true, i * da12, GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LONG_UNROLL);
                 points[i] = new Coordinates(point.lat2, point.lon2);
             }
         }
+
         return points;
     }
 
