@@ -51,6 +51,9 @@ export class Coordinates {
     static set_coordinates_format(format) {
         coordinates_format = format;
     }
+    static get_coordinates_format() {
+        return coordinates_format;
+    }
 
     static from_google(latlng) {
         return new Coordinates(latlng.lat(), latlng.lng());
@@ -229,7 +232,7 @@ export class Coordinates {
             lat_min += 1;
         }
 
-        const ew = Coordinates.NS(lng);
+        const ew = Coordinates.EW(lng);
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         lng_min = Math.floor(lng * 60);
@@ -269,7 +272,7 @@ export class Coordinates {
         lat = lat * 60 - lat_min;
         const lat_sec = lat * 60.0;
 
-        const ew = Coordinates.NS(lng);
+        const ew = Coordinates.EW(lng);
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         const lng_min = Math.floor(lng * 60);

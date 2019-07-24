@@ -1,4 +1,5 @@
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateChange, MapStateObserver} from "./mapstate.js";
+import {Coordinates, CoordinatesFormat} from "./coordinates.js";
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {
@@ -21,6 +22,23 @@ export class SidebarTools extends MapStateObserver {
 
         $("#btn-multi-markers").click(() => {
             self.app.show_multi_markers_dialog();
+        });
+
+        [
+            {id: CoordinatesFormat.D, name: "Degrees"},
+            {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
+            {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"}
+        ].forEach((item) => {
+            const option = $(`<option value="${item.id}">${item.name}</option>`);
+            option.text(item.name);
+            if (item.id === Coordinates.get_coordinates_format()) {
+                option.prop("selected", true);
+            }
+            $('#coordinates-format').append(option);
+        });
+        $('#coordinates-format').change(() => {
+            Coordinates.set_coordinates_format(parseInt($('#coordinates-format').val(), 10));
+            self.map_state.update_observers(MapStateChange.MARKERS);
         });
     }
 
