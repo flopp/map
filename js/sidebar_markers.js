@@ -1,6 +1,7 @@
 import {Color} from './color.js';
-import {Coordinates} from "./coordinates.js";
+import {Coordinates, CoordinatesFormat} from "./coordinates.js";
 import {MapStateChange, MapStateObserver} from "./mapstate.js";
+import {parse_float} from './utilities.js';
 
 export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
@@ -15,6 +16,29 @@ export class SidebarMarkers extends MapStateObserver {
         });
         $("#btn-delete-markers").click(() => {
             self.map_state.delete_all_markers();
+        });
+
+        this.hide_settings();
+        [
+            {id: CoordinatesFormat.D, name: "Degrees"},
+            {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
+            {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"}
+        ].forEach((item) => {
+            const option = $(`<option value="${item.id}">${item.name}</option>`);
+            option.text(item.name);
+            if (item.id === Coordinates.get_coordinates_format()) {
+                option.prop("selected", true);
+            }
+            $('#marker-settings [data-marker-settings-coordinates-format]').append(option);
+        });
+        $("#btn-marker-settings").click(() => {
+            self.show_settings();
+        });
+        $("#marker-settings [data-marker-settings-cancel]").click(() => {
+            self.hide_settings();
+        });
+        $("#marker-settings [data-marker-settings-submit]").click(() => {
+            self.submit_settings();
         });
     }
 
@@ -38,7 +62,7 @@ export class SidebarMarkers extends MapStateObserver {
             $(`#marker-${marker.get_id()} .marker-color`).css("background-color", marker.color.to_hash_string());
             $(`#marker-${marker.get_id()} .marker-name`).text(marker.name);
             $(`#marker-${marker.get_id()} .marker-radius`).text(circle);
-            $(`#marker-${marker.get_id()} .marker-coordinates`).text(marker.coordinates.to_string());
+            $(`#marker-${marker.get_id()} .marker-coordinates`).text(marker.coordinates.to_string_format(self.map_state.settings_marker_coordinates_format));
 
             self.update_edit_values(marker);
         });
@@ -64,6 +88,8 @@ export class SidebarMarkers extends MapStateObserver {
                 $(`#marker-edit-${id}`).remove();
             });
         }
+
+        this.update_settings_display();
     }
 
     create_div(marker) {
@@ -192,7 +218,7 @@ export class SidebarMarkers extends MapStateObserver {
             return;
         }
         $(`#marker-edit-${marker.get_id()} .marker-edit-name`).val(marker.name);
-        $(`#marker-edit-${marker.get_id()} .marker-edit-coordinates`).val(marker.coordinates.to_string());
+        $(`#marker-edit-${marker.get_id()} .marker-edit-coordinates`).val(marker.coordinates.to_string_format(this.map_state.settings_marker_coordinates_format));
         $(`#marker-edit-${marker.get_id()} .marker-edit-radius`).val(marker.radius);
         $(`#marker-edit-${marker.get_id()} .marker-edit-color`).val(marker.color.to_hash_string());
     }
@@ -216,5 +242,49 @@ export class SidebarMarkers extends MapStateObserver {
         marker.color = color;
         this.map_state.update_marker_storage(marker);
         this.map_state.update_observers(MapStateChange.MARKERS);
+    }
+
+    show_settings() {
+        if (!$('#marker-settings').hasClass('is-hidden')) {
+            return;
+        }
+
+        $('#marker-settings').removeClass('is-hidden');
+        this.update_settings_display();
+    }
+
+    hide_settings() {
+        $('#marker-settings').addClass('is-hidden');
+    }
+
+    submit_settings() {
+        const coordinates_format = parseInt($("#marker-settings [data-marker-settings-coordinates_format]").val(), 10);
+        const random_color = $("#marker-settings [data-marker-settings-random-color]").prop("checked");
+        const color = Color.from_string($("#marker-settings [data-marker-settings-color]").val());
+        const radius = parse_float($("#marker-settings [data-marker-settings-radius]").val());
+
+        if ((color === null) || (radius === null)) {
+            alert("bad values");
+            return;
+        }
+
+        this.map_state.set_settings_marker_coordinates_format(coordinates_format);
+        this.map_state.set_settings_marker_random_color(random_color);
+        this.map_state.set_settings_marker_color(color);
+        this.map_state.set_settings_marker_radius(radius);
+        this.map_state.update_observers(MapStateChange.MARKERS);
+
+        this.hide_settings();
+    }
+
+    update_settings_display() {
+        if ($('#marker-settings').hasClass('is-hidden')) {
+            return;
+        }
+
+        $("#marker-settings [data-marker-settings-coordinates_format]").val(this.map_state.settings_marker_coordinates_format);
+        $("#marker-settings [data-marker-settings-random-color]").prop("checked", this.map_state.settings_marker_random_color);
+        $("#marker-settings [data-marker-settings-color]").val(this.map_state.settings_marker_color.to_hash_string());
+        $("#marker-settings [data-marker-settings-radius]").val(this.map_state.settings_marker_radius);
     }
 }

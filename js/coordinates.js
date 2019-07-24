@@ -201,8 +201,8 @@ export class Coordinates {
         return leaflet_path;
     }
 
-    to_string() {
-        switch (coordinates_format) {
+    to_string_format(format) {
+        switch (format) {
             case CoordinatesFormat.D:
                 return this.to_string_D();
             case CoordinatesFormat.DMS:
@@ -211,6 +211,10 @@ export class Coordinates {
             default:
                 return this.to_string_DM();
         }
+    }
+
+    to_string() {
+        return this.to_string_format(coordinates_format);
     }
 
     to_string_DM() {

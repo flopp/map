@@ -41,6 +41,13 @@ export class Storage {
     set_int(key, value) {
         this.set(key, String(value));
     }
+    set_bool(key, value) {
+        if (value) {
+            this.set_int(key, 1);
+        } else {
+            this.set_int(key, 0);
+        }
+    }
     set_float(key, value) {
         this.set(key, String(value));
     }
@@ -57,6 +64,12 @@ export class Storage {
             return parseInt(s, 10);
         }
         return default_value;
+    }
+    get_bool(key, default_value) {
+        if (default_value) {
+            return this.get_int(key, 1) != 0;
+        }
+        return this.get_int(key, 0) != 0;
     }
     get_float(key, default_value) {
         const s = this.get(key, null);
