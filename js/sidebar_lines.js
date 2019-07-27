@@ -1,5 +1,6 @@
 import {Color} from './color.js';
 import {MapStateChange, MapStateObserver} from "./mapstate.js";
+import {create_button, create_dropdown, create_color_input, create_select_input, parse_int} from "./utilities.js";
 
 export class SidebarLines extends MapStateObserver {
     constructor(app) {
@@ -93,10 +94,10 @@ export class SidebarLines extends MapStateObserver {
 
         const center = $('<div class="line-center"></div>');
         center.append($(`<table>
-            <tr><td>From:</td><td class="line-from"></td></tr>
-            <tr><td>To:</td><td class="line-to"></td></tr>
-            <tr><td>Length:</td><td class="line-distance"></td></tr>
-            <tr><td>Bearing:</td><td class="line-bearing"></td></tr>
+            <tr><td class="has-text-weight-semibold">From:</td><td class="line-from"></td></tr>
+            <tr><td class="has-text-weight-semibold">To:</td><td class="line-to"></td></tr>
+            <tr><td class="has-text-weight-semibold">Length:</td><td class="line-distance"></td></tr>
+            <tr><td class="has-text-weight-semibold">Bearing:</td><td class="line-bearing"></td></tr>
         </table>`));
         m.append(center);
 
@@ -126,90 +127,51 @@ export class SidebarLines extends MapStateObserver {
 
     create_edit_div(line) {
         const self = this;
-        const m = $(`<div id="line-edit-${line.get_id()}" class="edit">`);
+        const div = $(`<div id="line-edit-${line.get_id()}" class="edit">`);
 
-        const line1 = $(`<div class="field">
-            <label class="label">From</label>
-            <div class="control">
-                <div class="select">
-                    <select class="line-edit-from"></select>
-                </div>
-            </div>
-        </div>`);
+        const from = create_select_input("From", "data-from");
+        const to = create_select_input("To", "data-to");
+        const color = create_color_input("Color", "data-color", "Color");
 
-        const line2 = $(`<div class="field">
-            <label class="label">To</label>
-            <div class="control">
-                <div class="select">
-                    <select class="line-edit-to"></select>
-                </div>
-            </div>
-        </div>`);
-
-        const color = $(`<div class="field">
-            <label class="label">Color</label>
-            <div class="control">
-                <input class="input line-edit-color" type="color" placeholder="Color">
-            </div>
-        </div>`);
-
-        const submit_button = $('<button class="button">Submit</button>').click(() => {
+        const submit_button = create_button("Submit", () => {
             self.submit_edit(line);
         });
-        const cancel_button = $('<button class="button">Cancel</button>').click(() => {
-            $(`#line-edit-${line.get_id()}`).remove();
+        const cancel_button = create_button("Cancel", () => {
+            div.remove();
         });
         const buttons = $('<div class="field is-grouped">')
-            .append($('<div class="control">').append(submit_button))
-            .append($('<div class="control">').append(cancel_button));
+            .append(submit_button)
+            .append(cancel_button);
 
-        m.append(line1).append(line2).append(color).append(buttons);
+        div.append(from).append(to).append(color).append(buttons);
 
-        return m;
+        return div;
     }
 
     create_line_dropdown(line) {
         const self = this;
-
-        const menu_id = `dropdown-line-${line.get_id()}`;
-        const dropdown = $('<div class="dropdown is-right">');
-        dropdown.click((event) => {
-            event.stopPropagation();
-            $(`#line-${line.get_id()} .dropdown`).toggleClass('is-active');
-        });
-
-        const dropdown_trigger = $('<div class="dropdown-trigger">');
-        dropdown.append(dropdown_trigger);
-        const dropdown_button = $(`<button class="button is-white" aria-haspopup="true" aria-controls="${menu_id}">
-            <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>
-        </button>`);
-        dropdown_trigger.append(dropdown_button);
-
-        const dropdown_menu = $(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
-        dropdown.append(dropdown_menu);
-        const dropdown_menu_content = $('<div class="dropdown-content">');
-        dropdown_menu.append(dropdown_menu_content);
-
-        const menu_edit = $('<a href="#" class="line-edit dropdown-item">Edit</a>');
-        menu_edit.click(() => {
-            if ($(`#line-edit-${line.get_id()}`).length == 0) {
-                self.create_edit_div(line).insertAfter(`#line-${line.get_id()}`);
-                self.update_edit_values(line);
+        return create_dropdown(`dropdown-line-${line.get_id()}`, [
+            {
+                label: "Edit",
+                callback: () => {
+                    if ($(`#line-edit-${line.get_id()}`).length == 0) {
+                        self.create_edit_div(line).insertAfter(`#line-${line.get_id()}`);
+                        self.update_edit_values(line);
+                    }
+                }
+            },
+            {
+                label: "Delete",
+                callback: () => {
+                    self.map_state.delete_line(line.get_id());
+                }
             }
-        });
-        dropdown_menu_content.append(menu_edit);
-
-        const menu_delete = $('<a href="#" class="line-delete dropdown-item">Delete</a>');
-        menu_delete.click(() => {
-            self.map_state.delete_line(line.get_id());
-        });
-        dropdown_menu_content.append(menu_delete);
-
-        return dropdown;
+        ]);
     }
 
     update_edit_values(line) {
-        if ($(`#line-edit-${line.get_id()}`).length == 0) {
+        const div = $(`#line-edit-${line.get_id()}`);
+        if (div.length == 0) {
             return;
         }
 
@@ -227,40 +189,41 @@ export class SidebarLines extends MapStateObserver {
             return a.name.localeCompare(b.name);
         });
 
-        $(`#line-edit-${line.get_id()} .line-edit-from`).empty();
+        div.find("[data-from]").empty();
         markers.forEach((name_id) => {
             const option = $(`<option value="${name_id.id}"></option>`);
             option.text(name_id.name);
             if (line.marker1 == name_id.id) {
                 option.prop("selected", true);
             }
-            $(`#line-edit-${line.get_id()} .line-edit-from`).append(option);
+            div.find("[data-from]").append(option);
         });
 
-        $(`#line-edit-${line.get_id()} .line-edit-to`).empty();
+        div.find("[data-to]").empty();
         markers.forEach((name_id) => {
             const option = $(`<option value="${name_id.id}"></option>`);
             option.text(name_id.name);
             if (line.marker2 == name_id.id) {
                 option.prop("selected", true);
             }
-            $(`#line-edit-${line.get_id()} .line-edit-to`).append(option);
+            div.find("[data-to]").append(option);
         });
 
-        $(`#line-edit-${line.get_id()} .line-edit-color`).val(line.color.to_hash_string());
+        div.find("[data-color]").val(line.color.to_hash_string());
     }
 
     submit_edit(line) {
-        const marker1 = parseInt($(`#line-edit-${line.get_id()} .line-edit-from`).val(), 10);
-        const marker2 = parseInt($(`#line-edit-${line.get_id()} .line-edit-to`).val(), 10);
-        const color = Color.from_string($(`#line-edit-${line.get_id()} .line-edit-color`).val());
+        const div = $(`#line-edit-${line.get_id()}`);
+        const marker1 = parse_int(div.find("[data-from]").val());
+        const marker2 = parse_int(div.find("[data-to]").val());
+        const color = Color.from_string(div.find("[data-color]").val());
 
         if (!color) {
             alert('bad values.');
             return;
         }
 
-        $(`#line-edit-${line.get_id()}`).remove();
+        div.remove();
 
         line.marker1 = marker1;
         line.marker2 = marker2;

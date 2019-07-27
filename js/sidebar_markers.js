@@ -1,7 +1,7 @@
 import {Color} from './color.js';
 import {Coordinates, CoordinatesFormat} from "./coordinates.js";
 import {MapStateChange, MapStateObserver} from "./mapstate.js";
-import {parse_float} from './utilities.js';
+import {parse_float, create_button, create_dropdown, create_text_input, create_color_input} from './utilities.js';
 
 export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
@@ -55,15 +55,15 @@ export class SidebarMarkers extends MapStateObserver {
             if ($(`#marker-${marker.get_id()}`).length == 0) {
                 $("#markers").append(self.create_div(marker));
             }
+            const div = $(`#marker-${marker.get_id()}`);
 
             const circle = (marker.radius > 0)
                 ? `Circle: ${marker.radius.toFixed(2)} m`
                 : "No circle";
-
-            $(`#marker-${marker.get_id()} .marker-color`).css("background-color", marker.color.to_hash_string());
-            $(`#marker-${marker.get_id()} .marker-name`).text(marker.name);
-            $(`#marker-${marker.get_id()} .marker-radius`).text(circle);
-            $(`#marker-${marker.get_id()} .marker-coordinates`).text(marker.coordinates.to_string_format(self.map_state.settings_marker_coordinates_format));
+            div.find(".marker-color").css("background-color", marker.color.to_hash_string());
+            div.find(".marker-name").text(marker.name);
+            div.find(".marker-radius").text(circle);
+            div.find(".marker-coordinates").text(marker.coordinates.to_string_format(self.map_state.settings_marker_coordinates_format));
 
             self.update_edit_values(marker);
         });
@@ -122,120 +122,79 @@ export class SidebarMarkers extends MapStateObserver {
 
     create_edit_div(marker) {
         const self = this;
-        const m = $(`<div id="marker-edit-${marker.get_id()}" class="edit">`);
+        const div = $(`<div id="marker-edit-${marker.get_id()}" class="edit">`);
 
-        const name = $(`
-        <div class="field">
-            <label class="label">Name</label>
-            <div class="control">
-                <input class="input marker-edit-name" type="text" placeholder="Name">
-            </div>
-        </div>`);
+        const name = create_text_input("Name", "data-name", "Name");
+        const coordinates = create_text_input("Coordinates", "data-coordinates", "Coordinates");
+        const radius = create_text_input("Circle Radius (m)", "data-radius", "Circle Radius");
+        const color = create_color_input("Color", "data-color", "Color");
 
-        const coordinates = $(`<div class="field">
-            <label class="label">Coordinates</label>
-            <div class="control">
-                <input class="input marker-edit-coordinates" type="text" placeholder="Coordinates">
-            </div>
-        </div>`);
-
-        const radius = $(`<div class="field">
-            <label class="label">Circle Radius (m)</label>
-            <div class="control">
-                <input class="input marker-edit-radius" type="text" placeholder="Circle Radius">
-            </div>
-        </div>`);
-
-        const color = $(`<div class="field">
-            <label class="label">Color</label>
-            <div class="control">
-                <input class="input marker-edit-color" type="color" placeholder="Color">
-            </div>
-        </div>`);
-
-        const submit_button = $('<button class="button">Submit</button>').click(() => {
+        const submit_button = create_button("Submit", () => {
             self.submit_edit(marker);
         });
-        const cancel_button = $('<button class="button">Cancel</button>').click(() => {
-            $(`#marker-edit-${marker.get_id()}`).remove();
+        const cancel_button = create_button("Cancel", () => {
+            div.remove();
         });
         const buttons = $('<div class="field is-grouped">')
-            .append($('<div class="control">').append(submit_button))
-            .append($('<div class="control">').append(cancel_button));
+            .append(submit_button)
+            .append(cancel_button);
 
-        m.append(name).append(coordinates).append(radius).append(color).append(buttons);
+        div.append(name).append(coordinates).append(radius).append(color).append(buttons);
 
-        return m;
+        return div;
     }
 
     create_marker_dropdown(marker) {
         const self = this;
-
-        const menu_id = `dropdown-marker-${marker.get_id()}`;
-        const dropdown = $('<div class="dropdown is-right">');
-        dropdown.click((event) => {
-            event.stopPropagation();
-            $(`#marker-${marker.get_id()} .dropdown`).toggleClass('is-active');
-        });
-
-        const dropdown_trigger = $('<div class="dropdown-trigger">');
-        dropdown.append(dropdown_trigger);
-        const dropdown_button = $(`<button class="button is-white" aria-haspopup="true" aria-controls="${menu_id}">
-            <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>
-        </button>`);
-        dropdown_trigger.append(dropdown_button);
-
-        const dropdown_menu = $(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
-        dropdown.append(dropdown_menu);
-        const dropdown_menu_content = $('<div class="dropdown-content">');
-        dropdown_menu.append(dropdown_menu_content);
-
-        const menu_edit = $('<a href="#" class="marker-edit dropdown-item">Edit</a>');
-        menu_edit.click(() => {
-            if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
-                self.create_edit_div(marker).insertAfter(`#marker-${marker.get_id()}`);
-                self.update_edit_values(marker);
+        return create_dropdown(`dropdown-marker-${marker.get_id()}`, [
+            {
+                label: "Edit",
+                callback: () => {
+                    if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
+                        self.create_edit_div(marker).insertAfter(`#marker-${marker.get_id()}`);
+                        self.update_edit_values(marker);
+                    }
+                }
+            },
+            {
+                label: "Waypoint Projection",
+                callback: () => {
+                    self.app.show_projection_dialog(marker);
+                }
+            },
+            {
+                label: "Delete",
+                callback: () => {
+                    self.map_state.delete_marker(marker.get_id());
+                }
             }
-        });
-        dropdown_menu_content.append(menu_edit);
-
-        const menu_project = $('<a href="#" class="marker-project dropdown-item">Waypoint Projection</a>');
-        menu_project.click(() => {
-            self.app.show_projection_dialog(marker);
-        });
-        dropdown_menu_content.append(menu_project);
-
-        const menu_delete = $('<a href="#" class="marker-delete dropdown-item">Delete</a>');
-        menu_delete.click(() => {
-            self.map_state.delete_marker(marker.get_id());
-        });
-        dropdown_menu_content.append(menu_delete);
-
-        return dropdown;
+        ]);
     }
 
     update_edit_values(marker) {
-        if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
+        const div = $(`#marker-edit-${marker.get_id()}`);
+        if (div.length == 0) {
             return;
         }
-        $(`#marker-edit-${marker.get_id()} .marker-edit-name`).val(marker.name);
-        $(`#marker-edit-${marker.get_id()} .marker-edit-coordinates`).val(marker.coordinates.to_string_format(this.map_state.settings_marker_coordinates_format));
-        $(`#marker-edit-${marker.get_id()} .marker-edit-radius`).val(marker.radius);
-        $(`#marker-edit-${marker.get_id()} .marker-edit-color`).val(marker.color.to_hash_string());
+        div.find("[data-name]").val(marker.name);
+        div.find("[data-coordinates]").val(marker.coordinates.to_string_format(this.map_state.settings_marker_coordinates_format));
+        div.find("[data-radius]").val(marker.radius);
+        div.find("[data-color]").val(marker.color.to_hash_string());
     }
 
     submit_edit(marker) {
-        const name = $(`#marker-edit-${marker.get_id()} .marker-edit-name`).val();
-        const coordinates = Coordinates.from_string($(`#marker-edit-${marker.get_id()} .marker-edit-coordinates`).val());
-        const radius = parseFloat($(`#marker-edit-${marker.get_id()} .marker-edit-radius`).val());
-        const color = Color.from_string($(`#marker-edit-${marker.get_id()} .marker-edit-color`).val());
+        const div = $(`#marker-edit-${marker.get_id()}`);
+        const name = div.find("[data-name]").val();
+        const coordinates = Coordinates.from_string(div.find("[data-coordinates]").val());
+        const radius = parse_float(div.find("[data-radius]").val());
+        const color = Color.from_string(div.find("[data-color]").val());
 
         if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
             alert('bad values.');
             return;
         }
 
-        $(`#marker-edit-${marker.get_id()}`).remove();
+        div.remove();
 
         marker.name = name;
         marker.coordinates = coordinates;
