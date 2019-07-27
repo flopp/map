@@ -38,6 +38,9 @@ export class MapState {
         this.settings_marker_color = null;
         this.settings_marker_radius = null;
 
+        this.settings_line_random_color = null;
+        this.settings_line_color = null;
+
         this.observers = [];
 
         this.storage = new Storage();
@@ -64,6 +67,9 @@ export class MapState {
         this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
         this.storage.set_color("settings.marker.color", this.settings_marker_color);
         this.storage.set_float("settings.marker.radius", this.settings_marker_radius);
+
+        this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
+        this.storage.set_color("settings.line.color", this.settings_line_color);
     }
 
     restore() {
@@ -130,13 +136,18 @@ export class MapState {
 
         // settings
         this.set_settings_marker_coordinates_format(
-            this.storage.get_int("seetings.marker.coordinates_format", 1));
+            this.storage.get_int("settings.marker.coordinates_format", 1));
         this.set_settings_marker_random_color(
-            this.storage.get_bool("seetings.marker.random_color", true));
+            this.storage.get_bool("settings.marker.random_color", true));
         this.set_settings_marker_color(
-            this.storage.get_color("seetings.marker.color", new Color("FF0000")));
+            this.storage.get_color("settings.marker.color", new Color("FF0000")));
         this.set_settings_marker_radius(
-            this.storage.get_float("seetings.marker.radius", 0));
+            this.storage.get_float("settings.marker.radius", 0));
+
+        this.set_default_line_settings({
+            random_color: this.storage.get_bool("settings.line.random_color", true),
+            color:        this.storage.get_color("settings.line.color", new Color("FF0000"))
+        });
     }
 
     register_observer(observer) {
@@ -310,6 +321,10 @@ export class MapState {
 
     add_line() {
         const line = new Line(-1, -1);
+        if (!this.settings_line_random_color) {
+            line.color = this.settings_line_color;
+        }
+
         this.lines.push(line);
         this.lines_hash.set(line.get_id(), line);
         this.update_line_storage(line);
@@ -410,6 +425,16 @@ export class MapState {
     set_settings_marker_radius(radius) {
         this.settings_marker_radius = radius;
         this.storage.set_bool("settings.marker.radius", this.settings_marker_radius);
+        this.update_observers(MapStateChange.MARKERS);
+    }
+
+    set_default_line_settings(settings) {
+        this.settings_line_random_color = settings.random_color;
+        this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
+
+        this.settings_line_color = settings.color;
+        this.storage.set_bool("settings.line.color", this.settings_line_color);
+
         this.update_observers(MapStateChange.MARKERS);
     }
 

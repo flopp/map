@@ -13,6 +13,17 @@ export class SidebarLines extends MapStateObserver {
         $("#btn-delete-lines").click(() => {
             self.map_state.delete_all_lines();
         });
+
+        this.hide_settings();
+        $("#btn-line-settings").click(() => {
+            self.toggle_settings();
+        });
+        $("#line-settings [data-cancel]").click(() => {
+            self.hide_settings();
+        });
+        $("#line-settings [data-submit]").click(() => {
+            self.submit_settings();
+        });
     }
 
     update_state(changes) {
@@ -60,6 +71,8 @@ export class SidebarLines extends MapStateObserver {
                 });
             }
         }
+
+        this.update_settings_display();
 
         if (changes & (MapStateChange.MARKERS | MapStateChange.LINES)) {
             this.map_state.lines.forEach((line) => {
@@ -254,5 +267,52 @@ export class SidebarLines extends MapStateObserver {
 
         this.map_state.update_line_storage(line);
         this.map_state.update_observers(MapStateChange.LINES);
+    }
+
+    show_settings() {
+        if (!$('#line-settings').hasClass('is-hidden')) {
+            return;
+        }
+
+        $('#line-settings').removeClass('is-hidden');
+        this.update_settings_display();
+    }
+
+    hide_settings() {
+        $('#line-settings').addClass('is-hidden');
+    }
+
+    toggle_settings() {
+        if ($('#line-settings').hasClass('is-hidden')) {
+            this.hide_settings();
+        } else {
+            this.show_settings();
+        }
+    }
+
+    submit_settings() {
+        const random_color = $("#line-settings [data-random-color]").prop("checked");
+        const color = Color.from_string($("#line-settings [data-color]").val());
+
+        if (color === null) {
+            alert("bad values");
+            return;
+        }
+
+        this.map_state.set_default_line_settings({
+            random_color: random_color,
+            color: color
+        });
+
+        this.hide_settings();
+    }
+
+    update_settings_display() {
+        if ($('#line-settings').hasClass('is-hidden')) {
+            return;
+        }
+
+        $("#line-settings [data-random-color]").prop("checked", this.map_state.settings_line_random_color);
+        $("#line-settings [data-color]").val(this.map_state.settings_line_color.to_hash_string());
     }
 }

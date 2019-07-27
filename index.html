@@ -135,7 +135,7 @@
                                 <label class="label">Coordinates Display Format</label>
                                 <div class="control">
                                     <div class="select">
-                                        <select data-marker-settings-coordinates-format></select>
+                                        <select data-coordinates-format></select>
                                     </div>
                                 </div>
                             </div>
@@ -143,24 +143,24 @@
                                 <label class="label">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
-                                        <input data-marker-settings-random-color type="checkbox">Use random colors</label>
+                                        <input data-random-color type="checkbox">Use random colors</label>
                                       </div>
                                 <div class="control">
-                                    <input class="input" data-marker-settings-color type="color" placeholder="Color">
+                                    <input class="input" data-color type="color" placeholder="Color">
                                 </div>
                             </div>
                             <div class="field">
                                 <label class="label">Default Circle Radius (m)</label>
                                 <div class="control">
-                                    <input class="input" data-marker-settings-radius type="text" placeholder="Circle Radius">
+                                    <input class="input" data-radius type="text" placeholder="Circle Radius">
                                 </div>
                             </div>
                             <div class="field is-grouped">
                                 <div class="control">
-                                    <button class="button" data-marker-settings-submit>Submit</button>
+                                    <button class="button" data-submit>Submit</button>
                                 </div>
                                 <div class="control">
-                                    <button class="button" data-marker-settings-cancel>Cancel</button>
+                                    <button class="button" data-cancel>Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -183,6 +183,33 @@
                             <p class="control">
                                 <a id="btn-delete-lines" class="button is-danger">DELETE ALL</a>
                             </p>
+                            <p class="control">
+                                <a id="btn-line-settings" class="button">
+                                    <span class="icon">
+                                        <i class="fas fa-sliders-h"></i>
+                                    </span>
+                                </a>
+                            </p>
+                        </div>
+                        <div id="line-settings">
+                            <div class="field">
+                                <label class="label">Default Color</label>
+                                <div class="control">
+                                    <label class="checkbox">
+                                    <input data-random-color type="checkbox">Use random colors</label>
+                                </div>
+                                <div class="control">
+                                    <input class="input" data-color type="color" placeholder="Color">
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control">
+                                    <button class="button" data-submit>Submit</button>
+                                </div>
+                                <div class="control">
+                                    <button class="button" data-cancel>Cancel</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="scrollable-content">

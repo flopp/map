@@ -29,15 +29,15 @@ export class SidebarMarkers extends MapStateObserver {
             if (item.id === Coordinates.get_coordinates_format()) {
                 option.prop("selected", true);
             }
-            $('#marker-settings [data-marker-settings-coordinates-format]').append(option);
+            $('#marker-settings [data-coordinates-format]').append(option);
         });
         $("#btn-marker-settings").click(() => {
-            self.show_settings();
+            self.toggle_settings();
         });
-        $("#marker-settings [data-marker-settings-cancel]").click(() => {
+        $("#marker-settings [data-cancel]").click(() => {
             self.hide_settings();
         });
-        $("#marker-settings [data-marker-settings-submit]").click(() => {
+        $("#marker-settings [data-submit]").click(() => {
             self.submit_settings();
         });
     }
@@ -257,11 +257,19 @@ export class SidebarMarkers extends MapStateObserver {
         $('#marker-settings').addClass('is-hidden');
     }
 
+    toggle_settings() {
+        if ($('#marker-settings').hasClass('is-hidden')) {
+            this.hide_settings();
+        } else {
+            this.show_settings();
+        }
+    }
+
     submit_settings() {
-        const coordinates_format = parseInt($("#marker-settings [data-marker-settings-coordinates_format]").val(), 10);
-        const random_color = $("#marker-settings [data-marker-settings-random-color]").prop("checked");
-        const color = Color.from_string($("#marker-settings [data-marker-settings-color]").val());
-        const radius = parse_float($("#marker-settings [data-marker-settings-radius]").val());
+        const coordinates_format = parseInt($("#marker-settings [data-coordinates-format]").val(), 10);
+        const random_color = $("#marker-settings [data-random-color]").prop("checked");
+        const color = Color.from_string($("#marker-settings [data-color]").val());
+        const radius = parse_float($("#marker-settings [data-radius]").val());
 
         if ((color === null) || (radius === null)) {
             alert("bad values");
@@ -282,9 +290,9 @@ export class SidebarMarkers extends MapStateObserver {
             return;
         }
 
-        $("#marker-settings [data-marker-settings-coordinates_format]").val(this.map_state.settings_marker_coordinates_format);
-        $("#marker-settings [data-marker-settings-random-color]").prop("checked", this.map_state.settings_marker_random_color);
-        $("#marker-settings [data-marker-settings-color]").val(this.map_state.settings_marker_color.to_hash_string());
-        $("#marker-settings [data-marker-settings-radius]").val(this.map_state.settings_marker_radius);
+        $("#marker-settings [data-coordinates-format]").val(this.map_state.settings_marker_coordinates_format);
+        $("#marker-settings [data-random-color]").prop("checked", this.map_state.settings_marker_random_color);
+        $("#marker-settings [data-color]").val(this.map_state.settings_marker_color.to_hash_string());
+        $("#marker-settings [data-radius]").val(this.map_state.settings_marker_radius);
     }
 }
