@@ -14,14 +14,15 @@ export class SidebarLines extends MapStateObserver {
             self.map_state.delete_all_lines();
         });
 
+        this.settingsDiv = $("#line-settings");
         this.hide_settings();
         $("#btn-line-settings").click(() => {
             self.toggle_settings();
         });
-        $("#line-settings [data-cancel]").click(() => {
+        this.settingsDiv.find("[data-cancel]").click(() => {
             self.hide_settings();
         });
-        $("#line-settings [data-submit]").click(() => {
+        this.settingsDiv.find("[data-submit]").click(() => {
             self.submit_settings();
         });
     }
@@ -269,30 +270,34 @@ export class SidebarLines extends MapStateObserver {
         this.map_state.update_observers(MapStateChange.LINES);
     }
 
+    settings_shown() {
+        return !this.settingsDiv.hasClass("is-hidden");
+    }
+
     show_settings() {
-        if (!$('#line-settings').hasClass('is-hidden')) {
+        if (this.settings_shown()) {
             return;
         }
 
-        $('#line-settings').removeClass('is-hidden');
+        this.settingsDiv.removeClass('is-hidden');
         this.update_settings_display();
     }
 
     hide_settings() {
-        $('#line-settings').addClass('is-hidden');
+        this.settingsDiv.addClass('is-hidden');
     }
 
     toggle_settings() {
-        if ($('#line-settings').hasClass('is-hidden')) {
-            this.show_settings();
-        } else {
+        if (this.settings_shown()) {
             this.hide_settings();
+        } else {
+            this.show_settings();
         }
     }
 
     submit_settings() {
-        const random_color = $("#line-settings [data-random-color]").prop("checked");
-        const color = Color.from_string($("#line-settings [data-color]").val());
+        const random_color = this.settingsDiv.find("[data-random-color]").prop("checked");
+        const color = Color.from_string(this.settingsDiv.find("[data-color]").val());
 
         if (color === null) {
             alert("bad values");
@@ -308,11 +313,11 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_settings_display() {
-        if ($('#line-settings').hasClass('is-hidden')) {
+        if (!this.settings_shown()) {
             return;
         }
 
-        $("#line-settings [data-random-color]").prop("checked", this.map_state.settings_line_random_color);
-        $("#line-settings [data-color]").val(this.map_state.settings_line_color.to_hash_string());
+        this.settingsDiv.find("[data-random-color]").prop("checked", this.map_state.settings_line_random_color);
+        this.settingsDiv.find("[data-color]").val(this.map_state.settings_line_color.to_hash_string());
     }
 }

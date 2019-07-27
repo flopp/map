@@ -136,14 +136,12 @@ export class MapState {
         this.recompute_lines();
 
         // settings
-        this.set_settings_marker_coordinates_format(
-            this.storage.get_int("settings.marker.coordinates_format", 1));
-        this.set_settings_marker_random_color(
-            this.storage.get_bool("settings.marker.random_color", true));
-        this.set_settings_marker_color(
-            this.storage.get_color("settings.marker.color", new Color("FF0000")));
-        this.set_settings_marker_radius(
-            this.storage.get_float("settings.marker.radius", 0));
+        this.set_default_marker_settings({
+            coordinates_format: this.storage.get_int("settings.marker.coordinates_format", 1),
+            random_color: this.storage.get_bool("settings.marker.random_color", true),
+            color: this.storage.get_color("settings.marker.color", new Color("FF0000")),
+            radius: this.storage.get_float("settings.marker.radius", 0)
+        });
 
         this.set_default_line_settings({
             random_color: this.storage.get_bool("settings.line.random_color", true),
@@ -400,32 +398,27 @@ export class MapState {
         }
     }
 
-    set_settings_marker_coordinates_format(coordinates_format) {
-        switch (coordinates_format) {
+    set_default_marker_settings(settings) {
+        switch (settings.coordinates_format) {
             case CoordinatesFormat.D:
             case CoordinatesFormat.DM:
             case CoordinatesFormat.DMS:
-                this.settings_marker_coordinates_format = coordinates_format;
+                this.settings_marker_coordinates_format = settings.coordinates_format;
                 break;
             default:
                 this.settings_marker_coordinates_format = CoordinatesFormat.DM;
         }
         this.storage.set_int("settings.marker.coordinates_format", this.settings_marker_coordinates_format);
-        this.update_observers(MapStateChange.MARKERS);
-    }
-    set_settings_marker_random_color(random_color) {
-        this.settings_marker_random_color = random_color;
+
+        this.settings_marker_random_color = settings.random_color;
         this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
-        this.update_observers(MapStateChange.MARKERS);
-    }
-    set_settings_marker_color(color) {
-        this.settings_marker_color = color;
-        this.storage.set_bool("settings.marker.color", this.settings_marker_color);
-        this.update_observers(MapStateChange.MARKERS);
-    }
-    set_settings_marker_radius(radius) {
-        this.settings_marker_radius = radius;
-        this.storage.set_bool("settings.marker.radius", this.settings_marker_radius);
+
+        this.settings_marker_color = settings.color;
+        this.storage.set_color("settings.marker.color", this.settings_marker_color);
+
+        this.settings_marker_radius = settings.radius;
+        this.storage.set_float("settings.marker.radius", this.settings_marker_radius);
+
         this.update_observers(MapStateChange.MARKERS);
     }
 
@@ -434,9 +427,9 @@ export class MapState {
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
 
         this.settings_line_color = settings.color;
-        this.storage.set_bool("settings.line.color", this.settings_line_color);
+        this.storage.set_color("settings.line.color", this.settings_line_color);
 
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(MapStateChange.LINES);
     }
 
     to_json() {

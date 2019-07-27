@@ -18,6 +18,7 @@ export class SidebarMarkers extends MapStateObserver {
             self.map_state.delete_all_markers();
         });
 
+        this.settingsDiv = $("#marker-settings");
         this.hide_settings();
         [
             {id: CoordinatesFormat.D, name: "Degrees"},
@@ -29,15 +30,15 @@ export class SidebarMarkers extends MapStateObserver {
             if (item.id === Coordinates.get_coordinates_format()) {
                 option.prop("selected", true);
             }
-            $('#marker-settings [data-coordinates-format]').append(option);
+            this.settingsDiv.find("[data-coordinates-format]").append(option);
         });
         $("#btn-marker-settings").click(() => {
             self.toggle_settings();
         });
-        $("#marker-settings [data-cancel]").click(() => {
+        this.settingsDiv.find("[data-cancel]").click(() => {
             self.hide_settings();
         });
-        $("#marker-settings [data-submit]").click(() => {
+        this.settingsDiv.find("[data-submit]").click(() => {
             self.submit_settings();
         });
     }
@@ -244,55 +245,60 @@ export class SidebarMarkers extends MapStateObserver {
         this.map_state.update_observers(MapStateChange.MARKERS);
     }
 
+    settings_shown() {
+        return !this.settingsDiv.hasClass("is-hidden");
+    }
+
     show_settings() {
-        if (!$('#marker-settings').hasClass('is-hidden')) {
+        if (this.settings_shown()) {
             return;
         }
 
-        $('#marker-settings').removeClass('is-hidden');
+        this.settingsDiv.removeClass('is-hidden');
         this.update_settings_display();
     }
 
     hide_settings() {
-        $('#marker-settings').addClass('is-hidden');
+        this.settingsDiv.addClass('is-hidden');
     }
 
     toggle_settings() {
-        if ($('#marker-settings').hasClass('is-hidden')) {
-            this.show_settings();
-        } else {
+        if (this.settings_shown()) {
             this.hide_settings();
+        } else {
+            this.show_settings();
         }
     }
 
     submit_settings() {
-        const coordinates_format = parseInt($("#marker-settings [data-coordinates-format]").val(), 10);
-        const random_color = $("#marker-settings [data-random-color]").prop("checked");
-        const color = Color.from_string($("#marker-settings [data-color]").val());
-        const radius = parse_float($("#marker-settings [data-radius]").val());
+        const coordinates_format = parseInt(this.settingsDiv.find("[data-coordinates-format]").val(), 10);
+        const random_color = this.settingsDiv.find("[data-random-color]").prop("checked");
+        const color = Color.from_string(this.settingsDiv.find("[data-color]").val());
+        const radius = parse_float(this.settingsDiv.find("[data-radius]").val());
 
         if ((color === null) || (radius === null)) {
             alert("bad values");
             return;
         }
 
-        this.map_state.set_settings_marker_coordinates_format(coordinates_format);
-        this.map_state.set_settings_marker_random_color(random_color);
-        this.map_state.set_settings_marker_color(color);
-        this.map_state.set_settings_marker_radius(radius);
-        this.map_state.update_observers(MapStateChange.MARKERS);
+        this.map_state.set_default_marker_settings({
+            coordinates_format: coordinates_format,
+            random_color: random_color,
+            color: color,
+            radius: radius
+        });
 
         this.hide_settings();
     }
 
     update_settings_display() {
-        if ($('#marker-settings').hasClass('is-hidden')) {
+        if (!this.settings_shown()) {
             return;
         }
 
-        $("#marker-settings [data-coordinates-format]").val(this.map_state.settings_marker_coordinates_format);
-        $("#marker-settings [data-random-color]").prop("checked", this.map_state.settings_marker_random_color);
-        $("#marker-settings [data-color]").val(this.map_state.settings_marker_color.to_hash_string());
-        $("#marker-settings [data-radius]").val(this.map_state.settings_marker_radius);
+        this.settingsDiv.find("[data-coordinates-format]").val(this.map_state.settings_marker_coordinates_format);
+        this.settingsDiv.find("[data-random-color]").prop("checked", this.map_state.settings_marker_random_color);
+        this.settingsDiv.find("[data-color]").val(this.map_state.settings_marker_color.to_hash_string());
+        this.settingsDiv.find("[data-radius]").val(this.map_state.settings_marker_radius);
     }
 }
