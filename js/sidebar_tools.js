@@ -1,5 +1,4 @@
-import {MapStateChange, MapStateObserver} from "./mapstate.js";
-import {Coordinates, CoordinatesFormat} from "./coordinates.js";
+import {MapStateObserver} from "./mapstate.js";
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {

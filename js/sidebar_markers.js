@@ -259,9 +259,9 @@ export class SidebarMarkers extends MapStateObserver {
 
     toggle_settings() {
         if ($('#marker-settings').hasClass('is-hidden')) {
-            this.hide_settings();
-        } else {
             this.show_settings();
+        } else {
+            this.hide_settings();
         }
     }
 

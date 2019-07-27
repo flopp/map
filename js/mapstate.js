@@ -4,6 +4,7 @@ import {Line} from "./line.js";
 import {Marker} from "./marker.js";
 import {Storage} from "./storage.js";
 import {MapType, maptype2string, string2maptype} from "./maptype.js";
+import {parse_float, parse_int} from "./utilities.js";
 
 
 export const MapStateChange = {
@@ -443,6 +444,18 @@ export class MapState {
             "maptype": this.map_type,
             "center": this.center.to_string_D(),
             "zoom": this.zoom,
+            "settings": {
+                "markers": {
+                    "coordinates_format": this.settings_marker_coordinates_format,
+                    "random_color": this.settings_marker_random_color,
+                    "color": this.settings_marker_color.to_hash_string(),
+                    "radius": this.settings_marker_radius
+                },
+                "lines": {
+                    "random_color": this.settings_line_random_color,
+                    "color": this.settings_line_color.to_hash_string(),
+                }
+            },
             "markers": [],
             "lines": []
         };
@@ -475,6 +488,43 @@ export class MapState {
             const center = Coordinates.from_string(data.center);
             if (center !== null) {
                 this.center = center;
+            }
+        }
+
+        if ("settings" in data) {
+            if ("markers" in data.settings) {
+                if ("coordinates_format" in data.settings.markers) {
+                    const coordinates_format = parse_int(data.settings.markers.coordinates_format);
+                    if (coordinates_format === CoordinatesFormat.D || coordinates_format === CoordinatesFormat.DM || coordinates_format === CoordinatesFormat.DMS) {
+                        this.settings_marker_coordinates_format = coordinates_format;
+                    }
+                }
+                if ("random_color" in data.settings.markers) {
+                    this.settings_marker_random_color = data.settings.markers.random_color;
+                }
+                if ("color" in data.settings.markers) {
+                    const color = Color.from_string(data.settings.markers.color);
+                    if (color) {
+                        this.settings_marker_color = color;
+                    }
+                }
+                if ("radius" in data.settings.markers) {
+                    const radius = parse_float(data.settings.markers.radius);
+                    if (radius !== null) {
+                        this.settings_marker_radius = radius;
+                    }
+                }
+            }
+            if ("lines" in data.settings) {
+                if ("random_color" in data.settings.lines) {
+                    this.settings_line_random_color = data.settings.lines.random_color;
+                }
+                if ("color" in data.settings.lines) {
+                    const color = Color.from_string(data.settings.lines.color);
+                    if (color) {
+                        this.settings_line_color = color;
+                    }
+                }
             }
         }
 

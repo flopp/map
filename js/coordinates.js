@@ -225,7 +225,6 @@ export class Coordinates {
             lng_min,
             lng_mmin;
 
-        const ns = Coordinates.NS(lat);
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
         lat_min = Math.floor(lat * 60);
@@ -236,7 +235,6 @@ export class Coordinates {
             lat_min += 1;
         }
 
-        const ew = Coordinates.EW(lng);
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         lng_min = Math.floor(lng * 60);
@@ -247,7 +245,7 @@ export class Coordinates {
             lng_min += 1;
         }
 
-        return ns +
+        return this.NS() +
                 " " +
                 Coordinates.zeropad(lat_deg, 2) +
                 " " +
@@ -255,7 +253,7 @@ export class Coordinates {
                 "." +
                 Coordinates.zeropad(lat_mmin, 3) +
                 " " +
-                ew +
+                this.EW() +
                 " " +
                 Coordinates.zeropad(lng_deg, 3) +
                 " " +
@@ -269,21 +267,19 @@ export class Coordinates {
         let lat = Math.abs(this.lat()),
             lng = Math.abs(this.lng());
 
-        const ns = Coordinates.NS(lat);
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
         const lat_min = Math.floor(lat * 60);
         lat = lat * 60 - lat_min;
         const lat_sec = lat * 60.0;
 
-        const ew = Coordinates.EW(lng);
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         const lng_min = Math.floor(lng * 60);
         lng = lng * 60 - lng_min;
         const lng_sec = lng * 60.0;
 
-        return ns +
+        return this.NS() +
                 " " +
                 Coordinates.zeropad(lat_deg, 2) +
                 " " +
@@ -291,7 +287,7 @@ export class Coordinates {
                 " " +
                 Coordinates.zeropad(lat_sec.toFixed(2), 5) +
                 " " +
-                ew +
+                this.EW() +
                 " " +
                 Coordinates.zeropad(lng_deg, 3) +
                 " " +
@@ -301,15 +297,7 @@ export class Coordinates {
     }
 
     to_string_D() {
-        const
-            lat = Math.abs(this.lat()),
-            lng = Math.abs(this.lng()),
-            ns = Coordinates.NS(lat),
-            ew = Coordinates.EW(lng);
-
-        return ns + " " + lat.toFixed(6) +
-            " " +
-            ew + " " + lng.toFixed(6);
+        return `${this.NS()} ${Math.abs(this.lat()).toFixed(6)} ${this.EW()} ${Math.abs(this.lng()).toFixed(6)}`;
     }
 
     distance(other) {
@@ -341,7 +329,7 @@ export class Coordinates {
         const points = new Array(k + 1);
         points[0] = this;
         points[k] = new Coordinates(other.raw_lat, other.next_lng(this.raw_lng));
-        
+
         if (k > 1) {
             const line = geod.InverseLine(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LONG_UNROLL);
             const da12 = t.a12 / k;
@@ -354,15 +342,15 @@ export class Coordinates {
         return points;
     }
 
-    static NS(lat) {
-        if (lat >= 0) {
+    NS() {
+        if (this.lat() >= 0) {
             return 'N';
         }
         return 'S';
     }
 
-    static EW(lng) {
-        if (lng >= 0) {
+    EW() {
+        if (this.lng() >= 0) {
             return 'E';
         }
         return 'W';
