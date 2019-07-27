@@ -1,5 +1,7 @@
 .vscode
 build
+deploy
 node_modules
 .secrets.js
+.secrets-production.js
 package-lock.json

@@ -6,6 +6,7 @@
     "scripts": {
         "lint": "eslint js/*.js",
         "build": "mkdir -p build && cp index.html css/style.css .secrets.js build && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./build/bundle.js",
+        "deploy": "mkdir -p deploy && cp index.html css/style.css deploy && cp .secrets-production.js deploy/.secrets.js && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode production -o ./deploy/bundle.js && rsync -v -r ./deploy/* flopp@grus.uberspace.de:html/map2",
         "start": "http-server build"
     },
     "repository": {
