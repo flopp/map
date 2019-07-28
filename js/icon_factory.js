@@ -26,6 +26,15 @@ export class IconFactory {
         };
     }
 
+    bing_icon(text, color) {
+        /* global Microsoft */
+        const icon = this.create_map_icon(text, color);
+        return {
+            icon: icon.url,
+            anchor: new Microsoft.Maps.Point(icon.anchor[0], icon.anchor[1])
+        };
+    }
+
     create_map_icon(text, color) {
         const encoder = document.createElement('span');
         encoder.textContent = text;

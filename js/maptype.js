@@ -6,6 +6,8 @@ const MapType = {
     GOOGLE_SATELLITE: "GOOGLE_SATELLITE",
     GOOGLE_HYBRID:    "GOOGLE_HYBRID",
     GOOGLE_TERRAIN:   "GOOGLE_TERRAIN",
+    BING_ROAD:        "BING_ROAD",
+    BING_AERIAL:      "BING_AERIAL"
 };
 
 if (Object.freeze) {
@@ -25,6 +27,8 @@ const string2maptype = (s) => {
         case MapType.GOOGLE_SATELLITE: return MapType.GOOGLE_SATELLITE;
         case MapType.GOOGLE_HYBRID:    return MapType.GOOGLE_HYBRID;
         case MapType.GOOGLE_TERRAIN:   return MapType.GOOGLE_TERRAIN;
+        case MapType.BING_ROAD:        return MapType.BING_ROAD;
+        case MapType.BING_AERIAL:      return MapType.BING_AERIAL;
     }
     return null;
 };

@@ -63,6 +63,10 @@ export class Coordinates {
         return new Coordinates(latlng.lat, latlng.lng);
     }
 
+    static from_bing(latlng) {
+        return new Coordinates(latlng.latitude, latlng.longitude);
+    }
+
     static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {
         let lat, lng;
 
@@ -191,6 +195,11 @@ export class Coordinates {
     to_leaflet() {
         /* global L */
         return L.latLng(this.raw_lat, this.raw_lng);
+    }
+
+    to_bing() {
+        /* global Microsoft */
+        return new Microsoft.Maps.Location(this.raw_lat, this.raw_lng);
     }
 
     static to_leaflet_path(path) {

@@ -19,6 +19,8 @@ export class SidebarLayers extends MapStateObserver {
             {type: MapType.GOOGLE_SATELLITE, name: "Google Satellite"},
             {type: MapType.GOOGLE_HYBRID,    name: "Google Hybrid"},
             {type: MapType.GOOGLE_TERRAIN,   name: "Google Terrain"},
+            {type: MapType.BING_ROAD,        name: "Bing Road"},
+            {type: MapType.BING_AERIAL,      name: "Bing Aerial"},
         ];
         const baselayer_menu = $("#baselayer-dropdown .dropdown-content");
         this.baselayers.forEach((baselayer) => {
@@ -52,6 +54,14 @@ export class SidebarLayers extends MapStateObserver {
     disable_google_layers() {
         this.baselayers.forEach((baselayer) => {
             if (baselayer.name.indexOf("Google") >= 0) {
+                baselayer.a.remove();
+            }
+        });
+    }
+
+    disable_bing_layers() {
+        this.baselayers.forEach((baselayer) => {
+            if (baselayer.name.indexOf("Bing") >= 0) {
                 baselayer.a.remove();
             }
         });
