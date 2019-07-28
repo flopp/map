@@ -1,3 +1,4 @@
+import {BingWrapper} from "./bing_wrapper.js";
 import {Coordinates} from "./coordinates.js";
 import {GoogleWrapper} from "./google_wrapper.js";
 import {IconFactory} from "./icon_factory.js";
@@ -8,12 +9,14 @@ import {MultiMarkersDialog} from "./multi_markers_dialog.js";
 import {ProjectionDialog} from "./projection_dialog.js";
 import {Sidebar} from "./sidebar.js";
 
-/* global GOOGLE_API_KEY */
+/* global BING_API_KEY GOOGLE_API_KEY */
 
 
 export class App {
-    constructor(id_leaflet, id_google) {
+    constructor(id_leaflet, id_google, id_bing) {
         this.google_maps_error = false;
+        this.bing_maps_error = false;
+
         this.console_filter();
 
         this.map_state = new MapState();
@@ -24,14 +27,18 @@ export class App {
 
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
+        this.id_bing = id_bing;
 
-        $('#' + this.id_google).hide();
+        $(`#${this.id_google}`).hide();
+        $(`#${this.id_bing}`).hide();
 
         this.sidebar = new Sidebar("#sidebar", "#sidebar-controls", this);
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
         this.google = null;
         this.google_loading = false;
+        this.bing = null;
+        this.bing_loading = false;
 
         if (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32)) {
             this.google_maps_error = true;
@@ -55,6 +62,23 @@ export class App {
         this.google_loading = false;
     }
 
+    initialize_bing_map() {
+        if (this.bing_maps_error) {
+            this.switch_map(MapType.OPENSTREETMAP);
+            return;
+        }
+
+        /* global Microsoft */
+        Microsoft.Maps.loadModule('Microsoft.Maps.SpatialMath', () => {
+            this.show_bing_div();
+            this.bing = new BingWrapper(this.id_bing, this);
+
+            this.bing.activate();
+            this.map_state.update_observers(MapStateChange.EVERYTHING);
+            this.bing_loading = false;
+        });
+    }
+
     switch_map (type) {
         if (this.google_maps_error) {
             switch (type) {
@@ -62,6 +86,17 @@ export class App {
                 case MapType.GOOGLE_SATELLITE:
                 case MapType.GOOGLE_HYBRID:
                 case MapType.GOOGLE_TERRAIN:
+                    this.map_state.set_map_type(MapType.OPENSTREETMAP);
+                    this.switch_to_leaflet();
+                    return;
+                default:
+            }
+        }
+
+        if (this.bing_maps_error) {
+            switch (type) {
+                case MapType.BING_ROAD:
+                case MapType.BING_AERIAL:
                     this.map_state.set_map_type(MapType.OPENSTREETMAP);
                     this.switch_to_leaflet();
                     return;
@@ -83,6 +118,10 @@ export class App {
             case MapType.GOOGLE_TERRAIN:
                 this.switch_to_google();
                 break;
+            case MapType.BING_ROAD:
+            case MapType.BING_AERIAL:
+                this.switch_to_bing();
+                break;
             default:
                 break;
         }
@@ -91,6 +130,9 @@ export class App {
     switch_to_leaflet () {
         if (this.google) {
             this.google.deactivate();
+        }
+        if (this.bing) {
+            this.bing.deactivate();
         }
         this.show_leaflet_div();
         this.leaflet.activate();
@@ -127,6 +169,12 @@ export class App {
         this.switch_map(MapType.OPENSTREETMAP);
     }
 
+    bing_maps_error_raised() {
+        this.bing_maps_error = true;
+        this.sidebar.sidebar_layers.disable_bing_layers();
+        this.switch_map(MapType.OPENSTREETMAP);
+    }
+
     switch_to_google() {
         const self = this;
         if (this.google_maps_error) {
@@ -137,6 +185,9 @@ export class App {
         }
 
         this.leaflet.deactivate();
+        if (this.bing) {
+            this.bing.deactivate();
+        }
 
         if (this.google) {
             this.show_google_div();
@@ -179,20 +230,86 @@ export class App {
         });
     }
 
+    switch_to_bing() {
+        const self = this;
+        if (this.bing_maps_error) {
+            return;
+        }
+        if (this.bing_loading) {
+            return;
+        }
+
+        this.leaflet.deactivate();
+        if (this.google) {
+            this.google.deactivate();
+        }
+
+
+        if (this.bing) {
+            this.show_bing_div();
+            this.bing.activate();
+            this.map_state.update_observers(MapStateChange.EVERYTHING);
+            this.bing.invalidate_size();
+            return;
+        }
+
+        console.log("ON DEMAND LOADING OF THE BING MAPS API");
+        this.bing_loading = true;
+        const promise = new Promise((resolve, reject) => {
+            const callbackName = '__bingMapsApiOnLoadCallback';
+            // Reject the promise after a timeout
+            const timeoutId = setTimeout(function () {
+                // Set the on load callback to a no-op
+                window[callbackName] = () => {};
+                self.bing_maps_error_raised();
+                reject(new Error('Could not load the Bing Maps API'));
+            }, 10000);
+
+            window[callbackName] = () => {
+                if (timeoutId !== null) {
+                    clearTimeout(timeoutId);
+                }
+                resolve();
+                Reflect.deleteProperty(window, callbackName);
+            };
+            const url = `http://www.bing.com/api/maps/mapcontrol?key=${BING_API_KEY}&callback=${callbackName}`;
+            $.getScript(url);
+        });
+
+        promise.then(() => {
+            self.initialize_bing_map();
+        }).catch((error) => {
+            console.log("Error in promise");
+            console.error(error);
+            self.bing_maps_error_raised();
+        });
+    }
+
     show_leaflet_div() {
-        $('#' + this.id_google).hide();
         $('#' + this.id_leaflet).show();
+        $('#' + this.id_google).hide();
+        $('#' + this.id_bing).hide();
     }
 
     show_google_div() {
         $('#' + this.id_leaflet).hide();
         $('#' + this.id_google).show();
+        $('#' + this.id_bing).hide();
+    }
+
+    show_bing_div() {
+        $('#' + this.id_leaflet).hide();
+        $('#' + this.id_google).hide();
+        $('#' + this.id_bing).show();
     }
 
     update_geometry() {
         this.leaflet.invalidate_size();
         if (this.google) {
             this.google.invalidate_size();
+        }
+        if (this.bing) {
+            this.bing.invalidate_size();
         }
     }
 

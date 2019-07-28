@@ -90,81 +90,85 @@ export class LeafletWrapper extends MapWrapper {
     create_marker_object(marker) {
         const self = this;
 
-        const m = L.marker(marker.coordinates.to_leaflet(), {
+        const obj = L.marker(marker.coordinates.to_leaflet(), {
             draggable: true,
             autoPan: true,
             icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color)
         }).addTo(this.map);
 
-        m.last_name = marker.name;
-        m.last_color = marker.color;
-        m.circle = null;
+        obj.meta = {
+            last_name: marker.name,
+            last_color: marker.color,
+            circle: null
+        };
 
-        m.on('drag', () => {
-            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_leaflet(m.getLatLng()), null);
-            if (m.circle) {
-                m.circle.setLatLng(m.getLatLng());
+        obj.on('drag', () => {
+            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_leaflet(obj.getLatLng()), null);
+            if (obj.meta.circle) {
+                const center = Coordinates.from_leaflet(obj.getLatLng());
+                const points = Coordinates.to_leaflet_path(center.geodesic_circle(marker.radius));
+                obj.meta.circle.setLatLngs(points);
             }
         });
-        this.markers.set(marker.get_id(), m);
+        this.markers.set(marker.get_id(), obj);
 
-        this.update_marker_object(m, marker);
+        this.update_marker_object(obj, marker);
     }
 
-    update_marker_object(m, marker) {
-        m.setLatLng(marker.coordinates.to_leaflet());
+    update_marker_object(obj, marker) {
+        obj.setLatLng(marker.coordinates.to_leaflet());
         if (marker.radius > 0) {
-            if (m.circle) {
-                m.circle.setLatLng(marker.coordinates.to_leaflet());
-                m.circle.setRadius(marker.radius);
-            } else {
-                m.circle = L.circle(marker.coordinates.to_leaflet(), {
-                    radius: marker.radius,
+            if (!obj.meta.circle) {
+                obj.meta.circle = L.polygon([], {
                     color: marker.color.to_hash_string(),
                     weight: 1,
                     interactive: false
                 }).addTo(this.map);
             }
-        } else if (m.circle) {
-            this.map.removeLayer(m.circle);
-            m.circle = null;
+            obj.meta.circle.setLatLngs(Coordinates.to_leaflet_path(marker.coordinates.geodesic_circle(marker.radius)));
+        } else if (obj.meta.circle) {
+            this.map.removeLayer(obj.meta.circle);
+            obj.meta.circle = null;
         }
 
-        if (!marker.color.equals(m.last_color) || (marker.name !== m.last_name)) {
-            m.setIcon(this.app.icon_factory.leaflet_icon(marker.name, marker.color));
+        if (!marker.color.equals(obj.meta.last_color) || (marker.name !== obj.meta.last_name)) {
+            obj.setIcon(this.app.icon_factory.leaflet_icon(marker.name, marker.color));
         }
-        if (m.circle && !marker.color.equals(m.last_color)) {
-            m.circle.setStyle({color: marker.color.to_hash_string()});
+        if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
+            obj.meta.circle.setStyle({color: marker.color.to_hash_string()});
         }
 
-        m.last_color = marker.color;
-        m.last_name = marker.name;
+        obj.meta.last_color = marker.color;
+        obj.meta.last_name = marker.name;
     }
 
-    delete_marker_object(m) {
-        if (m.circle) {
-            this.map.removeLayer(m.circle);
+    delete_marker_object(obj) {
+        if (obj.meta.circle) {
+            this.map.removeLayer(obj.meta.circle);
         }
-        this.map.removeLayer(m);
+        this.map.removeLayer(obj);
     }
 
     create_line_object(line) {
-        const m = L.polyline([], {
+        const obj = L.polyline([], {
             color: line.color.to_hash_string(),
             weight: 2,
             interactive: false
         }).addTo(this.map);
 
-        m.last_color = line.color;
-        m.arrow = L.polyline([], {
-            color: line.color.to_hash_string(),
-            weight: 2,
-            interactive: false
-        }).addTo(this.map);
+        obj.meta = {
+            last_color: line.color,
+            arrow: L.polyline([], {
+                color: line.color.to_hash_string(),
+                weight: 2,
+                interactive: false
+            })
+        };
+        obj.meta.arrow.addTo(this.map);
 
-        this.lines.set(line.get_id(), m);
+        this.lines.set(line.get_id(), obj);
 
-        this.update_line_object(m, line);
+        this.update_line_object(obj, line);
     }
 
     arrow_head (p1, p2) {
@@ -198,34 +202,36 @@ export class LeafletWrapper extends MapWrapper {
         ];
     }
 
-    update_line_object(m, line) {
+    update_line_object(obj, line) {
         if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
             const path = this.map_state.get_marker(line.marker1).coordinates.interpolate_geodesic_line(this.map_state.get_marker(line.marker2).coordinates, this.map_state.zoom);
             const leaflet_path = Coordinates.to_leaflet_path(path);
-            m.setLatLngs(leaflet_path);
+            obj.setLatLngs(leaflet_path);
             if (leaflet_path.length <= 1) {
-                m.arrow.setLatLngs([]);
+                obj.meta.arrow.setLatLngs([]);
             } else {
-                m.arrow.setLatLngs(this.arrow_head(leaflet_path[leaflet_path.length - 2], leaflet_path[leaflet_path.length - 1]));
+                const last = leaflet_path[leaflet_path.length - 1];
+                const last1 = leaflet_path[leaflet_path.length - 2];
+                obj.meta.arrow.setLatLngs(this.arrow_head(last1, last));
             }
         } else {
-            m.setLatLngs([]);
-            m.arrow.setLatLngs([]);
+            obj.setLatLngs([]);
+            obj.meta.arrow.setLatLngs([]);
         }
 
-        if (!line.color.equals(m.last_color)) {
-            m.setStyle({
+        if (!line.color.equals(obj.meta.last_color)) {
+            obj.setStyle({
                 color: line.color.to_hash_string()
             });
-            m.arrow.setStyle({
+            obj.meta.arrow.setStyle({
                 color: line.color.to_hash_string()
             });
-            m.last_color = line.color;
+            obj.meta.last_color = line.color;
         }
     }
 
-    delete_line_object(m) {
-        this.map.removeLayer(m.arrow);
-        this.map.removeLayer(m);
+    delete_line_object(obj) {
+        this.map.removeLayer(obj.meta.arrow);
+        this.map.removeLayer(obj);
     }
 }

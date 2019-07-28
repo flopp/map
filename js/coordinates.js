@@ -63,6 +63,10 @@ export class Coordinates {
         return new Coordinates(latlng.lat, latlng.lng);
     }
 
+    static from_bing(latlng) {
+        return new Coordinates(latlng.latitude, latlng.longitude);
+    }
+
     static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {
         let lat, lng;
 
@@ -193,12 +197,25 @@ export class Coordinates {
         return L.latLng(this.raw_lat, this.raw_lng);
     }
 
+    to_bing() {
+        /* global Microsoft */
+        return new Microsoft.Maps.Location(this.raw_lat, this.raw_lng);
+    }
+
     static to_leaflet_path(path) {
         const leaflet_path = [];
         path.forEach((coordinates) => {
             leaflet_path.push(coordinates.to_leaflet());
         });
         return leaflet_path;
+    }
+
+    static to_bing_path(path) {
+        const bing_path = [];
+        path.forEach((coordinates) => {
+            bing_path.push(coordinates.to_bing());
+        });
+        return bing_path;
     }
 
     to_string_format(format) {
@@ -339,6 +356,15 @@ export class Coordinates {
             }
         }
 
+        return points;
+    }
+
+    geodesic_circle(radius) {
+        const delta_angle = 1;
+        const points = [];
+        for (let angle = 0; angle < 360; angle += delta_angle) {
+            points.push(this.project(angle, radius));
+        }
         return points;
     }
 

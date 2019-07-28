@@ -70,39 +70,41 @@ export class GoogleWrapper extends MapWrapper {
     create_marker_object(marker) {
         const self = this;
 
-        const m = new google.maps.Marker({
+        const obj = new google.maps.Marker({
             position: marker.coordinates.to_google(),
             map: self.map,
             draggable: true,
         });
 
-        m.last_name = null;
-        m.last_color = null;
-        m.circle = null;
+        obj.meta = {
+            last_name: null,
+            last_color: null,
+            circle: null
+        };
 
-        google.maps.event.addListener(m, "drag", function () {
-            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_google(m.getPosition()));
-            if (m.circle) {
-                m.circle.setCenter(m.getPosition());
+        google.maps.event.addListener(obj, "drag", function () {
+            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_google(obj.getPosition()));
+            if (obj.meta.circle) {
+                obj.meta.circle.setCenter(obj.getPosition());
             }
         });
 
-        this.markers.set(marker.get_id(), m);
+        this.markers.set(marker.get_id(), obj);
 
-        this.update_marker_object(m, marker);
+        this.update_marker_object(obj, marker);
     }
 
-    update_marker_object(m, marker) {
+    update_marker_object(obj, marker) {
         const position = marker.coordinates.to_google();
 
-        m.setPosition(position);
+        obj.setPosition(position);
 
         if (marker.radius > 0) {
-            if (m.circle) {
-                m.circle.setCenter(position);
-                m.circle.setRadius(marker.radius);
+            if (obj.meta.circle) {
+                obj.meta.circle.setCenter(position);
+                obj.meta.circle.setRadius(marker.radius);
             } else {
-                m.circle = new google.maps.Circle({
+                obj.meta.circle = new google.maps.Circle({
                     center: position,
                     map: this.map,
                     strokeColor: marker.color.to_hash_string(),
@@ -113,16 +115,16 @@ export class GoogleWrapper extends MapWrapper {
                     radius: marker.radius
                 });
             }
-        } else if (m.circle) {
-            m.circle.setMap(null);
-            m.circle = null;
+        } else if (obj.meta.circle) {
+            obj.meta.circle.setMap(null);
+            obj.meta.circle = null;
         }
 
-        if (!marker.color.equals(m.last_color) || (marker.name !== m.last_name)) {
-            m.setIcon(this.app.icon_factory.google_icon(marker.name, marker.color));
+        if (!marker.color.equals(obj.meta.last_color) || (marker.name !== obj.meta.last_name)) {
+            obj.setIcon(this.app.icon_factory.google_icon(marker.name, marker.color));
         }
-        if (m.circle && !marker.color.equals(m.last_color)) {
-            m.circle.setOptions({
+        if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
+            obj.meta.circle.setOptions({
                 strokeColor: marker.color.to_hash_string(),
                 strokeOpacity: 1,
                 strokeWeight: 1,
@@ -131,20 +133,20 @@ export class GoogleWrapper extends MapWrapper {
             });
         }
 
-        m.last_color = marker.color;
-        m.last_name = marker.name;
+        obj.meta.last_color = marker.color;
+        obj.meta.last_name = marker.name;
     }
 
-    delete_marker_object(m) {
-        if (m.circle) {
-            m.circle.setMap(null);
-            m.circle = null;
+    delete_marker_object(obj) {
+        if (obj.meta.circle) {
+            obj.meta.circle.setMap(null);
+            obj.meta.circle = null;
         }
-        m.setMap(null);
+        obj.setMap(null);
     }
 
     create_line_object(line) {
-        var m = new google.maps.Polyline({
+        var obj = new google.maps.Polyline({
             map: this.map,
             path: [],
             geodesic: true,
@@ -162,24 +164,26 @@ export class GoogleWrapper extends MapWrapper {
             ]
         });
 
-        m.last_color = line.color;
+        obj.meta = {
+            last_color: line.color
+        };
 
-        this.lines.set(line.get_id(), m);
-        this.update_line_object(m, line);
+        this.lines.set(line.get_id(), obj);
+        this.update_line_object(obj, line);
     }
 
-    update_line_object(m, line) {
+    update_line_object(obj, line) {
         if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
-            m.setPath([this.get_marker_object(line.marker1).getPosition(), this.get_marker_object(line.marker2).getPosition()]);
+            obj.setPath([this.get_marker_object(line.marker1).getPosition(), this.get_marker_object(line.marker2).getPosition()]);
         } else {
-            m.setPath([]);
+            obj.setPath([]);
         }
 
-        if (!line.color.equals(m.last_color)) {
-            m.setOptions({
+        if (!line.color.equals(obj.meta.last_color)) {
+            obj.setOptions({
                 strokeColor: line.color.to_hash_string()
             });
-            m.last_color = line.color;
+            obj.meta.last_color = line.color;
         }
     }
 
