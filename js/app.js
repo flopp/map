@@ -8,8 +8,14 @@ import {MultiMarkersDialog} from "./multi_markers_dialog.js";
 import {ProjectionDialog} from "./projection_dialog.js";
 import {Sidebar} from "./sidebar.js";
 
+/* global GOOGLE_API_KEY */
+
+
 export class App {
     constructor(id_leaflet, id_google) {
+        this.google_maps_error = false;
+        this.console_filter();
+
         this.map_state = new MapState();
 
         this.icon_factory = new IconFactory();
@@ -27,18 +33,42 @@ export class App {
         this.google = null;
         this.google_loading = false;
 
+        if (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32)) {
+            this.google_maps_error = true;
+            this.sidebar.sidebar_layers.disable_google_layers();
+        }
+
         this.switch_map(this.map_state.map_type);
     }
 
     initialize_google_map() {
+        if (this.google_maps_error) {
+            this.switch_map(MapType.OPENSTREETMAP);
+            return;
+        }
+
         this.show_google_div();
         this.google = new GoogleWrapper(this.id_google, this);
+
         this.google.activate();
         this.map_state.update_observers(MapStateChange.EVERYTHING);
         this.google_loading = false;
     }
 
     switch_map (type) {
+        if (this.google_maps_error) {
+            switch (type) {
+                case MapType.GOOGLE_ROADMAP:
+                case MapType.GOOGLE_SATELLITE:
+                case MapType.GOOGLE_HYBRID:
+                case MapType.GOOGLE_TERRAIN:
+                    this.map_state.set_map_type(MapType.OPENSTREETMAP);
+                    this.switch_to_leaflet();
+                    return;
+                default:
+            }
+        }
+
         this.map_state.set_map_type(type);
 
         switch (type) {
@@ -68,8 +98,40 @@ export class App {
         this.leaflet.invalidate_size();
     }
 
+    console_filter() {
+        const console = window.console;
+        if (!console) {
+            return;
+        }
+
+        const self = this;
+        const original = console.error;
+        console.error = (...args) => {
+            // show original message
+            Reflect.apply(original, console, args);
+
+            if (args[0] && ((typeof args[0]) == "string")) {
+                if ((args[0].indexOf("Google Maps JavaScript API error") >= 0) ||
+                    (args[0].indexOf("You are using this API without a key") >= 0) ||
+                    (args[0].indexOf("developers.google.com") >= 0)) {
+                    console.warn("Intercepted error message from the Google Maps API. Disabling google maps.");
+                    self.google_maps_error_raised();
+                }
+            }
+        };
+    }
+
+    google_maps_error_raised() {
+        this.google_maps_error = true;
+        this.sidebar.sidebar_layers.disable_google_layers();
+        this.switch_map(MapType.OPENSTREETMAP);
+    }
+
     switch_to_google() {
         const self = this;
+        if (this.google_maps_error) {
+            return;
+        }
         if (this.google_loading) {
             return;
         }
@@ -86,13 +148,13 @@ export class App {
 
         console.log("ON DEMAND LOADING OF THE GOOGLE MAPS API");
         this.google_loading = true;
-
         const promise = new Promise((resolve, reject) => {
             const callbackName = '__googleMapsApiOnLoadCallback';
             // Reject the promise after a timeout
             const timeoutId = setTimeout(function () {
                 // Set the on load callback to a no-op
                 window[callbackName] = () => {};
+                self.google_maps_error_raised();
                 reject(new Error('Could not load the Google Maps API'));
             }, 10000);
 
@@ -104,7 +166,6 @@ export class App {
                 Reflect.deleteProperty(window, callbackName);
             };
 
-            /* global GOOGLE_API_KEY */
             const url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=${callbackName}`;
             $.getScript(url);
         });
@@ -112,7 +173,9 @@ export class App {
         promise.then(() => {
             self.initialize_google_map();
         }).catch((error) => {
+            console.log("Error in promise");
             console.error(error);
+            self.google_maps_error_raised();
         });
     }
 

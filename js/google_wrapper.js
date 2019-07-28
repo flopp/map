@@ -4,6 +4,7 @@ import {MapWrapper} from "./map_wrapper.js";
 
 /* global google */
 
+
 export class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
@@ -24,7 +25,8 @@ export class GoogleWrapper extends MapWrapper {
                 zoomControlOptions: {
                     position: google.maps.ControlPosition.LEFT_TOP
                 }
-            });
+            }
+        );
 
         google.maps.event.addListener(this.map, 'center_changed', function () {
             if (self.active && !self.automatic_event) {

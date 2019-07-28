@@ -48,4 +48,12 @@ export class SidebarLayers extends MapStateObserver {
             }
         });
     }
+
+    disable_google_layers() {
+        this.baselayers.forEach((baselayer) => {
+            if (baselayer.name.indexOf("Google") >= 0) {
+                baselayer.a.remove();
+            }
+        });
+    }
 }
