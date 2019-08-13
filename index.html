@@ -91,7 +91,7 @@
                         <div class="field">
                             <label class="label">Base Layer:</label>
                             <div class="control">
-                                <div id="baselayer-dropdown" class="dropdown">
+                                <div id="baselayer-dropdown" class="dropdown is-fullwidth">
                                     <div class="dropdown-trigger">
                                         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
                                             <span id="baselayer-name">Map Style</span>
@@ -105,6 +105,16 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Base Layer:</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select data-baselayer></select>
+                                </div>
+                            </div>
+                            <p class="help is-hidden" data-baselayer-help>Google Maps and Bing Maps layers have been disabled</p>
                         </div>
                     </div>
                 </div>

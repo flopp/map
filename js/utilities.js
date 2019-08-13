@@ -23,7 +23,7 @@ const create_text_input = (label, data_tag, placeholder) => {
         <div class="field">
             <label class="label">${label}</label>
             <div class="control">
-                <input class="input" type="text" ${data_tag} placeholder="${placeholder}">
+                <input class="input is-fullwidth" type="text" ${data_tag} placeholder="${placeholder}">
             </div>
         </div>`);
 };
@@ -33,7 +33,7 @@ const create_color_input = (label, data_tag, placeholder) => {
         <div class="field">
             <label class="label">${label}</label>
             <div class="control">
-                <input class="input" type="color" ${data_tag} placeholder="${placeholder}">
+                <input class="input is-fullwidth" type="color" ${data_tag} placeholder="${placeholder}">
             </div>
         </div>`);
 };
@@ -43,7 +43,7 @@ const create_select_input = (label, data_tag) => {
         <div class="field">
             <label class="label">${label}</label>
             <div class="control">
-                <div class="select">
+                <div class="select is-fullwidth">
                     <select ${data_tag}></select>
                 </div>
             </div>

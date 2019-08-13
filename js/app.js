@@ -14,8 +14,8 @@ import {Sidebar} from "./sidebar.js";
 
 export class App {
     constructor(id_leaflet, id_google, id_bing) {
-        this.google_maps_error = false;
-        this.bing_maps_error = false;
+        this.google_maps_error = GOOGLE_API_KEY.length < 24;
+        this.bing_maps_error = BING_API_KEY < 24;
 
         this.console_filter();
 
@@ -46,6 +46,14 @@ export class App {
         }
 
         this.switch_map(this.map_state.map_type);
+    }
+
+    has_google_maps() {
+        return !this.google_maps_error;
+    }
+
+    has_bing_maps() {
+        return !this.bing_maps_error;
     }
 
     initialize_google_map() {
