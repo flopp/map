@@ -51,7 +51,6 @@ export class BingWrapper extends MapWrapper {
     create_marker_object(marker) {
         const self = this;
 
-<<<<<<< HEAD
         var obj = new Microsoft.Maps.Pushpin(marker.coordinates.to_bing(), {
             draggable: true
         });
@@ -99,68 +98,10 @@ export class BingWrapper extends MapWrapper {
         if (!marker.color.equals(obj.meta.last_color) || (marker.name !== obj.meta.last_name)) {
             const icon = this.app.icon_factory.bing_icon(marker.name, marker.color);
             obj.setOptions({
-=======
-        var m = new Microsoft.Maps.Pushpin(marker.coordinates.to_bing(), {
-            draggable: true
-        });
-
-        this.map.entities.push(m);
-
-        m.last_name = null;
-        m.last_color = null;
-        m.circle = null;
-
-        Microsoft.Maps.Events.addHandler(m, "drag", function () {
-            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_bing(m.getLocation()));
-            /*
-            if (m.circle) {
-                m.circle.setCenter(m.getPosition());
-            }
-            */
-        });
-
-        this.markers.set(marker.get_id(), m);
-
-        this.update_marker_object(m, marker);
-    }
-
-    update_marker_object(m, marker) {
-        const position = marker.coordinates.to_bing();
-
-        m.setLocation(position);
-
-        /*
-        if (marker.radius > 0) {
-            if (m.circle) {
-                m.circle.setCenter(position);
-                m.circle.setRadius(marker.radius);
-            } else {
-                m.circle = new google.maps.Circle({
-                    center: position,
-                    map: this.map,
-                    strokeColor: marker.color.to_hash_string(),
-                    strokeOpacity: 1,
-                    strokeWeight: 1,
-                    fillColor: marker.color.to_hash_string(),
-                    fillOpacity: 0.2,
-                    radius: marker.radius
-                });
-            }
-        } else if (m.circle) {
-            m.circle.setMap(null);
-            m.circle = null;
-        }
-        */
-
-        if (!marker.color.equals(m.last_color) || (marker.name !== m.last_name)) {
-            const icon = this.app.icon_factory.bing_icon(marker.name, marker.color);
-            m.setOptions({
->>>>>>> 922e610e969115c8ad04be6ec898dec57d5c9a8b
                 icon: icon.icon,
                 anchor: icon.anchor
             });
         }
-<<<<<<< HEAD
 
         if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
             obj.meta.circle.setOptions({
@@ -245,81 +186,5 @@ export class BingWrapper extends MapWrapper {
         const c = Microsoft.Maps.Color.fromHex(color.to_hash_string());
         c.a = alpha;
         return c;
-=======
-        /*
-        if (m.circle && !marker.color.equals(m.last_color)) {
-            m.circle.setOptions({
-                strokeColor: marker.color.to_hash_string(),
-                strokeOpacity: 1,
-                strokeWeight: 1,
-                fillColor: marker.color.to_hash_string(),
-                fillOpacity: 0.2
-            });
-        }
-        */
-
-        m.last_color = marker.color;
-        m.last_name = marker.name;
-    }
-
-    delete_marker_object(m) {
-        /*
-        if (m.circle) {
-            m.circle.setMap(null);
-            m.circle = null;
-        }
-        */
-        this.map.entities.remove(m);
-    }
-
-    create_line_object(line) {
-        /*
-        var m = new google.maps.Polyline({
-            map: this.map,
-            path: [],
-            geodesic: true,
-            clickable: false,
-            strokeColor: line.color.to_hash_string(),
-            strokeOpacity: 1.0,
-            strokeWeight: 2,
-            icons: [
-                {
-                    icon: {
-                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
-                    },
-                    offset: '100%'
-                }
-            ]
-        });
-
-        m.last_color = line.color;
-
-        this.lines.set(line.get_id(), m);
-        this.update_line_object(m, line);
-        */
-    }
-
-    update_line_object(m, line) {
-        /*
-        if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
-            m.setPath([this.get_marker_object(line.marker1).getPosition(), this.get_marker_object(line.marker2).getPosition()]);
-        } else {
-            m.setPath([]);
-        }
-
-        if (!line.color.equals(m.last_color)) {
-            m.setOptions({
-                strokeColor: line.color.to_hash_string()
-            });
-            m.last_color = line.color;
-        }
-        */
-    }
-
-    delete_line_object(m) {
-        /*
-        m.setMap(null);
-        */
->>>>>>> 922e610e969115c8ad04be6ec898dec57d5c9a8b
     }
 }
