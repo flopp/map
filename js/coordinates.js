@@ -2,9 +2,9 @@
 const GeographicLib = require("../node_modules/geographiclib/geographiclib.min.js");
 
 const CoordinatesFormat = {
-    D: 0,
-    DM: 1,
-    DMS: 2,
+    D: "D",
+    DM: "DM",
+    DMS: "DMS",
 };
 
 if (Object.freeze) {

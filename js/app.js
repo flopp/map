@@ -20,6 +20,8 @@ export class App {
         this.console_filter();
 
         this.map_state = new MapState();
+        this.map_state.restore();
+        this.map_state.clear_storage();
 
         this.icon_factory = new IconFactory();
         this.projection_dialog = new ProjectionDialog(this.map_state);

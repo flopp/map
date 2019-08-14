@@ -45,8 +45,6 @@ export class MapState {
         this.observers = [];
 
         this.storage = new Storage();
-
-        this.restore();
     }
 
     store() {
@@ -93,10 +91,10 @@ export class MapState {
             if (id === "") {
                 return;
             }
-            const coordinates = self.storage.get_coordinates(`marker;${id};coordinates`, null);
-            const name        = self.storage.get(`marker;${id};name`, id);
-            const color       = self.storage.get_color(`marker;${id};color`, new Color("FF0000"));
-            const radius      = self.storage.get_float(`marker;${id};radius`, 0);
+            const coordinates = self.storage.get_coordinates(`marker[${id}].coordinates`, null);
+            const name        = self.storage.get(`marker[${id}].name`, id);
+            const color       = self.storage.get_color(`marker[${id}].color`, new Color("FF0000"));
+            const radius      = self.storage.get_float(`marker[${id}].radius`, 0);
             if (coordinates) {
                 const marker = new Marker(coordinates);
                 marker.name = name;
@@ -113,9 +111,9 @@ export class MapState {
             if (id === "") {
                 return;
             }
-            const old_marker1 = self.storage.get_int(`line;${id};marker1`, -1);
-            const old_marker2 = self.storage.get_int(`line;${id};marker2`, -1);
-            const color       = self.storage.get_color(`line;${id};color`, new Color("FF0000"));
+            const old_marker1 = self.storage.get_int(`line[${id}].marker1`, -1);
+            const old_marker2 = self.storage.get_int(`line[${id}].marker2`, -1);
+            const color       = self.storage.get_color(`line[${id}].color`, new Color("FF0000"));
 
             let marker1 = -1;
             if (marker_ids.has(old_marker1)) {
@@ -138,14 +136,54 @@ export class MapState {
         // settings
         this.set_default_marker_settings({
             coordinates_format: this.storage.get_int("settings.marker.coordinates_format", 1),
-            random_color: this.storage.get_bool("settings.marker.random_color", true),
-            color: this.storage.get_color("settings.marker.color", new Color("FF0000")),
-            radius: this.storage.get_float("settings.marker.radius", 0)
+            random_color:       this.storage.get_bool("settings.marker.random_color", true),
+            color:              this.storage.get_color("settings.marker.color", new Color("FF0000")),
+            radius:             this.storage.get_float("settings.marker.radius", 0)
         });
 
         this.set_default_line_settings({
             random_color: this.storage.get_bool("settings.line.random_color", true),
             color:        this.storage.get_color("settings.line.color", new Color("FF0000"))
+        });
+    }
+
+    clear_storage() {
+        const self = this;
+
+        const ok_keys = new Set();
+        ok_keys.add("version");
+        ok_keys.add("center");
+        ok_keys.add("zoom");
+        ok_keys.add("map_type");
+        ok_keys.add("sidebar_open");
+        ok_keys.add("markers");
+        this.markers.forEach((obj) => {
+            const id = obj.get_id();
+            ok_keys.add(`marker[${id}].coordinates`);
+            ok_keys.add(`marker[${id}].name`);
+            ok_keys.add(`marker[${id}].color`);
+            ok_keys.add(`marker[${id}].radius`);
+        });
+        ok_keys.add("lines");
+        this.lines.forEach((obj) => {
+            const id = obj.get_id();
+            ok_keys.add(`line[${id}].marker1`);
+            ok_keys.add(`line[${id}].marker2`);
+            ok_keys.add(`line[${id}].color`);
+        });
+        ok_keys.add("settings.marker.coordinates_format");
+        ok_keys.add("settings.marker.random_color");
+        ok_keys.add("settings.marker.color");
+        ok_keys.add("settings.marker.radius");
+        ok_keys.add("settings.line.random_color");
+        ok_keys.add("settings.line.color");
+
+        const bad_keys = this.storage.all_keys().filter((key) => {
+            return !ok_keys.has(key);
+        });
+        bad_keys.forEach((key) => {
+            console.log("bad key: ", key);
+            self.storage.remove(key);
         });
     }
 
@@ -289,29 +327,30 @@ export class MapState {
 
     set_marker_coordinates(id, coordinates) {
         this.markers_hash.get(id).coordinates = coordinates;
-        this.storage.set_coordinates(`marker;${id};coordinates`, coordinates);
+        this.storage.set_coordinates(`marker[${id}].coordinates`, coordinates);
         this.update_observers(MapStateChange.MARKERS);
     }
     set_marker_name(id, name) {
         this.markers_hash.get(id).name = name;
-        this.storage.set(`marker;${id};name`, name);
+        this.storage.set(`marker[${id}].name`, name);
         this.update_observers(MapStateChange.MARKERS);
     }
     set_marker_color(id, color) {
         this.markers_hash.get(id).color = color;
-        this.storage.set_color(`marker;${id};color`, color);
+        this.storage.set_color(`marker[${id}].color`, color);
         this.update_observers(MapStateChange.MARKERS);
     }
     set_marker_radius(id, radius) {
         this.markers_hash.get(id).radius = radius;
-        this.storage.set_float(`marker;${id};radius`, radius);
+        this.storage.set_float(`marker[${id}].radius`, radius);
         this.update_observers(MapStateChange.MARKERS);
     }
     update_marker_storage(marker) {
-        this.storage.set_coordinates(`marker;${marker.get_id()};coordinates`, marker.coordinates);
-        this.storage.set(`marker;${marker.get_id()};name`, marker.name);
-        this.storage.set_color(`marker;${marker.get_id()};color`, marker.color);
-        this.storage.set_float(`marker;${marker.get_id()};radius`, marker.radius);
+        const id = marker.get_id();
+        this.storage.set_coordinates(`marker[${id}].coordinates`, marker.coordinates);
+        this.storage.set(`marker[${id}].name`, marker.name);
+        this.storage.set_color(`marker[${id}].color`, marker.color);
+        this.storage.set_float(`marker[${id}].radius`, marker.radius);
     }
 
     get_marker_ids_string() {
@@ -356,23 +395,24 @@ export class MapState {
 
     set_line_marker1(id, marker_id) {
         this.lines_hash.get(id).marker1 = marker_id;
-        this.storage.set_int(`line;${id};marker1`, marker_id);
+        this.storage.set_int(`line[${id}].marker1`, marker_id);
         this.update_observers(MapStateChange.LINES);
     }
     set_line_marker2(id, marker_id) {
         this.lines_hash.get(id).marker2 = marker_id;
-        this.storage.set_int(`line;${id};marker2`, marker_id);
+        this.storage.set_int(`line[${id}].marker2`, marker_id);
         this.update_observers(MapStateChange.LINES);
     }
     set_line_color(id, color) {
         this.lines_hash.get(id).color = color;
-        this.storage.set_color(`line;${id};color`, color);
+        this.storage.set_color(`line[${id}].color`, color);
         this.update_observers(MapStateChange.LINES);
     }
     update_line_storage(line) {
-        this.storage.set_int(`line;${line.get_id()};marker1`, line.marker1);
-        this.storage.set_int(`line;${line.get_id()};marker2`, line.marker2);
-        this.storage.set_color(`line;${line.get_id()};color`, line.color);
+        const id = line.get_id();
+        this.storage.set_int(`line[${id}].marker1`, line.marker1);
+        this.storage.set_int(`line[${id}].marker2`, line.marker2);
+        this.storage.set_color(`line[${id}].color`, line.color);
     }
 
     get_line_ids_string() {
