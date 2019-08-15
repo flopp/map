@@ -52,16 +52,16 @@ export class SidebarLines extends MapStateObserver {
             });
 
             /* remove spurious lines */
-            var lines = $("#lines > .line");
+            const lines = $("#lines > .line");
             if (lines.length > this.map_state.lines.length) {
-                var ids = new Set();
+                const ids = new Set();
                 this.map_state.lines.forEach((line) => {
                     ids.add(line.get_id());
                 });
 
-                var deleted_ids = [];
+                const deleted_ids = [];
                 lines.each((i, m) => {
-                    var id = parseInt(m.id.substring(5), 10);
+                    const id = parse_int(m.id.substring(5));
                     if (!ids.has(id)) {
                         deleted_ids.push(id);
                     }

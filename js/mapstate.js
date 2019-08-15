@@ -284,7 +284,7 @@ export class MapState {
     }
 
     add_marker(coordinates) {
-        var marker = null;
+        let marker = null;
         if (!coordinates) {
             marker = new Marker(this.center);
         } else {

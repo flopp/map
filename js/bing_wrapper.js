@@ -51,7 +51,7 @@ export class BingWrapper extends MapWrapper {
     create_marker_object(marker) {
         const self = this;
 
-        var obj = new Microsoft.Maps.Pushpin(marker.coordinates.to_bing(), {
+        const obj = new Microsoft.Maps.Pushpin(marker.coordinates.to_bing(), {
             draggable: true
         });
 

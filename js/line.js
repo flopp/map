@@ -1,6 +1,6 @@
 import {Color} from './color.js';
 
-var next_line_id = 0;
+let next_line_id = 0;
 
 export class Line {
     constructor(marker_id1, marker_id2) {

@@ -14,8 +14,8 @@ import {Sidebar} from "./sidebar.js";
 
 export class App {
     constructor(id_leaflet, id_google, id_bing) {
-        this.google_maps_error = GOOGLE_API_KEY.length < 24;
-        this.bing_maps_error = BING_API_KEY < 24;
+        this.google_maps_error = false;
+        this.bing_maps_error = false;
 
         this.console_filter();
 
@@ -42,9 +42,14 @@ export class App {
         this.bing = null;
         this.bing_loading = false;
 
+        console.log(GOOGLE_API_KEY, GOOGLE_API_KEY.length);
         if (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32)) {
             this.google_maps_error = true;
             this.sidebar.sidebar_layers.disable_google_layers();
+        }
+        if (((typeof BING_API_KEY) == "undefined") || (BING_API_KEY.length < 32)) {
+            this.bing_maps_error = true;
+            this.sidebar.sidebar_layers.disable_bing_layers();
         }
 
         this.switch_map(this.map_state.map_type);
@@ -282,7 +287,7 @@ export class App {
                 resolve();
                 Reflect.deleteProperty(window, callbackName);
             };
-            const url = `http://www.bing.com/api/maps/mapcontrol?key=${BING_API_KEY}&callback=${callbackName}`;
+            const url = `https://www.bing.com/api/maps/mapcontrol?key=${BING_API_KEY}&callback=${callbackName}`;
             $.getScript(url);
         });
 
@@ -324,7 +329,7 @@ export class App {
     }
 
     locate_me() {
-        var self = this;
+        const self = this;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (location) => {

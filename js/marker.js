@@ -1,6 +1,6 @@
 import {Color} from './color.js';
 
-var next_marker_id = 0;
+let next_marker_id = 0;
 
 export class Marker {
     constructor(coordinates) {

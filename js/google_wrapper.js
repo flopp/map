@@ -146,7 +146,7 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     create_line_object(line) {
-        var obj = new google.maps.Polyline({
+        const obj = new google.maps.Polyline({
             map: this.map,
             path: [],
             geodesic: true,

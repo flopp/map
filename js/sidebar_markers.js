@@ -1,7 +1,7 @@
 import {Color} from './color.js';
 import {Coordinates, CoordinatesFormat} from "./coordinates.js";
 import {MapStateChange, MapStateObserver} from "./mapstate.js";
-import {parse_float, create_button, create_dropdown, create_text_input, create_color_input} from './utilities.js';
+import {parse_float, parse_int, create_button, create_dropdown, create_text_input, create_color_input} from './utilities.js';
 
 export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
@@ -69,16 +69,16 @@ export class SidebarMarkers extends MapStateObserver {
         });
 
         /* remove spurious markers */
-        var markers = $("#markers > .marker");
+        const markers = $("#markers > .marker");
         if (markers.length > this.map_state.markers.length) {
-            var ids = new Set();
+            const ids = new Set();
             this.map_state.markers.forEach((marker) => {
                 ids.add(marker.get_id());
             });
 
-            var deleted_ids = [];
+            const deleted_ids = [];
             markers.each((i, m) => {
-                var id = parseInt(m.id.substring(7), 10);
+                const id = parse_int(m.id.substring(7));
                 if (!ids.has(id)) {
                     deleted_ids.push(id);
                 }
