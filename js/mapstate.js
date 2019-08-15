@@ -187,6 +187,183 @@ export class MapState {
         });
     }
 
+    restore_from_url() {
+        const self = this;
+
+        const params = new Map();
+        window.location.search.substr(1).split('&').forEach((token) => {
+            const tokens = token.split('=', 2);
+            if (tokens[0].length > 0) {
+                if (tokens.length == 1) {
+                    params.set(tokens[0], '');
+                } else {
+                    params.set(tokens[0], tokens[1]);
+                }
+            }
+        });
+
+        let center = null;
+        let zoom = null;
+        let map_type = null;
+        const markers = [];
+        const marker_hash = new Map();
+        const lines = [];
+
+        params.forEach((value, key) => {
+            switch (key) {
+                case 'c':
+                    center = Coordinates.from_string(value);
+                    break;
+                case 'z':
+                    zoom = parse_int(value);
+                    break;
+                case 't':
+                    map_type = string2maptype(value);
+                    if (map_type === null) {
+                        switch (value) {
+                            case 'OSM':
+                            case 'OSM/DE':
+                                map_type = MapType.OPENSTREETMAP;
+                                break;
+                            case 'TOPO':
+                                map_type = MapType.OPENTOPOMAP;
+                                break;
+                            case 'roadmap':
+                                map_type = MapType.GOOGLE_ROADMAP;
+                                break;
+                            case 'terrain':
+                                map_type = MapType.GOOGLE_TERRAIN;
+                                break;
+                            case 'satellite':
+                                map_type = MapType.GOOGLE_SATELLITE;
+                                break;
+                            case 'hybrid':
+                                map_type = MapType.GOOGLE_HYBRID;
+                                break;
+                        }
+                    }
+                    break;
+                case 'm':
+                    value.split('*').forEach((token) => {
+                        // A:47.984967:7.908317:1000:markerA:ff0000
+                        const tokens = token.split(':');
+                        if ((tokens.length < 3) || (tokens.length > 6)) {
+                            return;
+                        }
+                        const id = tokens[0];
+                        const lat = parse_float(tokens[1]);
+                        const lon = parse_float(tokens[2]);
+                        let radius = 0;
+                        if (tokens.length > 3) {
+                            radius = parse_float(tokens[3]);
+                        }
+                        let name = id;
+                        if (tokens.length > 4) {
+                            name = self.decode(tokens[4]);
+                        }
+                        let color = Color.random_from_palette();
+                        if (tokens.length > 5) {
+                            color = Color.from_string(tokens[5]);
+                        }
+
+                        if ((id.length > 0) && (lat !== null) && (lon !== null) && (radius !== null) && (name !== null) && (color !== null)) {
+                            marker_hash.set(id, markers.length);
+                            markers.push({name: name, coordinates: new Coordinates(lat, lon), color: color, radius: radius});
+                        }
+                    });
+                    break;
+                case 'd':
+                    value.split('*').forEach((token) => {
+                        // from:to:color
+                        const tokens = token.split(':');
+                        if ((tokens.length < 2) || (tokens.length > 3)) {
+                            return;
+                        }
+
+                        let from = null;
+                        if (tokens[0].length == 0) {
+                            from = -1;
+                        } else if (marker_hash.has(tokens[0])) {
+                            from = marker_hash.get(tokens[0]);
+                        }
+                        let to = null;
+                        if (tokens[1].length == 0) {
+                            to = -1;
+                        } else if (marker_hash.has(tokens[1])) {
+                            to = marker_hash.get(tokens[1]);
+                        }
+                        let color = Color.from_string('#ff0000');
+                        if (tokens.length > 2) {
+                            color = Color.from_string(tokens[2]);
+                        }
+
+                        if ((from !== null) && (to !== null) && (color !== null)) {
+                            lines.push({from: from, to: to, color: color});
+                        }
+                    });
+                    break;
+                default:
+                    console.log(`ignoring unsupported url parameter: ${key}=${value}`);
+            }
+        });
+
+        if ((center === null) && (markers.length == 0)) {
+            return;
+        }
+
+        this.clear_storage();
+
+        if (center === null) {
+            let lat = 0;
+            let lon = 0;
+            markers.forEach((marker) => {
+                lat += marker.coordinates.lat();
+                lon += marker.coordinates.lng();
+            });
+            center = new Coordinates(lat / markers.length, lon / markers.length);
+        }
+        this.storage.set_coordinates('center', center);
+
+        if (zoom !== null) {
+            this.storage.set_int('zoom', zoom);
+        }
+
+        if (map_type !== null) {
+            this.storage.set('map_type', map_type);
+        }
+
+        const marker_ids = markers.map((_m, i) => {
+            return i;
+        });
+        this.storage.set('markers', marker_ids.join(';'));
+        markers.forEach((obj, i) => {
+            self.storage.set(`marker[${i}].name`, obj.name);
+            self.storage.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
+            self.storage.set_float(`marker[${i}].radius`, obj.radius);
+            if (obj.color !== null) {
+                self.storage.set_color(`marker[${i}].color`, obj.color);
+            }
+        });
+
+        const line_ids = lines.map((_l, i) => {
+            return i;
+        });
+        this.storage.set('lines', line_ids.join(';'));
+        lines.forEach((obj, i) => {
+            self.storage.set(`line[${i}].marker1`, obj.from);
+            self.storage.set(`line[${i}].marker2`, obj.to);
+            self.storage.set_color(`line[${i}].color`, obj.color);
+        });
+    }
+
+    decode(s) {
+        return decodeURIComponent(s);
+    }
+
+    encode(s) {
+        return encodeURIComponent(s);
+    }
+
     register_observer(observer) {
         this.observers.push(observer);
     }

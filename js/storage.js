@@ -167,11 +167,11 @@ export class Storage {
         });
         this.set('markers', marker_ids.join(';'));
         markers.forEach((obj, i) => {
-            this.set(`marker[${i}].name`, obj.name);
-            this.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
-            this.set_float(`marker[${i}].radius`, obj.radius);
+            self.set(`marker[${i}].name`, obj.name);
+            self.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
+            self.set_float(`marker[${i}].radius`, obj.radius);
             if (obj.color !== null) {
-                this.set_color(`marker[${i}].color`, obj.color);
+                self.set_color(`marker[${i}].color`, obj.color);
             }
         });
 
@@ -180,9 +180,9 @@ export class Storage {
         });
         this.set('lines', line_ids.join(';'));
         lines.forEach((obj, i) => {
-            this.set(`line[${i}].marker1`, obj.from);
-            this.set(`line[${i}].marker2`, obj.to);
-            this.set_color(`line[${i}].color`, obj.color);
+            self.set(`line[${i}].marker1`, obj.from);
+            self.set(`line[${i}].marker2`, obj.to);
+            self.set_color(`line[${i}].color`, obj.color);
         });
     }
 

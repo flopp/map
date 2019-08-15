@@ -20,6 +20,7 @@ export class App {
         this.console_filter();
 
         this.map_state = new MapState();
+        this.map_state.restore_from_url();
         this.map_state.restore();
         this.map_state.clear_storage();
 
