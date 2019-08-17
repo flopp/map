@@ -356,12 +356,26 @@ export class MapState {
         });
     }
 
+    create_link() {
+        const self = this;
+
+        const base = window.location.href.split('?')[0].split('#')[0];
+        const markers = this.markers.map((m) => {
+            return `${m.get_id()}:${m.coordinates.lat().toFixed(6)}:${m.coordinates.lng().toFixed(6)}:${m.radius.toFixed(1)}:${self.encode(m.name)}:${m.color.to_string()}`;
+        }).join('*');
+        const lines = this.lines.map((obj) => {
+            return `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`;
+        }).join('*');
+
+        return `${base}?c=${this.center.lat().toFixed(6)}:${this.center.lng().toFixed(6)}&z=${this.zoom}&t=${this.map_type}&m=${markers}&d=${lines}`;
+    }
+
     decode(s) {
         return decodeURIComponent(s);
     }
 
     encode(s) {
-        return encodeURIComponent(s);
+        return encodeURIComponent(s).replace(new RegExp(/\*/, 'g'), '%2A').replace(new RegExp(/:/, 'g'), '%3A');
     }
 
     register_observer(observer) {

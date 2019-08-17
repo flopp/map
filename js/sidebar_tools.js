@@ -7,6 +7,10 @@ export class SidebarTools extends MapStateObserver {
 
         const self = this;
 
+        $("#btn-link").click(() => {
+            self.app.show_link_dialog();
+        });
+
         $("#btn-export-json").click(() => {
             self.export_json();
         });
