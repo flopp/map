@@ -21,7 +21,9 @@ export const MapStateChange = {
 
 
 export class MapState {
-    constructor() {
+    constructor(app) {
+        this.app = app;
+
         this.sidebar_open = null;
 
         this.map_type = null;
@@ -492,6 +494,8 @@ export class MapState {
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
 
+        this.app.message("A new marker has been created.", "info");
+
         return marker;
     }
 
@@ -559,6 +563,8 @@ export class MapState {
         this.update_line_storage(line);
         this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES);
+
+        this.app.message("A new line has been created.", "info");
 
         return line;
     }

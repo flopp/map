@@ -7,6 +7,7 @@ import {LinkDialog} from "./link_dialog.js";
 import {MapState, MapStateChange} from "./mapstate.js";
 import {MapType} from "./maptype.js";
 import {MultiMarkersDialog} from "./multi_markers_dialog.js";
+import {Notifications} from "./notifications.js";
 import {ProjectionDialog} from "./projection_dialog.js";
 import {Sidebar} from "./sidebar.js";
 
@@ -15,12 +16,14 @@ import {Sidebar} from "./sidebar.js";
 
 export class App {
     constructor(id_leaflet, id_google, id_bing) {
+        this.notifications = new Notifications();
+
         this.google_maps_error = false;
         this.bing_maps_error = false;
 
         this.console_filter();
 
-        this.map_state = new MapState();
+        this.map_state = new MapState(this);
         this.map_state.restore_from_url();
         this.map_state.restore();
         this.map_state.clear_storage();
@@ -49,13 +52,23 @@ export class App {
         if (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32)) {
             this.google_maps_error = true;
             this.sidebar.sidebar_layers.disable_google_layers();
+            this.message_error("Google Maps layers disabled due to missing API key.");
         }
         if (((typeof BING_API_KEY) == "undefined") || (BING_API_KEY.length < 32)) {
             this.bing_maps_error = true;
             this.sidebar.sidebar_layers.disable_bing_layers();
+            this.message_error("Bing Maps layers disabled due to missing API key.");
         }
 
         this.switch_map(this.map_state.map_type);
+    }
+
+    message(text) {
+        this.notifications.message(text, "info");
+    }
+
+    message_error(text) {
+        this.notifications.message(text, "danger");
     }
 
     has_google_maps() {
@@ -182,12 +195,14 @@ export class App {
     }
 
     google_maps_error_raised() {
+        this.message_error("Google Maps layers disabled due to invalid API key or some API error.");
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
         this.switch_map(MapType.OPENSTREETMAP);
     }
 
     bing_maps_error_raised() {
+        this.message_error("Bing Maps layers disabled due to invalid API key or some API error.");
         this.bing_maps_error = true;
         this.sidebar.sidebar_layers.disable_bing_layers();
         this.switch_map(MapType.OPENSTREETMAP);
