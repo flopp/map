@@ -29,9 +29,9 @@ export class App {
         this.map_state.clear_storage();
 
         this.icon_factory = new IconFactory();
-        this.projection_dialog = new ProjectionDialog(this.map_state);
-        this.multi_markers_dialog = new MultiMarkersDialog(this.map_state);
-        this.link_dialog = new LinkDialog(this.map_state);
+        this.projection_dialog = new ProjectionDialog(this);
+        this.multi_markers_dialog = new MultiMarkersDialog(this);
+        this.link_dialog = new LinkDialog(this);
 
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
@@ -354,11 +354,11 @@ export class App {
                     self.map_state.set_center(new Coordinates(location.coords.latitude, location.coords.longitude), null);
                 },
                 (error) => {
-                    alert(error.message);
+                    self.message_error(error.message);
                 }
             );
         } else {
-            alert("Geolocation is not supported by this browser.");
+            self.message_error("Geolocation services are not available.");
         }
     }
 
@@ -382,11 +382,11 @@ export class App {
                 if (data.length > 0) {
                     self.map_state.set_center(new Coordinates(data[0].lat, data[0].lon), null);
                 } else {
-                    alert("Cannot find location");
+                    self.message_error("Cannot find a matching location.");
                 }
             })
             .fail(() => {
-                alert("Contacting nominatimg server failed");
+                self.message_error("Failed to contact 'Nominatim' server.");
             });
     }
 

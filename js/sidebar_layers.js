@@ -4,9 +4,7 @@ import {MapType} from "./maptype.js";
 
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {
-        super(app.map_state);
-
-        this.app = app;
+        super(app);
 
         this.baselayers = [
             {type: MapType.OPENSTREETMAP,    name: "OpenStreetMap"},

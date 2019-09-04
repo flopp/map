@@ -7,11 +7,10 @@ import {SidebarTools} from "./sidebar_tools.js";
 
 export class Sidebar extends MapStateObserver {
     constructor(sidebar_selector, sidebar_controls_selector, app) {
-        super(app.map_state);
+        super(app);
 
         const self = this;
 
-        this.app = app;
         this.sidebar_selector = sidebar_selector;
         this.sidebar_controls_selector = sidebar_controls_selector;
 

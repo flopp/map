@@ -2,11 +2,10 @@ import {MapStateObserver, MapStateChange} from "./mapstate.js";
 
 export class MapWrapper extends MapStateObserver {
     constructor(div_id, app) {
-        super(app.map_state);
+        super(app);
 
         this.active = false;
         this.div_id = div_id;
-        this.app = app;
         this.markers = new Map();
         this.lines = new Map();
 

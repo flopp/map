@@ -4,7 +4,7 @@ import {create_button, create_dropdown, create_color_input, create_select_input,
 
 export class SidebarLines extends MapStateObserver {
     constructor(app) {
-        super(app.map_state);
+        super(app);
 
         const self = this;
 
@@ -219,7 +219,7 @@ export class SidebarLines extends MapStateObserver {
         const color = Color.from_string(div.find("[data-color]").val());
 
         if (!color) {
-            alert('bad values.');
+            this.app.message_error('bad values.');
             return;
         }
 
@@ -263,7 +263,7 @@ export class SidebarLines extends MapStateObserver {
         const color = Color.from_string(this.settingsDiv.find("[data-color]").val());
 
         if (color === null) {
-            alert("bad values");
+            this.app.message_error("bad values");
             return;
         }
 

@@ -10,6 +10,9 @@ class Notification {
         this.div.addEventListener('click', function () {
             self.hide();
         });
+        this.div.addEventListener('touchend', function () {
+            self.hide();
+        });
         setTimeout(function () {
             self.hide();
         }, 5000);

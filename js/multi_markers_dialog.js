@@ -4,8 +4,8 @@ import {MapStateChange} from './mapstate.js';
 import {parse_float} from './utilities.js';
 
 export class MultiMarkersDialog {
-    constructor (map_state) {
-        this.map_state = map_state;
+    constructor (app) {
+        this.app = app;
 
         const self = this;
 
@@ -47,11 +47,11 @@ export class MultiMarkersDialog {
         const common_radius = parse_float($("#multi-markers-dialog [data-common-radius]").val());
 
         if (use_common_color && (common_color === null)) {
-            alert("Bad common color");
+            this.app.message_error("Bad common color");
             return;
         }
         if (use_common_radius && (common_radius === null)) {
-            alert("Bad common radius");
+            this.app.message_error("Bad common radius");
             return;
         }
 
@@ -135,19 +135,19 @@ export class MultiMarkersDialog {
         });
 
         if (errors.length > 0) {
-            alert(errors.join("\n"));
+            this.app.message_error(errors.join("\n"));
             return;
         }
 
         data.forEach((marker_data) => {
-            const marker = self.map_state.add_marker(marker_data.coordinates);
+            const marker = self.app.map_state.add_marker(marker_data.coordinates);
             marker.name = marker_data.name;
             marker.color = marker_data.color;
             marker.radius = marker_data.radius;
-            self.map_state.update_marker_storage(marker);
+            self.app.map_state.update_marker_storage(marker);
         });
 
-        this.map_state.update_observers(MapStateChange.MARKERS);
+        this.app.map_state.update_observers(MapStateChange.MARKERS);
         this.hide();
     }
 

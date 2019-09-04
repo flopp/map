@@ -232,13 +232,14 @@ body {
     bottom: 0;
     right: 0;
     width: 300px;
-    z-index: 31;
+    z-index: 41;
     pointer-events: none;
     padding: 4px;
 }
 
 .notification {
     margin-bottom: 4px !important;
+    pointer-events: auto;
 }
 
 .notification-fadeOut {

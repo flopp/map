@@ -2,8 +2,7 @@ import {MapStateObserver} from "./mapstate.js";
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {
-        super(app.map_state);
-        this.app = app;
+        super(app);
 
         const self = this;
 

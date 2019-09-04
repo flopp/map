@@ -5,9 +5,7 @@ import {parse_float, parse_int, create_button, create_dropdown, create_text_inpu
 
 export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
-        super(app.map_state);
-
-        this.app = app;
+        super(app);
 
         const self = this;
 
@@ -190,7 +188,7 @@ export class SidebarMarkers extends MapStateObserver {
         const color = Color.from_string(div.find("[data-color]").val());
 
         if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
-            alert('bad values.');
+            this.app.message_error('Bad values.');
             return;
         }
 
@@ -236,7 +234,7 @@ export class SidebarMarkers extends MapStateObserver {
         const radius = parse_float(this.settingsDiv.find("[data-radius]").val());
 
         if ((color === null) || (radius === null)) {
-            alert("bad values");
+            this.app.message_error('Bad values.');
             return;
         }
 
