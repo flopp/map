@@ -1,3 +1,4 @@
+import {ApiKeysDialog} from "./api_keys_dialog.js";
 import {BingWrapper} from "./bing_wrapper.js";
 import {Coordinates} from "./coordinates.js";
 import {GoogleWrapper} from "./google_wrapper.js";
@@ -29,6 +30,7 @@ export class App {
         this.map_state.clear_storage();
 
         this.icon_factory = new IconFactory();
+        this.api_keys_dialog = null;
         this.projection_dialog = new ProjectionDialog(this);
         this.multi_markers_dialog = new MultiMarkersDialog(this);
         this.link_dialog = new LinkDialog(this);
@@ -388,6 +390,13 @@ export class App {
             .fail(() => {
                 self.message_error("Failed to contact 'Nominatim' server.");
             });
+    }
+
+    show_api_keys_dialog() {
+        if (this.api_keys_dialog === null) {
+            this.api_keys_dialog = new ApiKeysDialog(this);
+        }
+        this.api_keys_dialog.show();
     }
 
     show_projection_dialog(marker) {

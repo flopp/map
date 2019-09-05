@@ -97,6 +97,12 @@
                             </div>
                             <p class="help is-hidden" data-baselayer-help>Google Maps and Bing Maps layers have been disabled</p>
                         </div>
+
+                        <hr />
+
+                        <div class="buttons">
+                            <a id="btn-api-keys" class="button is-fullwidth is-success">Add Your Own API Keys</a>
+                        </div>
                     </div>
                 </div>
 
@@ -249,6 +255,44 @@
             <div id="map-container-leaflet" class="map-container"></div>
             <div id="map-container-google" class="map-container"></div>
             <div id="map-container-bing" class="map-container"></div>
+
+            <div id="api-keys-dialog" class="modal">
+                <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <h2 class="modal-card-title">Add Your Own API Keys</h2>
+                            <button class="delete" data-cancel aria-label="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <p>Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps/Bing Maps servers, and they are never part of any data export.</p>
+
+                            <h3 class="is-size-4">Google Maps API Key</h3>
+                            <p>
+                                Get your API Key for the Google Maps Javascript API from <a href="https://console.developers.google.com" target="_blank">Google's API console</a>.
+                            </p>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-google-api-key class="input" type="text" placeholder="Google API Key">
+                                </div>
+                            </div>
+
+                            <h3 class="is-size-4">Bing Maps API Key</h3>
+                            <p>
+                                Get your API Key for Bing Maps directly from <a href="https://www.microsoft.com/en-us/maps/create-a-bing-maps-key" target="_blank">Microsoft</a>.
+                            </p>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-bing-api-key class="input" type="text" placeholder="Bing Maps API Key">
+                                </div>
+                            </div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" data-ok>Apply</button>
+                            <button class="button" data-cancel>Cancel</button>
+                        </footer>
+                    </div>
+                </div>
+            </div>
 
             <div id="projection-dialog" class="modal">
                 <div class="modal-background"></div>

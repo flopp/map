@@ -27,6 +27,11 @@ export class SidebarLayers extends MapStateObserver {
             app.switch_map(baselayer_select.val());
         });
 
+
+        $("#btn-api-keys").click(() => {
+            self.app.show_api_keys_dialog();
+        });
+
         if (!app.has_google_maps()) {
             this.disable_google_layers();
         }

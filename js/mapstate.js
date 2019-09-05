@@ -16,7 +16,8 @@ export const MapStateChange = {
     VIEW: 12,
     MARKERS: 16,
     LINES: 32,
-    EVERYTHING: 63
+    API_KEYS: 64,
+    EVERYTHING: 127
 };
 
 
@@ -25,6 +26,9 @@ export class MapState {
         this.app = app;
 
         this.sidebar_open = null;
+
+        this.google_api_key = "";
+        this.bing_api_key = "";
 
         this.map_type = null;
         this.zoom = null;
@@ -51,6 +55,9 @@ export class MapState {
 
     store() {
         const self = this;
+        this.storage.set("google_api_key", this.google_api_key);
+        this.storage.set("bing_api_key", this.bing_api_key);
+
         this.storage.set("sidebar_open", this.sidebar_open);
         this.storage.set_coordinates("center", this.center);
         this.storage.set_int("zoom", this.zoom);
@@ -75,6 +82,12 @@ export class MapState {
 
     restore() {
         const self = this;
+
+        // api keys
+        this.set_google_api_key(
+            this.storage.get("google_api_key", ""));
+        this.set_bing_api_key(
+            this.storage.get("bing_api_key", ""));
 
         // sidebar
         this.set_sidebar_open(
@@ -154,6 +167,8 @@ export class MapState {
 
         const ok_keys = new Set();
         ok_keys.add("version");
+        ok_keys.add("google_api_key");
+        ok_keys.add("bing_api_key");
         ok_keys.add("center");
         ok_keys.add("zoom");
         ok_keys.add("map_type");
@@ -442,6 +457,26 @@ export class MapState {
         });
 
         return changed;
+    }
+
+    set_google_api_key(key) {
+        this.google_api_key = key;
+        this.storage.set("google_api_key", this.google_api_key);
+        this.update_observers(MapStateChange.API_KEYS);
+    }
+
+    set_bing_api_key(key) {
+        this.bing_api_key = key;
+        this.storage.set("bing_api_key", this.bing_api_key);
+        this.update_observers(MapStateChange.API_KEYS);
+    }
+
+    set_api_keys(google_api_key, bing_api_key) {
+        this.google_api_key = google_api_key;
+        this.storage.set("google_api_key", this.google_api_key);
+        this.bing_api_key = bing_api_key;
+        this.storage.set("bing_api_key", this.bing_api_key);
+        this.update_observers(MapStateChange.API_KEY);
     }
 
     set_sidebar_open(section) {
