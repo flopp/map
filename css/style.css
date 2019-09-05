@@ -23,7 +23,7 @@ body {
     top: 0;
     bottom: 0;
     right: 0;
-    width: 300px;
+    width: 270px;
     z-index: 30;
     background: white;
 }
@@ -42,7 +42,7 @@ body {
     overflow: hidden;
 }
 #sidebar-controls.sidebar-open {
-    right: 300px;
+    right: 270px;
 }
 
 .sidebar-control {
@@ -199,7 +199,7 @@ body {
     overflow: hidden;
 }
 .map-container.sidebar-open {
-    right: 300px;
+    right: 270px;
 }
 
 .buttons.has-addons.is-vertical {
@@ -231,7 +231,7 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 300px;
+    width: 270px;
     z-index: 41;
     pointer-events: none;
     padding: 4px;
@@ -251,7 +251,7 @@ body {
 
 @keyframes NotificationIn {
     from {
-        transform: translate3d(400px, 0, 0);;
+        transform: translate3d(300px, 0, 0);;
         opacity: 0;
     }
     to {
@@ -266,7 +266,7 @@ body {
         opacity: 1;
     }
     to {
-        transform: translate3d(400px, 0, 0);
+        transform: translate3d(300px, 0, 0);
         opacity: 0;
     }
 }
