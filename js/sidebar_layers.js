@@ -5,6 +5,7 @@ import {MapType} from "./maptype.js";
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {
         super(app);
+        const self = this;
 
         this.baselayers = [
             {type: MapType.OPENSTREETMAP,    name: "OpenStreetMap"},
@@ -18,13 +19,13 @@ export class SidebarLayers extends MapStateObserver {
             {type: MapType.BING_AERIAL,      name: "Bing Aerial"},
         ];
 
-        const baselayer_select = $("#sidebar-layers").find("[data-baselayer]");
+        this.baselayer_select = $("#sidebar-layers").find("[data-baselayer]");
         this.baselayers.forEach((baselayer) => {
             baselayer.option = $(`<option value=${baselayer.type}>`).text(baselayer.name);
-            baselayer_select.append(baselayer.option);
+            self.baselayer_select.append(baselayer.option);
         });
-        baselayer_select.change(() => {
-            app.switch_map(baselayer_select.val());
+        this.baselayer_select.change(() => {
+            app.switch_map(self.baselayer_select.val());
         });
 
 
@@ -50,22 +51,40 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    disable_google_layers() {
+    disable_layers(which) {
         this.baselayers.forEach((baselayer) => {
-            if (baselayer.name.indexOf("Google") >= 0) {
+            if (baselayer.name.indexOf(which) >= 0) {
                 baselayer.option.remove();
+                baselayer.option = null;
             }
         });
         this.update_baselayer_help();
     }
 
-    disable_bing_layers() {
+    enable_layers(which) {
         this.baselayers.forEach((baselayer) => {
-            if (baselayer.name.indexOf("Bing") >= 0) {
-                baselayer.option.remove();
+            if ((baselayer.name.indexOf(which) >= 0) && (baselayer.option === null)) {
+                baselayer.option = $(`<option value=${baselayer.type}>`).text(baselayer.name);
+                self.baselayer_select.append(baselayer.option);
             }
         });
         this.update_baselayer_help();
+    }
+
+    disable_google_layers() {
+        this.disable_layers("Google");
+    }
+
+    enable_google_layers() {
+        this.enable_layers("Google");
+    }
+
+    disable_bing_layers() {
+        this.disable_layers("Bing");
+    }
+
+    enable_bing_layers() {
+        this.enable_layers("Bing");
     }
 
     update_baselayer_help() {
