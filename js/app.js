@@ -50,12 +50,12 @@ export class App {
         this.bing = null;
         this.bing_loading = false;
 
-        if ((this.map_state.google_api_key !== "") && (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32))) {
+        if ((this.map_state.google_api_key === "") && (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32))) {
             this.google_maps_error = true;
             this.sidebar.sidebar_layers.disable_google_layers();
             this.message_error("Google Maps layers disabled due to missing API key.");
         }
-        if ((this.map_state.bing_api_key !== "") && (((typeof BING_API_KEY) == "undefined") || (BING_API_KEY.length < 32))) {
+        if ((this.map_state.bing_api_key === "") && (((typeof BING_API_KEY) == "undefined") || (BING_API_KEY.length < 32))) {
             this.bing_maps_error = true;
             this.sidebar.sidebar_layers.disable_bing_layers();
             this.message_error("Bing Maps layers disabled due to missing API key.");

@@ -3,6 +3,6 @@
 
 ```
 npm install
-npm run webpack
-npm start
+npm run build
+npm run start
 ```
