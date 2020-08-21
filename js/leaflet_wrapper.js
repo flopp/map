@@ -30,11 +30,16 @@ export class LeafletWrapper extends MapWrapper {
             maxZoom: 14,
             subdomains: 'abcd'
         });
+        this.layer_arcgis_worldimagery = L.tileLayer('https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+            maxZoom: 18
+        });
 
         this.layers = [
             this.layer_openstreetmap,
             this.layer_opentopomap,
             this.layer_stamen_terrain,
+            this.layer_arcgis_worldimagery
         ];
 
         this.map.on('zoom', function () {
@@ -61,6 +66,9 @@ export class LeafletWrapper extends MapWrapper {
                 break;
             case MapType.STAMEN_TERRAIN:
                 layer = this.layer_stamen_terrain;
+                break;
+            case MapType.ARCGIS_WORLDIMAGERY:
+                layer = this.layer_arcgis_worldimagery;
                 break;
             default:
                 break;

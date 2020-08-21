@@ -8,15 +8,16 @@ export class SidebarLayers extends MapStateObserver {
         const self = this;
 
         this.baselayers = [
-            {type: MapType.OPENSTREETMAP,    name: "OpenStreetMap"},
-            {type: MapType.OPENTOPOMAP,      name: "OpenTopoMap"},
-            {type: MapType.STAMEN_TERRAIN,   name: "Stamen Terrain"},
-            {type: MapType.GOOGLE_ROADMAP,   name: "Google Roadmap"},
-            {type: MapType.GOOGLE_SATELLITE, name: "Google Satellite"},
-            {type: MapType.GOOGLE_HYBRID,    name: "Google Hybrid"},
-            {type: MapType.GOOGLE_TERRAIN,   name: "Google Terrain"},
-            {type: MapType.BING_ROAD,        name: "Bing Road"},
-            {type: MapType.BING_AERIAL,      name: "Bing Aerial"},
+            {type: MapType.OPENSTREETMAP,       name: "OpenStreetMap"},
+            {type: MapType.OPENTOPOMAP,         name: "OpenTopoMap"},
+            {type: MapType.STAMEN_TERRAIN,      name: "Stamen Terrain"},
+            {type: MapType.ARCGIS_WORLDIMAGERY, name: "Arcgis World Imagery"},
+            {type: MapType.GOOGLE_ROADMAP,      name: "Google Roadmap"},
+            {type: MapType.GOOGLE_SATELLITE,    name: "Google Satellite"},
+            {type: MapType.GOOGLE_HYBRID,       name: "Google Hybrid"},
+            {type: MapType.GOOGLE_TERRAIN,      name: "Google Terrain"},
+            {type: MapType.BING_ROAD,           name: "Bing Road"},
+            {type: MapType.BING_AERIAL,         name: "Bing Aerial"},
         ];
 
         this.baselayer_select = $("#sidebar-layers").find("[data-baselayer]");
