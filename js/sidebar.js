@@ -36,7 +36,7 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_tools = new SidebarTools(app);
     }
 
-    toggle (toggle_control_id) {
+    toggle(toggle_control_id) {
         if ((!toggle_control_id) || $(`#${toggle_control_id}`).parent().hasClass('active')) {
             this.map_state.set_sidebar_open(null);
         } else {

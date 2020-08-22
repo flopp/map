@@ -77,8 +77,6 @@ export class IconFactory {
                    </svg>`,
             url = `data:image/svg+xml;charset=UTF-8;base64,${window.btoa(svg)}`;
 
-            console.log(svg);
-
         return {
             url: url,
             size: [w, 37],

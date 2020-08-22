@@ -229,7 +229,7 @@
                         <div class="buttons">
                             <a id="btn-export-json" class="button is-fullwidth">Export Full Map State (JSON)</a>
 
-                            <input id="inp-import-json" style="display:none" type="file" name="files" />
+                            <input id="inp-import-json" style="display: none;" type="file" name="files" />
                             <a id="btn-import-json" class="button is-fullwidth">Import Full Map State (JSON)</a>
                         </div>
 
@@ -255,6 +255,14 @@
             <div id="map-container-leaflet" class="map-container"></div>
             <div id="map-container-google" class="map-container"></div>
             <div id="map-container-bing" class="map-container"></div>
+
+            <div id="map-contextmenu" class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <a id="map-contextmenu-addmarker" class="dropdown-item">ADD MARKER</a>
+                    <a id="map-contextmenu-deletemarker" class="dropdown-item">DELETE MARKER</a>
+                    <a id="map-contextmenu-centermap" class="dropdown-item">CENTER MAP HERE</a>
+                </div>
+            </div>
 
             <div id="api-keys-dialog" class="modal">
                 <div class="modal-background"></div>

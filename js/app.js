@@ -5,6 +5,7 @@ import {GoogleWrapper} from "./google_wrapper.js";
 import {IconFactory} from "./icon_factory.js";
 import {LeafletWrapper} from "./leaflet_wrapper.js";
 import {LinkDialog} from "./link_dialog.js";
+import {MapMenu} from "./map_menu.js";
 import {MapState, MapStateChange} from "./mapstate.js";
 import {MapType} from "./maptype.js";
 import {MultiMarkersDialog} from "./multi_markers_dialog.js";
@@ -34,6 +35,7 @@ export class App {
         this.projection_dialog = new ProjectionDialog(this);
         this.multi_markers_dialog = new MultiMarkersDialog(this);
         this.link_dialog = new LinkDialog(this);
+        this.map_menu = new MapMenu(this);
 
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;

@@ -43,15 +43,22 @@ export class LeafletWrapper extends MapWrapper {
         ];
 
         this.map.on('zoom', function () {
+            self.app.map_menu.hide();
             if (self.active && !self.automatic_event) {
                 self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
             }
         });
 
         this.map.on('move', function () {
+            self.app.map_menu.hide();
             if (self.active && !self.automatic_event) {
                 self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
             }
+        });
+
+        this.map.on('contextmenu', (event) => {
+            self.app.map_menu.showMap(event.containerPoint.x, event.containerPoint.y, Coordinates.from_leaflet(event.latlng));
+            return false;
         });
     }
 
@@ -118,6 +125,12 @@ export class LeafletWrapper extends MapWrapper {
                 obj.meta.circle.setLatLngs(points);
             }
         });
+
+        obj.on('contextmenu', (event) => {
+            self.app.map_menu.showMarker(event.containerPoint.x, event.containerPoint.y, obj);
+            return false;
+        });
+
         this.markers.set(marker.get_id(), obj);
 
         this.update_marker_object(obj, marker);
