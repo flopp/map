@@ -6,6 +6,7 @@ export class MapWrapper extends MapStateObserver {
 
         this.active = false;
         this.div_id = div_id;
+        this.div = document.getElementById(div_id);
         this.markers = new Map();
         this.lines = new Map();
 
@@ -22,6 +23,14 @@ export class MapWrapper extends MapStateObserver {
 
     set_map_view(_center, _zoom) {
         throw new Error('not implemented');
+    }
+
+    width() {
+        return this.div.offsetWidth;
+    }
+
+    height() {
+        return this.div.offsetHeight;
     }
 
     invalidate_size() {}

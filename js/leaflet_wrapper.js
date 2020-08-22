@@ -57,7 +57,7 @@ export class LeafletWrapper extends MapWrapper {
         });
 
         this.map.on('contextmenu', (event) => {
-            self.app.map_menu.showMap(event.containerPoint.x, event.containerPoint.y, Coordinates.from_leaflet(event.latlng));
+            self.app.map_menu.showMap(self, event.containerPoint.x, event.containerPoint.y, Coordinates.from_leaflet(event.latlng));
             return false;
         });
     }
@@ -127,7 +127,7 @@ export class LeafletWrapper extends MapWrapper {
         });
 
         obj.on('contextmenu', (event) => {
-            self.app.map_menu.showMarker(event.containerPoint.x, event.containerPoint.y, obj);
+            self.app.map_menu.showMarker(self, event.containerPoint.x, event.containerPoint.y, obj);
             return false;
         });
 

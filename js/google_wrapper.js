@@ -42,7 +42,7 @@ export class GoogleWrapper extends MapWrapper {
         });
 
         google.maps.event.addListener(this.map, 'rightclick', (event) => {
-            self.app.map_menu.showMap(event.pixel.x, event.pixel.y, Coordinates.from_google(event.latLng));
+            self.app.map_menu.showMap(self, event.pixel.x, event.pixel.y, Coordinates.from_google(event.latLng));
             return false;
         });
     }
@@ -96,7 +96,7 @@ export class GoogleWrapper extends MapWrapper {
         });
 
         google.maps.event.addListener(obj, "rightclick", (event) => {
-            self.app.map_menu.showMarker(event.pixel.x, event.pixel.y, obj);
+            self.app.map_menu.showMarker(self, event.pixel.x, event.pixel.y, obj);
             return false;
         });
 

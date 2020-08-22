@@ -41,7 +41,7 @@ export class MapMenu {
         this.menu.css({display: 'none'});
     }
 
-    showMap(x, y, coordinates) {
+    showMap(wrapper, x, y, coordinates) {
         this.addmarker.show();
         this.deletemarker.hide();
         this.centermap.show();
@@ -49,10 +49,10 @@ export class MapMenu {
         this.marker = null;
         this.coordinates = coordinates;
 
-        this.show(x, y);
+        this.show(wrapper, x, y);
     }
 
-    showMarker(x, y, marker) {
+    showMarker(wrapper, x, y, marker) {
         this.addmarker.hide();
         this.deletemarker.show();
         this.centermap.show();
@@ -60,11 +60,21 @@ export class MapMenu {
         this.marker = marker;
         this.coordinates = null;
 
-        this.show(x, y);
+        this.show(wrapper, x, y);
     }
 
-    show(x, y) {
+    show(wrapper, x, y) {
         this.hide();
+
+        // Adjust the menu if clicked to close to the edge of the map
+        if (x > wrapper.width() - this.menu.width()) {
+            x = wrapper.width() - this.menu.width();
+        }
+
+        if (y > wrapper.height() - this.menu.height()) {
+            y = wrapper.height() - this.menu.height();
+        }
+
         this.menu.css({top: y, left: x, display: 'block'});
     }
 }

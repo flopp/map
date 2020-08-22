@@ -40,7 +40,9 @@ body {
     bottom: 0;
     z-index: 30;
     overflow: hidden;
+    pointer-events: none;
 }
+
 #sidebar-controls.sidebar-open {
     right: 270px;
 }
@@ -51,6 +53,7 @@ body {
 
     background-color: rgba(0,0,0,0.6);
     text-align: center;
+    pointer-events: all;
 }
 
 .sidebar-control.active {
