@@ -4,7 +4,9 @@
     "description": "",
     "main": "js/main.js",
     "scripts": {
-        "lint": "eslint js/*.js",
+        "lint-eslint": "eslint js/*.js",
+        "lint-prettier": "prettier --list-different js/*.js",
+        "prettier": "prettier --write js/*.js",
         "build": "mkdir -p build && cp index.html css/style.css .secrets.js build && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./build/bundle.js",
         "deploy": "mkdir -p deploy && cp index.html css/style.css deploy && cp .secrets-production.js deploy/.secrets.js && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode production -o ./deploy/bundle.js && (cd deploy && rsync -v -r . flopp@grus.uberspace.de:html/map2/)",
         "start": "http-server build"
@@ -20,13 +22,14 @@
     },
     "homepage": "https://github.com/flopp/dualmap#readme",
     "devDependencies": {
-        "eslint": "^6.0.1",
-        "http-server": "^0.11.1",
-        "webpack": "^4.35.3",
-        "webpack-cli": "^3.3.6"
+        "eslint": "^7.7.0",
+        "http-server": "^0.12.3",
+        "prettier": "^2.0.5",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12"
     },
     "dependencies": {
-        "clipboard": "^2.0.4",
-        "geographiclib": "^1.49.0"
+        "clipboard": "^2.0.6",
+        "geographiclib": "^1.50.0"
     }
 }
