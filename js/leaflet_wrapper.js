@@ -42,23 +42,23 @@ export class LeafletWrapper extends MapWrapper {
             this.layer_arcgis_worldimagery
         ];
 
-        this.map.on('zoom', function () {
-            self.app.map_menu.hide();
-            if (self.active && !self.automatic_event) {
-                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
-            }
-        });
-
-        this.map.on('move', function () {
-            self.app.map_menu.hide();
-            if (self.active && !self.automatic_event) {
-                self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
-            }
+        ['zoom', 'move'].forEach((event_name) => {
+            self.map.on(event_name, () => {
+                if (self.active && !self.automatic_event) {
+                    self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
+                }
+            });
         });
 
         this.map.on('contextmenu', (event) => {
             self.app.map_menu.showMap(self, event.containerPoint.x, event.containerPoint.y, Coordinates.from_leaflet(event.latlng));
             return false;
+        });
+
+        ['zoom', 'move', 'mousedown'].forEach((event_name) => {
+            self.map.on(event_name, () => {
+                self.app.map_menu.hide();
+            });
         });
     }
 
@@ -127,7 +127,7 @@ export class LeafletWrapper extends MapWrapper {
         });
 
         obj.on('contextmenu', (event) => {
-            self.app.map_menu.showMarker(self, event.containerPoint.x, event.containerPoint.y, obj);
+            self.app.map_menu.showMarker(self, event.containerPoint.x, event.containerPoint.y, marker);
             return false;
         });
 

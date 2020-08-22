@@ -29,21 +29,23 @@ export class GoogleWrapper extends MapWrapper {
             }
         );
 
-        google.maps.event.addListener(this.map, 'center_changed', () => {
-            if (self.active && !self.automatic_event) {
-                self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
-            }
-        });
-
-        google.maps.event.addListener(this.map, 'zoom_changed', () => {
-            if (self.active && !self.automatic_event) {
-                self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
-            }
+        ['center_changed', 'zoom_changed'].forEach((event_name) => {
+            google.maps.event.addListener(this.map, event_name, () => {
+                if (self.active && !self.automatic_event) {
+                    self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
+                }
+            });
         });
 
         google.maps.event.addListener(this.map, 'rightclick', (event) => {
             self.app.map_menu.showMap(self, event.pixel.x, event.pixel.y, Coordinates.from_google(event.latLng));
             return false;
+        });
+
+        ['click', 'dragstart', 'zoom_changed', 'maptypeid_changed', 'center_changed'].forEach((event_name) => {
+            google.maps.event.addListener(self.map, event_name, () => {
+                self.app.map_menu.hide();
+            });
         });
     }
 
@@ -96,7 +98,7 @@ export class GoogleWrapper extends MapWrapper {
         });
 
         google.maps.event.addListener(obj, "rightclick", (event) => {
-            self.app.map_menu.showMarker(self, event.pixel.x, event.pixel.y, obj);
+            self.app.map_menu.showMarker(self, event.pixel.x + self.width() / 2, event.pixel.y + self.height() / 2, marker);
             return false;
         });
 
