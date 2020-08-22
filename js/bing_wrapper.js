@@ -168,6 +168,13 @@ export class BingWrapper extends MapWrapper {
     }
 
     create_line_object(line) {
+        if (
+            !this.has_marker_object(line.marker1) ||
+            !this.has_marker_object(line.marker2)
+        ) {
+            return;
+        }
+
         const obj = new Microsoft.Maps.Polyline([], {
             strokeColor: line.color.to_hash_string(),
             strokeThickness: 2,
@@ -223,8 +230,11 @@ export class BingWrapper extends MapWrapper {
                 obj.meta.arrow.setOptions({visible: false});
             }
         } else {
-            obj.setLocations([]);
-            obj.meta.arrow.setOptions({visible: false});
+            // Delete the Bing line object if one of the end-points is undefined.
+            // This is necessary since Bing doesn't like empty lines...
+            this.delete_line_object(obj);
+            this.lines.delete(line.get_id());
+            return;
         }
 
         if (!line.color.equals(obj.meta.last_color)) {
@@ -235,10 +245,10 @@ export class BingWrapper extends MapWrapper {
         }
     }
 
-    delete_line_object(m) {
-        this.map.entities.remove(m.meta.arrow);
-        m.meta.arrow = null;
-        this.map.entities.remove(m);
+    delete_line_object(obj) {
+        this.map.entities.remove(obj.meta.arrow);
+        obj.meta.arrow = null;
+        this.map.entities.remove(obj);
     }
 
     rgba_color(color, alpha) {
