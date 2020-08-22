@@ -66,15 +66,18 @@ export class MapMenu {
     show(wrapper, x, y) {
         this.hide();
 
+        let xx = x;
+        let yy = y;
+
         // Adjust the menu if clicked to close to the edge of the map
         if (x > wrapper.width() - this.menu.width()) {
-            x = wrapper.width() - this.menu.width();
+            xx = wrapper.width() - this.menu.width();
         }
 
         if (y > wrapper.height() - this.menu.height()) {
-            y = wrapper.height() - this.menu.height();
+            yy = wrapper.height() - this.menu.height();
         }
 
-        this.menu.css({top: y, left: x, display: 'block'});
+        this.menu.css({top: yy, left: xx, display: 'block'});
     }
 }
