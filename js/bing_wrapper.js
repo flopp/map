@@ -27,6 +27,21 @@ export class BingWrapper extends MapWrapper {
                 self.map_state.set_view(Coordinates.from_bing(self.map.getCenter()), self.map.getZoom(), self);
             }
         });
+
+        Microsoft.Maps.Events.addHandler(this.map, 'rightclick', (event) => {
+            if (event.primitive && event.primitive.meta && event.primitive.meta.marker) {
+                self.app.map_menu.showMarker(self, event.getX() + self.width() / 2, event.getY() + self.height() / 2, event.primitive.meta.marker);
+            } else {
+                self.app.map_menu.showMap(self, event.getX() + self.width() / 2, event.getY() + self.height() / 2, Coordinates.from_bing(event.location));
+            }
+            return false;
+        });
+
+        ['viewchangestart', 'mousedown'].forEach((event_name) => {
+            Microsoft.Maps.Events.addHandler(this.map, event_name, () => {
+                self.app.map_menu.hide();
+            });
+        });
     }
 
     set_map_type(map_type) {
@@ -58,12 +73,13 @@ export class BingWrapper extends MapWrapper {
         this.map.entities.push(obj);
 
         obj.meta = {
+            marker: marker,
             last_name: null,
             last_color: null,
             circle: null
         };
 
-        Microsoft.Maps.Events.addHandler(obj, "drag", function () {
+        Microsoft.Maps.Events.addHandler(obj, "drag", () => {
             self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_bing(obj.getLocation()));
             if (obj.meta.circle) {
                 const center = Coordinates.from_bing(obj.getLocation());
@@ -129,6 +145,7 @@ export class BingWrapper extends MapWrapper {
             strokeThickness: 2
         });
         obj.meta = {
+            line: line,
             last_color: line.color,
             arrow: new Microsoft.Maps.Pushpin(new Microsoft.Maps.Location(0, 0), {
                 visible: false,
