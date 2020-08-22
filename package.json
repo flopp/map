@@ -6,7 +6,8 @@
     "scripts": {
         "lint-eslint": "eslint js/*.js",
         "lint-prettier": "prettier --list-different js/*.js",
-        "prettier": "prettier --write js/*.js",
+        "fix-eslint": "eslint --fix js/*.js",
+        "fix-prettier": "prettier --write js/*.js",
         "build": "mkdir -p build && cp index.html css/style.css .secrets.js build && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./build/bundle.js",
         "deploy": "mkdir -p deploy && cp index.html css/style.css deploy && cp .secrets-production.js deploy/.secrets.js && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode production -o ./deploy/bundle.js && (cd deploy && rsync -v -r . flopp@grus.uberspace.de:html/map2/)",
         "start": "http-server build"

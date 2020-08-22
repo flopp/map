@@ -1,6 +1,6 @@
 export class IconFactory {
     constructor() {
-        this.font = "16px sans";
+        this.font = '16px sans';
         this.canvas = null;
     }
 
@@ -31,7 +31,7 @@ export class IconFactory {
         const icon = this.create_map_icon(text, color);
         return {
             icon: icon.url,
-            anchor: new Microsoft.Maps.Point(icon.anchor[0], icon.anchor[1])
+            anchor: new Microsoft.Maps.Point(icon.anchor[0], icon.anchor[1]),
         };
     }
 
@@ -40,14 +40,17 @@ export class IconFactory {
         encoder.textContent = text;
         const domString = encoder.innerHTML;
         // domString is UTF-16; we need to convert it to UTF-8; see https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#Solution_4_%E2%80%93_escaping_the_string_before_encoding_it
-        const encoded_text = encodeURIComponent(domString).replace(/%([0-9A-F]{2})/g,
-            function toSolidBytes(match, p1) {
+        const encoded_text = encodeURIComponent(domString).replace(
+            /%([0-9A-F]{2})/g,
+            (_match, p1) => {
                 return String.fromCharCode('0x' + p1);
-            }
+            },
         );
 
-        const
-            w = Math.max(33.0, 16.0 + this.compute_text_width(text, this.font)),
+        const w = Math.max(
+                33.0,
+                16.0 + this.compute_text_width(text, this.font),
+            ),
             w2 = 0.5 * w,
             d = 4.0,
             text_color = color.text_color().to_hash_string(),
@@ -66,11 +69,15 @@ export class IconFactory {
                      </defs>
                        <path
                          fill="#7F7F7F" stroke="#7F7F7F"
-                         d="M 4 4 L 4 26 L ${w2 - d} 26 L ${w2} 33 L ${w2 + d} 26 L ${w - d} 26 L ${w - d} 4 L 4 4 z"
+                         d="M 4 4 L 4 26 L ${w2 - d} 26 L ${w2} 33 L ${
+    w2 + d
+} 26 L ${w - d} 26 L ${w - d} 4 L 4 4 z"
                          filter="url(#shadow)" />
                        <path
                          fill="${color.to_hash_string()}" stroke="#000000"
-                         d="M 4 4 L 4 26 L ${w2 - d} 26 L ${w2} 33 L ${w2 + d} 26 L ${w - d} 26 L ${w - d} 4 L 4 4 z" />
+                         d="M 4 4 L 4 26 L ${w2 - d} 26 L ${w2} 33 L ${
+    w2 + d
+} 26 L ${w - d} 26 L ${w - d} 4 L 4 4 z" />
                        <text
                          style="text-anchor:middle;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-weight:normal;font-size:16px;line-height:100%;font-family:sans;letter-spacing:0px;word-spacing:0px;fill:${text_color};fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
                          x="${w2}" y="21">${encoded_text}</text>
@@ -87,10 +94,10 @@ export class IconFactory {
     compute_text_width(text) {
         // re-use canvas object for better performance
         if (!this.canvas) {
-            this.canvas = document.createElement("canvas");
+            this.canvas = document.createElement('canvas');
         }
 
-        const context = this.canvas.getContext("2d");
+        const context = this.canvas.getContext('2d');
         context.font = this.font;
 
         return context.measureText(text).width;

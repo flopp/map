@@ -1,18 +1,18 @@
 const parse_float = (str) => {
-    if (!((/[0-9]/).test(str))) {
+    if (!/[0-9]/.test(str)) {
         return null;
     }
-    if (!((/^(\+|-)?[0-9]*\.?[0-9]*$/).test(str))) {
+    if (!/^(\+|-)?[0-9]*\.?[0-9]*$/.test(str)) {
         return null;
     }
     return parseFloat(str);
 };
 
 const parse_int = (str) => {
-    if (!((/[0-9]/).test(str))) {
+    if (!/[0-9]/.test(str)) {
         return null;
     }
-    if (!((/^(\+|-)?[0-9]+$/).test(str))) {
+    if (!/^(\+|-)?[0-9]+$/.test(str)) {
         return null;
     }
     return parseFloat(str);
@@ -75,7 +75,9 @@ const create_dropdown = (menu_id, items) => {
     menu.append(menu_content);
 
     items.forEach((item) => {
-        const dropdown_item = $(`<a href="#" class="dropdown-item">${item.label}</a>`);
+        const dropdown_item = $(
+            `<a href="#" class="dropdown-item">${item.label}</a>`,
+        );
         dropdown_item.click(item.callback);
         menu_content.append(dropdown_item);
     });
@@ -83,4 +85,12 @@ const create_dropdown = (menu_id, items) => {
     return dropdown;
 };
 
-export {parse_float, parse_int, create_button, create_dropdown, create_text_input, create_color_input, create_select_input};
+export {
+    parse_float,
+    parse_int,
+    create_button,
+    create_dropdown,
+    create_text_input,
+    create_color_input,
+    create_select_input,
+};

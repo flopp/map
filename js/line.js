@@ -25,9 +25,9 @@ export class Line {
 
     to_json() {
         return {
-            "marker1": this.marker1,
-            "marker2": this.marker2,
-            "color": this.color.to_string()
+            marker1: this.marker1,
+            marker2: this.marker2,
+            color: this.color.to_string(),
         };
     }
 }

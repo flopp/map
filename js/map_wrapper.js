@@ -1,4 +1,4 @@
-import {MapStateObserver, MapStateChange} from "./mapstate.js";
+import {MapStateObserver, MapStateChange} from './mapstate.js';
 
 export class MapWrapper extends MapStateObserver {
     constructor(div_id, app) {
@@ -13,7 +13,7 @@ export class MapWrapper extends MapStateObserver {
         this.create_map_object(div_id);
     }
 
-    create_map_object (_div_id) {
+    create_map_object(_div_id) {
         throw new Error('not implemented');
     }
 
@@ -48,7 +48,7 @@ export class MapWrapper extends MapStateObserver {
     }
 
     has_marker_object(id) {
-        return (id >= 0) && this.markers.has(id);
+        return id >= 0 && this.markers.has(id);
     }
 
     get_marker_object(id) {
@@ -95,7 +95,10 @@ export class MapWrapper extends MapStateObserver {
             // update and add markers
             this.map_state.markers.forEach((marker) => {
                 if (self.markers.has(marker.get_id())) {
-                    self.update_marker_object(self.markers.get(marker.get_id()), marker);
+                    self.update_marker_object(
+                        self.markers.get(marker.get_id()),
+                        marker,
+                    );
                 } else {
                     self.create_marker_object(marker);
                 }

@@ -1,9 +1,8 @@
-import {Coordinates} from "./coordinates.js";
-import {MapType} from "./maptype.js";
-import {MapWrapper} from "./map_wrapper.js";
+import {Coordinates} from './coordinates.js';
+import {MapType} from './maptype.js';
+import {MapWrapper} from './map_wrapper.js';
 
 /* global google */
-
 
 export class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
@@ -11,38 +10,49 @@ export class GoogleWrapper extends MapWrapper {
         this.automatic_event = false;
     }
 
-    create_map_object (div_id) {
+    create_map_object(div_id) {
         const self = this;
 
-        this.map = new google.maps.Map(
-            document.getElementById(div_id), {
-                clickableIcons: false,
-                fullscreenControl: false,
-                mapTypeControl: false,
-                panControl: false,
-                rotateControl: false,
-                streetViewControl: false,
-                zoomControl: true,
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_TOP
-                }
-            }
-        );
-
+        this.map = new google.maps.Map(document.getElementById(div_id), {
+            clickableIcons: false,
+            fullscreenControl: false,
+            mapTypeControl: false,
+            panControl: false,
+            rotateControl: false,
+            streetViewControl: false,
+            zoomControl: true,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.LEFT_TOP,
+            },
+        });
         ['center_changed', 'zoom_changed'].forEach((event_name) => {
             google.maps.event.addListener(this.map, event_name, () => {
                 if (self.active && !self.automatic_event) {
-                    self.map_state.set_view(Coordinates.from_google(self.map.getCenter()), self.map.getZoom(), self);
+                    self.map_state.set_view(
+                        Coordinates.from_google(self.map.getCenter()),
+                        self.map.getZoom(),
+                        self,
+                    );
                 }
             });
         });
 
         google.maps.event.addListener(this.map, 'rightclick', (event) => {
-            self.app.map_menu.showMap(self, event.pixel.x, event.pixel.y, Coordinates.from_google(event.latLng));
+            self.app.map_menu.showMap(
+                self,
+                event.pixel.x,
+                event.pixel.y,
+                Coordinates.from_google(event.latLng),
+            );
             return false;
         });
-
-        ['click', 'dragstart', 'zoom_changed', 'maptypeid_changed', 'center_changed'].forEach((event_name) => {
+        [
+            'click',
+            'dragstart',
+            'zoom_changed',
+            'maptypeid_changed',
+            'center_changed',
+        ].forEach((event_name) => {
             google.maps.event.addListener(self.map, event_name, () => {
                 self.app.map_menu.hide();
             });
@@ -87,18 +97,26 @@ export class GoogleWrapper extends MapWrapper {
         obj.meta = {
             last_name: null,
             last_color: null,
-            circle: null
+            circle: null,
         };
 
-        google.maps.event.addListener(obj, "drag", () => {
-            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_google(obj.getPosition()));
+        google.maps.event.addListener(obj, 'drag', () => {
+            self.map_state.set_marker_coordinates(
+                marker.get_id(),
+                Coordinates.from_google(obj.getPosition()),
+            );
             if (obj.meta.circle) {
                 obj.meta.circle.setCenter(obj.getPosition());
             }
         });
 
-        google.maps.event.addListener(obj, "rightclick", (event) => {
-            self.app.map_menu.showMarker(self, event.pixel.x + self.width() / 2, event.pixel.y + self.height() / 2, marker);
+        google.maps.event.addListener(obj, 'rightclick', (event) => {
+            self.app.map_menu.showMarker(
+                self,
+                event.pixel.x + self.width() / 2,
+                event.pixel.y + self.height() / 2,
+                marker,
+            );
             return false;
         });
 
@@ -125,7 +143,7 @@ export class GoogleWrapper extends MapWrapper {
                     strokeWeight: 1,
                     fillColor: marker.color.to_hash_string(),
                     fillOpacity: 0.2,
-                    radius: marker.radius
+                    radius: marker.radius,
                 });
             }
         } else if (obj.meta.circle) {
@@ -133,8 +151,13 @@ export class GoogleWrapper extends MapWrapper {
             obj.meta.circle = null;
         }
 
-        if (!marker.color.equals(obj.meta.last_color) || (marker.name !== obj.meta.last_name)) {
-            obj.setIcon(this.app.icon_factory.google_icon(marker.name, marker.color));
+        if (
+            !marker.color.equals(obj.meta.last_color) ||
+            marker.name !== obj.meta.last_name
+        ) {
+            obj.setIcon(
+                this.app.icon_factory.google_icon(marker.name, marker.color),
+            );
         }
         if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
             obj.meta.circle.setOptions({
@@ -142,7 +165,7 @@ export class GoogleWrapper extends MapWrapper {
                 strokeOpacity: 1,
                 strokeWeight: 1,
                 fillColor: marker.color.to_hash_string(),
-                fillOpacity: 0.2
+                fillOpacity: 0.2,
             });
         }
 
@@ -170,15 +193,15 @@ export class GoogleWrapper extends MapWrapper {
             icons: [
                 {
                     icon: {
-                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+                        path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
                     },
-                    offset: '100%'
-                }
-            ]
+                    offset: '100%',
+                },
+            ],
         });
 
         obj.meta = {
-            last_color: line.color
+            last_color: line.color,
         };
 
         this.lines.set(line.get_id(), obj);
@@ -186,15 +209,21 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     update_line_object(obj, line) {
-        if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
-            obj.setPath([this.get_marker_object(line.marker1).getPosition(), this.get_marker_object(line.marker2).getPosition()]);
+        if (
+            this.has_marker_object(line.marker1) &&
+            this.has_marker_object(line.marker2)
+        ) {
+            obj.setPath([
+                this.get_marker_object(line.marker1).getPosition(),
+                this.get_marker_object(line.marker2).getPosition(),
+            ]);
         } else {
             obj.setPath([]);
         }
 
         if (!line.color.equals(obj.meta.last_color)) {
             obj.setOptions({
-                strokeColor: line.color.to_hash_string()
+                strokeColor: line.color.to_hash_string(),
             });
             obj.meta.last_color = line.color;
         }

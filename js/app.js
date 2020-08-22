@@ -1,20 +1,19 @@
-import {ApiKeysDialog} from "./api_keys_dialog.js";
-import {BingWrapper} from "./bing_wrapper.js";
-import {Coordinates} from "./coordinates.js";
-import {GoogleWrapper} from "./google_wrapper.js";
-import {IconFactory} from "./icon_factory.js";
-import {LeafletWrapper} from "./leaflet_wrapper.js";
-import {LinkDialog} from "./link_dialog.js";
-import {MapMenu} from "./map_menu.js";
-import {MapState, MapStateChange} from "./mapstate.js";
-import {MapType} from "./maptype.js";
-import {MultiMarkersDialog} from "./multi_markers_dialog.js";
-import {Notifications} from "./notifications.js";
-import {ProjectionDialog} from "./projection_dialog.js";
-import {Sidebar} from "./sidebar.js";
+import {ApiKeysDialog} from './api_keys_dialog.js';
+import {BingWrapper} from './bing_wrapper.js';
+import {Coordinates} from './coordinates.js';
+import {GoogleWrapper} from './google_wrapper.js';
+import {IconFactory} from './icon_factory.js';
+import {LeafletWrapper} from './leaflet_wrapper.js';
+import {LinkDialog} from './link_dialog.js';
+import {MapMenu} from './map_menu.js';
+import {MapState, MapStateChange} from './mapstate.js';
+import {MapType} from './maptype.js';
+import {MultiMarkersDialog} from './multi_markers_dialog.js';
+import {Notifications} from './notifications.js';
+import {ProjectionDialog} from './projection_dialog.js';
+import {Sidebar} from './sidebar.js';
 
 /* global BING_API_KEY GOOGLE_API_KEY */
-
 
 export class App {
     constructor(id_leaflet, id_google, id_bing) {
@@ -44,7 +43,7 @@ export class App {
         $(`#${this.id_google}`).hide();
         $(`#${this.id_bing}`).hide();
 
-        this.sidebar = new Sidebar("#sidebar", "#sidebar-controls", this);
+        this.sidebar = new Sidebar('#sidebar', '#sidebar-controls', this);
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
         this.google = null;
@@ -52,26 +51,36 @@ export class App {
         this.bing = null;
         this.bing_loading = false;
 
-        if ((this.map_state.google_api_key === "") && (((typeof GOOGLE_API_KEY) == "undefined") || (GOOGLE_API_KEY.length < 32))) {
+        if (
+            this.map_state.google_api_key === '' &&
+            (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)
+        ) {
             this.google_maps_error = true;
             this.sidebar.sidebar_layers.disable_google_layers();
-            this.message_error("Google Maps layers disabled due to missing API key.");
+            this.message_error(
+                'Google Maps layers disabled due to missing API key.',
+            );
         }
-        if ((this.map_state.bing_api_key === "") && (((typeof BING_API_KEY) == "undefined") || (BING_API_KEY.length < 32))) {
+        if (
+            this.map_state.bing_api_key === '' &&
+            (typeof BING_API_KEY == 'undefined' || BING_API_KEY.length < 32)
+        ) {
             this.bing_maps_error = true;
             this.sidebar.sidebar_layers.disable_bing_layers();
-            this.message_error("Bing Maps layers disabled due to missing API key.");
+            this.message_error(
+                'Bing Maps layers disabled due to missing API key.',
+            );
         }
 
         this.switch_map(this.map_state.map_type);
     }
 
     message(text) {
-        this.notifications.message(text, "info");
+        this.notifications.message(text, 'info');
     }
 
     message_error(text) {
-        this.notifications.message(text, "danger");
+        this.notifications.message(text, 'danger');
     }
 
     has_google_maps() {
@@ -113,7 +122,7 @@ export class App {
         });
     }
 
-    switch_map (type) {
+    switch_map(type) {
         if (this.google_maps_error) {
             switch (type) {
                 case MapType.GOOGLE_ROADMAP:
@@ -162,7 +171,7 @@ export class App {
         }
     }
 
-    switch_to_leaflet () {
+    switch_to_leaflet() {
         if (this.google) {
             this.google.deactivate();
         }
@@ -187,11 +196,16 @@ export class App {
             // show original message
             Reflect.apply(original, console, args);
 
-            if (args[0] && ((typeof args[0]) == "string")) {
-                if ((args[0].indexOf("Google Maps JavaScript API error") >= 0) ||
-                    (args[0].indexOf("You are using this API without a key") >= 0) ||
-                    (args[0].indexOf("developers.google.com") >= 0)) {
-                    console.warn("Intercepted error message from the Google Maps API. Disabling google maps.");
+            if (args[0] && typeof args[0] == 'string') {
+                if (
+                    args[0].indexOf('Google Maps JavaScript API error') >= 0 ||
+                    args[0].indexOf('You are using this API without a key') >=
+                        0 ||
+                    args[0].indexOf('developers.google.com') >= 0
+                ) {
+                    console.warn(
+                        'Intercepted error message from the Google Maps API. Disabling google maps.',
+                    );
                     self.google_maps_error_raised();
                 }
             }
@@ -199,14 +213,18 @@ export class App {
     }
 
     google_maps_error_raised() {
-        this.message_error("Google Maps layers disabled due to invalid API key or some API error.");
+        this.message_error(
+            'Google Maps layers disabled due to invalid API key or some API error.',
+        );
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
         this.switch_map(MapType.OPENSTREETMAP);
     }
 
     bing_maps_error_raised() {
-        this.message_error("Bing Maps layers disabled due to invalid API key or some API error.");
+        this.message_error(
+            'Bing Maps layers disabled due to invalid API key or some API error.',
+        );
         this.bing_maps_error = true;
         this.sidebar.sidebar_layers.disable_bing_layers();
         this.switch_map(MapType.OPENSTREETMAP);
@@ -234,12 +252,12 @@ export class App {
             return;
         }
 
-        console.log("ON DEMAND LOADING OF THE GOOGLE MAPS API");
+        console.log('ON DEMAND LOADING OF THE GOOGLE MAPS API');
         this.google_loading = true;
         const promise = new Promise((resolve, reject) => {
             const callbackName = '__googleMapsApiOnLoadCallback';
             // Reject the promise after a timeout
-            const timeoutId = setTimeout(function () {
+            const timeoutId = setTimeout(() => {
                 // Set the on load callback to a no-op
                 window[callbackName] = () => {};
                 self.google_maps_error_raised();
@@ -258,13 +276,15 @@ export class App {
             $.getScript(url);
         });
 
-        promise.then(() => {
-            self.initialize_google_map();
-        }).catch((error) => {
-            console.log("Error in promise");
-            console.error(error);
-            self.google_maps_error_raised();
-        });
+        promise
+            .then(() => {
+                self.initialize_google_map();
+            })
+            .catch((error) => {
+                console.log('Error in promise');
+                console.error(error);
+                self.google_maps_error_raised();
+            });
     }
 
     switch_to_bing() {
@@ -281,7 +301,6 @@ export class App {
             this.google.deactivate();
         }
 
-
         if (this.bing) {
             this.show_bing_div();
             this.bing.activate();
@@ -290,12 +309,12 @@ export class App {
             return;
         }
 
-        console.log("ON DEMAND LOADING OF THE BING MAPS API");
+        console.log('ON DEMAND LOADING OF THE BING MAPS API');
         this.bing_loading = true;
         const promise = new Promise((resolve, reject) => {
             const callbackName = '__bingMapsApiOnLoadCallback';
             // Reject the promise after a timeout
-            const timeoutId = setTimeout(function () {
+            const timeoutId = setTimeout(() => {
                 // Set the on load callback to a no-op
                 window[callbackName] = () => {};
                 self.bing_maps_error_raised();
@@ -313,13 +332,15 @@ export class App {
             $.getScript(url);
         });
 
-        promise.then(() => {
-            self.initialize_bing_map();
-        }).catch((error) => {
-            console.log("Error in promise");
-            console.error(error);
-            self.bing_maps_error_raised();
-        });
+        promise
+            .then(() => {
+                self.initialize_bing_map();
+            })
+            .catch((error) => {
+                console.log('Error in promise');
+                console.error(error);
+                self.bing_maps_error_raised();
+            });
     }
 
     show_leaflet_div() {
@@ -355,14 +376,20 @@ export class App {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (location) => {
-                    self.map_state.set_center(new Coordinates(location.coords.latitude, location.coords.longitude), null);
+                    self.map_state.set_center(
+                        new Coordinates(
+                            location.coords.latitude,
+                            location.coords.longitude,
+                        ),
+                        null,
+                    );
                 },
                 (error) => {
                     self.message_error(error.message);
-                }
+                },
             );
         } else {
-            self.message_error("Geolocation services are not available.");
+            self.message_error('Geolocation services are not available.');
         }
     }
 
@@ -384,9 +411,12 @@ export class App {
         $.get(url)
             .done((data) => {
                 if (data.length > 0) {
-                    self.map_state.set_center(new Coordinates(data[0].lat, data[0].lon), null);
+                    self.map_state.set_center(
+                        new Coordinates(data[0].lat, data[0].lon),
+                        null,
+                    );
                 } else {
-                    self.message_error("Cannot find a matching location.");
+                    self.message_error('Cannot find a matching location.');
                 }
             })
             .fail(() => {
@@ -413,4 +443,3 @@ export class App {
         this.link_dialog.show();
     }
 }
-

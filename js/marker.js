@@ -23,11 +23,11 @@ export class Marker {
 
     to_json() {
         return {
-            "marker_id": this.get_id(),
-            "coordinates": this.coordinates.to_string_D(),
-            "name": this.name,
-            "color": this.color.to_string(),
-            "radius": this.radius
+            marker_id: this.get_id(),
+            coordinates: this.coordinates.to_string_D(),
+            name: this.name,
+            color: this.color.to_string(),
+            radius: this.radius,
         };
     }
 }

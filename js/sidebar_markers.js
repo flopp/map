@@ -1,7 +1,14 @@
 import {Color} from './color.js';
-import {Coordinates, CoordinatesFormat} from "./coordinates.js";
-import {MapStateChange, MapStateObserver} from "./mapstate.js";
-import {parse_float, parse_int, create_button, create_dropdown, create_text_input, create_color_input} from './utilities.js';
+import {Coordinates, CoordinatesFormat} from './coordinates.js';
+import {MapStateChange, MapStateObserver} from './mapstate.js';
+import {
+    parse_float,
+    parse_int,
+    create_button,
+    create_dropdown,
+    create_text_input,
+    create_color_input,
+} from './utilities.js';
 
 export class SidebarMarkers extends MapStateObserver {
     constructor(app) {
@@ -9,34 +16,34 @@ export class SidebarMarkers extends MapStateObserver {
 
         const self = this;
 
-        $("#btn-add-marker").click(() => {
+        $('#btn-add-marker').click(() => {
             self.map_state.add_marker();
         });
-        $("#btn-delete-markers").click(() => {
+        $('#btn-delete-markers').click(() => {
             self.map_state.delete_all_markers();
         });
 
-        this.settingsDiv = $("#marker-settings");
+        this.settingsDiv = $('#marker-settings');
         this.hide_settings();
         [
-            {id: CoordinatesFormat.D, name: "Degrees"},
-            {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
-            {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"}
+            {id: CoordinatesFormat.D, name: 'Degrees'},
+            {id: CoordinatesFormat.DM, name: 'Degrees+Minutes'},
+            {id: CoordinatesFormat.DMS, name: 'Degrees+Minutes+Seconds'},
         ].forEach((item) => {
             const option = $(`<option value="${item.id}">${item.name}</option>`);
             option.text(item.name);
             if (item.id === Coordinates.get_coordinates_format()) {
-                option.prop("selected", true);
+                option.prop('selected', true);
             }
-            this.settingsDiv.find("[data-coordinates-format]").append(option);
+            this.settingsDiv.find('[data-coordinates-format]').append(option);
         });
-        $("#btn-marker-settings").click(() => {
+        $('#btn-marker-settings').click(() => {
             self.toggle_settings();
         });
-        this.settingsDiv.find("[data-cancel]").click(() => {
+        this.settingsDiv.find('[data-cancel]').click(() => {
             self.hide_settings();
         });
-        this.settingsDiv.find("[data-submit]").click(() => {
+        this.settingsDiv.find('[data-submit]').click(() => {
             self.submit_settings();
         });
     }
@@ -51,23 +58,31 @@ export class SidebarMarkers extends MapStateObserver {
         /* update and add markers */
         this.map_state.markers.forEach((marker) => {
             if ($(`#marker-${marker.get_id()}`).length == 0) {
-                $("#markers").append(self.create_div(marker));
+                $('#markers').append(self.create_div(marker));
             }
             const div = $(`#marker-${marker.get_id()}`);
 
-            const circle = (marker.radius > 0)
-                ? `Circle: ${marker.radius.toFixed(2)} m`
-                : "No circle";
-            div.find(".marker-color").css("background-color", marker.color.to_hash_string());
-            div.find(".marker-name").text(marker.name);
-            div.find(".marker-radius").text(circle);
-            div.find(".marker-coordinates").text(marker.coordinates.to_string_format(self.map_state.settings_marker_coordinates_format));
+            const circle =
+                marker.radius > 0
+                    ? `Circle: ${marker.radius.toFixed(2)} m`
+                    : 'No circle';
+            div.find('.marker-color').css(
+                'background-color',
+                marker.color.to_hash_string(),
+            );
+            div.find('.marker-name').text(marker.name);
+            div.find('.marker-radius').text(circle);
+            div.find('.marker-coordinates').text(
+                marker.coordinates.to_string_format(
+                    self.map_state.settings_marker_coordinates_format,
+                ),
+            );
 
             self.update_edit_values(marker);
         });
 
         /* remove spurious markers */
-        const markers = $("#markers > .marker");
+        const markers = $('#markers > .marker');
         if (markers.length > this.map_state.markers.length) {
             const ids = new Set();
             this.map_state.markers.forEach((marker) => {
@@ -107,7 +122,7 @@ export class SidebarMarkers extends MapStateObserver {
         </div>`);
         m.append(center);
 
-        const right  = $('<div class="marker-right"></div>');
+        const right = $('<div class="marker-right"></div>');
         right.append(this.create_marker_dropdown(marker));
         m.append(right);
 
@@ -122,22 +137,34 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
         const div = $(`<div id="marker-edit-${marker.get_id()}" class="edit">`);
 
-        const name = create_text_input("Name", "data-name", "Name");
-        const coordinates = create_text_input("Coordinates", "data-coordinates", "Coordinates");
-        const radius = create_text_input("Circle Radius (m)", "data-radius", "Circle Radius");
-        const color = create_color_input("Color", "data-color", "Color");
+        const name = create_text_input('Name', 'data-name', 'Name');
+        const coordinates = create_text_input(
+            'Coordinates',
+            'data-coordinates',
+            'Coordinates',
+        );
+        const radius = create_text_input(
+            'Circle Radius (m)',
+            'data-radius',
+            'Circle Radius',
+        );
+        const color = create_color_input('Color', 'data-color', 'Color');
 
-        const submit_button = create_button("Submit", () => {
+        const submit_button = create_button('Submit', () => {
             self.submit_edit(marker);
         });
-        const cancel_button = create_button("Cancel", () => {
+        const cancel_button = create_button('Cancel', () => {
             div.remove();
         });
         const buttons = $('<div class="field is-grouped">')
             .append(submit_button)
             .append(cancel_button);
 
-        div.append(name).append(coordinates).append(radius).append(color).append(buttons);
+        div.append(name)
+            .append(coordinates)
+            .append(radius)
+            .append(color)
+            .append(buttons);
 
         return div;
     }
@@ -146,26 +173,28 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
         return create_dropdown(`dropdown-marker-${marker.get_id()}`, [
             {
-                label: "Edit",
+                label: 'Edit',
                 callback: () => {
                     if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
-                        self.create_edit_div(marker).insertAfter(`#marker-${marker.get_id()}`);
+                        self.create_edit_div(marker).insertAfter(
+                            `#marker-${marker.get_id()}`,
+                        );
                         self.update_edit_values(marker);
                     }
-                }
+                },
             },
             {
-                label: "Waypoint Projection",
+                label: 'Waypoint Projection',
                 callback: () => {
                     self.app.show_projection_dialog(marker);
-                }
+                },
             },
             {
-                label: "Delete",
+                label: 'Delete',
                 callback: () => {
                     self.map_state.delete_marker(marker.get_id());
-                }
-            }
+                },
+            },
         ]);
     }
 
@@ -174,20 +203,26 @@ export class SidebarMarkers extends MapStateObserver {
         if (div.length == 0) {
             return;
         }
-        div.find("[data-name]").val(marker.name);
-        div.find("[data-coordinates]").val(marker.coordinates.to_string_format(this.map_state.settings_marker_coordinates_format));
-        div.find("[data-radius]").val(marker.radius);
-        div.find("[data-color]").val(marker.color.to_hash_string());
+        div.find('[data-name]').val(marker.name);
+        div.find('[data-coordinates]').val(
+            marker.coordinates.to_string_format(
+                this.map_state.settings_marker_coordinates_format,
+            ),
+        );
+        div.find('[data-radius]').val(marker.radius);
+        div.find('[data-color]').val(marker.color.to_hash_string());
     }
 
     submit_edit(marker) {
         const div = $(`#marker-edit-${marker.get_id()}`);
-        const name = div.find("[data-name]").val();
-        const coordinates = Coordinates.from_string(div.find("[data-coordinates]").val());
-        const radius = parse_float(div.find("[data-radius]").val());
-        const color = Color.from_string(div.find("[data-color]").val());
+        const name = div.find('[data-name]').val();
+        const coordinates = Coordinates.from_string(
+            div.find('[data-coordinates]').val(),
+        );
+        const radius = parse_float(div.find('[data-radius]').val());
+        const color = Color.from_string(div.find('[data-color]').val());
 
-        if ((name.length == 0) || (!coordinates) || (radius === null) || (!color)) {
+        if (name.length == 0 || !coordinates || radius === null || !color) {
             this.app.message_error('Bad values.');
             return;
         }
@@ -203,7 +238,7 @@ export class SidebarMarkers extends MapStateObserver {
     }
 
     settings_shown() {
-        return !this.settingsDiv.hasClass("is-hidden");
+        return !this.settingsDiv.hasClass('is-hidden');
     }
 
     show_settings() {
@@ -228,12 +263,19 @@ export class SidebarMarkers extends MapStateObserver {
     }
 
     submit_settings() {
-        const coordinates_format = parseInt(this.settingsDiv.find("[data-coordinates-format]").val(), 10);
-        const random_color = this.settingsDiv.find("[data-random-color]").prop("checked");
-        const color = Color.from_string(this.settingsDiv.find("[data-color]").val());
-        const radius = parse_float(this.settingsDiv.find("[data-radius]").val());
+        const coordinates_format = parseInt(
+            this.settingsDiv.find('[data-coordinates-format]').val(),
+            10,
+        );
+        const random_color = this.settingsDiv
+            .find('[data-random-color]')
+            .prop('checked');
+        const color = Color.from_string(
+            this.settingsDiv.find('[data-color]').val(),
+        );
+        const radius = parse_float(this.settingsDiv.find('[data-radius]').val());
 
-        if ((color === null) || (radius === null)) {
+        if (color === null || radius === null) {
             this.app.message_error('Bad values.');
             return;
         }
@@ -242,7 +284,7 @@ export class SidebarMarkers extends MapStateObserver {
             coordinates_format: coordinates_format,
             random_color: random_color,
             color: color,
-            radius: radius
+            radius: radius,
         });
 
         this.hide_settings();
@@ -253,9 +295,17 @@ export class SidebarMarkers extends MapStateObserver {
             return;
         }
 
-        this.settingsDiv.find("[data-coordinates-format]").val(this.map_state.settings_marker_coordinates_format);
-        this.settingsDiv.find("[data-random-color]").prop("checked", this.map_state.settings_marker_random_color);
-        this.settingsDiv.find("[data-color]").val(this.map_state.settings_marker_color.to_hash_string());
-        this.settingsDiv.find("[data-radius]").val(this.map_state.settings_marker_radius);
+        this.settingsDiv
+            .find('[data-coordinates-format]')
+            .val(this.map_state.settings_marker_coordinates_format);
+        this.settingsDiv
+            .find('[data-random-color]')
+            .prop('checked', this.map_state.settings_marker_random_color);
+        this.settingsDiv
+            .find('[data-color]')
+            .val(this.map_state.settings_marker_color.to_hash_string());
+        this.settingsDiv
+            .find('[data-radius]')
+            .val(this.map_state.settings_marker_radius);
     }
 }

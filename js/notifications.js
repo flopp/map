@@ -7,13 +7,13 @@ class Notification {
         this.div = document.createElement('div');
         this.div.className = `notification is-${type}`;
         this.div.innerHTML = text;
-        this.div.addEventListener('click', function () {
+        this.div.addEventListener('click', () => {
             self.hide();
         });
-        this.div.addEventListener('touchend', function () {
+        this.div.addEventListener('touchend', () => {
             self.hide();
         });
-        setTimeout(function () {
+        setTimeout(() => {
             self.hide();
         }, 5000);
     }
@@ -25,9 +25,13 @@ class Notification {
         }
         this.hiding = true;
         this.div.className += ' notification-fadeOut';
-        this.div.addEventListener('animationend', function () {
-            self.parent.removeNotification(self);
-        }, false);
+        this.div.addEventListener(
+            'animationend',
+            () => {
+                self.parent.removeNotification(self);
+            },
+            false,
+        );
     }
 }
 
@@ -42,12 +46,15 @@ export class Notifications {
 
         // We need DOM to be ready
         console.log(document.readyState);
-        if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
-            console.log("document already ready");
+        if (
+            document.readyState === 'interactive' ||
+            document.readyState === 'complete'
+        ) {
+            console.log('document already ready');
             this.init();
         } else {
-            console.log("document not ready, yet");
-            window.addEventListener('DOMContentLoaded', function () {
+            console.log('document not ready, yet');
+            window.addEventListener('DOMContentLoaded', () => {
                 console.log("now it's ready");
                 self.init();
             });
@@ -55,7 +62,7 @@ export class Notifications {
     }
 
     init() {
-        console.log("notifications.init");
+        console.log('notifications.init');
         this.container = document.createElement('div');
         this.container.id = 'notification-container';
         document.body.appendChild(this.container);

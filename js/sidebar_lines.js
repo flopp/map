@@ -1,6 +1,12 @@
 import {Color} from './color.js';
-import {MapStateChange, MapStateObserver} from "./mapstate.js";
-import {create_button, create_dropdown, create_color_input, create_select_input, parse_int} from "./utilities.js";
+import {MapStateChange, MapStateObserver} from './mapstate.js';
+import {
+    create_button,
+    create_dropdown,
+    create_color_input,
+    create_select_input,
+    parse_int,
+} from './utilities.js';
 
 export class SidebarLines extends MapStateObserver {
     constructor(app) {
@@ -8,22 +14,22 @@ export class SidebarLines extends MapStateObserver {
 
         const self = this;
 
-        $("#btn-add-line").click(() => {
+        $('#btn-add-line').click(() => {
             self.map_state.add_line();
         });
-        $("#btn-delete-lines").click(() => {
+        $('#btn-delete-lines').click(() => {
             self.map_state.delete_all_lines();
         });
 
-        this.settingsDiv = $("#line-settings");
+        this.settingsDiv = $('#line-settings');
         this.hide_settings();
-        $("#btn-line-settings").click(() => {
+        $('#btn-line-settings').click(() => {
             self.toggle_settings();
         });
-        this.settingsDiv.find("[data-cancel]").click(() => {
+        this.settingsDiv.find('[data-cancel]').click(() => {
             self.hide_settings();
         });
-        this.settingsDiv.find("[data-submit]").click(() => {
+        this.settingsDiv.find('[data-submit]').click(() => {
             self.submit_settings();
         });
     }
@@ -34,25 +40,34 @@ export class SidebarLines extends MapStateObserver {
             // update and add lines
             this.map_state.lines.forEach((line) => {
                 if ($(`#line-${line.get_id()}`).length == 0) {
-                    $("#lines").append(self.create_div(line));
+                    $('#lines').append(self.create_div(line));
                 }
 
-                const length = (line.length !== null)
-                    ? `${line.length.toFixed(2)} m`
-                    : "n/a";
-                const bearing = (line.bearing !== null)
-                    ? `${line.bearing.toFixed(2)}°`
-                    : "n/a";
+                const length =
+                    line.length !== null
+                        ? `${line.length.toFixed(2)} m`
+                        : 'n/a';
+                const bearing =
+                    line.bearing !== null
+                        ? `${line.bearing.toFixed(2)}°`
+                        : 'n/a';
 
-                $(`#line-${line.get_id()} .line-color`).css("background-color", line.color.to_hash_string());
-                $(`#line-${line.get_id()} .line-from`).text(self.marker_name(line.marker1));
-                $(`#line-${line.get_id()} .line-to`).text(self.marker_name(line.marker2));
+                $(`#line-${line.get_id()} .line-color`).css(
+                    'background-color',
+                    line.color.to_hash_string(),
+                );
+                $(`#line-${line.get_id()} .line-from`).text(
+                    self.marker_name(line.marker1),
+                );
+                $(`#line-${line.get_id()} .line-to`).text(
+                    self.marker_name(line.marker2),
+                );
                 $(`#line-${line.get_id()} .line-distance`).text(length);
                 $(`#line-${line.get_id()} .line-bearing`).text(bearing);
             });
 
             /* remove spurious lines */
-            const lines = $("#lines > .line");
+            const lines = $('#lines > .line');
             if (lines.length > this.map_state.lines.length) {
                 const ids = new Set();
                 this.map_state.lines.forEach((line) => {
@@ -93,12 +108,14 @@ export class SidebarLines extends MapStateObserver {
         m.append(left);
 
         const center = $('<div class="line-center"></div>');
-        center.append($(`<table>
+        center.append(
+            $(`<table>
             <tr><td class="has-text-weight-semibold">From:</td><td class="line-from"></td></tr>
             <tr><td class="has-text-weight-semibold">To:</td><td class="line-to"></td></tr>
             <tr><td class="has-text-weight-semibold">Length:</td><td class="line-distance"></td></tr>
             <tr><td class="has-text-weight-semibold">Bearing:</td><td class="line-bearing"></td></tr>
-        </table>`));
+        </table>`),
+        );
         m.append(center);
 
         const right = $('<div class="line-right"></div>');
@@ -114,7 +131,7 @@ export class SidebarLines extends MapStateObserver {
 
     marker_name(id) {
         if (id == -1) {
-            return "<NONE>";
+            return '<NONE>';
         }
 
         const marker = this.map_state.get_marker(id);
@@ -129,14 +146,14 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
         const div = $(`<div id="line-edit-${line.get_id()}" class="edit">`);
 
-        const from = create_select_input("From", "data-from");
-        const to = create_select_input("To", "data-to");
-        const color = create_color_input("Color", "data-color", "Color");
+        const from = create_select_input('From', 'data-from');
+        const to = create_select_input('To', 'data-to');
+        const color = create_color_input('Color', 'data-color', 'Color');
 
-        const submit_button = create_button("Submit", () => {
+        const submit_button = create_button('Submit', () => {
             self.submit_edit(line);
         });
-        const cancel_button = create_button("Cancel", () => {
+        const cancel_button = create_button('Cancel', () => {
             div.remove();
         });
         const buttons = $('<div class="field is-grouped">')
@@ -152,20 +169,22 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
         return create_dropdown(`dropdown-line-${line.get_id()}`, [
             {
-                label: "Edit",
+                label: 'Edit',
                 callback: () => {
                     if ($(`#line-edit-${line.get_id()}`).length == 0) {
-                        self.create_edit_div(line).insertAfter(`#line-${line.get_id()}`);
+                        self.create_edit_div(line).insertAfter(
+                            `#line-${line.get_id()}`,
+                        );
                         self.update_edit_values(line);
                     }
-                }
+                },
             },
             {
-                label: "Delete",
+                label: 'Delete',
                 callback: () => {
                     self.map_state.delete_line(line.get_id());
-                }
-            }
+                },
+            },
         ]);
     }
 
@@ -175,7 +194,7 @@ export class SidebarLines extends MapStateObserver {
             return;
         }
 
-        const markers = [{name: "<NONE>", id: -1}];
+        const markers = [{name: '<NONE>', id: -1}];
         this.map_state.markers.forEach((marker) => {
             markers.push({name: marker.name, id: marker.get_id()});
         });
@@ -189,34 +208,34 @@ export class SidebarLines extends MapStateObserver {
             return a.name.localeCompare(b.name);
         });
 
-        div.find("[data-from]").empty();
+        div.find('[data-from]').empty();
         markers.forEach((name_id) => {
             const option = $(`<option value="${name_id.id}"></option>`);
             option.text(name_id.name);
             if (line.marker1 == name_id.id) {
-                option.prop("selected", true);
+                option.prop('selected', true);
             }
-            div.find("[data-from]").append(option);
+            div.find('[data-from]').append(option);
         });
 
-        div.find("[data-to]").empty();
+        div.find('[data-to]').empty();
         markers.forEach((name_id) => {
             const option = $(`<option value="${name_id.id}"></option>`);
             option.text(name_id.name);
             if (line.marker2 == name_id.id) {
-                option.prop("selected", true);
+                option.prop('selected', true);
             }
-            div.find("[data-to]").append(option);
+            div.find('[data-to]').append(option);
         });
 
-        div.find("[data-color]").val(line.color.to_hash_string());
+        div.find('[data-color]').val(line.color.to_hash_string());
     }
 
     submit_edit(line) {
         const div = $(`#line-edit-${line.get_id()}`);
-        const marker1 = parse_int(div.find("[data-from]").val());
-        const marker2 = parse_int(div.find("[data-to]").val());
-        const color = Color.from_string(div.find("[data-color]").val());
+        const marker1 = parse_int(div.find('[data-from]').val());
+        const marker2 = parse_int(div.find('[data-to]').val());
+        const color = Color.from_string(div.find('[data-color]').val());
 
         if (!color) {
             this.app.message_error('bad values.');
@@ -234,7 +253,7 @@ export class SidebarLines extends MapStateObserver {
     }
 
     settings_shown() {
-        return !this.settingsDiv.hasClass("is-hidden");
+        return !this.settingsDiv.hasClass('is-hidden');
     }
 
     show_settings() {
@@ -259,17 +278,21 @@ export class SidebarLines extends MapStateObserver {
     }
 
     submit_settings() {
-        const random_color = this.settingsDiv.find("[data-random-color]").prop("checked");
-        const color = Color.from_string(this.settingsDiv.find("[data-color]").val());
+        const random_color = this.settingsDiv
+            .find('[data-random-color]')
+            .prop('checked');
+        const color = Color.from_string(
+            this.settingsDiv.find('[data-color]').val(),
+        );
 
         if (color === null) {
-            this.app.message_error("bad values");
+            this.app.message_error('bad values');
             return;
         }
 
         this.map_state.set_default_line_settings({
             random_color: random_color,
-            color: color
+            color: color,
         });
 
         this.hide_settings();
@@ -280,7 +303,11 @@ export class SidebarLines extends MapStateObserver {
             return;
         }
 
-        this.settingsDiv.find("[data-random-color]").prop("checked", this.map_state.settings_line_random_color);
-        this.settingsDiv.find("[data-color]").val(this.map_state.settings_line_color.to_hash_string());
+        this.settingsDiv
+            .find('[data-random-color]')
+            .prop('checked', this.map_state.settings_line_random_color);
+        this.settingsDiv
+            .find('[data-color]')
+            .val(this.map_state.settings_line_color.to_hash_string());
     }
 }

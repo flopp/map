@@ -1,4 +1,4 @@
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateObserver} from './mapstate.js';
 
 export class SidebarLocation extends MapStateObserver {
     constructor(app) {
@@ -6,13 +6,13 @@ export class SidebarLocation extends MapStateObserver {
 
         const self = this;
 
-        $("#btn-locate").click(() => {
+        $('#btn-locate').click(() => {
             self.app.locate_me();
         });
-        $("#btn-search").click(() => {
+        $('#btn-search').click(() => {
             self.perform_search();
         });
-        $("#input-search").keypress((event) => {
+        $('#input-search').keypress((event) => {
             if (event.which == 13) {
                 self.perform_search();
             }
@@ -24,7 +24,7 @@ export class SidebarLocation extends MapStateObserver {
     }
 
     perform_search() {
-        const location_string = $("#input-search").val().trim();
+        const location_string = $('#input-search').val().trim();
         if (location_string.length > 0) {
             self.app.search_location(location_string);
         }

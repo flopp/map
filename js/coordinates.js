@@ -1,10 +1,10 @@
 /* global require */
-const GeographicLib = require("../node_modules/geographiclib/geographiclib.min.js");
+const GeographicLib = require('../node_modules/geographiclib/geographiclib.min.js');
 
 const CoordinatesFormat = {
-    D: "D",
-    DM: "DM",
-    DMS: "DMS",
+    D: 'D',
+    DM: 'DM',
+    DMS: 'DMS',
 };
 
 if (Object.freeze) {
@@ -47,7 +47,6 @@ export class Coordinates {
         return lng;
     }
 
-
     static set_coordinates_format(format) {
         coordinates_format = format;
     }
@@ -70,7 +69,7 @@ export class Coordinates {
     static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {
         let lat, lng;
 
-        if ((h1 !== '+') && (d1 < 0)) {
+        if (h1 !== '+' && d1 < 0) {
             return null;
         }
         // allow for m/s = 60 for supporting UNESCO style coordinates; see https://github.com/flopp/FloppsMap/issues/77
@@ -91,8 +90,8 @@ export class Coordinates {
             return null;
         }
 
-        const c1 = d1 + (m1 / 60.0) + (s1 / 3600.0);
-        const c2 = d2 + (m2 / 60.0) + (s2 / 3600.0);
+        const c1 = d1 + m1 / 60.0 + s1 / 3600.0;
+        const c2 = d2 + m2 / 60.0 + s2 / 3600.0;
 
         if (h1 === '+' && h2 === '+') {
             lat = c1;
@@ -123,45 +122,160 @@ export class Coordinates {
     }
 
     static from_string(str) {
-        const
-            s = Coordinates.sanitize_string(str),
+        const s = Coordinates.sanitize_string(str),
             patterns = [
                 // DM / H D M
-                [/^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/, 1, 2, 3, 0, 4, 5, 6, 0],
+                [
+                    /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                    1,
+                    2,
+                    3,
+                    0,
+                    4,
+                    5,
+                    6,
+                    0,
+                ],
                 // DM / D H M
-                [/^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/, 2, 1, 3, 0, 5, 4, 6, 0],
+                [
+                    /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                    2,
+                    1,
+                    3,
+                    0,
+                    5,
+                    4,
+                    6,
+                    0,
+                ],
                 // DM / D M H
-                [/^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/, 3, 1, 2, 0, 6, 4, 5, 0],
+                [
+                    /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    3,
+                    1,
+                    2,
+                    0,
+                    6,
+                    4,
+                    5,
+                    0,
+                ],
                 // DM / D M
-                [/^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/, 'N', 1, 2, 0, 'E', 3, 4, 0],
+                [
+                    /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    'N',
+                    1,
+                    2,
+                    0,
+                    'E',
+                    3,
+                    4,
+                    0,
+                ],
                 // DMS / H D M S
-                [/^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/, 1, 2, 3, 4, 5, 6, 7, 8],
+                [
+                    /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                ],
                 // DMS / D H M S
-                [/^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/, 2, 1, 3, 4, 6, 5, 7, 8],
+                [
+                    /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                    2,
+                    1,
+                    3,
+                    4,
+                    6,
+                    5,
+                    7,
+                    8,
+                ],
                 // DMS / D M S H
-                [/^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/, 4, 1, 2, 3, 6, 5, 6, 7],
+                [
+                    /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    4,
+                    1,
+                    2,
+                    3,
+                    6,
+                    5,
+                    6,
+                    7,
+                ],
                 // DMS / D M S
-                [/^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/, 'N', 1, 2, 3, 'E', 4, 5, 6],
+                [
+                    /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    'N',
+                    1,
+                    2,
+                    3,
+                    'E',
+                    4,
+                    5,
+                    6,
+                ],
                 // D / H D
-                [/^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/, 1, 2, 0, 0, 3, 4, 0, 0],
+                [
+                    /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                    1,
+                    2,
+                    0,
+                    0,
+                    3,
+                    4,
+                    0,
+                    0,
+                ],
                 // D / D H
-                [/^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/, 2, 1, 0, 0, 4, 3, 0, 0],
+                [
+                    /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    2,
+                    1,
+                    0,
+                    0,
+                    4,
+                    3,
+                    0,
+                    0,
+                ],
                 // D / D
-                [/^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/, '+', 1, 0, 0, '+', 2, 0, 0]
+                [
+                    /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                    '+',
+                    1,
+                    0,
+                    0,
+                    '+',
+                    2,
+                    0,
+                    0,
+                ],
             ];
 
-        function mm(match, index) {
+        const mm = (match, index) => {
             if (typeof index === 'number') {
                 if (index > 0) {
                     const mi = match[index];
-                    if (mi === '+' || mi === 'N' || mi === 'E' || mi === 'W' || mi === 'S') {
+                    if (
+                        mi === '+' ||
+                        mi === 'N' ||
+                        mi === 'E' ||
+                        mi === 'W' ||
+                        mi === 'S'
+                    ) {
                         return mi;
                     }
                     return parseFloat(mi);
                 }
             }
             return index;
-        }
+        };
 
         for (let i = 0; i < patterns.length; i += 1) {
             const p = patterns[i];
@@ -175,7 +289,7 @@ export class Coordinates {
                     mm(m, p[5]),
                     mm(m, p[6]),
                     mm(m, p[7]),
-                    mm(m, p[8])
+                    mm(m, p[8]),
                 );
 
                 if (c) {
@@ -262,23 +376,24 @@ export class Coordinates {
             lng_min += 1;
         }
 
-        return this.NS() +
-                " " +
-                Coordinates.zeropad(lat_deg, 2) +
-                " " +
-                Coordinates.zeropad(lat_min, 2) +
-                "." +
-                Coordinates.zeropad(lat_mmin, 3) +
-                " " +
-                this.EW() +
-                " " +
-                Coordinates.zeropad(lng_deg, 3) +
-                " " +
-                Coordinates.zeropad(lng_min, 2) +
-                "." +
-                Coordinates.zeropad(lng_mmin, 3);
+        return (
+            this.NS() +
+            ' ' +
+            Coordinates.zeropad(lat_deg, 2) +
+            ' ' +
+            Coordinates.zeropad(lat_min, 2) +
+            '.' +
+            Coordinates.zeropad(lat_mmin, 3) +
+            ' ' +
+            this.EW() +
+            ' ' +
+            Coordinates.zeropad(lng_deg, 3) +
+            ' ' +
+            Coordinates.zeropad(lng_min, 2) +
+            '.' +
+            Coordinates.zeropad(lng_mmin, 3)
+        );
     }
-
 
     to_string_DMS() {
         let lat = Math.abs(this.lat()),
@@ -296,42 +411,69 @@ export class Coordinates {
         lng = lng * 60 - lng_min;
         const lng_sec = lng * 60.0;
 
-        return this.NS() +
-                " " +
-                Coordinates.zeropad(lat_deg, 2) +
-                " " +
-                Coordinates.zeropad(lat_min, 2) +
-                " " +
-                Coordinates.zeropad(lat_sec.toFixed(2), 5) +
-                " " +
-                this.EW() +
-                " " +
-                Coordinates.zeropad(lng_deg, 3) +
-                " " +
-                Coordinates.zeropad(lng_min, 2) +
-                " " +
-                Coordinates.zeropad(lng_sec.toFixed(2), 5);
+        return (
+            this.NS() +
+            ' ' +
+            Coordinates.zeropad(lat_deg, 2) +
+            ' ' +
+            Coordinates.zeropad(lat_min, 2) +
+            ' ' +
+            Coordinates.zeropad(lat_sec.toFixed(2), 5) +
+            ' ' +
+            this.EW() +
+            ' ' +
+            Coordinates.zeropad(lng_deg, 3) +
+            ' ' +
+            Coordinates.zeropad(lng_min, 2) +
+            ' ' +
+            Coordinates.zeropad(lng_sec.toFixed(2), 5)
+        );
     }
 
     to_string_D() {
-        return `${this.NS()} ${Math.abs(this.lat()).toFixed(6)} ${this.EW()} ${Math.abs(this.lng()).toFixed(6)}`;
+        return `${this.NS()} ${Math.abs(this.lat()).toFixed(
+            6,
+        )} ${this.EW()} ${Math.abs(this.lng()).toFixed(6)}`;
     }
 
     distance(other) {
         const geod = GeographicLib.Geodesic.WGS84;
-        const r = geod.Inverse(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.DISTANCE | GeographicLib.Geodesic.LONG_UNROLL);
+        const r = geod.Inverse(
+            this.raw_lat,
+            this.raw_lng,
+            other.raw_lat,
+            other.next_lng(this.raw_lng),
+            GeographicLib.Geodesic.DISTANCE |
+                GeographicLib.Geodesic.LONG_UNROLL,
+        );
         return r.s12;
     }
 
     distance_bearing(other) {
         const geod = GeographicLib.Geodesic.WGS84;
-        const r = geod.Inverse(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.DISTANCE | GeographicLib.Geodesic.AZIMUTH | GeographicLib.Geodesic.LONG_UNROLL);
+        const r = geod.Inverse(
+            this.raw_lat,
+            this.raw_lng,
+            other.raw_lat,
+            other.next_lng(this.raw_lng),
+            GeographicLib.Geodesic.DISTANCE |
+                GeographicLib.Geodesic.AZIMUTH |
+                GeographicLib.Geodesic.LONG_UNROLL,
+        );
         return {distance: r.s12, bearing: r.azi1};
     }
 
     project(angle, distance) {
         const geod = GeographicLib.Geodesic.WGS84;
-        const r = geod.Direct(this.lat(), this.lng(), angle, distance, GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONG_UNROLL);
+        const r = geod.Direct(
+            this.lat(),
+            this.lng(),
+            angle,
+            distance,
+            GeographicLib.Geodesic.LONGITUDE |
+                GeographicLib.Geodesic.LATITUDE |
+                GeographicLib.Geodesic.LONG_UNROLL,
+        );
         return new Coordinates(r.lat2, r.lon2);
     }
 
@@ -339,7 +481,14 @@ export class Coordinates {
         // const d = 6000000 / Math.pow(2, zoom);
         const maxk = 50;
         const geod = GeographicLib.Geodesic.WGS84;
-        const t = geod.Inverse(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.DISTANCE | GeographicLib.Geodesic.LONG_UNROLL);
+        const t = geod.Inverse(
+            this.raw_lat,
+            this.raw_lng,
+            other.raw_lat,
+            other.next_lng(this.raw_lng),
+            GeographicLib.Geodesic.DISTANCE |
+                GeographicLib.Geodesic.LONG_UNROLL,
+        );
 
         // const k = Math.min(maxk, Math.max(1, Math.ceil(t.s12 / d)));
         const k = maxk;
@@ -348,10 +497,24 @@ export class Coordinates {
         points[k] = new Coordinates(other.raw_lat, other.next_lng(this.raw_lng));
 
         if (k > 1) {
-            const line = geod.InverseLine(this.raw_lat, this.raw_lng, other.raw_lat, other.next_lng(this.raw_lng), GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LONG_UNROLL);
+            const line = geod.InverseLine(
+                this.raw_lat,
+                this.raw_lng,
+                other.raw_lat,
+                other.next_lng(this.raw_lng),
+                GeographicLib.Geodesic.LATITUDE |
+                    GeographicLib.Geodesic.LONGITUDE |
+                    GeographicLib.Geodesic.LONG_UNROLL,
+            );
             const da12 = t.a12 / k;
             for (let i = 1; i < k; i += 1) {
-                const point = line.GenPosition(true, i * da12, GeographicLib.Geodesic.LATITUDE | GeographicLib.Geodesic.LONGITUDE | GeographicLib.Geodesic.LONG_UNROLL);
+                const point = line.GenPosition(
+                    true,
+                    i * da12,
+                    GeographicLib.Geodesic.LATITUDE |
+                        GeographicLib.Geodesic.LONGITUDE |
+                        GeographicLib.Geodesic.LONG_UNROLL,
+                );
                 points[i] = new Coordinates(point.lat2, point.lon2);
             }
         }
@@ -385,18 +548,18 @@ export class Coordinates {
     static zeropad(num, width) {
         let s = String(num);
         while (s.length < width) {
-            s = "0" + s;
+            s = '0' + s;
         }
         return s;
     }
 
     static sanitize_string(s) {
-        let sanitized = "",
+        let sanitized = '',
             commas = 0,
             periods = 0;
 
         for (let i = 0; i < s.length; i += 1) {
-            if ((s[i] === 'o') || (s[i] === 'O')) {
+            if (s[i] === 'o' || s[i] === 'O') {
                 // map 'O'/'o' to 'E' (German 'Ost' = 'East')
                 sanitized += 'E';
             } else if (s[i].match(/[a-z0-9-]/i)) {
@@ -413,11 +576,11 @@ export class Coordinates {
         }
 
         // try to map commas to spaces or periods
-        if ((commas === 1) && ((periods === 0) || (periods >= 2))) {
+        if (commas === 1 && (periods === 0 || periods >= 2)) {
             return sanitized.replace(/,/g, ' ');
         }
 
-        if ((commas >= 1) && (periods === 0)) {
+        if (commas >= 1 && periods === 0) {
             return sanitized.replace(/,/g, '.');
         }
 

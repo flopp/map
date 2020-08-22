@@ -1,8 +1,7 @@
-import {Color} from "./color.js";
-import {Coordinates, CoordinatesFormat} from "./coordinates.js";
-import {MapType} from "./maptype.js";
-import {parse_int, parse_float} from "./utilities.js";
-
+import {Color} from './color.js';
+import {Coordinates, CoordinatesFormat} from './coordinates.js';
+import {MapType} from './maptype.js';
+import {parse_int, parse_float} from './utilities.js';
 
 export class Storage {
     constructor() {
@@ -13,7 +12,7 @@ export class Storage {
             window.localStorage.removeItem(x);
         } catch (e) {
             this.ok = false;
-            console.error("Local storage not available!");
+            console.error('Local storage not available!');
         }
 
         this.migrate();
@@ -48,7 +47,7 @@ export class Storage {
         if (this.exists('clat') && this.exists('clon')) {
             const clat = this.get_float('clat', null);
             const clon = this.get_float('clon', null);
-            if ((clat !== null) && (clon !== null)) {
+            if (clat !== null && clon !== null) {
                 center = new Coordinates(clat, clon);
             }
         }
@@ -97,62 +96,75 @@ export class Storage {
         // markers (ID1:ID2:...); markerID1; markerID2; ...
         const markers = [];
         const marker_hash = new Map();
-        this.get('markers', '').split(':').forEach((id_string) => {
-            const id_int = parse_int(id_string);
-            if (id_int === null) {
-                return;
-            }
-            const key = `marker${id_int}`;
-            const raw_data = self.get(key, null);
-            if (raw_data === null) {
-                return;
-            }
+        this.get('markers', '')
+            .split(':')
+            .forEach((id_string) => {
+                const id_int = parse_int(id_string);
+                if (id_int === null) {
+                    return;
+                }
+                const key = `marker${id_int}`;
+                const raw_data = self.get(key, null);
+                if (raw_data === null) {
+                    return;
+                }
 
-            const data = raw_data.split(':');
-            if ((data.length !== 4) && (data.length !== 5)) {
-                return;
-            }
+                const data = raw_data.split(':');
+                if (data.length !== 4 && data.length !== 5) {
+                    return;
+                }
 
-            const lat = parse_float(data[0]);
-            const lon = parse_float(data[1]);
-            if ((lat === null) || (lon === null)) {
-                return;
-            }
-            const coordinates = new Coordinates(lat, lon);
+                const lat = parse_float(data[0]);
+                const lon = parse_float(data[1]);
+                if (lat === null || lon === null) {
+                    return;
+                }
+                const coordinates = new Coordinates(lat, lon);
 
-            let radius = parse_float(data[2]);
-            if (radius === null) {
-                radius = 0;
-            }
+                let radius = parse_float(data[2]);
+                if (radius === null) {
+                    radius = 0;
+                }
 
-            const name = data[3];
+                const name = data[3];
 
-            let color = null;
-            if (data.length === 5) {
-                color = Color.from_string(data[4]);
-            }
+                let color = null;
+                if (data.length === 5) {
+                    color = Color.from_string(data[4]);
+                }
 
-            marker_hash.set(id_int, markers.length);
-            markers.push({name: name, coordinates: coordinates, color: color, radius: radius});
-        });
+                marker_hash.set(id_int, markers.length);
+                markers.push({
+                    name: name,
+                    coordinates: coordinates,
+                    color: color,
+                    radius: radius,
+                });
+            });
 
         // lines (FROM1:TO1*FROM2:TO2*...)
         const lines = [];
-        this.get('lines', '').split('*').forEach((ids) => {
-            const split_ids = ids.split(':');
-            if (split_ids.length !== 2) {
-                return;
-            }
-            let from = self.alpha2id_v1(split_ids[0]);
-            let to = self.alpha2id_v1(split_ids[1]);
-            if ((from < 0) || !marker_hash.has(from)) {
-                from = -1;
-            }
-            if ((to < 0) || !marker_hash.has(to)) {
-                to = -1;
-            }
-            lines.push({from: from, to: to, color: Color.from_string('#ff0000')});
-        });
+        this.get('lines', '')
+            .split('*')
+            .forEach((ids) => {
+                const split_ids = ids.split(':');
+                if (split_ids.length !== 2) {
+                    return;
+                }
+                let from = self.alpha2id_v1(split_ids[0]);
+                let to = self.alpha2id_v1(split_ids[1]);
+                if (from < 0 || !marker_hash.has(from)) {
+                    from = -1;
+                }
+                if (to < 0 || !marker_hash.has(to)) {
+                    to = -1;
+                }
+                lines.push({
+                    from: from,
+                    to: to,
+                    color: Color.from_string('#ff0000'),
+                });
+            });
 
         // write out everything
         if (center !== null) {
@@ -191,12 +203,16 @@ export class Storage {
         const index_0 = '0'.charCodeAt(0);
         const upper_s = s.toUpperCase();
 
-        if ((/^[A-Z]$/).test(upper_s)) {
+        if (/^[A-Z]$/.test(upper_s)) {
             return upper_s.charCodeAt(0) - index_A;
         }
 
-        if ((/^[A-Z][0-9]$/).test(upper_s)) {
-            return (upper_s.charCodeAt(0) - index_A) + (26 * (upper_s.charCodeAt(1) - index_0));
+        if (/^[A-Z][0-9]$/.test(upper_s)) {
+            return (
+                upper_s.charCodeAt(0) -
+                index_A +
+                26 * (upper_s.charCodeAt(1) - index_0)
+            );
         }
 
         return -1;

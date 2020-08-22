@@ -2,10 +2,10 @@ export class MapMenu {
     constructor(app) {
         const self = this;
         this.app = app;
-        this.menu = $("#map-contextmenu");
-        this.addmarker = $("#map-contextmenu-addmarker");
-        this.deletemarker = $("#map-contextmenu-deletemarker");
-        this.centermap = $("#map-contextmenu-centermap");
+        this.menu = $('#map-contextmenu');
+        this.addmarker = $('#map-contextmenu-addmarker');
+        this.deletemarker = $('#map-contextmenu-deletemarker');
+        this.centermap = $('#map-contextmenu-centermap');
         this.marker = null;
         this.coordinates = null;
 

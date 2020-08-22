@@ -1,6 +1,6 @@
-import {Coordinates} from "./coordinates.js";
-import {MapType} from "./maptype.js";
-import {MapWrapper} from "./map_wrapper.js";
+import {Coordinates} from './coordinates.js';
+import {MapType} from './maptype.js';
+import {MapWrapper} from './map_wrapper.js';
 
 /* global L */
 
@@ -10,51 +10,73 @@ export class LeafletWrapper extends MapWrapper {
         this.automatic_event = false;
     }
 
-    create_map_object (div_id) {
+    create_map_object(div_id) {
         const self = this;
 
         this.map = L.map(div_id);
 
-        this.layer_openstreetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map tiles by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-            maxZoom: 16,
-            subdomains: 'abc'
-        });
-        this.layer_opentopomap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map tiles by <a href="http://opentopomap.org">OpenTopoMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-            maxZoom: 17,
-            subdomains: 'abc'
-        });
-        this.layer_stamen_terrain = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {
-            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-            maxZoom: 14,
-            subdomains: 'abcd'
-        });
-        this.layer_arcgis_worldimagery = L.tileLayer('https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
-            maxZoom: 18
-        });
+        this.layer_openstreetmap = L.tileLayer(
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            {
+                attribution:
+                    'Map tiles by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+                maxZoom: 16,
+                subdomains: 'abc',
+            },
+        );
+        this.layer_opentopomap = L.tileLayer(
+            'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+            {
+                attribution:
+                    'Map tiles by <a href="http://opentopomap.org">OpenTopoMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+                maxZoom: 17,
+                subdomains: 'abc',
+            },
+        );
+        this.layer_stamen_terrain = L.tileLayer(
+            'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
+            {
+                attribution:
+                    'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+                maxZoom: 14,
+                subdomains: 'abcd',
+            },
+        );
+        this.layer_arcgis_worldimagery = L.tileLayer(
+            'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            {
+                attribution:
+                    'Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+                maxZoom: 18,
+            },
+        );
 
         this.layers = [
             this.layer_openstreetmap,
             this.layer_opentopomap,
             this.layer_stamen_terrain,
-            this.layer_arcgis_worldimagery
+            this.layer_arcgis_worldimagery,
         ];
-
         ['zoom', 'move'].forEach((event_name) => {
             self.map.on(event_name, () => {
                 if (self.active && !self.automatic_event) {
-                    self.map_state.set_view(Coordinates.from_leaflet(self.map.getCenter()), self.map.getZoom());
+                    self.map_state.set_view(
+                        Coordinates.from_leaflet(self.map.getCenter()),
+                        self.map.getZoom(),
+                    );
                 }
             });
         });
 
         this.map.on('contextmenu', (event) => {
-            self.app.map_menu.showMap(self, event.containerPoint.x, event.containerPoint.y, Coordinates.from_leaflet(event.latlng));
+            self.app.map_menu.showMap(
+                self,
+                event.containerPoint.x,
+                event.containerPoint.y,
+                Coordinates.from_leaflet(event.latlng),
+            );
             return false;
         });
-
         ['zoom', 'move', 'mousedown'].forEach((event_name) => {
             self.map.on(event_name, () => {
                 self.app.map_menu.hide();
@@ -94,7 +116,7 @@ export class LeafletWrapper extends MapWrapper {
 
     set_map_view(center, zoom) {
         this.automatic_event = true;
-        this.map.setView(center.to_leaflet(), zoom, {'animate': false});
+        this.map.setView(center.to_leaflet(), zoom, {animate: false});
         this.automatic_event = false;
     }
 
@@ -108,26 +130,37 @@ export class LeafletWrapper extends MapWrapper {
         const obj = L.marker(marker.coordinates.to_leaflet(), {
             draggable: true,
             autoPan: true,
-            icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color)
+            icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color),
         }).addTo(this.map);
 
         obj.meta = {
             last_name: marker.name,
             last_color: marker.color,
-            circle: null
+            circle: null,
         };
 
         obj.on('drag', () => {
-            self.map_state.set_marker_coordinates(marker.get_id(), Coordinates.from_leaflet(obj.getLatLng()), null);
+            self.map_state.set_marker_coordinates(
+                marker.get_id(),
+                Coordinates.from_leaflet(obj.getLatLng()),
+                null,
+            );
             if (obj.meta.circle) {
                 const center = Coordinates.from_leaflet(obj.getLatLng());
-                const points = Coordinates.to_leaflet_path(center.geodesic_circle(marker.radius));
+                const points = Coordinates.to_leaflet_path(
+                    center.geodesic_circle(marker.radius),
+                );
                 obj.meta.circle.setLatLngs(points);
             }
         });
 
         obj.on('contextmenu', (event) => {
-            self.app.map_menu.showMarker(self, event.containerPoint.x, event.containerPoint.y, marker);
+            self.app.map_menu.showMarker(
+                self,
+                event.containerPoint.x,
+                event.containerPoint.y,
+                marker,
+            );
             return false;
         });
 
@@ -143,17 +176,26 @@ export class LeafletWrapper extends MapWrapper {
                 obj.meta.circle = L.polygon([], {
                     color: marker.color.to_hash_string(),
                     weight: 1,
-                    interactive: false
+                    interactive: false,
                 }).addTo(this.map);
             }
-            obj.meta.circle.setLatLngs(Coordinates.to_leaflet_path(marker.coordinates.geodesic_circle(marker.radius)));
+            obj.meta.circle.setLatLngs(
+                Coordinates.to_leaflet_path(
+                    marker.coordinates.geodesic_circle(marker.radius),
+                ),
+            );
         } else if (obj.meta.circle) {
             this.map.removeLayer(obj.meta.circle);
             obj.meta.circle = null;
         }
 
-        if (!marker.color.equals(obj.meta.last_color) || (marker.name !== obj.meta.last_name)) {
-            obj.setIcon(this.app.icon_factory.leaflet_icon(marker.name, marker.color));
+        if (
+            !marker.color.equals(obj.meta.last_color) ||
+            marker.name !== obj.meta.last_name
+        ) {
+            obj.setIcon(
+                this.app.icon_factory.leaflet_icon(marker.name, marker.color),
+            );
         }
         if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
             obj.meta.circle.setStyle({color: marker.color.to_hash_string()});
@@ -174,7 +216,7 @@ export class LeafletWrapper extends MapWrapper {
         const obj = L.polyline([], {
             color: line.color.to_hash_string(),
             weight: 2,
-            interactive: false
+            interactive: false,
         }).addTo(this.map);
 
         obj.meta = {
@@ -182,8 +224,8 @@ export class LeafletWrapper extends MapWrapper {
             arrow: L.polyline([], {
                 color: line.color.to_hash_string(),
                 weight: 2,
-                interactive: false
-            })
+                interactive: false,
+            }),
         };
         obj.meta.arrow.addTo(this.map);
 
@@ -192,40 +234,54 @@ export class LeafletWrapper extends MapWrapper {
         this.update_line_object(obj, line);
     }
 
-    arrow_head (p1, p2) {
-        const compute_heading = (a, b) => ((Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI) + 90 + 360) % 360;
+    arrow_head(p1, p2) {
+        const compute_heading = (a, b) => ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) %
+            360;
 
         const headAngle = 60;
         const pixelSize = 10;
         const d2r = Math.PI / 180;
         const prevPoint = this.map.project(p1);
         const tipPoint = this.map.project(p2);
-        if ((Math.abs(prevPoint.x - tipPoint.x) <= 1) && (Math.abs(prevPoint.y - tipPoint.y) <= 1)) {
+        if (
+            Math.abs(prevPoint.x - tipPoint.x) <= 1 &&
+            Math.abs(prevPoint.y - tipPoint.y) <= 1
+        ) {
             return [];
         }
         const heading = compute_heading(prevPoint, tipPoint);
-        const direction = (-(heading - 90)) * d2r;
-        const radianArrowAngle = headAngle / 2 * d2r;
+        const direction = -(heading - 90) * d2r;
+        const radianArrowAngle = (headAngle / 2) * d2r;
 
         const headAngle1 = direction + radianArrowAngle;
         const headAngle2 = direction - radianArrowAngle;
         const arrowHead1 = L.point(
             tipPoint.x - pixelSize * Math.cos(headAngle1),
-            tipPoint.y + pixelSize * Math.sin(headAngle1));
+            tipPoint.y + pixelSize * Math.sin(headAngle1),
+        );
         const arrowHead2 = L.point(
             tipPoint.x - pixelSize * Math.cos(headAngle2),
-            tipPoint.y + pixelSize * Math.sin(headAngle2));
+            tipPoint.y + pixelSize * Math.sin(headAngle2),
+        );
 
         return [
             this.map.unproject(arrowHead1),
             p2,
-            this.map.unproject(arrowHead2)
+            this.map.unproject(arrowHead2),
         ];
     }
 
     update_line_object(obj, line) {
-        if (this.has_marker_object(line.marker1) && this.has_marker_object(line.marker2)) {
-            const path = this.map_state.get_marker(line.marker1).coordinates.interpolate_geodesic_line(this.map_state.get_marker(line.marker2).coordinates, this.map_state.zoom);
+        if (
+            this.has_marker_object(line.marker1) &&
+            this.has_marker_object(line.marker2)
+        ) {
+            const path = this.map_state
+                .get_marker(line.marker1)
+                .coordinates.interpolate_geodesic_line(
+                    this.map_state.get_marker(line.marker2).coordinates,
+                    this.map_state.zoom,
+                );
             const leaflet_path = Coordinates.to_leaflet_path(path);
             obj.setLatLngs(leaflet_path);
             if (leaflet_path.length <= 1) {
@@ -242,10 +298,10 @@ export class LeafletWrapper extends MapWrapper {
 
         if (!line.color.equals(obj.meta.last_color)) {
             obj.setStyle({
-                color: line.color.to_hash_string()
+                color: line.color.to_hash_string(),
             });
             obj.meta.arrow.setStyle({
-                color: line.color.to_hash_string()
+                color: line.color.to_hash_string(),
             });
             obj.meta.last_color = line.color;
         }

@@ -1,4 +1,4 @@
-import {MapStateObserver} from "./mapstate.js";
+import {MapStateObserver} from './mapstate.js';
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {
@@ -6,23 +6,23 @@ export class SidebarTools extends MapStateObserver {
 
         const self = this;
 
-        $("#btn-link").click(() => {
+        $('#btn-link').click(() => {
             self.app.show_link_dialog();
         });
 
-        $("#btn-export-json").click(() => {
+        $('#btn-export-json').click(() => {
             self.export_json();
         });
 
-        $("#btn-import-json").click((event) => {
-            $("#inp-import-json").click();
+        $('#btn-import-json').click((event) => {
+            $('#inp-import-json').click();
             event.preventDefault();
         });
-        $("#inp-import-json").change((event) => {
+        $('#inp-import-json').change((event) => {
             self.import_json(event.target.files[0]);
         });
 
-        $("#btn-multi-markers").click(() => {
+        $('#btn-multi-markers').click(() => {
             self.app.show_multi_markers_dialog();
         });
     }
@@ -34,7 +34,10 @@ export class SidebarTools extends MapStateObserver {
     export_json() {
         const data = JSON.stringify(this.map_state.to_json());
         const element = document.createElement('a');
-        element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(data));
+        element.setAttribute(
+            'href',
+            'data:application/json;charset=utf-8,' + encodeURIComponent(data),
+        );
         element.setAttribute('download', 'mapstate.json');
         element.style.display = 'none';
         document.body.appendChild(element);
@@ -53,7 +56,7 @@ export class SidebarTools extends MapStateObserver {
         };
 
         // reset file input
-        const input = $("#inp-import-json");
+        const input = $('#inp-import-json');
         input.wrap('<form>').closest('form').get(0).reset();
         input.unwrap();
     }

@@ -24,12 +24,12 @@ export class Color {
 
     static random_from_palette() {
         const colors = [
-            "FF3860", // bulma red
-            "FFDD57", // bulma yellow
-            "23D160", // bulma green
-            "3273DC", // bulma dark blue
-            "209CEE", // bulma light blue
-            "00D1B2"  // bulma teal
+            'FF3860', // bulma red
+            'FFDD57', // bulma yellow
+            '23D160', // bulma green
+            '3273DC', // bulma dark blue
+            '209CEE', // bulma light blue
+            '00D1B2', // bulma teal
         ];
 
         let hex = null;
@@ -50,8 +50,7 @@ export class Color {
     }
 
     luma() {
-        const
-            rgb = parseInt(this.hex, 16),
+        const rgb = parseInt(this.hex, 16),
             r = (rgb >> 16) & 0xff,
             g = (rgb >> 8) & 0xff,
             b = (rgb >> 0) & 0xff;
@@ -61,9 +60,9 @@ export class Color {
 
     text_color() {
         if (this.luma() >= 128) {
-            return new Color("000000");
+            return new Color('000000');
         }
-        return new Color("FFFFFF");
+        return new Color('FFFFFF');
     }
 
     equals(other) {

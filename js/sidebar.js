@@ -1,9 +1,9 @@
-import {MapStateChange, MapStateObserver} from "./mapstate.js";
-import {SidebarLayers} from "./sidebar_layers.js";
-import {SidebarLines} from "./sidebar_lines.js";
-import {SidebarLocation} from "./sidebar_location.js";
-import {SidebarMarkers} from "./sidebar_markers.js";
-import {SidebarTools} from "./sidebar_tools.js";
+import {MapStateChange, MapStateObserver} from './mapstate.js';
+import {SidebarLayers} from './sidebar_layers.js';
+import {SidebarLines} from './sidebar_lines.js';
+import {SidebarLocation} from './sidebar_location.js';
+import {SidebarMarkers} from './sidebar_markers.js';
+import {SidebarTools} from './sidebar_tools.js';
 
 export class Sidebar extends MapStateObserver {
     constructor(sidebar_selector, sidebar_controls_selector, app) {
@@ -15,13 +15,15 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_controls_selector = sidebar_controls_selector;
 
         this.controls = [];
-        $(".sidebar-control-button").each((index, button) => {
+        $('.sidebar-control-button').each((index, button) => {
             const id = button.id;
             button.addEventListener('click', () => {
                 self.toggle(id);
             });
 
-            const close_button = $(`${button.dataset.container} > .header > .close`);
+            const close_button = $(
+                `${button.dataset.container} > .header > .close`,
+            );
             close_button.click(() => {
                 self.toggle(null);
             });
@@ -37,7 +39,10 @@ export class Sidebar extends MapStateObserver {
     }
 
     toggle(toggle_control_id) {
-        if ((!toggle_control_id) || $(`#${toggle_control_id}`).parent().hasClass('active')) {
+        if (
+            !toggle_control_id ||
+            $(`#${toggle_control_id}`).parent().hasClass('active')
+        ) {
             this.map_state.set_sidebar_open(null);
         } else {
             this.map_state.set_sidebar_open(toggle_control_id);
@@ -61,7 +66,7 @@ export class Sidebar extends MapStateObserver {
 
             $(this.sidebar_selector).removeClass('sidebar-open');
             $(this.sidebar_controls_selector).removeClass('sidebar-open');
-            $(".map-container").each((index, obj) => {
+            $('.map-container').each((index, obj) => {
                 obj.classList.remove('sidebar-open');
             });
         } else {
@@ -87,7 +92,7 @@ export class Sidebar extends MapStateObserver {
 
             $(this.sidebar_selector).addClass('sidebar-open');
             $(this.sidebar_controls_selector).addClass('sidebar-open');
-            $(".map-container").each((index, obj) => {
+            $('.map-container').each((index, obj) => {
                 obj.classList.add('sidebar-open');
             });
         }
