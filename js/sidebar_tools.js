@@ -1,4 +1,4 @@
-import {MapStateObserver} from './mapstate.js';
+import {MapStateObserver} from './map_state.js';
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {
@@ -38,7 +38,7 @@ export class SidebarTools extends MapStateObserver {
             'href',
             'data:application/json;charset=utf-8,' + encodeURIComponent(data),
         );
-        element.setAttribute('download', 'mapstate.json');
+        element.setAttribute('download', 'map_state.json');
         element.style.display = 'none';
         document.body.appendChild(element);
         element.click();

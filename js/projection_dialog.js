@@ -1,5 +1,5 @@
 import {Color} from './color.js';
-import {MapStateChange} from './mapstate.js';
+import {MapStateChange} from './map_state.js';
 import {parse_float} from './utilities.js';
 
 export class ProjectionDialog {

@@ -1,6 +1,6 @@
 import {Color} from './color.js';
 import {Coordinates, CoordinatesFormat} from './coordinates.js';
-import {MapType} from './maptype.js';
+import {MapType} from './map_type.js';
 import {parse_int, parse_float} from './utilities.js';
 
 export class Storage {

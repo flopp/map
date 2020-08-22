@@ -1,5 +1,5 @@
 import {Color} from './color.js';
-import {MapStateChange, MapStateObserver} from './mapstate.js';
+import {MapStateChange, MapStateObserver} from './map_state.js';
 import {
     create_button,
     create_dropdown,

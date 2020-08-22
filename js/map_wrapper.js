@@ -1,4 +1,4 @@
-import {MapStateObserver, MapStateChange} from './mapstate.js';
+import {MapStateObserver, MapStateChange} from './map_state.js';
 
 export class MapWrapper extends MapStateObserver {
     constructor(div_id, app) {

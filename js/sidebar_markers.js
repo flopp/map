@@ -1,6 +1,6 @@
 import {Color} from './color.js';
 import {Coordinates, CoordinatesFormat} from './coordinates.js';
-import {MapStateChange, MapStateObserver} from './mapstate.js';
+import {MapStateChange, MapStateObserver} from './map_state.js';
 import {
     parse_float,
     parse_int,

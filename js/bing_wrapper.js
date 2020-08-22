@@ -1,5 +1,5 @@
 import {Coordinates} from './coordinates.js';
-import {MapType} from './maptype.js';
+import {MapType} from './map_type.js';
 import {MapWrapper} from './map_wrapper.js';
 
 /* global Microsoft */

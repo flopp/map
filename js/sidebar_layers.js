@@ -1,5 +1,5 @@
-import {MapStateObserver, MapStateChange} from './mapstate.js';
-import {MapType} from './maptype.js';
+import {MapStateObserver, MapStateChange} from './map_state.js';
+import {MapType} from './map_type.js';
 
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {

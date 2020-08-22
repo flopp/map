@@ -1,4 +1,4 @@
-import {MapStateChange, MapStateObserver} from './mapstate.js';
+import {MapStateChange, MapStateObserver} from './map_state.js';
 import {SidebarLayers} from './sidebar_layers.js';
 import {SidebarLines} from './sidebar_lines.js';
 import {SidebarLocation} from './sidebar_location.js';

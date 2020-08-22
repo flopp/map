@@ -3,7 +3,7 @@ import {Coordinates, CoordinatesFormat} from './coordinates.js';
 import {Line} from './line.js';
 import {Marker} from './marker.js';
 import {Storage} from './storage.js';
-import {MapType, maptype2string, string2maptype} from './maptype.js';
+import {MapType, maptype2string, string2maptype} from './map_type.js';
 import {parse_float, parse_int} from './utilities.js';
 
 export const MapStateChange = {

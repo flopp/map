@@ -1,4 +1,4 @@
-import {MapStateObserver} from './mapstate.js';
+import {MapStateObserver} from './map_state.js';
 
 export class SidebarLocation extends MapStateObserver {
     constructor(app) {
