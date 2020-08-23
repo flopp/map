@@ -9,6 +9,7 @@ const MapType = {
     GOOGLE_TERRAIN: 'GOOGLE_TERRAIN',
     BING_ROAD: 'BING_ROAD',
     BING_AERIAL: 'BING_AERIAL',
+    BING_AERIAL_NO_LABELS: 'BING_AERIAL_NO_LABELS',
 };
 
 if (Object.freeze) {
@@ -41,8 +42,66 @@ const string2maptype = (s) => {
             return MapType.BING_ROAD;
         case MapType.BING_AERIAL:
             return MapType.BING_AERIAL;
+        case MapType.BING_AERIAL_NO_LABELS:
+            return MapType.BING_AERIAL_NO_LABELS;
     }
     return null;
 };
 
-export {MapType, maptype2string, string2maptype};
+const maptype2human = (t) => {
+    switch (t) {
+        case MapType.OPENSTREETMAP:
+            return 'OpenStreetMap';
+        case MapType.OPENTOPOMAP:
+            return 'OpenTopoMap';
+        case MapType.STAMEN_TERRAIN:
+            return 'Stamen Terrain';
+        case MapType.ARCGIS_WORLDIMAGERY:
+            return 'Arcgis World Imagery';
+        case MapType.GOOGLE_ROADMAP:
+            return 'Google Roadmap';
+        case MapType.GOOGLE_SATELLITE:
+            return 'Google Satellite';
+        case MapType.GOOGLE_HYBRID:
+            return 'Google Hybrid';
+        case MapType.GOOGLE_TERRAIN:
+            return 'Google Terrain';
+        case MapType.BING_ROAD:
+            return 'Bing Road';
+        case MapType.BING_AERIAL:
+            return 'Bing Aerial';
+        case MapType.BING_AERIAL_NO_LABELS:
+            return 'Bing Aerial (no labels)';
+    }
+    return 'Unknown';
+};
+
+const isGoogle = (t) => {
+    switch (t) {
+        case MapType.GOOGLE_ROADMAP:
+        case MapType.GOOGLE_SATELLITE:
+        case MapType.GOOGLE_HYBRID:
+        case MapType.GOOGLE_TERRAIN:
+            return true;
+    }
+    return false;
+};
+
+const isBing = (t) => {
+    switch (t) {
+        case MapType.BING_ROAD:
+        case MapType.BING_AERIAL:
+        case MapType.BING_AERIAL_NO_LABELS:
+            return true;
+    }
+    return false;
+};
+
+export {
+    MapType,
+    maptype2string,
+    maptype2human,
+    string2maptype,
+    isGoogle,
+    isBing,
+};

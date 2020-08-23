@@ -14,10 +14,12 @@ export class BingWrapper extends MapWrapper {
         const self = this;
         this.map = new Microsoft.Maps.Map(`#${div_id}`, {
             disableBirdseye: true,
+            disableKeyboardInput: true,
             disableStreetside: true,
             showDashboard: false,
             showLocateMeButton: false,
             showMapTypeSelector: false,
+            showZoomButtons: true,
         });
 
         Microsoft.Maps.Events.addHandler(this.map, 'viewchangeend', () => {
@@ -27,6 +29,27 @@ export class BingWrapper extends MapWrapper {
                     self.map.getZoom(),
                     self,
                 );
+            }
+        });
+
+        Microsoft.Maps.Events.addHandler(this.map, 'maptypechanged', () => {
+            if (self.active && !self.automatic_event) {
+                if (
+                    self.app.map_state.map_type ===
+                    MapType.BING_AERIAL_NO_LABELS
+                ) {
+                    this.automatic_event = true;
+                    this.map.setView({
+                        labelOverlay: Microsoft.Maps.LabelOverlay.hidden,
+                    });
+                    this.automatic_event = false;
+                } else {
+                    this.automatic_event = true;
+                    this.map.setView({
+                        labelOverlay: Microsoft.Maps.LabelOverlay.visible,
+                    });
+                    this.automatic_event = false;
+                }
             }
         });
 
@@ -67,6 +90,9 @@ export class BingWrapper extends MapWrapper {
             case MapType.BING_AERIAL:
                 this.map.setMapType(Microsoft.Maps.MapTypeId.aerial);
                 break;
+            case MapType.BING_AERIAL_NO_LABELS:
+                this.map.setMapType(Microsoft.Maps.MapTypeId.aerial);
+                break;
             default:
                 break;
         }
@@ -74,7 +100,19 @@ export class BingWrapper extends MapWrapper {
 
     set_map_view(center, zoom) {
         this.automatic_event = true;
-        this.map.setView({center: center.to_bing(), zoom: zoom});
+        if (this.app.map_state.map_type === MapType.BING_AERIAL_NO_LABELS) {
+            this.map.setView({
+                center: center.to_bing(),
+                zoom: zoom,
+                labelOverlay: Microsoft.Maps.LabelOverlay.hidden,
+            });
+        } else {
+            this.map.setView({
+                center: center.to_bing(),
+                zoom: zoom,
+                labelOverlay: Microsoft.Maps.LabelOverlay.visible,
+            });
+        }
         this.automatic_event = false;
     }
 

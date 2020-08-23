@@ -1,5 +1,5 @@
 import {MapStateObserver, MapStateChange} from './map_state.js';
-import {MapType} from './map_type.js';
+import {MapType, maptype2human, isGoogle, isBing} from './map_type.js';
 
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {
@@ -7,22 +7,23 @@ export class SidebarLayers extends MapStateObserver {
         const self = this;
 
         this.baselayers = [
-            {type: MapType.OPENSTREETMAP, name: 'OpenStreetMap'},
-            {type: MapType.OPENTOPOMAP, name: 'OpenTopoMap'},
-            {type: MapType.STAMEN_TERRAIN, name: 'Stamen Terrain'},
-            {type: MapType.ARCGIS_WORLDIMAGERY, name: 'Arcgis World Imagery'},
-            {type: MapType.GOOGLE_ROADMAP, name: 'Google Roadmap'},
-            {type: MapType.GOOGLE_SATELLITE, name: 'Google Satellite'},
-            {type: MapType.GOOGLE_HYBRID, name: 'Google Hybrid'},
-            {type: MapType.GOOGLE_TERRAIN, name: 'Google Terrain'},
-            {type: MapType.BING_ROAD, name: 'Bing Road'},
-            {type: MapType.BING_AERIAL, name: 'Bing Aerial'},
+            {type: MapType.OPENSTREETMAP},
+            {type: MapType.OPENTOPOMAP},
+            {type: MapType.STAMEN_TERRAIN},
+            {type: MapType.ARCGIS_WORLDIMAGERY},
+            {type: MapType.GOOGLE_ROADMAP},
+            {type: MapType.GOOGLE_SATELLITE},
+            {type: MapType.GOOGLE_HYBRID},
+            {type: MapType.GOOGLE_TERRAIN},
+            {type: MapType.BING_ROAD},
+            {type: MapType.BING_AERIAL},
+            {type: MapType.BING_AERIAL_NO_LABELS},
         ];
 
         this.baselayer_select = $('#sidebar-layers').find('[data-baselayer]');
         this.baselayers.forEach((baselayer) => {
             baselayer.option = $(`<option value=${baselayer.type}>`).text(
-                baselayer.name,
+                maptype2human(baselayer.type),
             );
             self.baselayer_select.append(baselayer.option);
         });
@@ -54,9 +55,9 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    disable_layers(which) {
+    disable_layers(check_function) {
         this.baselayers.forEach((baselayer) => {
-            if (baselayer.name.indexOf(which) >= 0) {
+            if (check_function(baselayer.type)) {
                 baselayer.option.remove();
                 baselayer.option = null;
             }
@@ -64,14 +65,11 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    enable_layers(which) {
+    enable_layers(check_function) {
         this.baselayers.forEach((baselayer) => {
-            if (
-                baselayer.name.indexOf(which) >= 0 &&
-                baselayer.option === null
-            ) {
+            if (check_function(baselayer.type)) {
                 baselayer.option = $(`<option value=${baselayer.type}>`).text(
-                    baselayer.name,
+                    maptype2human(baselayer.type),
                 );
                 self.baselayer_select.append(baselayer.option);
             }
@@ -80,19 +78,20 @@ export class SidebarLayers extends MapStateObserver {
     }
 
     disable_google_layers() {
-        this.disable_layers('Google');
+        this.disable_layers(isGoogle);
     }
 
     enable_google_layers() {
-        this.enable_layers('Google');
+        this.enable_layers(isGoogle);
     }
 
     disable_bing_layers() {
-        this.disable_layers('Bing');
+        this.disable_layers(isBing);
+        this.update_baselayer_help();
     }
 
     enable_bing_layers() {
-        this.enable_layers('Bing');
+        this.enable_layers(isBing);
     }
 
     update_baselayer_help() {

@@ -140,6 +140,7 @@ export class App {
             switch (type) {
                 case MapType.BING_ROAD:
                 case MapType.BING_AERIAL:
+                case MapType.BING_AERIAL_NO_LABELS:
                     this.map_state.set_map_type(MapType.OPENSTREETMAP);
                     this.switch_to_leaflet();
                     return;
@@ -164,6 +165,7 @@ export class App {
                 break;
             case MapType.BING_ROAD:
             case MapType.BING_AERIAL:
+            case MapType.BING_AERIAL_NO_LABELS:
                 this.switch_to_bing();
                 break;
             default:

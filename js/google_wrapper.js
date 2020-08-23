@@ -24,7 +24,9 @@ export class GoogleWrapper extends MapWrapper {
             zoomControlOptions: {
                 position: google.maps.ControlPosition.LEFT_TOP,
             },
+            tilt: 0,
         });
+
         ['center_changed', 'zoom_changed'].forEach((event_name) => {
             google.maps.event.addListener(this.map, event_name, () => {
                 if (self.active && !self.automatic_event) {
@@ -46,6 +48,7 @@ export class GoogleWrapper extends MapWrapper {
             );
             return false;
         });
+
         [
             'click',
             'dragstart',
