@@ -62,21 +62,29 @@
                     </div>
 
                     <div class="content">
-                        <a id="btn-locate" class="button is-fullwidth is-success">LOCATE ME!</a>
+                        <div class="field">
+                            <div class="control">
+                                <a id="btn-locate" class="button is-fullwidth is-success">LOCATE ME!</a>
+                            </div>
+                            <p class="help">Center the map on your current location.</p>
+                        </div>
 
                         <hr />
-
-                        <div class="field has-addons">
-                            <div class="control">
-                                <input id="input-search" class="input" type="text" placeholder="Location">
+                        
+                        <div class="field">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input id="input-search" class="input" type="text" placeholder="Location">
+                                </div>
+                                <div class="control">
+                                    <a id="btn-search" class="button is-info">
+                                        <span class="icon is-small">
+                                            <i class="fas fa-search-location"></i>
+                                        </span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="control">
-                                <a id="btn-search" class="button is-info">
-                                    <span class="icon is-small">
-                                        <i class="fas fa-search-location"></i>
-                                    </span>
-                                </a>
-                            </div>
+                            <p class="help">Search for a location (enter e.g. a city name or coordinates in various formats) and center the map.</p>
                         </div>
                     </div>
                 </div>
@@ -220,23 +228,37 @@
                         <h2>Tools</h2>
                     </div>
                     <div class="content">
-                        <div class="buttons">
-                            <a id="btn-link" class="button is-fullwidth is-success">Create Link</a>
+                        <div class="field">
+                            <div class="control">
+                                <a id="btn-link" class="button is-fullwidth is-success">Create Link</a>
+                            </div>
+                            <p class="help">Create a link to this map, e.g. for sharing it with others.</p>
                         </div>
 
                         <hr />
 
-                        <div class="buttons">
-                            <a id="btn-export-json" class="button is-fullwidth">Export Full Map State (JSON)</a>
-
-                            <input id="inp-import-json" style="display: none;" type="file" name="files" />
-                            <a id="btn-import-json" class="button is-fullwidth">Import Full Map State (JSON)</a>
+                        <div class="field">
+                            <div class="field">
+                                <div class="control">
+                                    <a id="btn-export-json" class="button is-fullwidth">Export Full Map State (JSON)</a>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input id="inp-import-json" style="display: none;" type="file" name="files" />
+                                    <a id="btn-import-json" class="button is-fullwidth">Import Full Map State (JSON)</a>
+                                </div>
+                            </div>
+                            <p class="help">Export/import a JSON file containing the full map state.</p>
                         </div>
 
                         <hr />
 
-                        <div class="buttons">
-                            <a id="btn-multi-markers" class="button is-fullwidth is-success">Create Multiple Markers</a>
+                        <div class="field">
+                            <div class="control">
+                                <a id="btn-multi-markers" class="button is-fullwidth is-success">Create Multiple Markers</a>
+                            </div>
+                            <p class="help">Create multiple markes at once, i.e. by providing a list of coordinates.</p>
                         </div>
                     </div>
                 </div>
@@ -260,6 +282,7 @@
                 <div class="dropdown-content">
                     <a id="map-contextmenu-addmarker" class="dropdown-item">ADD MARKER</a>
                     <a id="map-contextmenu-deletemarker" class="dropdown-item">DELETE MARKER</a>
+                    <a id="map-contextmenu-projection" class="dropdown-item">WAYPOINT PROJECTION</a>
                     <a id="map-contextmenu-centermap" class="dropdown-item">CENTER MAP HERE</a>
                 </div>
             </div>
@@ -369,7 +392,7 @@
                             <button class="delete" data-cancel aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            <p>TODO: Blah...</p>
+                            <p>You can share this link with others to enable them to view your current map state.</p>
 
                             <div class="field has-addons">
                                 <div class="control is-expanded">

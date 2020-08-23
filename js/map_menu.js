@@ -5,6 +5,7 @@ export class MapMenu {
         this.menu = $('#map-contextmenu');
         this.addmarker = $('#map-contextmenu-addmarker');
         this.deletemarker = $('#map-contextmenu-deletemarker');
+        this.projection = $('#map-contextmenu-projection');
         this.centermap = $('#map-contextmenu-centermap');
         this.marker = null;
         this.coordinates = null;
@@ -20,6 +21,14 @@ export class MapMenu {
             if (self.marker) {
                 self.app.map_state.delete_marker(self.marker.get_id());
                 self.marker = null;
+            }
+            return false;
+        });
+
+        this.projection.click(() => {
+            self.hide();
+            if (self.marker) {
+                self.app.show_projection_dialog(self.marker);
             }
             return false;
         });
@@ -44,6 +53,7 @@ export class MapMenu {
     showMap(wrapper, x, y, coordinates) {
         this.addmarker.show();
         this.deletemarker.hide();
+        this.projection.hide();
         this.centermap.show();
 
         this.marker = null;
@@ -55,6 +65,7 @@ export class MapMenu {
     showMarker(wrapper, x, y, marker) {
         this.addmarker.hide();
         this.deletemarker.show();
+        this.projection.show();
         this.centermap.show();
 
         this.marker = marker;
