@@ -44,9 +44,7 @@ export class SidebarLines extends MapStateObserver {
                 }
 
                 const length =
-                    line.length !== null
-                        ? `${line.length.toFixed(2)} m`
-                        : 'n/a';
+                    line.length !== null ? `${line.length.toFixed(2)} m` : 'n/a';
                 const bearing =
                     line.bearing !== null
                         ? `${line.bearing.toFixed(2)}°`

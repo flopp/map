@@ -182,6 +182,13 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     create_line_object(line) {
+        if (
+            !this.has_marker_object(line.marker1) ||
+            !this.has_marker_object(line.marker2)
+        ) {
+            return;
+        }
+
         const obj = new google.maps.Polyline({
             map: this.map,
             path: [],
@@ -210,16 +217,18 @@ export class GoogleWrapper extends MapWrapper {
 
     update_line_object(obj, line) {
         if (
-            this.has_marker_object(line.marker1) &&
-            this.has_marker_object(line.marker2)
+            !this.has_marker_object(line.marker1) ||
+            !this.has_marker_object(line.marker2)
         ) {
-            obj.setPath([
-                this.get_marker_object(line.marker1).getPosition(),
-                this.get_marker_object(line.marker2).getPosition(),
-            ]);
-        } else {
-            obj.setPath([]);
+            this.delete_line_object(obj);
+            this.lines.delete(line.get_id());
+            return;
         }
+
+        obj.setPath([
+            this.get_marker_object(line.marker1).getPosition(),
+            this.get_marker_object(line.marker2).getPosition(),
+        ]);
 
         if (!line.color.equals(obj.meta.last_color)) {
             obj.setOptions({
@@ -229,7 +238,7 @@ export class GoogleWrapper extends MapWrapper {
         }
     }
 
-    delete_line_object(m) {
-        m.setMap(null);
+    delete_line_object(obj) {
+        obj.setMap(null);
     }
 }

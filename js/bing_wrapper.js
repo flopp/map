@@ -199,42 +199,37 @@ export class BingWrapper extends MapWrapper {
 
     update_line_object(obj, line) {
         if (
-            this.has_marker_object(line.marker1) &&
-            this.has_marker_object(line.marker2)
+            !this.has_marker_object(line.marker1) ||
+            !this.has_marker_object(line.marker2)
         ) {
-            const path = this.map_state
-                .get_marker(line.marker1)
-                .coordinates.interpolate_geodesic_line(
-                    this.map_state.get_marker(line.marker2).coordinates,
-                    this.map_state.zoom,
-                );
-            const bing_path = Coordinates.to_bing_path(path);
-
-            obj.setLocations(bing_path);
-
-            if (bing_path.length >= 2) {
-                const last = bing_path[bing_path.length - 1];
-                const last1 = bing_path[bing_path.length - 2];
-                obj.meta.arrow.setLocation(last);
-                const heading = Microsoft.Maps.SpatialMath.getHeading(
-                    last1,
-                    last,
-                );
-                obj.meta.arrow.setOptions({
-                    icon: `<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32">
-                               <path d="M10.5 24 L16 16 21.5 24" style="stroke:${line.color.to_hash_string()};stroke-width:2px;fill:none;" transform="rotate(${heading}, 16, 16)"/>
-                           </svg>`,
-                    visible: true,
-                });
-            } else {
-                obj.meta.arrow.setOptions({visible: false});
-            }
-        } else {
-            // Delete the Bing line object if one of the end-points is undefined.
-            // This is necessary since Bing doesn't like empty lines...
             this.delete_line_object(obj);
             this.lines.delete(line.get_id());
             return;
+        }
+
+        const path = this.map_state
+            .get_marker(line.marker1)
+            .coordinates.interpolate_geodesic_line(
+                this.map_state.get_marker(line.marker2).coordinates,
+                this.map_state.zoom,
+            );
+        const bing_path = Coordinates.to_bing_path(path);
+
+        obj.setLocations(bing_path);
+
+        if (bing_path.length >= 2) {
+            const last = bing_path[bing_path.length - 1];
+            const last1 = bing_path[bing_path.length - 2];
+            obj.meta.arrow.setLocation(last);
+            const heading = Microsoft.Maps.SpatialMath.getHeading(last1, last);
+            obj.meta.arrow.setOptions({
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" height="32" width="32">
+                               <path d="M10.5 24 L16 16 21.5 24" style="stroke:${line.color.to_hash_string()};stroke-width:2px;fill:none;" transform="rotate(${heading}, 16, 16)"/>
+                           </svg>`,
+                visible: true,
+            });
+        } else {
+            obj.meta.arrow.setOptions({visible: false});
         }
 
         if (!line.color.equals(obj.meta.last_color)) {

@@ -213,6 +213,13 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     create_line_object(line) {
+        if (
+            !this.has_marker_object(line.marker1) ||
+            !this.has_marker_object(line.marker2)
+        ) {
+            return;
+        }
+
         const obj = L.polyline([], {
             color: line.color.to_hash_string(),
             weight: 2,
@@ -273,27 +280,28 @@ export class LeafletWrapper extends MapWrapper {
 
     update_line_object(obj, line) {
         if (
-            this.has_marker_object(line.marker1) &&
-            this.has_marker_object(line.marker2)
+            !this.has_marker_object(line.marker1) ||
+            !this.has_marker_object(line.marker2)
         ) {
-            const path = this.map_state
-                .get_marker(line.marker1)
-                .coordinates.interpolate_geodesic_line(
-                    this.map_state.get_marker(line.marker2).coordinates,
-                    this.map_state.zoom,
-                );
-            const leaflet_path = Coordinates.to_leaflet_path(path);
-            obj.setLatLngs(leaflet_path);
-            if (leaflet_path.length <= 1) {
-                obj.meta.arrow.setLatLngs([]);
-            } else {
-                const last = leaflet_path[leaflet_path.length - 1];
-                const last1 = leaflet_path[leaflet_path.length - 2];
-                obj.meta.arrow.setLatLngs(this.arrow_head(last1, last));
-            }
-        } else {
-            obj.setLatLngs([]);
+            this.delete_line_object(obj);
+            this.lines.delete(line.get_id());
+            return;
+        }
+
+        const path = this.map_state
+            .get_marker(line.marker1)
+            .coordinates.interpolate_geodesic_line(
+                this.map_state.get_marker(line.marker2).coordinates,
+                this.map_state.zoom,
+            );
+        const leaflet_path = Coordinates.to_leaflet_path(path);
+        obj.setLatLngs(leaflet_path);
+        if (leaflet_path.length <= 1) {
             obj.meta.arrow.setLatLngs([]);
+        } else {
+            const last = leaflet_path[leaflet_path.length - 1];
+            const last1 = leaflet_path[leaflet_path.length - 2];
+            obj.meta.arrow.setLatLngs(this.arrow_head(last1, last));
         }
 
         if (!line.color.equals(obj.meta.last_color)) {
