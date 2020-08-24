@@ -1,5 +1,5 @@
-/* global require */
-const GeographicLib = require('../node_modules/geographiclib/geographiclib.min.js');
+import * as L from 'leaflet';
+import {Geodesic} from 'geographiclib';
 
 const CoordinatesFormat = {
     D: 'D',
@@ -307,7 +307,6 @@ export class Coordinates {
     }
 
     to_leaflet() {
-        /* global L */
         return L.latLng(this.raw_lat, this.raw_lng);
     }
 
@@ -437,42 +436,37 @@ export class Coordinates {
     }
 
     distance(other) {
-        const geod = GeographicLib.Geodesic.WGS84;
+        const geod = Geodesic.WGS84;
         const r = geod.Inverse(
             this.raw_lat,
             this.raw_lng,
             other.raw_lat,
             other.next_lng(this.raw_lng),
-            GeographicLib.Geodesic.DISTANCE |
-                GeographicLib.Geodesic.LONG_UNROLL,
+            Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
         return r.s12;
     }
 
     distance_bearing(other) {
-        const geod = GeographicLib.Geodesic.WGS84;
+        const geod = Geodesic.WGS84;
         const r = geod.Inverse(
             this.raw_lat,
             this.raw_lng,
             other.raw_lat,
             other.next_lng(this.raw_lng),
-            GeographicLib.Geodesic.DISTANCE |
-                GeographicLib.Geodesic.AZIMUTH |
-                GeographicLib.Geodesic.LONG_UNROLL,
+            Geodesic.DISTANCE | Geodesic.AZIMUTH | Geodesic.LONG_UNROLL,
         );
         return {distance: r.s12, bearing: r.azi1};
     }
 
     project(angle, distance) {
-        const geod = GeographicLib.Geodesic.WGS84;
+        const geod = Geodesic.WGS84;
         const r = geod.Direct(
             this.lat(),
             this.lng(),
             angle,
             distance,
-            GeographicLib.Geodesic.LONGITUDE |
-                GeographicLib.Geodesic.LATITUDE |
-                GeographicLib.Geodesic.LONG_UNROLL,
+            Geodesic.LONGITUDE | Geodesic.LATITUDE | Geodesic.LONG_UNROLL,
         );
         return new Coordinates(r.lat2, r.lon2);
     }
@@ -480,14 +474,13 @@ export class Coordinates {
     interpolate_geodesic_line(other, _zoom) {
         // const d = 6000000 / Math.pow(2, zoom);
         const maxk = 50;
-        const geod = GeographicLib.Geodesic.WGS84;
+        const geod = Geodesic.WGS84;
         const t = geod.Inverse(
             this.raw_lat,
             this.raw_lng,
             other.raw_lat,
             other.next_lng(this.raw_lng),
-            GeographicLib.Geodesic.DISTANCE |
-                GeographicLib.Geodesic.LONG_UNROLL,
+            Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
 
         // const k = Math.min(maxk, Math.max(1, Math.ceil(t.s12 / d)));
@@ -502,18 +495,16 @@ export class Coordinates {
                 this.raw_lng,
                 other.raw_lat,
                 other.next_lng(this.raw_lng),
-                GeographicLib.Geodesic.LATITUDE |
-                    GeographicLib.Geodesic.LONGITUDE |
-                    GeographicLib.Geodesic.LONG_UNROLL,
+                Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL,
             );
             const da12 = t.a12 / k;
             for (let i = 1; i < k; i += 1) {
                 const point = line.GenPosition(
                     true,
                     i * da12,
-                    GeographicLib.Geodesic.LATITUDE |
-                        GeographicLib.Geodesic.LONGITUDE |
-                        GeographicLib.Geodesic.LONG_UNROLL,
+                    Geodesic.LATITUDE |
+                        Geodesic.LONGITUDE |
+                        Geodesic.LONG_UNROLL,
                 );
                 points[i] = new Coordinates(point.lat2, point.lon2);
             }

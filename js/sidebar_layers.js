@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import {MapStateObserver, MapStateChange} from './map_state.js';
 import {MapType, maptype2human, isGoogle, isBing} from './map_type.js';
 

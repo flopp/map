@@ -1,4 +1,5 @@
 import Clipboard from 'clipboard';
+import $ from 'jquery';
 
 export class LinkDialog {
     constructor(app) {

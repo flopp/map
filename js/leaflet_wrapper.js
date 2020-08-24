@@ -1,8 +1,8 @@
+import * as L from 'leaflet';
+
 import {Coordinates} from './coordinates.js';
 import {MapType} from './map_type.js';
 import {MapWrapper} from './map_wrapper.js';
-
-/* global L */
 
 export class LeafletWrapper extends MapWrapper {
     constructor(div_id, app) {

@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import {MapStateChange, MapStateObserver} from './map_state.js';
 import {SidebarLayers} from './sidebar_layers.js';
 import {SidebarLines} from './sidebar_lines.js';

@@ -8,8 +8,8 @@
         "lint-prettier": "prettier --list-different js/*.js",
         "fix-eslint": "eslint --fix js/*.js",
         "fix-prettier": "prettier --write js/*.js",
-        "build": "mkdir -p build && cp index.html css/style.css .secrets.js build && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode development -o ./build/bundle.js",
-        "deploy": "mkdir -p deploy && cp index.html css/style.css deploy && cp .secrets-production.js deploy/.secrets.js && webpack js/main.js node_modules/geographiclib/geographiclib.min.js --mode production -o ./deploy/bundle.js && (cd deploy && rsync -v -r . flopp@grus.uberspace.de:html/map2/)",
+        "build": "mkdir -p build build/css build/img build/js && cp index.html build && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css build/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg build/img && cp .secrets.js build/js/api-keys.js && webpack js/main.js --mode development -o ./build/js/bundle.js",
+        "deploy": "mkdir -p deploy deploy/css deploy/img deploy/js && cp index.html deploy && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css deploy/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg deploy/img && cp .secrets-production.js deploy/js/api-keys.js && webpack js/main.js --mode production -o ./deploy/js/bundle.js && (cd deploy && rsync -v -r . flopp@grus.uberspace.de:html/map2/)",
         "start": "http-server build"
     },
     "repository": {
@@ -30,7 +30,11 @@
         "webpack-cli": "^3.3.12"
     },
     "dependencies": {
+        "bulma": "^0.9.0",
         "clipboard": "^2.0.6",
-        "geographiclib": "^1.50.0"
+        "geographiclib": "^1.50.0",
+        "feather-icons": "^4.28.0",
+        "jquery": "^3.5.1",
+        "leaflet": "^1.6.0"
     }
 }

@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export class MapMenu {
     constructor(app) {
         const self = this;

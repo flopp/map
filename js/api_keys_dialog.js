@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 export class ApiKeysDialog {
     constructor(app) {
         this.id = '#api-keys-dialog';

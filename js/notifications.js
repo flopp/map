@@ -45,17 +45,13 @@ export class Notifications {
         this.max = 3;
 
         // We need DOM to be ready
-        console.log(document.readyState);
         if (
             document.readyState === 'interactive' ||
             document.readyState === 'complete'
         ) {
-            console.log('document already ready');
             this.init();
         } else {
-            console.log('document not ready, yet');
             window.addEventListener('DOMContentLoaded', () => {
-                console.log("now it's ready");
                 self.init();
             });
         }

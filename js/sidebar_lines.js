@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import {Color} from './color.js';
 import {MapStateChange, MapStateObserver} from './map_state.js';
 import {

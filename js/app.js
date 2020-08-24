@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import {ApiKeysDialog} from './api_keys_dialog.js';
 import {BingWrapper} from './bing_wrapper.js';
 import {Coordinates} from './coordinates.js';

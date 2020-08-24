@@ -1,3 +1,5 @@
+import * as L from 'leaflet';
+
 export class IconFactory {
     constructor() {
         this.font = '16px sans';
@@ -5,7 +7,6 @@ export class IconFactory {
     }
 
     leaflet_icon(text, color) {
-        /* global L */
         const icon = this.create_map_icon(text, color);
         return L.icon({
             iconUrl: icon.url,

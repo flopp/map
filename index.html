@@ -6,12 +6,9 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
-        <link rel="stylesheet" href="./style.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+        <link rel="stylesheet" href="css/leaflet.css" />
+        <link rel="stylesheet" href="css/bulma.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
     </head>
 
     <body>
@@ -19,37 +16,49 @@
             <div id="sidebar-controls">
                 <div class="sidebar-control">
                     <a href="#" class="sidebar-control-button" id="btn-location" data-container="#sidebar-location">
-                        <i class="fas fa-search-location"></i>
+                        <svg class="icon24">
+                            <use xlink:href="img/feather-sprite.svg#search"/>
+                        </svg>
                     </a>
                 </div>
 
                 <div class="sidebar-control">
                     <a href="#" class="sidebar-control-button" id="btn-layers" data-container="#sidebar-layers">
-                        <i class="fas fa-layer-group"></i>
+                        <svg class="icon24">
+                            <use xlink:href="img/feather-sprite.svg#layers"/>
+                        </svg>
                     </a>
                 </div>
 
                 <div class="sidebar-control">
                     <a href="#" class="sidebar-control-button" id="btn-markers" data-container="#sidebar-markers">
-                        <i class="fas fa-map-marker-alt"></i>
+                        <svg class="icon24">
+                            <use xlink:href="img/feather-sprite.svg#map-pin"/>
+                        </svg>
                     </a>
                 </div>
 
                 <div class="sidebar-control">
                     <a href="#" class="sidebar-control-button" id="btn-lines" data-container="#sidebar-lines">
-                        <i class="fas fa-ruler"></i>
+                        <svg class="icon24">
+                            <use xlink:href="img/feather-sprite.svg#maximize-2"/>
+                        </svg>
                     </a>
                 </div>
 
                 <div class="sidebar-control">
                     <a href="#" class="sidebar-control-button" id="btn-tools" data-container="#sidebar-tools">
-                        <i class="fas fa-tools"></i>
+                        <svg class="icon24">
+                            <use xlink:href="img/feather-sprite.svg#tool"/>
+                        </svg>
                     </a>
                 </div>
 
                 <div class="sidebar-control">
                     <a href="#" class="sidebar-control-button" id="btn-info" data-container="#sidebar-info">
-                        <i class="fas fa-question-circle"></i>
+                        <svg class="icon24">
+                            <use xlink:href="img/feather-sprite.svg#help-circle"/>
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -57,8 +66,12 @@
             <div id="sidebar">
                 <div class="sidebar-container" id="sidebar-location">
                     <div class="header">
-                        <span class="close"><i class="fas fa-times"></i></span>
                         <h2>Location</h2>
+                        <span class="close">
+                            <svg class="icon24">
+                                <use xlink:href="img/feather-sprite.svg#x"/>
+                            </svg>
+                        </span>
                     </div>
 
                     <div class="content">
@@ -78,9 +91,9 @@
                                 </div>
                                 <div class="control">
                                     <a id="btn-search" class="button is-info">
-                                        <span class="icon is-small">
-                                            <i class="fas fa-search-location"></i>
-                                        </span>
+                                        <svg class="icon icon16">
+                                            <use xlink:href="img/feather-sprite.svg#search"/>
+                                        </svg>
                                     </a>
                                 </div>
                             </div>
@@ -91,8 +104,12 @@
 
                 <div class="sidebar-container" id="sidebar-layers">
                     <div class="header">
-                        <span class="close"><i class="fas fa-times"></i></span>
                         <h2>Layers</h2>
+                        <span class="close">
+                            <svg class="icon24">
+                                <use xlink:href="img/feather-sprite.svg#x"/>
+                            </svg>
+                        </span>
                     </div>
 
                     <div class="content">
@@ -116,8 +133,12 @@
 
                 <div class="sidebar-container" id="sidebar-markers">
                     <div class="header">
-                        <span class="close"><i class="fas fa-times"></i></span>
                         <h2>Markers</h2>
+                        <span class="close">
+                            <svg class="icon24">
+                                <use xlink:href="img/feather-sprite.svg#x"/>
+                            </svg>
+                        </span>
                     </div>
                     <div class="content">
                         <div class="field is-grouped">
@@ -129,9 +150,9 @@
                             </p>
                             <p class="control">
                                 <a id="btn-marker-settings" class="button">
-                                    <span class="icon">
-                                        <i class="fas fa-sliders-h"></i>
-                                    </span>
+                                    <svg class="icon icon24">
+                                        <use xlink:href="img/feather-sprite.svg#sliders"/>
+                                    </svg>
                                 </a>
                             </p>
                         </div>
@@ -148,8 +169,10 @@
                                 <label class="label">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
-                                        <input data-random-color type="checkbox">Use random colors</label>
-                                      </div>
+                                        <input data-random-color type="checkbox" />
+                                        Use random colors
+                                    </label>
+                                </div>
                                 <div class="control">
                                     <input class="input" data-color type="color" placeholder="Color">
                                 </div>
@@ -177,8 +200,12 @@
 
                 <div class="sidebar-container" id="sidebar-lines">
                     <div class="header">
-                        <span class="close"><i class="fas fa-times"></i></span>
                         <h2>Lines</h2>
+                        <span class="close">
+                            <svg class="icon24">
+                                <use xlink:href="img/feather-sprite.svg#x"/>
+                            </svg>
+                        </span>
                     </div>
                     <div class="content">
                         <div class="field is-grouped">
@@ -190,9 +217,9 @@
                             </p>
                             <p class="control">
                                 <a id="btn-line-settings" class="button">
-                                    <span class="icon">
-                                        <i class="fas fa-sliders-h"></i>
-                                    </span>
+                                    <svg class="icon icon24">
+                                        <use xlink:href="img/feather-sprite.svg#sliders"/>
+                                    </svg>
                                 </a>
                             </p>
                         </div>
@@ -201,7 +228,9 @@
                                 <label class="label">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
-                                    <input data-random-color type="checkbox">Use random colors</label>
+                                        <input data-random-color type="checkbox" />
+                                        Use random colors
+                                    </label>
                                 </div>
                                 <div class="control">
                                     <input class="input" data-color type="color" placeholder="Color">
@@ -224,8 +253,12 @@
 
                 <div class="sidebar-container" id="sidebar-tools">
                     <div class="header">
-                        <span class="close"><i class="fas fa-times"></i></span>
                         <h2>Tools</h2>
+                        <span class="close">
+                            <svg class="icon24">
+                                <use xlink:href="img/feather-sprite.svg#x"/>
+                            </svg>
+                        </span>
                     </div>
                     <div class="content">
                         <div class="field">
@@ -265,30 +298,40 @@
 
                 <div class="sidebar-container" id="sidebar-info">
                     <div class="header">
-                        <span class="close"><i class="fas fa-times"></i></span>
                         <h2>Info</h2>
+                        <span class="close">
+                            <svg class="icon24">
+                                <use xlink:href="img/feather-sprite.svg#x"/>
+                            </svg>
+                        </span>
                     </div>
                     <div class="content">
                         <div class="field">
                             <label class="label">Contact/Mail</label>
-                            <div class="control">
-                                <a class="button is-text is-fullwidth" href="mailto:mail@florian-pigorsch.de" target="_blank">mail@florian-pigorsch.de</a>
-                            </div>
                             <p class="help">If you have any suggestions please feel free to contact me via e-mail.</p>
+                            <div class="control">
+                                <a class="button is-fullwidth is-success" href="mailto:mail@florian-pigorsch.de" target="_blank">mail@florian-pigorsch.de</a>
+                            </div>
                         </div>
+
+                        <hr />
+
                         <div class="field">
                             <label class="label">Source Code/Github</label>
-                            <div class="control">
-                                <a class="button is-text is-fullwidth" href="https://github.com/flopp/dualmap" target="_blank">github.com/flopp/dualmap</a>
-                            </div>
                             <p class="help">The code for this website is open source, hosted at Github.</p>
+                            <div class="control">
+                                <a class="button is-fullwidth is-success" href="https://github.com/flopp/dualmap" target="_blank">github.com/flopp/dualmap</a>
+                            </div>
                         </div>
+
+                        <hr />
+
                         <div class="field">
                             <label class="label">Support/Paypal</label>
-                            <div class="control">
-                                <a class="button is-text is-fullwidth" href="https://paypal.me/FPigorsch" target="_blank">paypal.me/FPigorsch</a>
-                            </div>
                             <p class="help">This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.</p>
+                            <div class="control">
+                                <a class="button is-fullwidth is-success" href="https://paypal.me/FPigorsch" target="_blank">paypal.me/FPigorsch</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -495,7 +538,7 @@
             </div>
         </div>
 
-        <script src="./.secrets.js"></script>
-        <script src="./bundle.js"></script>
+        <script src="js/api-keys.js"></script>
+        <script src="js/bundle.js"></script>
     </body>
 </html>

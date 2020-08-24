@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import {MapStateObserver} from './map_state.js';
 
 export class SidebarTools extends MapStateObserver {

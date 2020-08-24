@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 const parse_float = (str) => {
     if (!/[0-9]/.test(str)) {
         return null;
@@ -65,7 +67,7 @@ const create_dropdown = (menu_id, items) => {
     const trigger = $('<div class="dropdown-trigger">');
     dropdown.append(trigger);
     const dropdown_button = $(`<button class="button is-white" aria-haspopup="true" aria-controls="${menu_id}">
-        <span class="icon is-small"><i class="fas fa-ellipsis-v aria-hidden="true"></i></span>
+    <svg class="icon icon16"><use xlink:href="img/feather-sprite.svg#more-vertical"/></svg>
     </button>`);
     trigger.append(dropdown_button);
 

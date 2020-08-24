@@ -61,7 +61,8 @@ body {
 }
 
 .sidebar-control-button {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 40px;
     height: 40px;
     line-height: 40px;
@@ -86,9 +87,10 @@ body {
     padding: 10px 20px;
     background-color: hsl(204, 86%, 53%);
     color: #ffffff;
+    display: flex;
+    justify-content: space-between;
 }
 .sidebar-container > .header > .close {
-    float: right;
     cursor: pointer;
 }
 .sidebar-container > .header > h2 {
@@ -250,6 +252,30 @@ body {
     animation-duration: .3s;
     animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
     animation-fill-mode: forwards;
+}
+
+.icon24 {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    display: block;
+    margin: 0 auto;
+}
+
+.icon16 {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    display: block;
+    margin: 0 auto;
 }
 
 @keyframes NotificationIn {
