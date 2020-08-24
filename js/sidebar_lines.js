@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Sortable from 'sortablejs';
 
 import {Color} from './color.js';
 import {MapStateChange, MapStateObserver} from './map_state.js';
@@ -33,6 +34,12 @@ export class SidebarLines extends MapStateObserver {
         });
         this.settingsDiv.find('[data-submit]').click(() => {
             self.submit_settings();
+        });
+
+        this.sortable = Sortable.create(document.getElementById('lines'), {
+            onEnd: (event) => {
+                self.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
+            },
         });
     }
 

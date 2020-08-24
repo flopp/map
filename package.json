@@ -8,7 +8,8 @@
         "lint-prettier": "prettier --list-different js/*.js",
         "fix-eslint": "eslint --fix js/*.js",
         "fix-prettier": "prettier --write js/*.js",
-        "build": "mkdir -p build build/css build/img build/js && cp index.html build && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css build/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg build/img && cp .secrets.js build/js/api-keys.js && webpack js/main.js --mode development -o ./build/js/bundle.js",
+        "build": "mkdir -p build build/css build/img build/js && cp index.html build/ && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css build/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg build/img/ && cp .secrets.js build/js/api-keys.js",
+        "build2": "webpack js/main.js --mode development -o build/js/bundle.js",
         "deploy": "mkdir -p deploy deploy/css deploy/img deploy/js && cp index.html deploy && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css deploy/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg deploy/img && cp .secrets-production.js deploy/js/api-keys.js && webpack js/main.js --mode production -o ./deploy/js/bundle.js && (cd deploy && rsync -v -r . flopp@grus.uberspace.de:html/map2/)",
         "start": "http-server build"
     },
@@ -35,6 +36,7 @@
         "geographiclib": "^1.50.0",
         "feather-icons": "^4.28.0",
         "jquery": "^3.5.1",
-        "leaflet": "^1.6.0"
+        "leaflet": "^1.6.0",
+        "sortablejs": "^1.10.2"
     }
 }

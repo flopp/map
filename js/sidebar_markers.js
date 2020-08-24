@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import Sortable from 'sortablejs';
 
 import {Color} from './color.js';
 import {Coordinates, CoordinatesFormat} from './coordinates.js';
@@ -47,6 +48,15 @@ export class SidebarMarkers extends MapStateObserver {
         });
         this.settingsDiv.find('[data-submit]').click(() => {
             self.submit_settings();
+        });
+
+        this.sortable = Sortable.create(document.getElementById('markers'), {
+            onEnd: (event) => {
+                self.app.map_state.reorder_markers(
+                    event.oldIndex,
+                    event.newIndex,
+                );
+            },
         });
     }
 

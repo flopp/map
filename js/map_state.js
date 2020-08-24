@@ -681,6 +681,16 @@ export class MapState {
         return this.markers.map(m => m.get_id()).join(';');
     }
 
+    reorder_markers(old_index, new_index) {
+        console.log(old_index, new_index);
+        if (old_index === new_index) {
+            return;
+        }
+
+        this.markers.splice(new_index, 0, this.markers.splice(old_index, 1)[0]);
+        this.storage.set('markers', this.get_marker_ids_string());
+    }
+
     add_line() {
         const line = new Line(-1, -1);
         if (!this.settings_line_random_color) {
@@ -743,6 +753,16 @@ export class MapState {
 
     get_line_ids_string() {
         return this.lines.map(line => line.get_id()).join(';');
+    }
+
+    reorder_lines(old_index, new_index) {
+        console.log(old_index, new_index);
+        if (old_index === new_index) {
+            return;
+        }
+
+        this.lines.splice(new_index, 0, this.lines.splice(old_index, 1)[0]);
+        this.storage.set('lines', this.get_line_ids_string());
     }
 
     show_line(line) {
