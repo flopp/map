@@ -175,10 +175,7 @@ export class BingWrapper extends MapWrapper {
             !marker.color.equals(obj.meta.last_color) ||
             marker.name !== obj.meta.last_name
         ) {
-            const icon = this.app.icon_factory.bing_icon(
-                marker.name,
-                marker.color,
-            );
+            const icon = this.create_icon(marker);
             obj.setOptions({
                 icon: icon.icon,
                 anchor: icon.anchor,
@@ -288,5 +285,16 @@ export class BingWrapper extends MapWrapper {
         const c = Microsoft.Maps.Color.fromHex(color.to_hash_string());
         c.a = alpha;
         return c;
+    }
+
+    create_icon(marker) {
+        const icon = this.app.icon_factory.create_map_icon(
+            marker.name,
+            marker.color,
+        );
+        return {
+            icon: icon.url,
+            anchor: new Microsoft.Maps.Point(icon.anchor[0], icon.anchor[1]),
+        };
     }
 }

@@ -67,6 +67,10 @@ export class MapWrapper extends MapStateObserver {
         throw new Error('not implemented');
     }
 
+    create_icon(_marker) {
+        throw new Error('not implemented');
+    }
+
     activate() {
         this.active = true;
         this.update_state(MapStateChange.EVERYTHING);

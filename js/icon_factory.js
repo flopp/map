@@ -1,39 +1,7 @@
-import * as L from 'leaflet';
-
 export class IconFactory {
     constructor() {
         this.font = '16px sans';
         this.canvas = null;
-    }
-
-    leaflet_icon(text, color) {
-        const icon = this.create_map_icon(text, color);
-        return L.icon({
-            iconUrl: icon.url,
-            iconSize: icon.size,
-            iconAnchor: icon.anchor,
-        });
-    }
-
-    google_icon(text, color) {
-        /* global google */
-        const icon = this.create_map_icon(text, color);
-        return {
-            url: icon.url,
-            size: new google.maps.Size(icon.size[0], icon.size[1]),
-            scaledSize: new google.maps.Size(icon.size[0], icon.size[1]),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(icon.anchor[0], icon.anchor[1]),
-        };
-    }
-
-    bing_icon(text, color) {
-        /* global Microsoft */
-        const icon = this.create_map_icon(text, color);
-        return {
-            icon: icon.url,
-            anchor: new Microsoft.Maps.Point(icon.anchor[0], icon.anchor[1]),
-        };
     }
 
     create_map_icon(text, color) {

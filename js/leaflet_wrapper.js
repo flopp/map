@@ -130,7 +130,7 @@ export class LeafletWrapper extends MapWrapper {
         const obj = L.marker(marker.coordinates.to_leaflet(), {
             draggable: true,
             autoPan: true,
-            icon: self.app.icon_factory.leaflet_icon(marker.name, marker.color),
+            icon: this.create_icon(marker),
         }).addTo(this.map);
 
         obj.meta = {
@@ -318,5 +318,17 @@ export class LeafletWrapper extends MapWrapper {
     delete_line_object(obj) {
         this.map.removeLayer(obj.meta.arrow);
         this.map.removeLayer(obj);
+    }
+
+    create_icon(marker) {
+        const icon = this.app.icon_factory.create_map_icon(
+            marker.name,
+            marker.color,
+        );
+        return L.icon({
+            iconUrl: icon.url,
+            iconSize: icon.size,
+            iconAnchor: icon.anchor,
+        });
     }
 }

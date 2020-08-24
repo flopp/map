@@ -156,9 +156,7 @@ export class GoogleWrapper extends MapWrapper {
             !marker.color.equals(obj.meta.last_color) ||
             marker.name !== obj.meta.last_name
         ) {
-            obj.setIcon(
-                this.app.icon_factory.google_icon(marker.name, marker.color),
-            );
+            obj.setIcon(this.create_icon(marker));
         }
         if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
             obj.meta.circle.setOptions({
@@ -241,5 +239,19 @@ export class GoogleWrapper extends MapWrapper {
 
     delete_line_object(obj) {
         obj.setMap(null);
+    }
+
+    create_icon(marker) {
+        const icon = this.app.icon_factory.create_map_icon(
+            marker.name,
+            marker.color,
+        );
+        return {
+            url: icon.url,
+            size: new google.maps.Size(icon.size[0], icon.size[1]),
+            scaledSize: new google.maps.Size(icon.size[0], icon.size[1]),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(icon.anchor[0], icon.anchor[1]),
+        };
     }
 }
