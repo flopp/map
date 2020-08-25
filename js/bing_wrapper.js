@@ -4,6 +4,14 @@ import {MapWrapper} from './map_wrapper.js';
 
 /* global Microsoft */
 
+const from_coordinates = (c) => {
+    return new Microsoft.Maps.Location(c.raw_lat, c.raw_lng);
+};
+
+const to_coordinates = (bing_location) => {
+    return new Coordinates(bing_location.latitude, bing_location.longitude);
+};
+
 export class BingWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
@@ -25,7 +33,7 @@ export class BingWrapper extends MapWrapper {
         Microsoft.Maps.Events.addHandler(this.map, 'viewchangeend', () => {
             if (self.active && !self.automatic_event) {
                 self.map_state.set_view(
-                    Coordinates.from_bing(self.map.getCenter()),
+                    to_coordinates(self.map.getCenter()),
                     self.map.getZoom(),
                     self,
                 );
@@ -70,7 +78,7 @@ export class BingWrapper extends MapWrapper {
                     self,
                     event.getX() + self.width() / 2,
                     event.getY() + self.height() / 2,
-                    Coordinates.from_bing(event.location),
+                    to_coordinates(event.location),
                 );
             }
             return false;
@@ -102,13 +110,13 @@ export class BingWrapper extends MapWrapper {
         this.automatic_event = true;
         if (this.app.map_state.map_type === MapType.BING_AERIAL_NO_LABELS) {
             this.map.setView({
-                center: center.to_bing(),
+                center: from_coordinates(center),
                 zoom: zoom,
                 labelOverlay: Microsoft.Maps.LabelOverlay.hidden,
             });
         } else {
             this.map.setView({
-                center: center.to_bing(),
+                center: from_coordinates(center),
                 zoom: zoom,
                 labelOverlay: Microsoft.Maps.LabelOverlay.visible,
             });
@@ -119,9 +127,12 @@ export class BingWrapper extends MapWrapper {
     create_marker_object(marker) {
         const self = this;
 
-        const obj = new Microsoft.Maps.Pushpin(marker.coordinates.to_bing(), {
-            draggable: true,
-        });
+        const obj = new Microsoft.Maps.Pushpin(
+            from_coordinates(marker.coordinates),
+            {
+                draggable: true,
+            },
+        );
 
         this.map.entities.push(obj);
 
@@ -135,13 +146,13 @@ export class BingWrapper extends MapWrapper {
         Microsoft.Maps.Events.addHandler(obj, 'drag', () => {
             self.map_state.set_marker_coordinates(
                 marker.get_id(),
-                Coordinates.from_bing(obj.getLocation()),
+                to_coordinates(obj.getLocation()),
             );
             if (obj.meta.circle) {
-                const center = Coordinates.from_bing(obj.getLocation());
-                const points = Coordinates.to_bing_path(
-                    center.geodesic_circle(marker.radius),
-                );
+                const center = to_coordinates(obj.getLocation());
+                const points = center
+                    .geodesic_circle(marker.radius)
+                    .map(from_coordinates);
                 obj.meta.circle.setLocations(points);
             }
         });
@@ -152,7 +163,7 @@ export class BingWrapper extends MapWrapper {
     }
 
     update_marker_object(obj, marker) {
-        const position = marker.coordinates.to_bing();
+        const position = from_coordinates(marker.coordinates);
 
         obj.setLocation(position);
 
@@ -162,9 +173,9 @@ export class BingWrapper extends MapWrapper {
                 this.map.entities.push(obj.meta.circle);
             }
             const center = marker.coordinates;
-            const points = Coordinates.to_bing_path(
-                center.geodesic_circle(marker.radius),
-            );
+            const points = center
+                .geodesic_circle(marker.radius)
+                .map(from_coordinates);
             obj.meta.circle.setLocations(points);
         } else if (obj.meta.circle) {
             this.map.entities.remove(this.meta.circle);
@@ -248,7 +259,7 @@ export class BingWrapper extends MapWrapper {
                 this.map_state.get_marker(line.marker2).coordinates,
                 this.map_state.zoom,
             );
-        const bing_path = Coordinates.to_bing_path(path);
+        const bing_path = path.map(from_coordinates);
 
         obj.setLocations(bing_path);
 

@@ -4,6 +4,14 @@ import {MapWrapper} from './map_wrapper.js';
 
 /* global google */
 
+const from_coordinates = (c) => {
+    return new google.maps.LatLng(c.raw_lat, c.raw_lng);
+};
+
+const to_coordinates = (google_latlng) => {
+    return new Coordinates(google_latlng.lat(), google_latlng.lng());
+};
+
 export class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
@@ -30,7 +38,7 @@ export class GoogleWrapper extends MapWrapper {
             google.maps.event.addListener(this.map, event_name, () => {
                 if (self.active && !self.automatic_event) {
                     self.map_state.set_view(
-                        Coordinates.from_google(self.map.getCenter()),
+                        to_coordinates(self.map.getCenter()),
                         self.map.getZoom(),
                         self,
                     );
@@ -43,7 +51,7 @@ export class GoogleWrapper extends MapWrapper {
                 self,
                 event.pixel.x,
                 event.pixel.y,
-                Coordinates.from_google(event.latLng),
+                to_coordinates(event.latLng),
             );
             return false;
         });
@@ -81,7 +89,7 @@ export class GoogleWrapper extends MapWrapper {
 
     set_map_view(center, zoom) {
         this.automatic_event = true;
-        this.map.setCenter(center.to_google());
+        this.map.setCenter(from_coordinates(center));
         this.map.setZoom(zoom);
         this.automatic_event = false;
     }
@@ -90,7 +98,7 @@ export class GoogleWrapper extends MapWrapper {
         const self = this;
 
         const obj = new google.maps.Marker({
-            position: marker.coordinates.to_google(),
+            position: from_coordinates(marker.coordinates),
             map: self.map,
             draggable: true,
         });
@@ -104,7 +112,7 @@ export class GoogleWrapper extends MapWrapper {
         google.maps.event.addListener(obj, 'drag', () => {
             self.map_state.set_marker_coordinates(
                 marker.get_id(),
-                Coordinates.from_google(obj.getPosition()),
+                to_coordinates(obj.getPosition()),
             );
             if (obj.meta.circle) {
                 obj.meta.circle.setCenter(obj.getPosition());
@@ -127,7 +135,7 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     update_marker_object(obj, marker) {
-        const position = marker.coordinates.to_google();
+        const position = from_coordinates(marker.coordinates);
 
         obj.setPosition(position);
 

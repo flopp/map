@@ -4,6 +4,14 @@ import {Coordinates} from './coordinates.js';
 import {MapType} from './map_type.js';
 import {MapWrapper} from './map_wrapper.js';
 
+const from_coordinates = (c) => {
+    return L.latLng(c.raw_lat, c.raw_lng);
+};
+
+const to_coordinates = (leaflet_latlng) => {
+    return new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
+};
+
 export class LeafletWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
@@ -61,7 +69,7 @@ export class LeafletWrapper extends MapWrapper {
             self.map.on(event_name, () => {
                 if (self.active && !self.automatic_event) {
                     self.map_state.set_view(
-                        Coordinates.from_leaflet(self.map.getCenter()),
+                        to_coordinates(self.map.getCenter()),
                         self.map.getZoom(),
                     );
                 }
@@ -73,7 +81,7 @@ export class LeafletWrapper extends MapWrapper {
                 self,
                 event.containerPoint.x,
                 event.containerPoint.y,
-                Coordinates.from_leaflet(event.latlng),
+                to_coordinates(event.latlng),
             );
             return false;
         });
@@ -116,7 +124,7 @@ export class LeafletWrapper extends MapWrapper {
 
     set_map_view(center, zoom) {
         this.automatic_event = true;
-        this.map.setView(center.to_leaflet(), zoom, {animate: false});
+        this.map.setView(from_coordinates(center), zoom, {animate: false});
         this.automatic_event = false;
     }
 
@@ -127,7 +135,7 @@ export class LeafletWrapper extends MapWrapper {
     create_marker_object(marker) {
         const self = this;
 
-        const obj = L.marker(marker.coordinates.to_leaflet(), {
+        const obj = L.marker(from_coordinates(marker.coordinates), {
             draggable: true,
             autoPan: true,
             icon: this.create_icon(marker),
@@ -142,14 +150,14 @@ export class LeafletWrapper extends MapWrapper {
         obj.on('drag', () => {
             self.map_state.set_marker_coordinates(
                 marker.get_id(),
-                Coordinates.from_leaflet(obj.getLatLng()),
+                to_coordinates(obj.getLatLng()),
                 null,
             );
             if (obj.meta.circle) {
-                const center = Coordinates.from_leaflet(obj.getLatLng());
-                const points = Coordinates.to_leaflet_path(
-                    center.geodesic_circle(marker.radius),
-                );
+                const center = to_coordinates(obj.getLatLng());
+                const points = center
+                    .geodesic_circle(marker.radius)
+                    .map(from_coordinates);
                 obj.meta.circle.setLatLngs(points);
             }
         });
@@ -170,7 +178,7 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     update_marker_object(obj, marker) {
-        obj.setLatLng(marker.coordinates.to_leaflet());
+        obj.setLatLng(from_coordinates(marker.coordinates));
         if (marker.radius > 0) {
             if (!obj.meta.circle) {
                 obj.meta.circle = L.polygon([], {
@@ -180,9 +188,9 @@ export class LeafletWrapper extends MapWrapper {
                 }).addTo(this.map);
             }
             obj.meta.circle.setLatLngs(
-                Coordinates.to_leaflet_path(
-                    marker.coordinates.geodesic_circle(marker.radius),
-                ),
+                marker.coordinates
+                    .geodesic_circle(marker.radius)
+                    .map(from_coordinates),
             );
         } else if (obj.meta.circle) {
             this.map.removeLayer(obj.meta.circle);
@@ -294,7 +302,7 @@ export class LeafletWrapper extends MapWrapper {
                 this.map_state.get_marker(line.marker2).coordinates,
                 this.map_state.zoom,
             );
-        const leaflet_path = Coordinates.to_leaflet_path(path);
+        const leaflet_path = path.map(from_coordinates);
         obj.setLatLngs(leaflet_path);
         if (leaflet_path.length <= 1) {
             obj.meta.arrow.setLatLngs([]);
