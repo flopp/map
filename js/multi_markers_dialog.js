@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import {Color} from './color.js';
 import {Coordinates} from './coordinates.js';
 import {MapStateChange} from './map_state.js';
@@ -7,57 +5,62 @@ import {parse_float} from './utilities.js';
 
 export class MultiMarkersDialog {
     constructor(app) {
-        this.app = app;
-
         const self = this;
 
-        $('#multi-markers-dialog [data-use-common-name]').change(() => {
+        this.div = document.querySelector('#multi-markers-dialog');
+        this.app = app;
+
+        this.div.querySelector('[data-use-common-name]').onchange = () => {
             self.update_description();
-        });
-        $('#multi-markers-dialog [data-use-common-color]').change(() => {
+        };
+        this.div.querySelector('[data-use-common-color]').onchange = () => {
             self.update_description();
-        });
-        $('#multi-markers-dialog [data-use-common-radius]').change(() => {
+        };
+        this.div.querySelector('[data-use-common-radius]').onchange = () => {
             self.update_description();
+        };
+
+        this.div.querySelectorAll('[data-cancel]').forEach((el) => {
+            el.onclick = () => {
+                self.hide();
+            };
         });
-        $('#multi-markers-dialog [data-cancel]').click(() => {
-            self.hide();
-        });
-        $('#multi-markers-dialog [data-go]').click(() => {
-            self.go();
+        this.div.querySelectorAll('[data-go]').forEach((el) => {
+            el.onclick = () => {
+                self.go();
+            };
         });
     }
 
     show() {
-        $('#multi-markers-dialog').addClass('is-active');
-        $('#multi-markers-dialog [data-common-color]').val(
-            Color.random_from_palette().to_hash_string(),
-        );
+        this.div.classList.add('is-active');
+        this.div.querySelector(
+            '[data-common-color]',
+        ).value = Color.random_from_palette().to_hash_string();
         this.update_description();
     }
 
     hide() {
-        $('#multi-markers-dialog').removeClass('is-active');
+        this.div.classList.remove('is-active');
     }
 
     go() {
         const self = this;
 
-        const use_common_name = $(
-            '#multi-markers-dialog [data-use-common-name]',
-        ).is(':checked');
-        const use_common_color = $(
-            '#multi-markers-dialog [data-use-common-color]',
-        ).is(':checked');
-        const use_common_radius = $(
-            '#multi-markers-dialog [data-use-common-radius]',
-        ).is(':checked');
-        const common_name = $('#multi-markers-dialog [data-common-name]').val();
+        const use_common_name = this.div.querySelector('[data-use-common-name]')
+            .checked;
+        const use_common_color = this.div.querySelector(
+            '[data-use-common-color]',
+        ).checked;
+        const use_common_radius = this.div.querySelector(
+            '[data-use-common-radius]',
+        ).checked;
+        const common_name = this.div.querySelector('[data-common-name]').value;
         const common_color = Color.from_string(
-            $('#multi-markers-dialog [data-common-color]').val(),
+            this.div.querySelector('[data-common-color]').value,
         );
         const common_radius = parse_float(
-            $('#multi-markers-dialog [data-common-radius]').val(),
+            this.div.querySelector('[data-common-radius]').value,
         );
 
         if (use_common_color && common_color === null) {
@@ -84,9 +87,9 @@ export class MultiMarkersDialog {
         const data = [];
         let line_index = 0;
         let marker_index = 1;
-        $('#multi-markers-dialog [data-marker-data]')
-            .val()
-            .split('\n')
+        this.div
+            .querySelector('[data-marker-data]')
+            .value.split('\n')
             .forEach((line) => {
                 line_index += 1;
 
@@ -187,15 +190,14 @@ export class MultiMarkersDialog {
     }
 
     update_description() {
-        const use_common_name = $(
-            '#multi-markers-dialog [data-use-common-name]',
-        ).is(':checked');
-        const use_common_color = $(
-            '#multi-markers-dialog [data-use-common-color]',
-        ).is(':checked');
-        const use_common_radius = $(
-            '#multi-markers-dialog [data-use-common-radius]',
-        ).is(':checked');
+        const use_common_name = this.div.querySelector('[data-use-common-name]')
+            .checked;
+        const use_common_color = this.div.querySelector(
+            '[data-use-common-color]',
+        ).checked;
+        const use_common_radius = this.div.querySelector(
+            '[data-use-common-radius]',
+        ).checked;
 
         let description = '<COORDINATES>';
         if (!use_common_name) {
@@ -207,6 +209,6 @@ export class MultiMarkersDialog {
         if (!use_common_radius) {
             description += ';<RADIUS>';
         }
-        $('#multi-markers-dialog [data-format]').text(description);
+        this.div.querySelector('[data-format]').innerText = description;
     }
 }

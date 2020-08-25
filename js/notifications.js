@@ -58,7 +58,6 @@ export class Notifications {
     }
 
     init() {
-        console.log('notifications.init');
         this.container = document.createElement('div');
         this.container.id = 'notification-container';
         document.body.appendChild(this.container);

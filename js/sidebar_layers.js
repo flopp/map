@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import {MapStateObserver, MapStateChange} from './map_state.js';
 import {MapType, maptype2human, isGoogle, isBing} from './map_type.js';
 
@@ -7,6 +5,8 @@ export class SidebarLayers extends MapStateObserver {
     constructor(app) {
         super(app);
         const self = this;
+
+        this.div = document.querySelector('#sidebar-layers');
 
         this.baselayers = [
             {type: MapType.OPENSTREETMAP},
@@ -22,20 +22,20 @@ export class SidebarLayers extends MapStateObserver {
             {type: MapType.BING_AERIAL_NO_LABELS},
         ];
 
-        this.baselayer_select = $('#sidebar-layers').find('[data-baselayer]');
+        this.baselayer_select = this.div.querySelector('[data-baselayer]');
         this.baselayers.forEach((baselayer) => {
-            baselayer.option = $(`<option value=${baselayer.type}>`).text(
-                maptype2human(baselayer.type),
-            );
-            self.baselayer_select.append(baselayer.option);
+            baselayer.option = document.createElement('option');
+            baselayer.option.value = baselayer.type;
+            baselayer.option.text = maptype2human(baselayer.type);
+            self.baselayer_select.add(baselayer.option);
         });
-        this.baselayer_select.change(() => {
-            app.switch_map(self.baselayer_select.val());
-        });
+        this.baselayer_select.onchange = () => {
+            app.switch_map(self.baselayer_select.value);
+        };
 
-        $('#btn-api-keys').click(() => {
+        this.div.querySelector('[data-add-keys-button]').onclick = () => {
             self.app.show_api_keys_dialog();
-        });
+        };
 
         if (!app.has_google_maps()) {
             this.disable_google_layers();
@@ -51,9 +51,7 @@ export class SidebarLayers extends MapStateObserver {
         }
 
         /* baselayer */
-        $('#sidebar-layers')
-            .find('[data-baselayer]')
-            .val(this.map_state.map_type);
+        this.baselayer_select.value = this.map_state.map_type;
         this.update_baselayer_help();
     }
 
@@ -70,10 +68,10 @@ export class SidebarLayers extends MapStateObserver {
     enable_layers(check_function) {
         this.baselayers.forEach((baselayer) => {
             if (check_function(baselayer.type)) {
-                baselayer.option = $(`<option value=${baselayer.type}>`).text(
-                    maptype2human(baselayer.type),
-                );
-                self.baselayer_select.append(baselayer.option);
+                baselayer.option = document.createElement('option');
+                baselayer.option.value = baselayer.type;
+                baselayer.option.text = maptype2human(baselayer.type);
+                self.baselayer_select.add(baselayer.option);
             }
         });
         this.update_baselayer_help();
@@ -97,11 +95,11 @@ export class SidebarLayers extends MapStateObserver {
     }
 
     update_baselayer_help() {
-        const help_div = $('#sidebar-layers').find('[data-baselayer-help]');
+        const help_div = this.div.querySelector('[data-baselayer-help]');
         let missing_layers = '';
         if (this.app.has_google_maps()) {
             if (this.app.has_bing_maps()) {
-                help_div.addClass('is-hidden');
+                help_div.classList.add('is-hidden');
                 return;
             }
             missing_layers = 'Bing Maps';
@@ -110,9 +108,7 @@ export class SidebarLayers extends MapStateObserver {
         } else {
             missing_layers = 'Google Maps and Bing Maps';
         }
-        help_div.removeClass('is-hidden');
-        help_div.text(
-            `${missing_layers} layers have been disabled due to missing/invalid API keys or other API problems.`,
-        );
+        help_div.classList.remove('is-hidden');
+        help_div.innerText = `${missing_layers} layers have been disabled due to missing/invalid API keys or other API problems.`;
     }
 }

@@ -17,7 +17,7 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_controls_selector = sidebar_controls_selector;
 
         this.controls = [];
-        $('.sidebar-control-button').each((index, button) => {
+        $('.sidebar-control-button').each((_index, button) => {
             const id = button.id;
             button.addEventListener('click', () => {
                 self.toggle(id);
@@ -68,7 +68,7 @@ export class Sidebar extends MapStateObserver {
 
             $(this.sidebar_selector).removeClass('sidebar-open');
             $(this.sidebar_controls_selector).removeClass('sidebar-open');
-            $('.map-container').each((index, obj) => {
+            $('.map-container').each((_index, obj) => {
                 obj.classList.remove('sidebar-open');
             });
         } else {
@@ -94,7 +94,7 @@ export class Sidebar extends MapStateObserver {
 
             $(this.sidebar_selector).addClass('sidebar-open');
             $(this.sidebar_controls_selector).addClass('sidebar-open');
-            $('.map-container').each((index, obj) => {
+            $('.map-container').each((_index, obj) => {
                 obj.classList.add('sidebar-open');
             });
         }
