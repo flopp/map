@@ -393,7 +393,7 @@
                 <div class="modal-card">
                     <header class="modal-card-head">
                         <h2 class="modal-card-title">Waypoint Projection</h2>
-                        <button class="delete projection-cancel" aria-label="close"></button>
+                        <button class="delete" data-cancel></button>
                     </header>
                     <section class="modal-card-body">
                         <h3 class="is-size-4">Projection Data</h3>
@@ -441,8 +441,8 @@
                         </div>
                     </section>
                     <footer class="modal-card-foot">
-                        <button class="button is-success projection-perform">Perform Projection</button>
-                        <button class="button projection-cancel">Cancel</button>
+                        <button class="button is-success" data-project>Perform Projection</button>
+                        <button class="button" data-cancel>Cancel</button>
                     </footer>
                 </div>
             </div>
@@ -459,10 +459,10 @@
 
                             <div class="field has-addons">
                                 <div class="control is-expanded">
-                                    <input id="input-link" class="input" type="text" />
+                                    <input id="link-dialog-input" class="input" type="text" />
                                 </div>
                                 <div class="control">
-                                    <a id="btn-copy-link" data-clipboard-target="#input-link" class="button is-info">
+                                    <a id="link-dilog-copy-button" data-clipboard-target="#link-dialog-input" class="button is-info">
                                         Copy
                                     </a>
                                 </div>

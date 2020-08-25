@@ -1,61 +1,65 @@
-import $ from 'jquery';
-
 import {Color} from './color.js';
 import {MapStateChange} from './map_state.js';
 import {parse_float} from './utilities.js';
 
 export class ProjectionDialog {
     constructor(app) {
+        const self = this;
+
+        this.div = document.querySelector('#projection-dialog');
         this.app = app;
         this.marker = null;
 
-        const self = this;
-        $('#projection-dialog .projection-cancel').click(() => {
-            self.hide();
+        this.div.querySelectorAll('[data-cancel]').forEach((el) => {
+            el.onclick = () => {
+                self.hide();
+            };
         });
-        $('#projection-dialog .projection-perform').click(() => {
-            self.go();
+        this.div.querySelectorAll('[data-project]').forEach((el) => {
+            el.onclick = () => {
+                self.go();
+            };
         });
     }
 
     show(marker) {
         this.marker = marker;
-        $('#projection-dialog [data-distance]').val('');
-        $('#projection-dialog [data-bearing]').val('');
-        $('#projection-dialog [data-targetname]').val(
-            `Projection from ${marker.name}`,
-        );
-        $('#projection-dialog [data-targetcolor]').val(
-            marker.color.to_hash_string(),
-        );
-        $('#projection-dialog [data-targetradius]').val('');
-        $('#projection-dialog [data-linecolor]').val(
-            marker.color.to_hash_string(),
-        );
-        $('#projection-dialog').addClass('is-active');
+        this.div.querySelector('[data-distance]').value = '';
+        this.div.querySelector('[data-bearing]').value = '';
+        this.div.querySelector(
+            '[data-targetname]',
+        ).value = `Projection from ${marker.name}`;
+        this.div.querySelector(
+            '[data-targetcolor]',
+        ).value = marker.color.to_hash_string();
+        this.div.querySelector('[data-targetradius]').value = '';
+        this.div.querySelector(
+            '[data-linecolor]',
+        ).value = marker.color.to_hash_string();
+        this.div.classList.add('is-active');
     }
 
     hide() {
-        $('#projection-dialog').removeClass('is-active');
+        this.div.classList.remove('is-active');
     }
 
     go() {
         const distance = parse_float(
-            $('#projection-dialog [data-distance]').val(),
+            this.div.querySelector('[data-distance]').value,
         );
         const bearing = parse_float(
-            $('#projection-dialog [data-bearing]').val(),
+            this.div.querySelector('[data-bearing]').value,
         );
-        const target_name = $('#projection-dialog [data-targetname]').val();
+        const target_name = this.div.querySelector('[data-targetname]').value;
         const target_color = Color.from_string(
-            $('#projection-dialog [data-targetcolor]').val(),
+            this.div.querySelector('[data-targetcolor]').value,
         );
         const target_radius = parse_float(
-            $('#projection-dialog [data-targetradius').val(),
+            this.div.querySelector('[data-targetradius]').value,
         );
-        const create_line = $('#projection-dialog [data-line]').is(':checked');
+        const create_line = this.div.querySelector('[data-line]').checked;
         const line_color = Color.from_string(
-            $('#projection-dialog [data-linecolor]').val(),
+            this.div.querySelector('[data-linecolor]').value,
         );
 
         if (distance === null || distance <= 0) {

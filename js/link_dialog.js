@@ -1,12 +1,13 @@
 import Clipboard from 'clipboard';
-import $ from 'jquery';
 
 export class LinkDialog {
     constructor(app) {
-        this.app = app;
         const self = this;
 
-        this.clipboard = new Clipboard('#btn-copy-link');
+        this.div = document.querySelector('#link-dialog');
+        this.app = app;
+
+        this.clipboard = new Clipboard('#link-dialog-copy-button');
         this.clipboard.on('success', () => {
             self.app.message('The link has been copied to the clipboard.');
         });
@@ -14,18 +15,20 @@ export class LinkDialog {
             self.app.message_error('Copying of the link failed.');
         });
 
-        $('#link-dialog [data-cancel]').click(() => {
-            self.hide();
+        this.div.querySelectorAll('[data-cancel]').forEach((el) => {
+            el.onclick = () => {
+                self.hide();
+            };
         });
     }
 
     show() {
-        $('#link-dialog').addClass('is-active');
+        this.div.classList.add('is-active');
         const link = this.app.map_state.create_link();
-        $('#input-link').val(link);
+        document.querySelector('#link-dialog-input').value = link;
     }
 
     hide() {
-        $('#link-dialog').removeClass('is-active');
+        this.div.classList.remove('is-active');
     }
 }

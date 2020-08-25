@@ -201,9 +201,7 @@ export class LeafletWrapper extends MapWrapper {
             !marker.color.equals(obj.meta.last_color) ||
             marker.name !== obj.meta.last_name
         ) {
-            obj.setIcon(
-                this.app.icon_factory.leaflet_icon(marker.name, marker.color),
-            );
+            obj.setIcon(this.create_icon(marker));
         }
         if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
             obj.meta.circle.setStyle({color: marker.color.to_hash_string()});
