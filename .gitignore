@@ -1,6 +1,6 @@
 .vscode
-build
-deploy
+.local
+.upload
 node_modules
 .secrets.js
 .secrets-production.js

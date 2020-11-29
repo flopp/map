@@ -1,6 +1,6 @@
 {
-    "name": "dualmap",
-    "version": "1.0.0",
+    "name": "map",
+    "version": "0.0.1",
     "description": "",
     "main": "js/main.js",
     "scripts": {
@@ -14,14 +14,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/flopp/dualmap.git"
+        "url": "git+https://github.com/flopp/map.git"
     },
     "author": "Florian Pigorsch <mail@florian-pigorsch.de>",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/flopp/dualmap/issues"
+        "url": "https://github.com/flopp/map/issues"
     },
-    "homepage": "https://github.com/flopp/dualmap#readme",
+    "homepage": "https://github.com/flopp/map#readme",
     "devDependencies": {
         "eslint": "^7.7.0",
         "http-server": "^0.12.3",
