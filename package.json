@@ -8,9 +8,9 @@
         "lint-prettier": "prettier --list-different js/*.js",
         "fix-eslint": "eslint --fix js/*.js",
         "fix-prettier": "prettier --write js/*.js",
-        "build": "mkdir -p build build/css build/img build/js && cp index.html build/ && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css build/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg build/img/ && cp .secrets.js build/js/api-keys.js && webpack js/main.js --mode development -o build/js/bundle.js",
-        "deploy": "mkdir -p deploy deploy/css deploy/img deploy/js && cp index.html deploy && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css deploy/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg deploy/img && cp .secrets-production.js deploy/js/api-keys.js && webpack js/main.js --mode production -o ./deploy/js/bundle.js && (cd deploy && rsync -v -r . flopp@grus.uberspace.de:html/map2/)",
-        "start": "http-server build"
+        "build": "mkdir -p .local .local/css .local/img .local/js && cp html/index.html .local/ && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css .local/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg .local/img/ && cp .secrets.js .local/js/api-keys.js && webpack js/main.js --mode development -o .local/js/bundle.js",
+        "start": "http-server .local",
+        "upload": "mkdir -p .upload .upload/css .upload/img .upload/js && cp html/index.html .upload && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css .upload/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg .upload/img && cp .secrets-production.js .upload/js/api-keys.js && webpack js/main.js --mode production -o ./.upload/js/bundle.js && (cd .upload && rsync -v -r . floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/2oc.de/)"
     },
     "repository": {
         "type": "git",

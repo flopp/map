@@ -9,7 +9,7 @@ setup:
 .PHONY: build-local
 build-local:
 	mkdir -p ${LOCAL_DIR} ${LOCAL_DIR}/css ${LOCAL_DIR}/img ${LOCAL_DIR}/js
-	cp index.html ${LOCAL_DIR}/
+	cp html/index.html ${LOCAL_DIR}/
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${LOCAL_DIR}/css/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${LOCAL_DIR}/img/
 	cp .secrets.js ${LOCAL_DIR}/js/api-keys.js
@@ -19,11 +19,10 @@ build-local:
 run-local: build-local
 	node_modules/.bin/http-server ${LOCAL_DIR}
 
-
 .PHONY: build-upload
 build-upload:
 	mkdir -p ${UPLOAD_DIR} ${UPLOAD_DIR}/css ${UPLOAD_DIR}/img ${UPLOAD_DIR}/js
-	cp index.html ${UPLOAD_DIR}
+	cp html/index.html ${UPLOAD_DIR}
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${UPLOAD_DIR}/css/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${UPLOAD_DIR}/img
 	cp .secrets-production.js ${UPLOAD_DIR}/js/api-keys.js
