@@ -34,7 +34,7 @@ export class SidebarTools extends MapStateObserver {
     }
 
     export_json() {
-        const data = JSON.stringify(this.map_state.to_json());
+        const data = JSON.stringify(this.app.map_state.to_json());
         const element = document.createElement('a');
         element.setAttribute(
             'href',
@@ -53,8 +53,8 @@ export class SidebarTools extends MapStateObserver {
         reader.readAsText(file);
         reader.onloadend = () => {
             const data = JSON.parse(reader.result);
-            self.map_state.from_json(data);
-            self.app.switch_map(self.map_state.map_type);
+            self.app.map_state.from_json(data);
+            self.app.switch_map(self.app.map_state.map_type);
         };
 
         // reset file input

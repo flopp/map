@@ -53,27 +53,7 @@ export class App {
         this.bing = null;
         this.bing_loading = false;
 
-        if (
-            this.map_state.google_api_key === '' &&
-            (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)
-        ) {
-            this.google_maps_error = true;
-            this.sidebar.sidebar_layers.disable_google_layers();
-            this.message_error(
-                'Google Maps layers disabled due to missing API key.',
-            );
-        }
-        if (
-            this.map_state.bing_api_key === '' &&
-            (typeof BING_API_KEY == 'undefined' || BING_API_KEY.length < 32)
-        ) {
-            this.bing_maps_error = true;
-            this.sidebar.sidebar_layers.disable_bing_layers();
-            this.message_error(
-                'Bing Maps layers disabled due to missing API key.',
-            );
-        }
-
+        this.reset_maps();
         this.switch_map(this.map_state.map_type);
     }
 
@@ -83,6 +63,50 @@ export class App {
 
     message_error(text) {
         this.notifications.message(text, 'danger');
+    }
+
+    reset_maps() {
+        let google = true;
+        if (
+            this.map_state.google_api_key === '' &&
+            (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)
+        ) {
+            google = false;
+        }
+
+        let bing = true;
+        if (
+            this.map_state.bing_api_key === '' &&
+            (typeof BING_API_KEY == 'undefined' || BING_API_KEY.length < 32)
+        ) {
+            bing = false;
+        }
+
+        if (google) {
+            if (!this.has_google_maps()) {
+                this.google_maps_error = false;
+                this.sidebar.sidebar_layers.enable_google_layers();
+            }
+        } else {
+            this.google_maps_error = true;
+            this.sidebar.sidebar_layers.disable_google_layers();
+            this.message_error(
+                'Google Maps layers disabled due to missing API key.',
+            );
+        }
+
+        if (bing) {
+            if (!this.has_bing_maps()) {
+                this.bing_maps_error = false;
+                this.sidebar.sidebar_layers.enable_bing_layers();
+            }
+        } else {
+            this.bing_maps_error = true;
+            this.sidebar.sidebar_layers.disable_bing_layers();
+            this.message_error(
+                'Bing Maps layers disabled due to missing API key.',
+            );
+        }
     }
 
     has_google_maps() {
@@ -256,6 +280,11 @@ export class App {
             return;
         }
 
+        let api_key = this.map_state.google_api_key;
+        if ((api_key === '') && (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)) {
+            api_key = GOOGLE_API_KEY;
+        }
+
         console.log('ON DEMAND LOADING OF THE GOOGLE MAPS API');
         this.google_loading = true;
         const promise = new Promise((resolve, reject) => {
@@ -276,7 +305,7 @@ export class App {
                 Reflect.deleteProperty(window, callbackName);
             };
 
-            const url = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=${callbackName}`;
+            const url = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=${callbackName}`;
             $.getScript(url);
         });
 
@@ -311,6 +340,11 @@ export class App {
             this.map_state.update_observers(MapStateChange.EVERYTHING);
             this.bing.invalidate_size();
             return;
+        }
+
+        let api_key = this.map_state.bing_api_key;
+        if ((api_key === '') && (typeof BING_API_KEY == 'undefined' || BING_API_KEY.length < 32)) {
+            api_key = BING_API_KEY;
         }
 
         console.log('ON DEMAND LOADING OF THE BING MAPS API');

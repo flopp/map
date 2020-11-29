@@ -45,9 +45,9 @@ export class Sidebar extends MapStateObserver {
             !toggle_control_id ||
             $(`#${toggle_control_id}`).parent().hasClass('active')
         ) {
-            this.map_state.set_sidebar_open(null);
+            this.app.map_state.set_sidebar_open(null);
         } else {
-            this.map_state.set_sidebar_open(toggle_control_id);
+            this.app.map_state.set_sidebar_open(toggle_control_id);
         }
     }
 
@@ -56,7 +56,7 @@ export class Sidebar extends MapStateObserver {
             return;
         }
 
-        const section = this.map_state.sidebar_open;
+        const section = this.app.map_state.sidebar_open;
 
         if (!section) {
             this.controls.forEach((control) => {

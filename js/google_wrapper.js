@@ -37,7 +37,7 @@ export class GoogleWrapper extends MapWrapper {
         ['center_changed', 'zoom_changed'].forEach((event_name) => {
             google.maps.event.addListener(this.map, event_name, () => {
                 if (self.active && !self.automatic_event) {
-                    self.map_state.set_view(
+                    self.app.map_state.set_view(
                         to_coordinates(self.map.getCenter()),
                         self.map.getZoom(),
                         self,
@@ -110,7 +110,7 @@ export class GoogleWrapper extends MapWrapper {
         };
 
         google.maps.event.addListener(obj, 'drag', () => {
-            self.map_state.set_marker_coordinates(
+            self.app.map_state.set_marker_coordinates(
                 marker.get_id(),
                 to_coordinates(obj.getPosition()),
             );

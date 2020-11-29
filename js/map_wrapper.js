@@ -93,16 +93,16 @@ export class MapWrapper extends MapStateObserver {
 
         /* update view */
         if (changes & MapStateChange.MAPTYPE) {
-            this.set_map_type(this.map_state.map_type);
-            this.set_hillshading(this.map_state.hillshading);
+            this.set_map_type(this.app.map_state.map_type);
+            this.set_hillshading(this.app.map_state.hillshading);
         }
         if (changes & MapStateChange.VIEW) {
-            this.set_map_view(this.map_state.center, this.map_state.zoom);
+            this.set_map_view(this.app.map_state.center, this.app.map_state.zoom);
         }
 
         if (changes & MapStateChange.MARKERS) {
             // update and add markers
-            this.map_state.markers.forEach((marker) => {
+            this.app.map_state.markers.forEach((marker) => {
                 if (self.markers.has(marker.get_id())) {
                     self.update_marker_object(
                         self.markers.get(marker.get_id()),
@@ -114,9 +114,9 @@ export class MapWrapper extends MapStateObserver {
             });
 
             /* remove spurious markers */
-            if (this.markers.size > this.map_state.markers.length) {
+            if (this.markers.size > this.app.map_state.markers.length) {
                 const ids = new Set();
-                this.map_state.markers.forEach((marker) => {
+                this.app.map_state.markers.forEach((marker) => {
                     ids.add(marker.get_id());
                 });
 
@@ -136,7 +136,7 @@ export class MapWrapper extends MapStateObserver {
 
         if (changes & (MapStateChange.LINES | MapStateChange.ZOOM)) {
             // update and add lines; also update lines on zoom to redraw arrow heads!
-            this.map_state.lines.forEach((line) => {
+            this.app.map_state.lines.forEach((line) => {
                 if (self.lines.has(line.get_id())) {
                     self.update_line_object(self.lines.get(line.get_id()), line);
                 } else {
@@ -145,9 +145,9 @@ export class MapWrapper extends MapStateObserver {
             });
 
             /* remove spurious lines */
-            if (this.lines.size > this.map_state.lines.length) {
+            if (this.lines.size > this.app.map_state.lines.length) {
                 const ids = new Set();
-                this.map_state.lines.forEach((line) => {
+                this.app.map_state.lines.forEach((line) => {
                     ids.add(line.get_id());
                 });
 

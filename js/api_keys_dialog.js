@@ -36,6 +36,7 @@ export class ApiKeysDialog {
             this.div.querySelector('[data-google-api-key]').value,
             this.div.querySelector('[data-bing-api-key]').value,
         );
+        this.app.reset_maps();
         this.hide();
     }
 }

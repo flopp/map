@@ -72,7 +72,7 @@ export class LeafletWrapper extends MapWrapper {
         ['zoom', 'move'].forEach((event_name) => {
             self.map.on(event_name, () => {
                 if (self.active && !self.automatic_event) {
-                    self.map_state.set_view(
+                    self.app.map_state.set_view(
                         to_coordinates(self.map.getCenter()),
                         self.map.getZoom(),
                     );
@@ -170,7 +170,7 @@ export class LeafletWrapper extends MapWrapper {
         };
 
         obj.on('drag', () => {
-            self.map_state.set_marker_coordinates(
+            self.app.map_state.set_marker_coordinates(
                 marker.get_id(),
                 to_coordinates(obj.getLatLng()),
                 null,
@@ -316,11 +316,11 @@ export class LeafletWrapper extends MapWrapper {
             return;
         }
 
-        const path = this.map_state
+        const path = this.app.map_state
             .get_marker(line.marker1)
             .coordinates.interpolate_geodesic_line(
-                this.map_state.get_marker(line.marker2).coordinates,
-                this.map_state.zoom,
+                this.app.map_state.get_marker(line.marker2).coordinates,
+                this.app.map_state.zoom,
             );
         const leaflet_path = path.map(from_coordinates);
         obj.setLatLngs(leaflet_path);

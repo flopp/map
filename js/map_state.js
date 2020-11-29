@@ -1038,8 +1038,7 @@ export class MapState {
 export class MapStateObserver {
     constructor(app) {
         this.app = app;
-        this.map_state = app.map_state;
-        this.map_state.register_observer(this);
+        app.map_state.register_observer(this);
     }
 
     update_state(_changes) {

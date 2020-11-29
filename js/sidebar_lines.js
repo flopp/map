@@ -18,10 +18,10 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
 
         $('#btn-add-line').click(() => {
-            self.map_state.add_line();
+            self.app.map_state.add_line();
         });
         $('#btn-delete-lines').click(() => {
-            self.map_state.delete_all_lines();
+            self.app.map_state.delete_all_lines();
         });
 
         this.settingsDiv = $('#line-settings');
@@ -47,7 +47,7 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
         if (changes & MapStateChange.LINES) {
             // update and add lines
-            this.map_state.lines.forEach((line) => {
+            this.app.map_state.lines.forEach((line) => {
                 if ($(`#line-${line.get_id()}`).length == 0) {
                     $('#lines').append(self.create_div(line));
                 }
@@ -75,9 +75,9 @@ export class SidebarLines extends MapStateObserver {
 
             /* remove spurious lines */
             const lines = $('#lines > .line');
-            if (lines.length > this.map_state.lines.length) {
+            if (lines.length > this.app.map_state.lines.length) {
                 const ids = new Set();
-                this.map_state.lines.forEach((line) => {
+                this.app.map_state.lines.forEach((line) => {
                     ids.add(line.get_id());
                 });
 
@@ -99,7 +99,7 @@ export class SidebarLines extends MapStateObserver {
         this.update_settings_display();
 
         if (changes & (MapStateChange.MARKERS | MapStateChange.LINES)) {
-            this.map_state.lines.forEach((line) => {
+            this.app.map_state.lines.forEach((line) => {
                 self.update_edit_values(line);
             });
         }
@@ -130,7 +130,7 @@ export class SidebarLines extends MapStateObserver {
         m.append(right);
 
         m.click(() => {
-            self.map_state.show_line(line);
+            self.app.map_state.show_line(line);
         });
 
         return m;
@@ -141,7 +141,7 @@ export class SidebarLines extends MapStateObserver {
             return '<NONE>';
         }
 
-        const marker = this.map_state.get_marker(id);
+        const marker = this.app.map_state.get_marker(id);
         if (marker) {
             return marker.name;
         }
@@ -189,7 +189,7 @@ export class SidebarLines extends MapStateObserver {
             {
                 label: 'Delete',
                 callback: () => {
-                    self.map_state.delete_line(line.get_id());
+                    self.app.map_state.delete_line(line.get_id());
                 },
             },
         ]);
@@ -202,7 +202,7 @@ export class SidebarLines extends MapStateObserver {
         }
 
         const markers = [{name: '<NONE>', id: -1}];
-        this.map_state.markers.forEach((marker) => {
+        this.app.map_state.markers.forEach((marker) => {
             markers.push({name: marker.name, id: marker.get_id()});
         });
         markers.sort((a, b) => {
@@ -255,8 +255,8 @@ export class SidebarLines extends MapStateObserver {
         line.marker2 = marker2;
         line.color = color;
 
-        this.map_state.update_line_storage(line);
-        this.map_state.update_observers(MapStateChange.LINES);
+        this.app.map_state.update_line_storage(line);
+        this.app.map_state.update_observers(MapStateChange.LINES);
     }
 
     settings_shown() {
@@ -297,7 +297,7 @@ export class SidebarLines extends MapStateObserver {
             return;
         }
 
-        this.map_state.set_default_line_settings({
+        this.app.map_state.set_default_line_settings({
             random_color: random_color,
             color: color,
         });
@@ -312,9 +312,9 @@ export class SidebarLines extends MapStateObserver {
 
         this.settingsDiv
             .find('[data-random-color]')
-            .prop('checked', this.map_state.settings_line_random_color);
+            .prop('checked', this.app.map_state.settings_line_random_color);
         this.settingsDiv
             .find('[data-color]')
-            .val(this.map_state.settings_line_color.to_hash_string());
+            .val(this.app.map_state.settings_line_color.to_hash_string());
     }
 }

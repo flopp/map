@@ -20,10 +20,10 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
 
         $('#btn-add-marker').click(() => {
-            self.map_state.add_marker();
+            self.app.map_state.add_marker();
         });
         $('#btn-delete-markers').click(() => {
-            self.map_state.delete_all_markers();
+            self.app.map_state.delete_all_markers();
         });
 
         this.settingsDiv = $('#marker-settings');
@@ -68,7 +68,7 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
 
         /* update and add markers */
-        this.map_state.markers.forEach((marker) => {
+        this.app.map_state.markers.forEach((marker) => {
             if ($(`#marker-${marker.get_id()}`).length == 0) {
                 $('#markers').append(self.create_div(marker));
             }
@@ -86,7 +86,7 @@ export class SidebarMarkers extends MapStateObserver {
             div.find('.marker-radius').text(circle);
             div.find('.marker-coordinates').text(
                 marker.coordinates.to_string_format(
-                    self.map_state.settings_marker_coordinates_format,
+                    self.app.map_state.settings_marker_coordinates_format,
                 ),
             );
 
@@ -95,9 +95,9 @@ export class SidebarMarkers extends MapStateObserver {
 
         /* remove spurious markers */
         const markers = $('#markers > .marker');
-        if (markers.length > this.map_state.markers.length) {
+        if (markers.length > this.app.map_state.markers.length) {
             const ids = new Set();
-            this.map_state.markers.forEach((marker) => {
+            this.app.map_state.markers.forEach((marker) => {
                 ids.add(marker.get_id());
             });
 
@@ -139,7 +139,7 @@ export class SidebarMarkers extends MapStateObserver {
         m.append(right);
 
         m.click(() => {
-            self.map_state.set_center(marker.coordinates, null);
+            self.app.map_state.set_center(marker.coordinates, null);
         });
 
         return m;
@@ -204,7 +204,7 @@ export class SidebarMarkers extends MapStateObserver {
             {
                 label: 'Delete',
                 callback: () => {
-                    self.map_state.delete_marker(marker.get_id());
+                    self.app.map_state.delete_marker(marker.get_id());
                 },
             },
         ]);
@@ -218,7 +218,7 @@ export class SidebarMarkers extends MapStateObserver {
         div.find('[data-name]').val(marker.name);
         div.find('[data-coordinates]').val(
             marker.coordinates.to_string_format(
-                this.map_state.settings_marker_coordinates_format,
+                this.app.map_state.settings_marker_coordinates_format,
             ),
         );
         div.find('[data-radius]').val(marker.radius);
@@ -245,8 +245,8 @@ export class SidebarMarkers extends MapStateObserver {
         marker.coordinates = coordinates;
         marker.radius = radius;
         marker.color = color;
-        this.map_state.update_marker_storage(marker);
-        this.map_state.update_observers(MapStateChange.MARKERS);
+        this.app.map_state.update_marker_storage(marker);
+        this.app.map_state.update_observers(MapStateChange.MARKERS);
     }
 
     settings_shown() {
@@ -292,7 +292,7 @@ export class SidebarMarkers extends MapStateObserver {
             return;
         }
 
-        this.map_state.set_default_marker_settings({
+        this.app.map_state.set_default_marker_settings({
             coordinates_format: coordinates_format,
             random_color: random_color,
             color: color,
@@ -309,15 +309,15 @@ export class SidebarMarkers extends MapStateObserver {
 
         this.settingsDiv
             .find('[data-coordinates-format]')
-            .val(this.map_state.settings_marker_coordinates_format);
+            .val(this.app.map_state.settings_marker_coordinates_format);
         this.settingsDiv
             .find('[data-random-color]')
-            .prop('checked', this.map_state.settings_marker_random_color);
+            .prop('checked', this.app.map_state.settings_marker_random_color);
         this.settingsDiv
             .find('[data-color]')
-            .val(this.map_state.settings_marker_color.to_hash_string());
+            .val(this.app.map_state.settings_marker_color.to_hash_string());
         this.settingsDiv
             .find('[data-radius]')
-            .val(this.map_state.settings_marker_radius);
+            .val(this.app.map_state.settings_marker_radius);
     }
 }

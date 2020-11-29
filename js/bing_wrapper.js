@@ -32,7 +32,7 @@ export class BingWrapper extends MapWrapper {
 
         Microsoft.Maps.Events.addHandler(this.map, 'viewchangeend', () => {
             if (self.active && !self.automatic_event) {
-                self.map_state.set_view(
+                self.app.map_state.set_view(
                     to_coordinates(self.map.getCenter()),
                     self.map.getZoom(),
                     self,
@@ -144,7 +144,7 @@ export class BingWrapper extends MapWrapper {
         };
 
         Microsoft.Maps.Events.addHandler(obj, 'drag', () => {
-            self.map_state.set_marker_coordinates(
+            self.app.map_state.set_marker_coordinates(
                 marker.get_id(),
                 to_coordinates(obj.getLocation()),
             );
@@ -253,11 +253,11 @@ export class BingWrapper extends MapWrapper {
             return;
         }
 
-        const path = this.map_state
+        const path = this.app.map_state
             .get_marker(line.marker1)
             .coordinates.interpolate_geodesic_line(
-                this.map_state.get_marker(line.marker2).coordinates,
-                this.map_state.zoom,
+                this.app.map_state.get_marker(line.marker2).coordinates,
+                this.app.map_state.zoom,
             );
         const bing_path = path.map(from_coordinates);
 

@@ -45,9 +45,9 @@ export class SidebarLayers extends MapStateObserver {
         }
 
         this.hillshading_checkbox = this.div.querySelector('[data-hillshading-layer]');
-        this.hillshading_checkbox.checked = this.map_state.hillshading;
+        this.hillshading_checkbox.checked = this.app.map_state.hillshading;
         this.hillshading_checkbox.onchange = () => {
-            self.map_state.set_hillshading(self.hillshading_checkbox.checked);
+            self.app.map_state.set_hillshading(self.hillshading_checkbox.checked);
         };
     }
 
@@ -57,27 +57,32 @@ export class SidebarLayers extends MapStateObserver {
         }
 
         /* baselayer */
-        this.baselayer_select.value = this.map_state.map_type;
+        this.baselayer_select.value = this.app.map_state.map_type;
         this.update_baselayer_help();
     }
 
     disable_layers(check_function) {
         this.baselayers.forEach((baselayer) => {
             if (check_function(baselayer.type)) {
-                baselayer.option.remove();
-                baselayer.option = null;
+                if (baselayer.option) {
+                    baselayer.option.remove();
+                    baselayer.option = null;
+                }
             }
         });
         this.update_baselayer_help();
     }
 
     enable_layers(check_function) {
+        const self = this;
         this.baselayers.forEach((baselayer) => {
             if (check_function(baselayer.type)) {
-                baselayer.option = document.createElement('option');
-                baselayer.option.value = baselayer.type;
-                baselayer.option.text = maptype2human(baselayer.type);
-                self.baselayer_select.add(baselayer.option);
+                if (!baselayer.option) {
+                    baselayer.option = document.createElement('option');
+                    baselayer.option.value = baselayer.type;
+                    baselayer.option.text = maptype2human(baselayer.type);
+                    self.baselayer_select.add(baselayer.option);
+                }
             }
         });
         this.update_baselayer_help();
