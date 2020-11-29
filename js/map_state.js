@@ -31,6 +31,7 @@ export class MapState {
         this.map_type = null;
         this.zoom = null;
         this.center = null;
+        this.hillshading = false;
 
         this.markers = [];
         this.markers_hash = new Map();
@@ -60,6 +61,7 @@ export class MapState {
         this.storage.set_coordinates('center', this.center);
         this.storage.set_int('zoom', this.zoom);
         this.storage.set('map_type', maptype2string(this.map_type));
+        this.storage.set_bool('hillshading', this.hillshading);
         this.storage.set('markers', this.get_marker_ids_string());
         this.markers.forEach((marker) => {
             self.update_marker_storage(marker);
@@ -116,6 +118,7 @@ export class MapState {
                 ),
             ),
         );
+        this.set_hillshading(this.storage.get_bool('hillshading', false));
 
         // markers
         const marker_ids = new Map();
@@ -225,6 +228,7 @@ export class MapState {
         ok_keys.add('center');
         ok_keys.add('zoom');
         ok_keys.add('map_type');
+        ok_keys.add('hillshading');
         ok_keys.add('sidebar_open');
         ok_keys.add('markers');
         this.markers.forEach((obj) => {
@@ -579,7 +583,13 @@ export class MapState {
     set_map_type(map_type) {
         this.map_type = map_type;
         this.storage.set('map_type', maptype2string(this.map_type));
-        this.update_observers(MapStateChange.MAPSTATE);
+        this.update_observers(MapStateChange.MAPTYPE);
+    }
+
+    set_hillshading(enabled) {
+        this.hillshading = enabled;
+        this.storage.set_bool('hillshading', this.hillshading);
+        this.update_observers(MapStateChange.MAPTYPE);
     }
 
     set_view(center, zoom) {

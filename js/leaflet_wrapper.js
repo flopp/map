@@ -65,6 +65,10 @@ export class LeafletWrapper extends MapWrapper {
             this.layer_stamen_terrain,
             this.layer_arcgis_worldimagery,
         ];
+
+        this.hillshading_enabled = false;
+        this.hillshading_layer = null;
+
         ['zoom', 'move'].forEach((event_name) => {
             self.map.on(event_name, () => {
                 if (self.active && !self.automatic_event) {
@@ -119,6 +123,24 @@ export class LeafletWrapper extends MapWrapper {
                 }
             });
             this.map.addLayer(layer);
+        }
+    }
+
+    set_hillshading(enabled) {
+        if (this.hillshading_enabled == enabled) {
+            return;
+        }
+
+        this.hillshading_enabled = enabled;
+        if (enabled) {
+            if (!this.hillshading_layer) {
+                this.hillshading_layer = L.tileLayer(
+                    'https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
+                    {attribution: 'Hillshading by wmflabs.org', maxZoom: 15});
+            }
+            this.map.addLayer(this.hillshading_layer);
+        } else if (this.hillshading_layer) {
+            this.map.removeLayer(this.hillshading_layer);
         }
     }
 
