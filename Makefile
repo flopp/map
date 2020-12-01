@@ -22,7 +22,7 @@ run-local: build-local
 .PHONY: build-upload
 build-upload:
 	mkdir -p ${UPLOAD_DIR} ${UPLOAD_DIR}/css ${UPLOAD_DIR}/img ${UPLOAD_DIR}/js
-	cp html/index.html ${UPLOAD_DIR}
+	sed -e "/<!--TRACKING-->/r .tracking" html/index.html > ${UPLOAD_DIR}/index.html
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${UPLOAD_DIR}/css/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${UPLOAD_DIR}/img
 	cp .secrets-production.js ${UPLOAD_DIR}/js/api-keys.js

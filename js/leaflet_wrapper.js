@@ -16,6 +16,8 @@ export class LeafletWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
         this.automatic_event = false;
+        this.hillshading_enabled = false;
+        this.hillshading_layer = null;
     }
 
     create_map_object(div_id) {
@@ -65,9 +67,6 @@ export class LeafletWrapper extends MapWrapper {
             this.layer_stamen_terrain,
             this.layer_arcgis_worldimagery,
         ];
-
-        this.hillshading_enabled = false;
-        this.hillshading_layer = null;
 
         ['zoom', 'move'].forEach((event_name) => {
             self.map.on(event_name, () => {

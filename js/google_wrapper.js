@@ -16,6 +16,8 @@ export class GoogleWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
         this.automatic_event = false;
+        this.hillshading_enabled = false;
+        this.hillshading_layer = null;
     }
 
     create_map_object(div_id) {
@@ -84,6 +86,29 @@ export class GoogleWrapper extends MapWrapper {
                 break;
             default:
                 break;
+        }
+    }
+
+    set_hillshading(enabled) {
+        if (this.hillshading_enabled == enabled) {
+            return;
+        }
+
+        this.hillshading_enabled = enabled;
+        if (enabled) {
+            if (!this.hillshading_layer) {
+                this.hillshading_layer = new google.maps.ImageMapType({
+                    getTileUrl: function (coord, zoom) {
+                        return `https://tiles.wmflabs.org/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
+                    },
+                    tileSize: new google.maps.Size(256, 256),
+                    name: "Hillshading",
+                    maxZoom: 15
+                });
+            }
+            this.map.overlayMapTypes.insertAt(0, this.hillshading_layer);
+        } else if (this.hillshading_layer) {
+            this.map.overlayMapTypes.removeAt(this.map.overlayMapTypes.indexOf(this.hillshading_layer));
         }
     }
 
