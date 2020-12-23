@@ -16,6 +16,8 @@ export class BingWrapper extends MapWrapper {
     constructor(div_id, app) {
         super(div_id, app);
         this.automatic_event = false;
+        this.hillshading_enabled = false;
+        this.hillshading_layer = null;
     }
 
     create_map_object(div_id) {
@@ -103,6 +105,27 @@ export class BingWrapper extends MapWrapper {
                 break;
             default:
                 break;
+        }
+    }
+
+    set_hillshading(enabled) {
+        if (this.hillshading_enabled == enabled) {
+            return;
+        }
+
+        this.hillshading_enabled = enabled;
+        if (enabled) {
+            if (!this.hillshading_layer) {
+                this.hillshading_layer = new Microsoft.Maps.TileLayer({
+                    mercator: new Microsoft.Maps.TileSource({
+                        uriConstructor: 'https://tiles.wmflabs.org/hillshading/{zoom}/{x}/{y}.png',
+                        maxZoom: 15
+                    })
+                });
+            }
+            this.map.layers.insert(this.hillshading_layer);
+        } else if (this.hillshading_layer) {
+            this.map.layers.remove(this.hillshading_layer);
         }
     }
 

@@ -366,7 +366,7 @@ export class App {
                 resolve();
                 Reflect.deleteProperty(window, callbackName);
             };
-            const url = `https://www.bing.com/api/maps/mapcontrol?key=${BING_API_KEY}&callback=${callbackName}`;
+            const url = `https://www.bing.com/api/maps/mapcontrol?key=${api_key}&callback=${callbackName}`;
             $.getScript(url);
         });
 
