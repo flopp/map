@@ -9,7 +9,7 @@ import {LeafletWrapper} from './leaflet_wrapper.js';
 import {LinkDialog} from './link_dialog.js';
 import {MapMenu} from './map_menu.js';
 import {MapState, MapStateChange} from './map_state.js';
-import {MapType} from './map_type.js';
+import {MapType, isBing, isGoogle} from './map_type.js';
 import {MultiMarkersDialog} from './multi_markers_dialog.js';
 import {Notifications} from './notifications.js';
 import {ProjectionDialog} from './projection_dialog.js';
@@ -88,11 +88,7 @@ export class App {
                 this.sidebar.sidebar_layers.enable_google_layers();
             }
         } else {
-            this.google_maps_error = true;
-            this.sidebar.sidebar_layers.disable_google_layers();
-            this.message_error(
-                'Google Maps layers disabled due to missing API key.',
-            );
+            this.google_maps_error_raised();
         }
 
         if (bing) {
@@ -101,11 +97,7 @@ export class App {
                 this.sidebar.sidebar_layers.enable_bing_layers();
             }
         } else {
-            this.bing_maps_error = true;
-            this.sidebar.sidebar_layers.disable_bing_layers();
-            this.message_error(
-                'Bing Maps layers disabled due to missing API key.',
-            );
+            this.bing_maps_error_raised();
         }
     }
 
@@ -246,7 +238,9 @@ export class App {
         );
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
-        this.switch_map(MapType.OPENSTREETMAP);
+        if (isGoogle(this.map_state.map_type)) {
+            this.switch_map(MapType.OPENSTREETMAP);
+        }
     }
 
     bing_maps_error_raised() {
@@ -255,7 +249,9 @@ export class App {
         );
         this.bing_maps_error = true;
         this.sidebar.sidebar_layers.disable_bing_layers();
-        this.switch_map(MapType.OPENSTREETMAP);
+        if (isBing(this.map_state.map_type)) {
+            this.switch_map(MapType.OPENSTREETMAP);
+        }
     }
 
     switch_to_google() {

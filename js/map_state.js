@@ -571,7 +571,7 @@ export class MapState {
         this.storage.set('google_api_key', this.google_api_key);
         this.bing_api_key = bing_api_key;
         this.storage.set('bing_api_key', this.bing_api_key);
-        this.update_observers(MapStateChange.API_KEY);
+        this.update_observers(MapStateChange.API_KEYS);
     }
 
     set_sidebar_open(section) {
