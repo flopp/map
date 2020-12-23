@@ -692,7 +692,6 @@ export class MapState {
     }
 
     reorder_markers(old_index, new_index) {
-        console.log(old_index, new_index);
         if (old_index === new_index) {
             return;
         }
@@ -766,7 +765,6 @@ export class MapState {
     }
 
     reorder_lines(old_index, new_index) {
-        console.log(old_index, new_index);
         if (old_index === new_index) {
             return;
         }
