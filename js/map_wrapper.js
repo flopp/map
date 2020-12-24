@@ -22,7 +22,9 @@ export class MapWrapper extends MapStateObserver {
     }
 
     set_hillshading(_enabled) {
-        console.log("The 'hillshading' feature is not implemented for this map wrapper.");
+        console.log(
+            "The 'hillshading' feature is not implemented for this map wrapper.",
+        );
     }
 
     set_map_view(_center, _zoom) {
@@ -97,7 +99,10 @@ export class MapWrapper extends MapStateObserver {
             this.set_hillshading(this.app.map_state.hillshading);
         }
         if (changes & MapStateChange.VIEW) {
-            this.set_map_view(this.app.map_state.center, this.app.map_state.zoom);
+            this.set_map_view(
+                this.app.map_state.center,
+                this.app.map_state.zoom,
+            );
         }
 
         if (changes & MapStateChange.MARKERS) {

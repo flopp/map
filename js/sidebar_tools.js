@@ -1,12 +1,27 @@
 import $ from 'jquery';
 
-import {MapStateObserver} from './map_state.js';
+import {MapStateChange, MapStateObserver} from './map_state.js';
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {
         super(app);
 
         const self = this;
+
+        const div = document.querySelector('#sidebar-tools');
+        this.language_select = div.querySelector('[data-language]');
+        [
+            {title: 'English', short: 'en'},
+            {title: 'Deutsch', short: 'de'},
+        ].forEach((language) => {
+            const option = document.createElement('option');
+            option.value = language.short;
+            option.text = language.title;
+            self.language_select.add(option);
+        });
+        this.language_select.onchange = () => {
+            self.app.map_state.set_language(self.language_select.value);
+        };
 
         $('#btn-link').click(() => {
             self.app.show_link_dialog();
@@ -29,8 +44,12 @@ export class SidebarTools extends MapStateObserver {
         });
     }
 
-    update_state(_changes) {
-        // nothing
+    update_state(changes) {
+        if ((changes & MapStateChange.LANGUAGE) == MapStateChange.NOTHING) {
+            return;
+        }
+
+        this.language_select.value = this.app.map_state.language;
     }
 
     export_json() {

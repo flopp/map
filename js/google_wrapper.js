@@ -102,13 +102,15 @@ export class GoogleWrapper extends MapWrapper {
                         return `https://tiles.wmflabs.org/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
                     },
                     tileSize: new google.maps.Size(256, 256),
-                    name: "Hillshading",
-                    maxZoom: 15
+                    name: 'Hillshading',
+                    maxZoom: 15,
                 });
             }
             this.map.overlayMapTypes.insertAt(0, this.hillshading_layer);
         } else if (this.hillshading_layer) {
-            this.map.overlayMapTypes.removeAt(this.map.overlayMapTypes.indexOf(this.hillshading_layer));
+            this.map.overlayMapTypes.removeAt(
+                this.map.overlayMapTypes.indexOf(this.hillshading_layer),
+            );
         }
     }
 

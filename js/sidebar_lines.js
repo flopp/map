@@ -117,10 +117,10 @@ export class SidebarLines extends MapStateObserver {
         const center = $('<div class="line-center"></div>');
         center.append(
             $(`<table>
-            <tr><td class="has-text-weight-semibold">From:</td><td class="line-from"></td></tr>
-            <tr><td class="has-text-weight-semibold">To:</td><td class="line-to"></td></tr>
-            <tr><td class="has-text-weight-semibold">Length:</td><td class="line-distance"></td></tr>
-            <tr><td class="has-text-weight-semibold">Bearing:</td><td class="line-bearing"></td></tr>
+            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.from')}</td><td class="line-from"></td></tr>
+            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.to')}</td><td class="line-to"></td></tr>
+            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.length')}</td><td class="line-distance"></td></tr>
+            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.bearing')}</td><td class="line-bearing"></td></tr>
         </table>`),
         );
         m.append(center);
@@ -153,14 +153,14 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
         const div = $(`<div id="line-edit-${line.get_id()}" class="edit">`);
 
-        const from = create_select_input('From', 'data-from');
-        const to = create_select_input('To', 'data-to');
-        const color = create_color_input('Color', 'data-color', 'Color');
+        const from = create_select_input(this.app.translate('sidebar.lines.edit_from'), 'data-from');
+        const to = create_select_input(this.app.translate('sidebar.lines.edit_to'), 'data-to');
+        const color = create_color_input(this.app.translate('sidebar.lines.edit_color'), 'data-color', this.app.translate('sidebar.lines.edit_color_placeholder'));
 
-        const submit_button = create_button('Submit', () => {
+        const submit_button = create_button(this.app.translate('general.submit'), () => {
             self.submit_edit(line);
         });
-        const cancel_button = create_button('Cancel', () => {
+        const cancel_button = create_button(this.app.translate('general.cancel'), () => {
             div.remove();
         });
         const buttons = $('<div class="field is-grouped">')
@@ -176,7 +176,7 @@ export class SidebarLines extends MapStateObserver {
         const self = this;
         return create_dropdown(`dropdown-line-${line.get_id()}`, [
             {
-                label: 'Edit',
+                label: this.app.translate('sidebar.lines.edit'),
                 callback: () => {
                     if ($(`#line-edit-${line.get_id()}`).length == 0) {
                         self.create_edit_div(line).insertAfter(
@@ -187,7 +187,7 @@ export class SidebarLines extends MapStateObserver {
                 },
             },
             {
-                label: 'Delete',
+                label: this.app.translate('sidebar.lines.delete'),
                 callback: () => {
                     self.app.map_state.delete_line(line.get_id());
                 },
@@ -245,7 +245,7 @@ export class SidebarLines extends MapStateObserver {
         const color = Color.from_string(div.find('[data-color]').val());
 
         if (!color) {
-            this.app.message_error('bad values.');
+            this.app.message_error(this.app.translate('sidebar.lines.bad_values_message'));
             return;
         }
 
@@ -293,7 +293,7 @@ export class SidebarLines extends MapStateObserver {
         );
 
         if (color === null) {
-            this.app.message_error('bad values');
+            this.app.message_error(this.app.translate('sidebar.lines.bad_values_message'));
             return;
         }
 

@@ -66,7 +66,7 @@
             <div id="sidebar">
                 <div class="sidebar-container" id="sidebar-location">
                     <div class="header">
-                        <h2>Location</h2>
+                        <h2 data-i18n="sidebar.search.title">Search</h2>
                         <span class="close">
                             <svg class="icon24">
                                 <use xlink:href="img/feather-sprite.svg#x"/>
@@ -77,9 +77,9 @@
                     <div class="content">
                         <div class="field">
                             <div class="control">
-                                <a id="btn-locate" class="button is-fullwidth is-success">LOCATE ME!</a>
+                                <a id="btn-locate" data-i18n="sidebar.search.locate_me" class="button is-fullwidth is-success">Locate Me</a>
                             </div>
-                            <p class="help">Center the map on your current location.</p>
+                            <p data-i18n="sidebar.search.locate_me_help" class="help">Center the map on your current location.</p>
                         </div>
 
                         <hr />
@@ -87,7 +87,7 @@
                         <div class="field">
                             <div class="field has-addons">
                                 <div class="control">
-                                    <input id="input-search" class="input" type="text" placeholder="Location">
+                                    <input id="input-search" class="input" type="text" placeholder="Location" data-i18n="sidebar.search.search_placeholder" data-i18n-target="placeholder">
                                 </div>
                                 <div class="control">
                                     <a id="btn-search" class="button is-info">
@@ -97,14 +97,14 @@
                                     </a>
                                 </div>
                             </div>
-                            <p class="help">Search for a location (enter e.g. a city name or coordinates in various formats) and center the map.</p>
+                            <p data-i18n="sidebar.search.search_help" class="help">Search for a location (enter e.g. a city name or coordinates in various formats) and center the map.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="sidebar-container" id="sidebar-layers">
                     <div class="header">
-                        <h2>Layers</h2>
+                        <h2 data-i18n="sidebar.layers.title">Layers</h2>
                         <span class="close">
                             <svg class="icon24">
                                 <use xlink:href="img/feather-sprite.svg#x"/>
@@ -114,27 +114,27 @@
 
                     <div class="content">
                         <div class="field">
-                            <label class="label">Base Layer:</label>
+                            <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
                             <div class="control">
                                 <div class="select is-fullwidth">
                                     <select data-baselayer></select>
                                 </div>
                             </div>
-                            <p class="help is-hidden" data-baselayer-help>Google Maps and Bing Maps layers have been disabled</p>
+                            <p class="help is-hidden" data-baselayer-help data-i18n="sidebar.layers.base_help">Google Maps and Bing Maps layers have been disabled</p>
                         </div>
 
                         <hr />
 
                         <div class="buttons">
-                            <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button>Add Your Own API Keys</a>
+                            <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button data-i18n="sidebar.layers.apikeys">Add Your Own API Keys</a>
                         </div>
 
                         <div class="field">
-                            <label class="label">Additional Layers:</label>
+                            <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
                             <div class="control">
                                 <label class="checkbox">
                                     <input data-hillshading-layer type="checkbox" />
-                                    Hillshading
+                                    <span data-i18n="sidebar.layers.hillshading">Hillshading</span>
                                 </label>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
 
                 <div class="sidebar-container" id="sidebar-markers">
                     <div class="header">
-                        <h2>Markers</h2>
+                        <h2 data-i18n="sidebar.markers.title">Markers</h2>
                         <span class="close">
                             <svg class="icon24">
                                 <use xlink:href="img/feather-sprite.svg#x"/>
@@ -153,10 +153,10 @@
                     <div class="content">
                         <div class="field is-grouped">
                             <p class="control">
-                                <a id="btn-add-marker" class="button is-success">ADD</a>
+                                <a id="btn-add-marker" class="button is-success" data-i18n="general.add">Add</a>
                             </p>
                             <p class="control">
-                                <a id="btn-delete-markers" class="button is-danger">DELETE ALL</a>
+                                <a id="btn-delete-markers" class="button is-danger" data-i18n="general.delete_all">Delete All</a>
                             </p>
                             <p class="control">
                                 <a id="btn-marker-settings" class="button">
@@ -168,7 +168,7 @@
                         </div>
                         <div id="marker-settings">
                             <div class="field">
-                                <label class="label">Coordinates Display Format</label>
+                                <label class="label" data-i18n="sidebar.markers.settings.coordinates">Coordinates Display Format</label>
                                 <div class="control">
                                     <div class="select">
                                         <select data-coordinates-format></select>
@@ -176,11 +176,11 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label">Default Color</label>
+                                <label class="label" data-i18n="sidebar.markers.settings.defaultcolor">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
                                         <input data-random-color type="checkbox" />
-                                        Use random colors
+                                        <span data-i18n="sidebar.markers.settings.randomcolors">Use random colors</span>
                                     </label>
                                 </div>
                                 <div class="control">
@@ -188,17 +188,17 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label">Default Circle Radius (m)</label>
+                                <label class="label" data-i18n="sidebar.markers.settings.defaultradius">Default Circle Radius (m)</label>
                                 <div class="control">
-                                    <input class="input" data-radius type="text" placeholder="Circle Radius">
+                                    <input class="input" data-radius type="text" placeholder="Circle Radius" data-i18n="sidebar.markers.settings.defaultradius_placeholder" data-i18n-target="placeholder">
                                 </div>
                             </div>
                             <div class="field is-grouped">
                                 <div class="control">
-                                    <button class="button" data-submit>Submit</button>
+                                    <button class="button" data-submit data-i18n="general.submit">Submit</button>
                                 </div>
                                 <div class="control">
-                                    <button class="button" data-cancel>Cancel</button>
+                                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +210,7 @@
 
                 <div class="sidebar-container" id="sidebar-lines">
                     <div class="header">
-                        <h2>Lines</h2>
+                        <h2 data-i18n="sidebar.lines.title">Lines</h2>
                         <span class="close">
                             <svg class="icon24">
                                 <use xlink:href="img/feather-sprite.svg#x"/>
@@ -220,10 +220,10 @@
                     <div class="content">
                         <div class="field is-grouped">
                             <p class="control">
-                                <a id="btn-add-line" class="button is-success">ADD</a>
+                                <a id="btn-add-line" class="button is-success" data-i18n="general.add">Add</a>
                             </p>
                             <p class="control">
-                                <a id="btn-delete-lines" class="button is-danger">DELETE ALL</a>
+                                <a id="btn-delete-lines" class="button is-danger" data-i18n="general.delete_all">Delete All</a>
                             </p>
                             <p class="control">
                                 <a id="btn-line-settings" class="button">
@@ -235,11 +235,11 @@
                         </div>
                         <div id="line-settings">
                             <div class="field">
-                                <label class="label">Default Color</label>
+                                <label class="label" data-i18n="sidebar.lines.settings.defaultcolor">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
                                         <input data-random-color type="checkbox" />
-                                        Use random colors
+                                        <span data-i18n="sidebar.lines.settings.randomcolors">Use random colors</span>
                                     </label>
                                 </div>
                                 <div class="control">
@@ -248,10 +248,10 @@
                             </div>
                             <div class="field is-grouped">
                                 <div class="control">
-                                    <button class="button" data-submit>Submit</button>
+                                    <button class="button" data-submit data-i18n="general.submit">Submit</button>
                                 </div>
                                 <div class="control">
-                                    <button class="button" data-cancel>Cancel</button>
+                                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -263,7 +263,7 @@
 
                 <div class="sidebar-container" id="sidebar-tools">
                     <div class="header">
-                        <h2>Tools</h2>
+                        <h2 data-i18n="sidebar.tools.title">Tools</h2>
                         <span class="close">
                             <svg class="icon24">
                                 <use xlink:href="img/feather-sprite.svg#x"/>
@@ -272,43 +272,54 @@
                     </div>
                     <div class="content">
                         <div class="field">
+                            <label class="label" data-i18n="sidebar.tools.language">Language</label>
                             <div class="control">
-                                <a id="btn-link" class="button is-fullwidth is-success">Create Link</a>
+                                <div class="select is-fullwidth">
+                                    <select data-language></select>
+                                </div>
                             </div>
-                            <p class="help">Create a link to this map, e.g. for sharing it with others.</p>
                         </div>
 
                         <hr />
 
                         <div class="field">
-                            <div class="field">
+                            <div class="control">
+                                <a id="btn-link" class="button is-fullwidth is-success" data-i18n="sidebar.tools.createlink">Create Link</a>
+                            </div>
+                            <p class="help" data-i18n="sidebar.tools.createlink_help">Create a link to this map, e.g. for sharing it with others.</p>
+                        </div>
+
+                        <hr />
+
+                        <div class="field">
+                            <div class="field"></span>
                                 <div class="control">
-                                    <a id="btn-export-json" class="button is-fullwidth">Export Full Map State (JSON)</a>
+                                    <a id="btn-export-json" class="button is-fullwidth" data-i18n="sidebar.tools.exportjson">Export Full Map State (JSON)</a>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="control">
                                     <input id="inp-import-json" style="display: none;" type="file" name="files" />
-                                    <a id="btn-import-json" class="button is-fullwidth">Import Full Map State (JSON)</a>
+                                    <a id="btn-import-json" class="button is-fullwidth" data-i18n="sidebar.tools.importjson">Import Full Map State (JSON)</a>
                                 </div>
                             </div>
-                            <p class="help">Export/import a JSON file containing the full map state.</p>
+                            <p class="help" data-i18n="sidebar.tools.exportjson_help">Export/import a JSON file containing the full map state.</p>
                         </div>
 
                         <hr />
 
                         <div class="field">
                             <div class="control">
-                                <a id="btn-multi-markers" class="button is-fullwidth is-success">Create Multiple Markers</a>
+                                <a id="btn-multi-markers" class="button is-fullwidth is-success" data-i18n="sidebar.tools.createmarkers">Create Multiple Markers</a>
                             </div>
-                            <p class="help">Create multiple markes at once, i.e. by providing a list of coordinates.</p>
+                            <p class="help" data-i18n="sidebar.tools.createmarkers_help">Create multiple markes at once, i.e. by providing a list of coordinates.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="sidebar-container" id="sidebar-info">
                     <div class="header">
-                        <h2>Info</h2>
+                        <h2 data-i18n="sidebar.info.title">Info</h2>
                         <span class="close">
                             <svg class="icon24">
                                 <use xlink:href="img/feather-sprite.svg#x"/>
@@ -317,8 +328,8 @@
                     </div>
                     <div class="content">
                         <div class="field">
-                            <label class="label">Contact/Mail</label>
-                            <p class="help">If you have any suggestions please feel free to contact me via e-mail.</p>
+                            <label class="label" data-i18n="sidebar.info.contact">Contact/Mail</label>
+                            <p class="help" data-i18n="sidebar.info.contact_help">If you have any suggestions please feel free to contact me via e-mail.</p>
                             <div class="control">
                                 <a class="button is-fullwidth is-success" href="mailto:mail@florian-pigorsch.de" target="_blank">mail@florian-pigorsch.de</a>
                             </div>
@@ -327,8 +338,8 @@
                         <hr />
 
                         <div class="field">
-                            <label class="label">Source Code/Github</label>
-                            <p class="help">The code for this website is open source, hosted at Github.</p>
+                            <label class="label" data-i18n="sidebar.info.sources">Source Code/Github</label>
+                            <p class="help" data-i18n="sidebar.info.sources_help">The code for this website is open source, hosted at Github.</p>
                             <div class="control">
                                 <a class="button is-fullwidth is-success" href="https://github.com/flopp/map" target="_blank">github.com/flopp/map</a>
                             </div>
@@ -337,8 +348,8 @@
                         <hr />
 
                         <div class="field">
-                            <label class="label">Support/Paypal</label>
-                            <p class="help">This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.</p>
+                            <label class="label" data-i18n="sidebar.info.support">Support/Paypal</label>
+                            <p class="help" data-i18n="sidebar.info.support_help">This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.</p>
                             <div class="control">
                                 <a class="button is-fullwidth is-success" href="https://paypal.me/FPigorsch" target="_blank">paypal.me/FPigorsch</a>
                             </div>
@@ -353,10 +364,10 @@
 
             <div id="map-contextmenu" class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                    <a id="map-contextmenu-addmarker" class="dropdown-item">ADD MARKER</a>
-                    <a id="map-contextmenu-deletemarker" class="dropdown-item">DELETE MARKER</a>
-                    <a id="map-contextmenu-projection" class="dropdown-item">WAYPOINT PROJECTION</a>
-                    <a id="map-contextmenu-centermap" class="dropdown-item">CENTER MAP HERE</a>
+                    <a id="map-contextmenu-addmarker" class="dropdown-item" data-i18n="menu.addmarker">ADD MARKER</a>
+                    <a id="map-contextmenu-deletemarker" class="dropdown-item" data-i18n="menu.deletemarker">DELETE MARKER</a>
+                    <a id="map-contextmenu-projection" class="dropdown-item" data-i18n="menu.waypointprojection">WAYPOINT PROJECTION</a>
+                    <a id="map-contextmenu-centermap" class="dropdown-item" data-i18n="menu.centermap">CENTER MAP HERE</a>
                 </div>
             </div>
 
@@ -364,35 +375,45 @@
                 <div class="modal-background"></div>
                     <div class="modal-card">
                         <header class="modal-card-head">
-                            <h2 class="modal-card-title">Add Your Own API Keys</h2>
+                            <h2 class="modal-card-title" data-i18n="dialog.apikeys.title">Add Your Own API Keys</h2>
                             <button class="delete" data-cancel aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            <p>Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps/Bing Maps servers, and they are never part of any data export.</p>
+                            <p data-i18n="dialog.apikeys.help">Adding your own API keys enables access to map layers from Google Maps and Bing Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps/Bing Maps servers, and they are never part of any data export.</p>
 
-                            <h3 class="is-size-4">Google Maps API Key</h3>
-                            <p>
-                                Get your API Key for the Google Maps Javascript API from <a href="https://console.developers.google.com" target="_blank">Google's API console</a>.
+                            <h3 class="is-size-4" data-i18n="dialog.apikeys.google">Google Maps API Key</h3>
+                            <p data-i18n="dialog.apikeys.google_help">
+                                Get your API Key for the Google Maps Javascript API from Google's API console.
                             </p>
                             <div class="field">
                                 <div class="control">
-                                    <input data-google-api-key class="input" type="text" placeholder="Google API Key">
+                                    <a class="button is-success" href="https://console.developers.google.com" target="_blank" data-i18n="dialog.apikeys.google_link">Google API Console</a>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.apikeys.google_placeholder" data-i18n-target="placeholder">
                                 </div>
                             </div>
 
-                            <h3 class="is-size-4">Bing Maps API Key</h3>
-                            <p>
-                                Get your API Key for Bing Maps directly from <a href="https://www.microsoft.com/en-us/maps/create-a-bing-maps-key" target="_blank">Microsoft</a>.
+                            <h3 class="is-size-4" data-i18n="dialog.apikeys.bing">Bing Maps API Key</h3>
+                            <p data-i18n="dialog.apikeys.bing_help">
+                                Get your API Key for Bing Maps directly from Microsoft.
                             </p>
                             <div class="field">
                                 <div class="control">
-                                    <input data-bing-api-key class="input" type="text" placeholder="Bing Maps API Key">
+                                    <a class="button is-success" href="https://www.microsoft.com/en-us/maps/create-a-bing-maps-key" target="_blank" data-i18n="dialog.apikeys.bing_link">Microsoft</a>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-bing-api-key class="input" type="text" placeholder="Bing Maps API Key" data-i18n="dialog.apikeys.bing_placeholder" data-i18n-target="placeholder">
                                 </div>
                             </div>
                         </section>
                         <footer class="modal-card-foot">
-                            <button class="button is-success" data-ok>Apply</button>
-                            <button class="button" data-cancel>Cancel</button>
+                            <button class="button is-success" data-ok data-i18n="general.apply">Apply</button>
+                            <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                         </footer>
                     </div>
                 </div>
@@ -402,57 +423,57 @@
                 <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head">
-                        <h2 class="modal-card-title">Waypoint Projection</h2>
+                        <h2 class="modal-card-title" data-i18n="dialog.projection.title">Waypoint Projection</h2>
                         <button class="delete" data-cancel></button>
                     </header>
                     <section class="modal-card-body">
-                        <h3 class="is-size-4">Projection Data</h3>
+                        <h3 class="is-size-4" data-i18n="dialog.projection.data">Projection Data</h3>
                         <div class="field">
                             <div class="control">
-                                <input data-distance class="input" type="text" placeholder="Distance (m)">
+                                <input data-distance class="input" type="text" placeholder="Distance (m)" data-i18n="dialog.projection.distance" data-i18n-target="placeholder">
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                <input data-bearing class="input" type="text" placeholder="Bearing (°)">
-                            </div>
-                        </div>
-
-                        <h3 class="is-size-4">Created Marker</h3>
-                        <div class="field">
-                            <div class="control">
-                                <input data-targetname class="input" type="text" placeholder="Name of created marker">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-targetcolor class="input" type="color" placeholder="Color radius of created marker">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-targetradius class="input" type="text" placeholder="Circle radius of created marker">
+                                <input data-bearing class="input" type="text" placeholder="Bearing (°)" data-i18n="dialog.projection.bearing" data-i18n-target="placeholder">
                             </div>
                         </div>
 
-                        <h3 class="is-size-4">Created Line</h3>
+                        <h3 class="is-size-4" data-i18n="dialog.projection.marker">Created Marker</h3>
+                        <div class="field">
+                            <div class="control">
+                                <input data-targetname class="input" type="text" placeholder="Name of created marker" data-i18n="dialog.projection.marker_name" data-i18n-target="placeholder">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input data-targetcolor class="input" type="color" placeholder="Color of created marker" data-i18n="dialog.projection.marker_color" data-i18n-target="placeholder">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input data-targetradius class="input" type="text" placeholder="Circle radius of created marker" data-i18n="dialog.projection.marker_radius" data-i18n-target="placeholder">
+                            </div>
+                        </div>
+
+                        <h3 class="is-size-4" data-i18n="dialog.projection.line">Created Line</h3>
                         <div class="field">
                             <div class="control">
                                 <label class="checkbox">
                                     <input data-line type="checkbox">
-                                    Create line?
+                                    <span data-i18n="dialog.projection.createline">Create line?</span>
                                 </label>
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                <input data-linecolor class="input" type="color" placeholder="Color of created line">
+                                <input data-linecolor class="input" type="color" placeholder="Color of created line" data-i18n="dialog.projection.line_color" data-i18n-target="placeholder">
                             </div>
                         </div>
                     </section>
                     <footer class="modal-card-foot">
-                        <button class="button is-success" data-project>Perform Projection</button>
-                        <button class="button" data-cancel>Cancel</button>
+                        <button class="button is-success" data-project data-i18n="dialog.projection.project">Perform Projection</button>
+                        <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                     </footer>
                 </div>
             </div>
@@ -461,26 +482,26 @@
                 <div class="modal-background"></div>
                     <div class="modal-card">
                         <header class="modal-card-head">
-                            <h2 class="modal-card-title">Create Map Link</h2>
+                            <h2 class="modal-card-title" data-i18n="dialog.link.title">Create Map Link</h2>
                             <button class="delete" data-cancel aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            <p>You can share this link with others to enable them to view your current map state.</p>
+                            <p data-i18n="dialog.link.help">You can share this link with others to enable them to view your current map state.</p>
 
                             <div class="field has-addons">
                                 <div class="control is-expanded">
                                     <input id="link-dialog-input" class="input" type="text" />
                                 </div>
                                 <div class="control">
-                                    <a id="link-dilog-copy-button" data-clipboard-target="#link-dialog-input" class="button is-info">
+                                    <a id="link-dilog-copy-button" data-clipboard-target="#link-dialog-input" class="button is-info" data-i18n="dialog.link.copy">
                                         Copy
                                     </a>
                                 </div>
-                                <p class="help is-hidden">TODO: Link too long</p>
+                                <p class="help is-hidden" data-i18n="dialog.link.toolong">TODO: Link too long</p>
                             </div>
                         </section>
                         <footer class="modal-card-foot">
-                            <button class="button" data-cancel>Close</button>
+                            <button class="button" data-cancel data-i18n="general.cancel">Close</button>
                         </footer>
                     </div>
                 </div>
@@ -490,17 +511,17 @@
                 <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head">
-                        <h2 class="modal-card-title">Create Multiple Markers</h2>
+                        <h2 class="modal-card-title" data-i18n="dialog.multimarkers.title">Create Multiple Markers</h2>
                         <button class="delete" data-cancel aria-label="close"></button>
                     </header>
                     <section class="modal-card-body">
-                        <h3 class="is-size-4">Common Marker Attributes</h3>
+                        <h3 class="is-size-4" data-i18n="dialog.multimarkers.commonattributes">Common Marker Attributes</h3>
 
                         <div class="columns">
                             <div class="column">
                                 <label class="checkbox">
                                     <input type="checkbox" data-use-common-name>
-                                    Name Prefix
+                                    <span data-i18n="dialog.multimarkers.name">Name Prefix</span>
                                 </label>
                                 <div class="field">
                                     <div class="control">
@@ -511,7 +532,7 @@
                             <div class="column">
                                 <label class="checkbox">
                                     <input type="checkbox" data-use-common-color>
-                                    Color
+                                    <span data-i18n="dialog.multimarkers.color">Color</span>
                                 </label>
                                 <div class="field">
                                     <div class="control">
@@ -522,7 +543,7 @@
                             <div class="column">
                                 <label class="checkbox">
                                     <input type="checkbox" data-use-common-radius>
-                                    Circle Radius
+                                    <span data-i18n="dialog.multimarkers.radius">Circle Radius (m)</span>
                                 </label>
                                 <div class="field">
                                     <div class="control">
@@ -532,17 +553,17 @@
                             </div>
                         </div>
 
-                        <h3 class="is-size-4">Marker Data</h3>
+                        <h3 class="is-size-4" data-i18n="dialog.multimarkers.data">Marker Data</h3>
                         <p>
-                            Data format per line:<br />
+                            <span data-i18n="dialog.multimarkers.format">Data format per line:</span><br />
                             <span data-format class="is-family-code"></span>
                         </p>
 
                         <textarea data-marker-data class="textarea is-family-code" placeholder="Marker Data"></textarea>
                     </section>
                     <footer class="modal-card-foot">
-                        <button class="button is-success" data-go>Create Markers</button>
-                        <button class="button" data-cancel>Cancel</button>
+                        <button class="button is-success" data-go data-i18n="dialog.multimarkers.create">Create Markers</button>
+                        <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                     </footer>
                 </div>
             </div>

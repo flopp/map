@@ -44,10 +44,14 @@ export class SidebarLayers extends MapStateObserver {
             this.disable_bing_layers();
         }
 
-        this.hillshading_checkbox = this.div.querySelector('[data-hillshading-layer]');
+        this.hillshading_checkbox = this.div.querySelector(
+            '[data-hillshading-layer]',
+        );
         this.hillshading_checkbox.checked = this.app.map_state.hillshading;
         this.hillshading_checkbox.onchange = () => {
-            self.app.map_state.set_hillshading(self.hillshading_checkbox.checked);
+            self.app.map_state.set_hillshading(
+                self.hillshading_checkbox.checked,
+            );
         };
     }
 

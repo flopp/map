@@ -63,11 +63,11 @@ export class ProjectionDialog {
         );
 
         if (distance === null || distance <= 0) {
-            this.app.message_error('Bad distance');
+            this.app.message_error(this.app.translate('dialog.projection.bad_distance_message'));
             return;
         }
         if (bearing === null) {
-            this.app.message_error('Bad bearing');
+            this.app.message_error(this.app.translate('dialog.projection.bad_bearing_message'));
             return;
         }
 

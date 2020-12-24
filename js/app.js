@@ -5,6 +5,7 @@ import {BingWrapper} from './bing_wrapper.js';
 import {Coordinates} from './coordinates.js';
 import {GoogleWrapper} from './google_wrapper.js';
 import {IconFactory} from './icon_factory.js';
+import {Language} from './language.js';
 import {LeafletWrapper} from './leaflet_wrapper.js';
 import {LinkDialog} from './link_dialog.js';
 import {MapMenu} from './map_menu.js';
@@ -19,6 +20,7 @@ import {Sidebar} from './sidebar.js';
 
 export class App {
     constructor(id_leaflet, id_google, id_bing) {
+        this.lang = null;
         this.notifications = new Notifications();
 
         this.google_maps_error = false;
@@ -27,6 +29,9 @@ export class App {
         this.console_filter();
 
         this.map_state = new MapState(this);
+
+        this.lang = new Language(this);
+
         this.map_state.restore_from_url();
         this.map_state.restore();
         this.map_state.clear_storage();
@@ -234,7 +239,7 @@ export class App {
 
     google_maps_error_raised() {
         this.message_error(
-            'Google Maps layers disabled due to invalid API key or some API error.',
+            this.translate('messages.layer_disabled').replace('{1}', 'Google Maps'),
         );
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
@@ -245,7 +250,7 @@ export class App {
 
     bing_maps_error_raised() {
         this.message_error(
-            'Bing Maps layers disabled due to invalid API key or some API error.',
+            this.translate('messages.layer_disabled').replace('{1}', 'Bing Maps'),
         );
         this.bing_maps_error = true;
         this.sidebar.sidebar_layers.disable_bing_layers();
@@ -277,7 +282,10 @@ export class App {
         }
 
         let api_key = this.map_state.google_api_key;
-        if ((api_key === '') && (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)) {
+        if (
+            api_key === '' &&
+            (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)
+        ) {
             api_key = GOOGLE_API_KEY;
         }
 
@@ -339,7 +347,10 @@ export class App {
         }
 
         let api_key = this.map_state.bing_api_key;
-        if ((api_key === '') && (typeof BING_API_KEY == 'undefined' || BING_API_KEY.length < 32)) {
+        if (
+            api_key === '' &&
+            (typeof BING_API_KEY == 'undefined' || BING_API_KEY.length < 32)
+        ) {
             api_key = BING_API_KEY;
         }
 
@@ -419,11 +430,11 @@ export class App {
                     );
                 },
                 (error) => {
-                    self.message_error(error.message);
+                    self.message_error(self.translate('messages.geolocation_error').replace('{1}', error.message));
                 },
             );
         } else {
-            self.message_error('Geolocation services are not available.');
+            self.message_error(self.translate('messages.geolocation_not_available'));
         }
     }
 
@@ -450,11 +461,11 @@ export class App {
                         null,
                     );
                 } else {
-                    self.message_error('Cannot find a matching location.');
+                    self.message_error(self.lang.translate('search.noresult'));
                 }
             })
             .fail(() => {
-                self.message_error("Failed to contact 'Nominatim' server.");
+                self.message_error(self.lang.translate('search.servererror'));
             });
     }
 
@@ -475,5 +486,12 @@ export class App {
 
     show_link_dialog() {
         this.link_dialog.show();
+    }
+
+    translate(key) {
+        if (this.lang === null) {
+            return key;
+        }
+        return this.lang.translate(key);
     }
 }

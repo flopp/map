@@ -30,10 +30,13 @@
         "webpack-cli": "^3.3.12"
     },
     "dependencies": {
+        "@alienfast/i18next-loader": "^1.1.4",
         "bulma": "^0.9.0",
         "clipboard": "^2.0.6",
-        "geographiclib": "^1.50.0",
         "feather-icons": "^4.28.0",
+        "geographiclib": "^1.50.0",
+        "i18next": "^19.8.4",
+        "i18next-browser-languagedetector": "^6.0.1",
         "jquery": "^3.5.1",
         "leaflet": "^1.6.0",
         "sortablejs": "^1.10.2"

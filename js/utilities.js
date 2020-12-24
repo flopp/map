@@ -23,9 +23,9 @@ const parse_int = (str) => {
 const create_text_input = (label, data_tag, placeholder) => {
     return $(`
         <div class="field">
-            <label class="label">${label}</label>
+            <label class="label" data-i18n="${label}">${label}</label>
             <div class="control">
-                <input class="input is-fullwidth" type="text" ${data_tag} placeholder="${placeholder}">
+                <input class="input is-fullwidth" type="text" ${data_tag} placeholder="${placeholder}" data-i18n="${placeholder}" data-i18n-target="placeholder">
             </div>
         </div>`);
 };
@@ -33,9 +33,9 @@ const create_text_input = (label, data_tag, placeholder) => {
 const create_color_input = (label, data_tag, placeholder) => {
     return $(`
         <div class="field">
-            <label class="label">${label}</label>
+            <label class="label" data-i18n="${label}">${label}</label>
             <div class="control">
-                <input class="input is-fullwidth" type="color" ${data_tag} placeholder="${placeholder}">
+                <input class="input is-fullwidth" type="color" ${data_tag} placeholder="${placeholder}" data-i18n="${placeholder}" data-i18n-target="placeholder">
             </div>
         </div>`);
 };
@@ -43,7 +43,7 @@ const create_color_input = (label, data_tag, placeholder) => {
 const create_select_input = (label, data_tag) => {
     return $(`
         <div class="field">
-            <label class="label">${label}</label>
+            <label class="label" data-i18n="${label}">${label}</label>
             <div class="control">
                 <div class="select is-fullwidth">
                     <select ${data_tag}></select>

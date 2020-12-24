@@ -76,8 +76,8 @@ export class SidebarMarkers extends MapStateObserver {
 
             const circle =
                 marker.radius > 0
-                    ? `Circle: ${marker.radius.toFixed(2)} m`
-                    : 'No circle';
+                    ? self.app.translate('sidebar.markers.circle').replace('{1}', marker.radius.toFixed(2))
+                    : self.app.translate('sidebar.markers.no_circle');
             div.find('.marker-color').css(
                 'background-color',
                 marker.color.to_hash_string(),
@@ -149,23 +149,23 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
         const div = $(`<div id="marker-edit-${marker.get_id()}" class="edit">`);
 
-        const name = create_text_input('Name', 'data-name', 'Name');
+        const name = create_text_input(this.app.translate('sidebar.markers.edit_name'), 'data-name', this.app.translate('sidebar.markers.edit_name_placeholder'));
         const coordinates = create_text_input(
-            'Coordinates',
+            this.app.translate('sidebar.markers.edit_coordinates'),
             'data-coordinates',
-            'Coordinates',
+            this.app.translate('sidebar.markers.edit_coordinates_placeholder'),
         );
         const radius = create_text_input(
-            'Circle Radius (m)',
+            this.app.translate('sidebar.markers.edit_radius'),
             'data-radius',
-            'Circle Radius',
+            this.app.translate('sidebar.markers.edit_radius_placeholder'),
         );
-        const color = create_color_input('Color', 'data-color', 'Color');
+        const color = create_color_input(this.app.translate('sidebar.markers.edit_color'), 'data-color', this.app.translate('sidebar.markers.edit_color_placeholder'));
 
-        const submit_button = create_button('Submit', () => {
+        const submit_button = create_button(this.app.translate('general.submit'), () => {
             self.submit_edit(marker);
         });
-        const cancel_button = create_button('Cancel', () => {
+        const cancel_button = create_button(this.app.translate('general.cancel'), () => {
             div.remove();
         });
         const buttons = $('<div class="field is-grouped">')
@@ -185,7 +185,7 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
         return create_dropdown(`dropdown-marker-${marker.get_id()}`, [
             {
-                label: 'Edit',
+                label: self.app.translate('sidebar.markers.edit'),
                 callback: () => {
                     if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
                         self.create_edit_div(marker).insertAfter(
@@ -196,13 +196,13 @@ export class SidebarMarkers extends MapStateObserver {
                 },
             },
             {
-                label: 'Waypoint Projection',
+                label: self.app.translate('sidebar.markers.projection'),
                 callback: () => {
                     self.app.show_projection_dialog(marker);
                 },
             },
             {
-                label: 'Delete',
+                label: self.app.translate('sidebar.markers.delete'),
                 callback: () => {
                     self.app.map_state.delete_marker(marker.get_id());
                 },
@@ -235,7 +235,7 @@ export class SidebarMarkers extends MapStateObserver {
         const color = Color.from_string(div.find('[data-color]').val());
 
         if (name.length == 0 || !coordinates || radius === null || !color) {
-            this.app.message_error('Bad values.');
+            this.app.message_error(this.app.translate('sidebar.markers.bad_values_message'));
             return;
         }
 
@@ -286,9 +286,8 @@ export class SidebarMarkers extends MapStateObserver {
             this.settingsDiv.find('[data-color]').val(),
         );
         const radius = parse_float(this.settingsDiv.find('[data-radius]').val());
-
         if (color === null || radius === null) {
-            this.app.message_error('Bad values.');
+            this.app.message_error(this.app.translate('sidebar.markers.bad_values_message'));
             return;
         }
 

@@ -64,11 +64,19 @@ export class MultiMarkersDialog {
         );
 
         if (use_common_color && common_color === null) {
-            this.app.message_error('Bad common color');
+            this.app.message_error(
+                this.app.translate(
+                    'dialog.multimarkers.bad_common_color_message',
+                ),
+            );
             return;
         }
         if (use_common_radius && common_radius === null) {
-            this.app.message_error('Bad common radius');
+            this.app.message_error(
+                this.app.translate(
+                    'dialog.multimarkers.bad_common_radius_message',
+                ),
+            );
             return;
         }
 
@@ -101,7 +109,10 @@ export class MultiMarkersDialog {
                 const tokens = line.split(';');
                 if (tokens.length != tokens_per_line) {
                     errors.push(
-                        `Line ${line_index}: ${tokens_per_line} semicolon-separated tokens expected`,
+                        self.app
+                            .translate('dialog.multimarkers.tokens_message')
+                            .replace('{1}', line_index)
+                            .replace('{2}', tokens_per_line),
                     );
                     line_has_errors = true;
                 }
@@ -113,9 +124,12 @@ export class MultiMarkersDialog {
 
                 if (coordinates === null) {
                     errors.push(
-                        `Line ${line_index}: unable to parse coordinates: ${tokens[
-                            token_index
-                        ].trim()}`,
+                        self.app
+                            .translate(
+                                'dialog.multimarkers.coordinates_message',
+                            )
+                            .replace('{1}', line_index)
+                            .replace('{2}', tokens[token_index].trim()),
                     );
                     line_has_errors = true;
                 }
@@ -125,7 +139,11 @@ export class MultiMarkersDialog {
                 if (!use_common_name) {
                     name = tokens[token_index].trim();
                     if (name == '') {
-                        errors.push(`Line ${line_index}: empty name`);
+                        errors.push(
+                            self.app
+                                .translate('dialog.multimarkers.name_message')
+                                .replace('{1}', line_index),
+                        );
                         line_has_errors = true;
                     }
                     token_index += 1;
@@ -136,9 +154,10 @@ export class MultiMarkersDialog {
                     color = Color.from_string(tokens[token_index].trim());
                     if (color === null) {
                         errors.push(
-                            `Line ${line_index}: unable to parse color: ${tokens[
-                                token_index
-                            ].trim()}`,
+                            self.app
+                                .translate('dialog.multimarkers.color_message')
+                                .replace('{1}', line_index)
+                                .replace('{2}', tokens[token_index].trim()),
                         );
                         line_has_errors = true;
                     }
@@ -150,9 +169,10 @@ export class MultiMarkersDialog {
                     radius = parse_float(tokens[token_index].trim());
                     if (radius === null) {
                         errors.push(
-                            `Line ${line_index}: unable to parse radius: ${tokens[
-                                token_index
-                            ].trim()}`,
+                            self.app
+                                .translate('dialog.multimarkers.radius_message')
+                                .replace('{1}', line_index)
+                                .replace('{2}', tokens[token_index].trim()),
                         );
                         line_has_errors = true;
                     }
@@ -199,16 +219,34 @@ export class MultiMarkersDialog {
             '[data-use-common-radius]',
         ).checked;
 
-        let description = '<COORDINATES>';
+        const description = [
+            '<' +
+                this.app.translate('dialog.multimarkers.coordinates_token') +
+                '>',
+        ];
         if (!use_common_name) {
-            description += ';<NAME>';
+            description.push(
+                '<' +
+                    this.app.translate('dialog.multimarkers.name_token') +
+                    '>',
+            );
         }
         if (!use_common_color) {
-            description += ';<COLOR>';
+            description.push(
+                '<' +
+                    this.app.translate('dialog.multimarkers.color_token') +
+                    '>',
+            );
         }
         if (!use_common_radius) {
-            description += ';<RADIUS>';
+            description.push(
+                '<' +
+                    this.app.translate('dialog.multimarkers.radius_token') +
+                    '>',
+            );
         }
-        this.div.querySelector('[data-format]').innerText = description;
+        this.div.querySelector('[data-format]').innerText = description.join(
+            ';',
+        );
     }
 }

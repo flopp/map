@@ -1,0 +1,166 @@
+{
+    "main": {
+        "dialog": {
+            "apikeys": {
+                "bing": "Bing Maps API Key",
+                "bing_help": "Get your API Key for Bing Maps directly from Microsoft.",
+                "bing_link": "Microsoft",
+                "bing_placeholder": "Bing Maps API Key",
+                "google": "Google Maps API Key",
+                "google_help": "Get your API Key for the Google Maps Javascript API from Google's API console.",
+                "google_link": "Google API Console",
+                "google_placeholder": "Google API Key",
+                "help": "Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps/Bing Maps servers, and they are never part of any data export.",
+                "title": "Add Your Own API Keys"
+            },
+            "link": {
+                "copied_message": "The link has been copied to the clipboard.",
+                "copy": "Copy",
+                "failed_message": "Copying of the link failed.",
+                "help": "You can share this link with others to enable them to view your current map state.",
+                "title": "Create Link",
+                "toolong": "The link is probably too long. Browsers may not be able to handle it correctly."
+            },
+            "multimarkers": {
+                "bad_common_color_message": "Bad comon color.",
+                "bad_common_radius_message": "Bad common radius.",
+                "color": "Color",
+                "color_message": "Line {1}: unable to parse color: {2}",
+                "color_token": "COLOR",
+                "commonattributes": "Common Marker Attributes",
+                "coordinates_message": "Line {1}: unable to parse coordinates: {2}",
+                "coordinates_token": "COORDINATES",
+                "create": "Create",
+                "data": "Marker Data",
+                "format": "Data format per line:",
+                "name": "Name Prefix",
+                "name_message": "Line {1}: empty name",
+                "name_token": "NAME",
+                "radius": "Circle Radius (m)",
+                "radius_message": "Line {1}: unable to parse radius: {2}",
+                "radius_token": "RADIUS",
+                "title": "Create Multiple Markers",
+                "tokens_message": "Line {1}: {2} semicolon-separated tokens expected"
+            },
+            "projection": {
+                "bad_bearing_message": "Bad bearing value.",
+                "bad_distance_message": "Bad distance value.",
+                "bearing": "Bearing (\u00b0)",
+                "createline": "Create Line?",
+                "data": "Projection Data",
+                "distance": "Distance (m)",
+                "line": "Created Line",
+                "line_color": "Color of created line",
+                "marker": "Created Marker",
+                "marker_color": "Color",
+                "marker_name": "Name",
+                "marker_radius": "Radius (m)",
+                "project": "Project",
+                "title": "Waypoint Projection"
+            }
+        },
+        "general": {
+            "add": "Add",
+            "apply": "Apply",
+            "cancel": "Cancel",
+            "delete_all": "Delete All",
+            "submit": "Submit"
+        },
+        "menu": {
+            "addmarker": "Add Marker",
+            "centermap": "Center Map",
+            "deletemarker": "Delete Marker",
+            "waypointprojection": "Waypoint Projection"
+        },
+        "messages": {
+            "geolocation_error": "Geolocation error: {1}",
+            "geolocation_not_available": "Geolocation services are not available.",
+            "layer_disabled": "{1} disabled due to an invalid API key or some API error.",
+            "line_created": "A new line has been created.",
+            "marker_created": "A new marker has been created."
+        },
+        "search": {
+            "noresult": "Cannot find matching location.",
+            "servererror": "Failed to contact 'Nominatim' server."
+        },
+        "sidebar": {
+            "info": {
+                "contact": "Contact/Mail",
+                "contact_help": "",
+                "sources": "Sources/Github",
+                "sources_help": "",
+                "support": "Support/Paypal",
+                "support_help": "",
+                "title": "Info"
+            },
+            "layers": {
+                "additional": "Additional Layers",
+                "apikeys": "Own API Keys",
+                "base": "Base Layer",
+                "base_help": "Google Maps and Bing Maps layers have been disabled.",
+                "hillshading": "Hillshading",
+                "title": "Layers"
+            },
+            "lines": {
+                "bad_values_message": "Bad values.",
+                "bearing": "Bearing:",
+                "delete": "Delete",
+                "edit": "Edit",
+                "edit_color": "Color",
+                "edit_color_placeholder": "Color",
+                "edit_from": "From",
+                "edit_to": "To",
+                "from": "From:",
+                "length": "Length:",
+                "settings": {
+                    "defaultcolor": "Default Color",
+                    "randomcolors": "Random Color"
+                },
+                "title": "Lines",
+                "to": "To:"
+            },
+            "markers": {
+                "bad_values_message": "Bad values.",
+                "circle": "Circle: {1} m",
+                "delete": "Delete",
+                "edit": "Edit",
+                "edit_color": "Color",
+                "edit_color_placeholder": "Color",
+                "edit_coordinates": "Coordinates",
+                "edit_coordinates_placeholder": "Coordinates",
+                "edit_name": "Name",
+                "edit_name_placeholder": "Name",
+                "edit_radius": "Circle Radius (m)",
+                "edit_radius_placeholder": "Radius",
+                "no_circle": "No circle",
+                "projection": "Waypoint Projection",
+                "settings": {
+                    "coordinates": "Coordinates",
+                    "defaultcolor": "Default Color",
+                    "defaultradius": "Default Radius (m)",
+                    "defaultradius_placeholder": "Radius",
+                    "randomcolors": "Random Color"
+                },
+                "title": "Markers"
+            },
+            "search": {
+                "locate_me": "Locate Me",
+                "locate_me_help": "Determine your current location and center the map.",
+                "search_help": "Search for a location (e.g. enter a city name or coordinates) and center the map.",
+                "search_placeholder": "Location",
+                "title": "Search"
+            },
+            "tools": {
+                "createlink": "Create Link",
+                "createlink_help": "Create a link to this map, e.g. for sharing it with others.",
+                "createmarkers": "Create Multiple Markers",
+                "createmarkers_help": "Create multiple markes at once, i.e. by providing a list of coordinates.",
+                "exportjson": "Export Map State",
+                "exportjson_help": "Export/import a JSON file containing the full map state.",
+                "importjson": "Import Map State",
+                "language": "Language",
+                "title": "Tools"
+            }
+        }
+    }
+}

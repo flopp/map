@@ -16,12 +16,15 @@ export const MapStateChange = {
     MARKERS: 16,
     LINES: 32,
     API_KEYS: 64,
-    EVERYTHING: 127,
+    LANGUAGE: 128,
+    EVERYTHING: 255,
 };
 
 export class MapState {
     constructor(app) {
         this.app = app;
+
+        this.language = '';
 
         this.sidebar_open = null;
 
@@ -54,6 +57,9 @@ export class MapState {
 
     store() {
         const self = this;
+
+        this.storage.set('language', this.language);
+
         this.storage.set('google_api_key', this.google_api_key);
         this.storage.set('bing_api_key', this.bing_api_key);
 
@@ -97,6 +103,9 @@ export class MapState {
 
     restore() {
         const self = this;
+
+        // language
+        this.set_language(this.storage.get('language', ''));
 
         // api keys
         this.set_google_api_key(this.storage.get('google_api_key', ''));
@@ -223,6 +232,7 @@ export class MapState {
 
         const ok_keys = new Set();
         ok_keys.add('version');
+        ok_keys.add('language');
         ok_keys.add('google_api_key');
         ok_keys.add('bing_api_key');
         ok_keys.add('center');
@@ -554,6 +564,12 @@ export class MapState {
         return changed;
     }
 
+    set_language(language) {
+        this.language = language;
+        this.storage.set('language', this.language);
+        this.update_observers(MapStateChange.LANGUAGE);
+    }
+
     set_google_api_key(key) {
         this.google_api_key = key;
         this.storage.set('google_api_key', this.google_api_key);
@@ -630,7 +646,7 @@ export class MapState {
         this.storage.set('markers', this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
 
-        this.app.message('A new marker has been created.', 'info');
+        this.app.message(this.app.translate('messages.marker_created'), 'info');
 
         return marker;
     }
@@ -712,7 +728,7 @@ export class MapState {
         this.storage.set('lines', this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES);
 
-        this.app.message('A new line has been created.', 'info');
+        this.app.message(this.app.translate('messages.line_created'), 'info');
 
         return line;
     }

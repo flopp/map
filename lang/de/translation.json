@@ -1,0 +1,166 @@
+{
+    "main": {
+        "dialog": {
+            "apikeys": {
+                "bing": "Bing Maps API-Schl\u00fcssel",
+                "bing_help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr Bing Maps direkt bei Microsoft.",
+                "bing_link": "Microsoft",
+                "bing_placeholder": "Bing Maps API-Schl\u00fcssel",
+                "google": "Google Maps API-Schl\u00fcssel",
+                "google_help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr die Google Maps Javascript API in Googles API Console.",
+                "google_link": "Google API Console",
+                "google_placeholder": "Google Maps API-Schl\u00fcssel",
+                "help": "Eigene API-Schl\u00fcssel erlauben den Zugriff auf das Kartenmaterial von Google Maps und Bing Maps. Deine eigenen API-Schl\u00fcssel werden nur in deinem Browser gespeichert (local storage). Sie werden nur zu den entsprechenden Google Maps/Bing Maps-Servern geschickt.",
+                "title": "Eigene API-Keys Hinzuf\u00fcgen"
+            },
+            "link": {
+                "copied_message": "Der Link wurde in die Zwischenablage kopiert.",
+                "copy": "Kopieren",
+                "failed_message": "Kopieren des Links fehlgeschlagen.",
+                "help": "Du kannst diesen Link mit anderen Leute teilen, so dass sie deine aktuelle Karte sehen k\u00f6nnen.",
+                "title": "Link Erzeugen",
+                "toolong": "Der Link ist vermutlich zu lang. Es kann sein, dass Browser damit nicht korrekt umgehen k\u00f6nnen."
+            },
+            "multimarkers": {
+                "bad_common_color_message": "Fehlerhafte gemeinsame Farbe.",
+                "bad_common_radius_message": "Fehlerhafter gemeinsamer Radius.",
+                "color": "Farbe",
+                "color_message": "Zeile {1}: Farbe kann nicht geparst werden: {2}",
+                "color_token": "FARBE",
+                "commonattributes": "Gemeinsame Marker-Attribute",
+                "coordinates_message": "Zeile {1}: Koordinaten k\u00f6nnen nicht geparst werden: {2}",
+                "coordinates_token": "KOORDINATEN",
+                "create": "Erzeugen",
+                "data": "Marker-Daten",
+                "format": "Formatschema pro Zeile",
+                "name": "Namenspr\u00e4fix",
+                "name_message": "Zeile {1}: leerer Name",
+                "name_token": "NAME",
+                "radius": "Kreis-Radius (m)",
+                "radius_message": "Zeile {1}: Radius kann nicht geparst werden: {2}",
+                "radius_token": "RADIUS",
+                "title": "Mehrere Marker Hinzuf\u00fcgen",
+                "tokens_message": "Zeile {1}: {2} Semikolon-separierte Elemente erwartet."
+            },
+            "projection": {
+                "bad_bearing_message": "Fehlerhafter Richtungswert",
+                "bad_distance_message": "Fehlerhafter Distanzwert.",
+                "bearing": "Richtung (\u00b0)",
+                "createline": "Erzeuge Linie?",
+                "data": "Projektions-Daten",
+                "distance": "Distanz (m)",
+                "line": "Erzeugte Linie",
+                "line_color": "Farbe",
+                "marker": "Erzeugter Marker",
+                "marker_color": "Farbe",
+                "marker_name": "Name",
+                "marker_radius": "Radius (m)",
+                "project": "Projiziere",
+                "title": "Wegpunkt-Projektion"
+            }
+        },
+        "general": {
+            "add": "Hinzuf\u00fcgen",
+            "apply": "Anwenden",
+            "cancel": "Abbrechen",
+            "delete_all": "Alle L\u00f6schen",
+            "submit": "Anwenden"
+        },
+        "menu": {
+            "addmarker": "Marker hinzuf\u00fcgen",
+            "centermap": "Karte hier zentrieren",
+            "deletemarker": "Marker l\u00f6schen",
+            "waypointprojection": "Wegpunkt-Projektion"
+        },
+        "messages": {
+            "geolocation_error": "Geolocation-Fehler: {1}",
+            "geolocation_not_available": "Geolocation ist nicht verf\u00fcgbar.",
+            "layer_disabled": "{1} deaktiviert wegen eines ung\u00fcltigen API-Schl\u00fcssels oder eines API-Fehlers.",
+            "line_created": "Eine neue Linie wurde hinzugef\u00fcgt.",
+            "marker_created": "Ein neuer Marker wurde hinzugef\u00fcgt."
+        },
+        "search": {
+            "noresult": "Es konnte keine passender Ort gefunden werden.",
+            "servererror": "Fehler beim Kontaktieren des 'Nominatim'-Servers."
+        },
+        "sidebar": {
+            "info": {
+                "contact": "Kontakt/Mail",
+                "contact_help": "Wenn du Fragen oder Vorschl\u00e4ge hast, kontaktiere mich bitte via E-Mail.",
+                "sources": "Quellcode/Github",
+                "sources_help": "Der Quellcode dieser Web-App ist Open-Source und unter einer freien Lizenz auf Github verf\u00fcgbar.",
+                "support": "Unterst\u00fctzung/Paypal",
+                "support_help": "Diese Web-App wird kostenlos zur Verf\u00fcgung gestellt, allerdings fallen im Hintergrund Kosten an (Hosting, Domains, usw.). Wenn du dich daran beteiligen willst, benutze bitte Paypal.",
+                "title": "Infos"
+            },
+            "layers": {
+                "additional": "Zus\u00e4tzliche Ebenen",
+                "apikeys": "Eigene API-Schl\u00fcssel",
+                "base": "Hintergrundebene",
+                "base_help": "Google Maps und Bing Maps wurden deaktiviert.",
+                "hillshading": "Schummerung (hillshading)",
+                "title": "Ebenen"
+            },
+            "lines": {
+                "bad_values_message": "Fehlerhafte Werte.",
+                "bearing": "Richtung:",
+                "delete": "Löschen",
+                "edit": "Bearbeiten",
+                "edit_color": "Farbe",
+                "edit_color_placeholder": "Farbe",
+                "edit_from": "Von",
+                "edit_to": "Nach",
+                "from": "Von:",
+                "length": "Länge:",
+                "settings": {
+                    "defaultcolor": "Standardfarbe",
+                    "randomcolors": "Zuf\u00e4llige Farbe"
+                },
+                "title": "Linien",
+                "to": "Nach:"
+            },
+            "markers": {
+                "bad_values_message": "Fehlerhafte Werte.",
+                "circle": "Kreis: {1} m",
+                "delete": "L\u00f6schen",
+                "edit": "Bearbeiten",
+                "edit_color": "Farbe",
+                "edit_color_placeholder": "Farbe",
+                "edit_coordinates": "Koordinaten",
+                "edit_coordinates_placeholder": "Koordinaten",
+                "edit_name": "Name",
+                "edit_name_placeholder": "Name",
+                "edit_radius": "Kreis-Radius (m)",
+                "edit_radius_placeholder": "Radius",
+                "no_circle": "Kein Kreis",
+                "projection": "Wegpunkt-Projektion",
+                "settings": {
+                    "coordinates": "Koordinaten",
+                    "defaultcolor": "Standardfarbe",
+                    "defaultradius": "Standardradius (m)",
+                    "defaultradius_placeholder": "Radius",
+                    "randomcolors": "Zuf\u00e4llige Farbe"
+                },
+                "title": "Marker"
+            },
+            "search": {
+                "locate_me": "Lokalisiere mich!",
+                "locate_me_help": "Zentriere die Karte auf deiner aktuellen Position.",
+                "search_help": "Suche nach einem Ort (gebe z.B. einen St\u00e4dtename oder Koordinaten in verschiedenen Formaten ein) und zentriere die Karte.",
+                "search_placeholder": "Ort",
+                "title": "Suche"
+            },
+            "tools": {
+                "createlink": "Erzeuge Link",
+                "createlink_help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
+                "createmarkers": "Ereuge mehrere Marker",
+                "createmarkers_help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
+                "exportjson": "Exportiere Karten-Zustand",
+                "exportjson_help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
+                "importjson": "Importiere Karten-Zustand",
+                "language": "Sprache",
+                "title": "Werkzeuge"
+            }
+        }
+    }
+}

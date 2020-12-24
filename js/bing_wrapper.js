@@ -118,9 +118,10 @@ export class BingWrapper extends MapWrapper {
             if (!this.hillshading_layer) {
                 this.hillshading_layer = new Microsoft.Maps.TileLayer({
                     mercator: new Microsoft.Maps.TileSource({
-                        uriConstructor: 'https://tiles.wmflabs.org/hillshading/{zoom}/{x}/{y}.png',
-                        maxZoom: 15
-                    })
+                        uriConstructor:
+                            'https://tiles.wmflabs.org/hillshading/{zoom}/{x}/{y}.png',
+                        maxZoom: 15,
+                    }),
                 });
             }
             this.map.layers.insert(this.hillshading_layer);

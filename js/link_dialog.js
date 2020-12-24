@@ -9,10 +9,12 @@ export class LinkDialog {
 
         this.clipboard = new Clipboard('#link-dialog-copy-button');
         this.clipboard.on('success', () => {
-            self.app.message('The link has been copied to the clipboard.');
+            self.app.message(self.app.translate('dialog.link.copied_message'));
         });
         this.clipboard.on('error', () => {
-            self.app.message_error('Copying of the link failed.');
+            self.app.message_error(
+                self.app.translate('dialog.link.failed_message'),
+            );
         });
 
         this.div.querySelectorAll('[data-cancel]').forEach((el) => {
