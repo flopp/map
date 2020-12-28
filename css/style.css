@@ -278,6 +278,18 @@ body {
     margin: 0 auto;
 }
 
+.button .icon-small {
+    width: 1em;
+    height: 1em;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    display: block;
+    margin: 0 auto;
+}
+
 @keyframes NotificationIn {
     from {
         transform: translate3d(300px, 0, 0);;
