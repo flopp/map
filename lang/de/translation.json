@@ -64,6 +64,7 @@
             "apply": "Anwenden",
             "cancel": "Abbrechen",
             "delete_all": "Alle L\u00f6schen",
+            "no_marker_tag": "<KEINER>",
             "submit": "Anwenden"
         },
         "menu": {
@@ -104,14 +105,14 @@
             "lines": {
                 "bad_values_message": "Fehlerhafte Werte.",
                 "bearing": "Richtung:",
-                "delete": "Löschen",
+                "delete": "L\u00f6schen",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
                 "edit_from": "Von",
                 "edit_to": "Nach",
                 "from": "Von:",
-                "length": "Länge:",
+                "length": "L\u00e4nge:",
                 "settings": {
                     "defaultcolor": "Standardfarbe",
                     "randomcolors": "Zuf\u00e4llige Farbe"

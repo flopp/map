@@ -64,6 +64,7 @@
             "apply": "Apply",
             "cancel": "Cancel",
             "delete_all": "Delete All",
+            "no_marker_tag": "<NONE>",
             "submit": "Submit"
         },
         "menu": {

@@ -138,7 +138,7 @@ export class SidebarLines extends MapStateObserver {
 
     marker_name(id) {
         if (id == -1) {
-            return '<NONE>';
+            return this.app.translate('general.no_marker_tag');
         }
 
         const marker = this.app.map_state.get_marker(id);
@@ -146,7 +146,7 @@ export class SidebarLines extends MapStateObserver {
             return marker.name;
         }
 
-        return `<NONE>`;
+        return this.app.translate('general.no_marker_tag');
     }
 
     create_edit_div(line) {
@@ -201,7 +201,7 @@ export class SidebarLines extends MapStateObserver {
             return;
         }
 
-        const markers = [{name: '<NONE>', id: -1}];
+        const markers = [{name: this.app.translate('general.no_marker_tag'), id: -1}];
         this.app.map_state.markers.forEach((marker) => {
             markers.push({name: marker.name, id: marker.get_id()});
         });
