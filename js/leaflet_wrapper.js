@@ -121,6 +121,7 @@ export class LeafletWrapper extends MapWrapper {
                 }
             });
             this.map.addLayer(layer);
+            layer.bringToBack();
         }
     }
 
