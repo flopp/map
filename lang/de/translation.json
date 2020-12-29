@@ -55,6 +55,7 @@
                 "marker_color": "Farbe",
                 "marker_name": "Name",
                 "marker_radius": "Radius (m)",
+                "new_marker_name": "Projektion von {1}",
                 "project": "Projiziere",
                 "title": "Wegpunkt-Projektion"
             }

@@ -28,7 +28,7 @@ export class ProjectionDialog {
         this.div.querySelector('[data-bearing]').value = '';
         this.div.querySelector(
             '[data-targetname]',
-        ).value = `Projection from ${marker.name}`;
+        ).value = this.app.translate('dialog.projection.new_marker_name').replace('{1}', marker.name);
         this.div.querySelector(
             '[data-targetcolor]',
         ).value = marker.color.to_hash_string();
