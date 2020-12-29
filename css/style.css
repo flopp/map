@@ -70,6 +70,14 @@ body {
     color: #ffffff;
 }
 
+.sidebar-control .sidebar-control-button:hover {
+    color: hsl(204, 86%, 53%);
+}
+
+.sidebar-control.active .sidebar-control-button:hover {
+    color: rgba(0,0,0,0.6);
+}
+
 .sidebar-container {
     display: none;
     width: 100%;
