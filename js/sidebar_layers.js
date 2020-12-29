@@ -111,19 +111,17 @@ export class SidebarLayers extends MapStateObserver {
 
     update_baselayer_help() {
         const help_div = this.div.querySelector('[data-baselayer-help]');
-        let missing_layers = '';
         if (this.app.has_google_maps()) {
             if (this.app.has_bing_maps()) {
                 help_div.classList.add('is-hidden');
                 return;
             }
-            missing_layers = 'Bing Maps';
+            help_div.innerText = this.app.translate('sidebar.layers.bing_disabled');
         } else if (this.app.has_bing_maps()) {
-            missing_layers = 'Google Maps';
+            help_div.innerText = this.app.translate('sidebar.layers.google_disabled');
         } else {
-            missing_layers = 'Google Maps and Bing Maps';
+            help_div.innerText = this.app.translate('sidebar.layers.google_and_bing_disabled');
         }
         help_div.classList.remove('is-hidden');
-        help_div.innerText = `${missing_layers} layers have been disabled due to missing/invalid API keys or other API problems.`;
     }
 }

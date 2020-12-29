@@ -99,6 +99,9 @@
                 "apikeys": "Eigene API-Schl\u00fcssel",
                 "base": "Hintergrundebene",
                 "base_help": "Google Maps und Bing Maps wurden deaktiviert.",
+                "bing_disabled": "Bing Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
+                "google_and_bing_disabled": "Google Maps und Bing Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
+                "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hillshading": "Schummerung (hillshading)",
                 "title": "Ebenen"
             },

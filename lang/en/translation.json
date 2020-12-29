@@ -87,11 +87,11 @@
         "sidebar": {
             "info": {
                 "contact": "Contact/Mail",
-                "contact_help": "",
+                "contact_help": "If you have any suggestions please feel free to contact me via e-mail.",
                 "sources": "Sources/Github",
-                "sources_help": "",
+                "sources_help": "The code for this website is open source, hosted at Github.",
                 "support": "Support/Paypal",
-                "support_help": "",
+                "support_help": "This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.",
                 "title": "Info"
             },
             "layers": {
@@ -99,6 +99,9 @@
                 "apikeys": "Own API Keys",
                 "base": "Base Layer",
                 "base_help": "Google Maps and Bing Maps layers have been disabled.",
+                "bing_disabled": "Bing Maps layers have been disabled due to missing/invalid API keys or other API problems.",
+                "google_and_bing_disabled": "Google Maps and Bing Maps layers have been disabled due to missing/invalid API keys or other API problems.",
+                "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hillshading": "Hillshading",
                 "title": "Layers"
             },
