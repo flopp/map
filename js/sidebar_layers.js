@@ -53,6 +53,16 @@ export class SidebarLayers extends MapStateObserver {
                 self.hillshading_checkbox.checked,
             );
         };
+
+        this.german_npa_checkbox = this.div.querySelector(
+            '[data-german-npa-layer]',
+        );
+        this.german_npa_checkbox.checked = this.app.map_state.german_npa;
+        this.german_npa_checkbox.onchange = () => {
+            self.app.map_state.set_german_npa(
+                self.german_npa_checkbox.checked,
+            );
+        };
     }
 
     update_state(changes) {

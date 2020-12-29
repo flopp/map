@@ -1,6 +1,7 @@
 import {Coordinates} from './coordinates.js';
 import {MapType} from './map_type.js';
 import {MapWrapper} from './map_wrapper.js';
+import {encode_parameters} from './utilities.js';
 
 /* global google */
 
@@ -18,6 +19,8 @@ export class GoogleWrapper extends MapWrapper {
         this.automatic_event = false;
         this.hillshading_enabled = false;
         this.hillshading_layer = null;
+        this.german_npa_enabled = false;
+        this.german_npa_layer = null;
     }
 
     create_map_object(div_id) {
@@ -110,6 +113,48 @@ export class GoogleWrapper extends MapWrapper {
         } else if (this.hillshading_layer) {
             this.map.overlayMapTypes.removeAt(
                 this.map.overlayMapTypes.indexOf(this.hillshading_layer),
+            );
+        }
+    }
+
+    set_german_npa(enabled) {
+        const self = this;
+
+        if (this.german_npa_enabled == enabled) {
+            return;
+        }
+
+        this.german_npa_enabled = enabled;
+        if (enabled) {
+            if (!this.german_npa_layer) {
+                this.german_npa_layer = new google.maps.ImageMapType({
+                    getTileUrl: function (coord, zoom) {
+                        const proj = self.map.getProjection();
+                        const zfactor = 256 / Math.pow(2, zoom);
+                        const top = proj.fromPointToLatLng(new google.maps.Point(coord.x * zfactor, coord.y * zfactor));
+                        const bot = proj.fromPointToLatLng(new google.maps.Point((coord.x + 1) * zfactor, (coord.y + 1) * zfactor));
+                        const data = {
+                            dpi: 96,
+                            transparent: true,
+                            format: "png32",
+                            layers: "show:4",
+                            BBOX: top.lng() + "," + bot.lat() + "," + bot.lng() + "," + top.lat(),
+                            bboxSR: 4326,
+                            imageSR: 102113,
+                            size: "256,256",
+                            f: "image"
+                        };
+                        return `https://geodienste.bfn.de/arcgis/rest/services/bfn_sch/Schutzgebiet/MapServer/export?${encode_parameters(data)}`;
+                    },
+                    tileSize: new google.maps.Size(256, 256),
+                    name: 'German NPA',
+                    opacity: 0.5
+                });
+            }
+            this.map.overlayMapTypes.insertAt(0, this.german_npa_layer);
+        } else if (this.german_npa_layer) {
+            this.map.overlayMapTypes.removeAt(
+                this.map.overlayMapTypes.indexOf(this.german_npa_layer),
             );
         }
     }

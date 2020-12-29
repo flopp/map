@@ -87,6 +87,16 @@ const create_dropdown = (menu_id, items) => {
     return dropdown;
 };
 
+const encode_parameters = (parameters) => {
+    return Object.keys(parameters).reduce(
+        (a, k) => {
+            a.push(`${k}=${encodeURIComponent(parameters[k])}`);
+            return a;
+        },
+        []
+    ).join('&');
+};
+
 export {
     parse_float,
     parse_int,
@@ -95,4 +105,5 @@ export {
     create_text_input,
     create_color_input,
     create_select_input,
+    encode_parameters,
 };

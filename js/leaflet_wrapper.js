@@ -18,6 +18,8 @@ export class LeafletWrapper extends MapWrapper {
         this.automatic_event = false;
         this.hillshading_enabled = false;
         this.hillshading_layer = null;
+        this.german_npa_enabled = false;
+        this.german_npa_layer = null;
     }
 
     create_map_object(div_id) {
@@ -141,6 +143,28 @@ export class LeafletWrapper extends MapWrapper {
             this.map.addLayer(this.hillshading_layer);
         } else if (this.hillshading_layer) {
             this.map.removeLayer(this.hillshading_layer);
+        }
+    }
+
+    set_german_npa(enabled) {
+        if (this.german_npa_enabled == enabled) {
+            return;
+        }
+
+        this.german_npa_enabled = enabled;
+        if (enabled) {
+            if (!this.german_npa_layer) {
+                this.german_npa_layer = L.tileLayer.wms("http://geodienste.bfn.de/arcgis/services/bfn_sch/Schutzgebiet/MapServer/WMSServer", {
+                    layers: ['Naturschutzgebiete'],
+                    format: 'image/png',
+                    transparent: true,
+                    opacity: 0.5,
+                    attribution: "Yo!"
+                });
+            }
+            this.map.addLayer(this.german_npa_layer);
+        } else if (this.german_npa_layer) {
+            this.map.removeLayer(this.german_npa_layer);
         }
     }
 

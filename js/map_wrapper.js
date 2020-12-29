@@ -27,6 +27,12 @@ export class MapWrapper extends MapStateObserver {
         );
     }
 
+    set_german_npa(_enabled) {
+        console.log(
+            "The 'german_npa' feature is not implemented for this map wrapper.",
+        );
+    }
+
     set_map_view(_center, _zoom) {
         throw new Error('not implemented');
     }
@@ -97,6 +103,7 @@ export class MapWrapper extends MapStateObserver {
         if (changes & MapStateChange.MAPTYPE) {
             this.set_map_type(this.app.map_state.map_type);
             this.set_hillshading(this.app.map_state.hillshading);
+            this.set_german_npa(this.app.map_state.german_npa);
         }
         if (changes & MapStateChange.VIEW) {
             this.set_map_view(

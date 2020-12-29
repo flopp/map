@@ -128,6 +128,7 @@ export class MapState {
             ),
         );
         this.set_hillshading(this.storage.get_bool('hillshading', false));
+        this.set_german_npa(this.storage.get_bool('german_npa', false));
 
         // markers
         const marker_ids = new Map();
@@ -605,6 +606,12 @@ export class MapState {
     set_hillshading(enabled) {
         this.hillshading = enabled;
         this.storage.set_bool('hillshading', this.hillshading);
+        this.update_observers(MapStateChange.MAPTYPE);
+    }
+
+    set_german_npa(enabled) {
+        this.german_npa = enabled;
+        this.storage.set_bool('german_npa', this.german_npa);
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
