@@ -2,15 +2,11 @@
     "main": {
         "dialog": {
             "apikeys": {
-                "bing": "Bing Maps API Key",
-                "bing_help": "Get your API Key for Bing Maps directly from Microsoft.",
-                "bing_link": "Microsoft",
-                "bing_placeholder": "Bing Maps API Key",
                 "google": "Google Maps API Key",
                 "google_help": "Get your API Key for the Google Maps Javascript API from Google's API console.",
                 "google_link": "Google API Console",
                 "google_placeholder": "Google API Key",
-                "help": "Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps/Bing Maps servers, and they are never part of any data export.",
+                "help": "Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.",
                 "title": "Add Your Own API Keys"
             },
             "link": {
@@ -99,12 +95,10 @@
                 "additional": "Additional Layers",
                 "apikeys": "Own API Keys",
                 "base": "Base Layer",
-                "base_help": "Google Maps and Bing Maps layers have been disabled.",
-                "bing_disabled": "Bing Maps layers have been disabled due to missing/invalid API keys or other API problems.",
+                "base_help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
                 "german_npa_button": "Official Web App",
                 "german_npa_help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt für Naturschutz.",
-                "google_and_bing_disabled": "Google Maps and Bing Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hillshading": "Hillshading",
                 "title": "Layers"

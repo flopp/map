@@ -120,7 +120,7 @@
                                     <select data-baselayer></select>
                                 </div>
                             </div>
-                            <p class="help is-hidden" data-baselayer-help data-i18n="sidebar.layers.base_help">Google Maps and Bing Maps layers have been disabled</p>
+                            <p class="help is-hidden" data-baselayer-help data-i18n="sidebar.layers.base_help">Google Maps layers have been disabled</p>
                         </div>
 
                         <hr />
@@ -392,7 +392,6 @@
 
             <div id="map-container-leaflet" class="map-container"></div>
             <div id="map-container-google" class="map-container"></div>
-            <div id="map-container-bing" class="map-container"></div>
 
             <div id="map-contextmenu" class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
@@ -411,7 +410,7 @@
                             <button class="delete" data-cancel aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            <p data-i18n="dialog.apikeys.help">Adding your own API keys enables access to map layers from Google Maps and Bing Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps/Bing Maps servers, and they are never part of any data export.</p>
+                            <p data-i18n="dialog.apikeys.help">Adding your own API keys enables access to map layers from Google Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.</p>
 
                             <h3 class="is-size-4" data-i18n="dialog.apikeys.google">Google Maps API Key</h3>
                             <p data-i18n="dialog.apikeys.google_help">
@@ -430,26 +429,6 @@
                             <div class="field">
                                 <div class="control">
                                     <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.apikeys.google_placeholder" data-i18n-target="placeholder">
-                                </div>
-                            </div>
-
-                            <h3 class="is-size-4" data-i18n="dialog.apikeys.bing">Bing Maps API Key</h3>
-                            <p data-i18n="dialog.apikeys.bing_help">
-                                Get your API Key for Bing Maps directly from Microsoft.
-                            </p>
-                            <div class="field">
-                                <div class="control">
-                                    <a class="button is-warning" href="https://www.microsoft.com/en-us/maps/create-a-bing-maps-key" target="_blank">
-                                        <span data-i18n="dialog.apikeys.bing_link">Microsoft</span>
-                                        <svg class="icon icon-small">
-                                            <use xlink:href="img/feather-sprite.svg#external-link"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="control">
-                                    <input data-bing-api-key class="input" type="text" placeholder="Bing Maps API Key" data-i18n="dialog.apikeys.bing_placeholder" data-i18n-target="placeholder">
                                 </div>
                             </div>
                         </section>

@@ -22,9 +22,6 @@ export class ApiKeysDialog {
         this.div.querySelector(
             '[data-google-api-key]',
         ).value = this.app.map_state.google_api_key;
-        this.div.querySelector(
-            '[data-bing-api-key]',
-        ).value = this.app.map_state.bing_api_key;
     }
 
     hide() {
@@ -32,9 +29,8 @@ export class ApiKeysDialog {
     }
 
     ok() {
-        this.app.map_state.set_api_keys(
+        this.app.map_state.set_google_api_key(
             this.div.querySelector('[data-google-api-key]').value,
-            this.div.querySelector('[data-bing-api-key]').value,
         );
         this.app.reset_maps();
         this.hide();

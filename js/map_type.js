@@ -7,9 +7,6 @@ const MapType = {
     GOOGLE_SATELLITE: 'GOOGLE_SATELLITE',
     GOOGLE_HYBRID: 'GOOGLE_HYBRID',
     GOOGLE_TERRAIN: 'GOOGLE_TERRAIN',
-    BING_ROAD: 'BING_ROAD',
-    BING_AERIAL: 'BING_AERIAL',
-    BING_AERIAL_NO_LABELS: 'BING_AERIAL_NO_LABELS',
 };
 
 if (Object.freeze) {
@@ -38,12 +35,6 @@ const string2maptype = (s) => {
             return MapType.GOOGLE_HYBRID;
         case MapType.GOOGLE_TERRAIN:
             return MapType.GOOGLE_TERRAIN;
-        case MapType.BING_ROAD:
-            return MapType.BING_ROAD;
-        case MapType.BING_AERIAL:
-            return MapType.BING_AERIAL;
-        case MapType.BING_AERIAL_NO_LABELS:
-            return MapType.BING_AERIAL_NO_LABELS;
     }
     return null;
 };
@@ -66,12 +57,6 @@ const maptype2human = (t) => {
             return 'Google Hybrid';
         case MapType.GOOGLE_TERRAIN:
             return 'Google Terrain';
-        case MapType.BING_ROAD:
-            return 'Bing Road';
-        case MapType.BING_AERIAL:
-            return 'Bing Aerial';
-        case MapType.BING_AERIAL_NO_LABELS:
-            return 'Bing Aerial (no labels)';
     }
     return 'Unknown';
 };
@@ -87,21 +72,10 @@ const isGoogle = (t) => {
     return false;
 };
 
-const isBing = (t) => {
-    switch (t) {
-        case MapType.BING_ROAD:
-        case MapType.BING_AERIAL:
-        case MapType.BING_AERIAL_NO_LABELS:
-            return true;
-    }
-    return false;
-};
-
 export {
     MapType,
     maptype2string,
     maptype2human,
     string2maptype,
     isGoogle,
-    isBing,
 };

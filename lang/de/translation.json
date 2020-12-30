@@ -2,15 +2,11 @@
     "main": {
         "dialog": {
             "apikeys": {
-                "bing": "Bing Maps API-Schl\u00fcssel",
-                "bing_help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr Bing Maps direkt bei Microsoft.",
-                "bing_link": "Microsoft",
-                "bing_placeholder": "Bing Maps API-Schl\u00fcssel",
                 "google": "Google Maps API-Schl\u00fcssel",
                 "google_help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr die Google Maps Javascript API in Googles API Console.",
                 "google_link": "Google API Console",
                 "google_placeholder": "Google Maps API-Schl\u00fcssel",
-                "help": "Eigene API-Schl\u00fcssel erlauben den Zugriff auf das Kartenmaterial von Google Maps und Bing Maps. Deine eigenen API-Schl\u00fcssel werden nur in deinem Browser gespeichert (local storage). Sie werden nur zu den entsprechenden Google Maps/Bing Maps-Servern geschickt.",
+                "help": "Eigene API-Schl\u00fcssel erlauben den Zugriff auf das Kartenmaterial von Google Maps. Deine eigenen API-Schl\u00fcssel werden nur in deinem Browser gespeichert (local storage). Sie werden nur zu den entsprechenden Google Maps-Servern geschickt.",
                 "title": "Eigene API-Keys Hinzuf\u00fcgen"
             },
             "link": {
@@ -99,12 +95,10 @@
                 "additional": "Zus\u00e4tzliche Ebenen",
                 "apikeys": "Eigene API-Schl\u00fcssel",
                 "base": "Hintergrundebene",
-                "base_help": "Google Maps und Bing Maps wurden deaktiviert.",
-                "bing_disabled": "Bing Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
+                "base_help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
                 "german_npa_button": "Offizielle Web-App",
                 "german_npa_help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (grüne Flächen). Die Daten werden vom Bundesamt für Naturschutz zur Verfügung gestellt.",
-                "google_and_bing_disabled": "Google Maps und Bing Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hillshading": "Schummerung (hillshading)",
                 "title": "Ebenen"

@@ -1,5 +1,5 @@
 import {MapStateObserver, MapStateChange} from './map_state.js';
-import {MapType, maptype2human, isGoogle, isBing} from './map_type.js';
+import {MapType, maptype2human, isGoogle} from './map_type.js';
 
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {
@@ -17,9 +17,6 @@ export class SidebarLayers extends MapStateObserver {
             {type: MapType.GOOGLE_SATELLITE},
             {type: MapType.GOOGLE_HYBRID},
             {type: MapType.GOOGLE_TERRAIN},
-            {type: MapType.BING_ROAD},
-            {type: MapType.BING_AERIAL},
-            {type: MapType.BING_AERIAL_NO_LABELS},
         ];
 
         this.baselayer_select = this.div.querySelector('[data-baselayer]');
@@ -39,9 +36,6 @@ export class SidebarLayers extends MapStateObserver {
 
         if (!app.has_google_maps()) {
             this.disable_google_layers();
-        }
-        if (!app.has_bing_maps()) {
-            this.disable_bing_layers();
         }
 
         this.hillshading_checkbox = this.div.querySelector(
@@ -110,27 +104,13 @@ export class SidebarLayers extends MapStateObserver {
         this.enable_layers(isGoogle);
     }
 
-    disable_bing_layers() {
-        this.disable_layers(isBing);
-        this.update_baselayer_help();
-    }
-
-    enable_bing_layers() {
-        this.enable_layers(isBing);
-    }
-
     update_baselayer_help() {
         const help_div = this.div.querySelector('[data-baselayer-help]');
         if (this.app.has_google_maps()) {
-            if (this.app.has_bing_maps()) {
-                help_div.classList.add('is-hidden');
-                return;
-            }
-            help_div.innerText = this.app.translate('sidebar.layers.bing_disabled');
-        } else if (this.app.has_bing_maps()) {
-            help_div.innerText = this.app.translate('sidebar.layers.google_disabled');
+            help_div.classList.add('is-hidden');
+            return;
         } else {
-            help_div.innerText = this.app.translate('sidebar.layers.google_and_bing_disabled');
+            help_div.innerText = this.app.translate('sidebar.layers.google_disabled');
         }
         help_div.classList.remove('is-hidden');
     }

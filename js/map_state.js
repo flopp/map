@@ -29,7 +29,6 @@ export class MapState {
         this.sidebar_open = null;
 
         this.google_api_key = '';
-        this.bing_api_key = '';
 
         this.map_type = null;
         this.zoom = null;
@@ -61,7 +60,6 @@ export class MapState {
         this.storage.set('language', this.language);
 
         this.storage.set('google_api_key', this.google_api_key);
-        this.storage.set('bing_api_key', this.bing_api_key);
 
         this.storage.set('sidebar_open', this.sidebar_open);
         this.storage.set_coordinates('center', this.center);
@@ -109,7 +107,6 @@ export class MapState {
 
         // api keys
         this.set_google_api_key(this.storage.get('google_api_key', ''));
-        this.set_bing_api_key(this.storage.get('bing_api_key', ''));
 
         // sidebar
         this.set_sidebar_open(this.storage.get('sidebar_open', null));
@@ -235,11 +232,11 @@ export class MapState {
         ok_keys.add('version');
         ok_keys.add('language');
         ok_keys.add('google_api_key');
-        ok_keys.add('bing_api_key');
         ok_keys.add('center');
         ok_keys.add('zoom');
         ok_keys.add('map_type');
         ok_keys.add('hillshading');
+        ok_keys.add('german_npa');
         ok_keys.add('sidebar_open');
         ok_keys.add('markers');
         this.markers.forEach((obj) => {
@@ -577,20 +574,6 @@ export class MapState {
         this.update_observers(MapStateChange.API_KEYS);
     }
 
-    set_bing_api_key(key) {
-        this.bing_api_key = key;
-        this.storage.set('bing_api_key', this.bing_api_key);
-        this.update_observers(MapStateChange.API_KEYS);
-    }
-
-    set_api_keys(google_api_key, bing_api_key) {
-        this.google_api_key = google_api_key;
-        this.storage.set('google_api_key', this.google_api_key);
-        this.bing_api_key = bing_api_key;
-        this.storage.set('bing_api_key', this.bing_api_key);
-        this.update_observers(MapStateChange.API_KEYS);
-    }
-
     set_sidebar_open(section) {
         this.sidebar_open = section;
         this.storage.set('sidebar_open', section);
@@ -875,6 +858,8 @@ export class MapState {
             maptype: this.map_type,
             center: this.center.to_string_D(),
             zoom: this.zoom,
+            hillshading: this.hillshading,
+            german_npa: this.german_npa,
             settings: {
                 markers: {
                     coordinates_format: this.settings_marker_coordinates_format,
@@ -920,6 +905,14 @@ export class MapState {
             if (center !== null) {
                 this.center = center;
             }
+        }
+
+        if ('hillshading' in data) {
+            this.hillshading = data.hillshading;
+        }
+
+        if ('german_npa' in data) {
+            this.german_npa = data.german_npa;
         }
 
         if ('settings' in data) {
