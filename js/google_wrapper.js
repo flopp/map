@@ -148,6 +148,7 @@ export class GoogleWrapper extends MapWrapper {
                     },
                     tileSize: new google.maps.Size(256, 256),
                     name: 'German NPA',
+                    alt: "Bundesamt für Naturschutz (BfN)",
                     opacity: 0.5
                 });
             }

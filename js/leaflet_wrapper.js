@@ -154,12 +154,12 @@ export class LeafletWrapper extends MapWrapper {
         this.german_npa_enabled = enabled;
         if (enabled) {
             if (!this.german_npa_layer) {
-                this.german_npa_layer = L.tileLayer.wms("http://geodienste.bfn.de/arcgis/services/bfn_sch/Schutzgebiet/MapServer/WMSServer", {
+                this.german_npa_layer = L.tileLayer.wms("https://geodienste.bfn.de/ogc/wms/schutzgebiet?", {
                     layers: ['Naturschutzgebiete'],
                     format: 'image/png',
                     transparent: true,
                     opacity: 0.5,
-                    attribution: "Yo!"
+                    attribution: "Bundesamt für Naturschutz (BfN)"
                 });
             }
             this.map.addLayer(this.german_npa_layer);
