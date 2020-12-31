@@ -1,9 +1,16 @@
-import {Color} from './color.js';
+import {Color} from './color';
+import {Coordinates} from './coordinates';
 
 let next_marker_id = 0;
 
 export class Marker {
-    constructor(coordinates) {
+    private marker_id: number
+    public coordinates: Coordinates
+    public name: string
+    public color: Color
+    public radius: number
+
+    constructor(coordinates: Coordinates) {
         this.marker_id = next_marker_id;
         this.coordinates = coordinates;
         this.name = `Marker ${this.get_id()}`;
@@ -13,15 +20,15 @@ export class Marker {
         next_marker_id += 1;
     }
 
-    static reset_ids() {
+    public static reset_ids() : void {
         next_marker_id = 0;
     }
 
-    get_id() {
+    public get_id() : number {
         return this.marker_id;
     }
 
-    to_json() {
+    public to_json() : {marker_id: number, coordinates: string, name: string, color: string, radius: number} {
         return {
             marker_id: this.get_id(),
             coordinates: this.coordinates.to_string_D(),

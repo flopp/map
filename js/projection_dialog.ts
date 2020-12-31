@@ -1,65 +1,72 @@
-import {Color} from './color.js';
-import {MapStateChange} from './map_state.js';
-import {parse_float} from './utilities.js';
+import {App} from './app';
+import {Color} from './color';
+import {MapStateChange} from './map_state';
+import {Marker} from './marker';
+import {parse_float} from './utilities';
 
 export class ProjectionDialog {
-    constructor(app) {
+    private div: HTMLElement;
+    private app: App;
+    private marker: Marker;
+
+    constructor(app: App) {
         const self = this;
 
         this.div = document.querySelector('#projection-dialog');
         this.app = app;
         this.marker = null;
 
-        this.div.querySelectorAll('[data-cancel]').forEach((el) => {
-            el.onclick = () => {
+        this.div.querySelectorAll('[data-cancel]').forEach((element: HTMLElement): void => {
+            element.addEventListener('click', (): void => {
                 self.hide();
-            };
+            });
         });
-        this.div.querySelectorAll('[data-project]').forEach((el) => {
-            el.onclick = () => {
+        this.div.querySelectorAll('[data-project]').forEach((element: HTMLElement): void => {
+            element.addEventListener('click', (): void => {
                 self.go();
-            };
+            });
         });
     }
 
-    show(marker) {
+    public show(marker: Marker): void {
         this.marker = marker;
-        this.div.querySelector('[data-distance]').value = '';
-        this.div.querySelector('[data-bearing]').value = '';
-        this.div.querySelector(
+        (this.div.querySelector('[data-distance]') as HTMLInputElement).value = '';
+        (this.div.querySelector('[data-bearing]') as HTMLInputElement).value = '';
+        const name = this.app.translate('dialog.projection.new_marker_name').replace('{1}', marker.name);
+        (this.div.querySelector(
             '[data-targetname]',
-        ).value = this.app.translate('dialog.projection.new_marker_name').replace('{1}', marker.name);
-        this.div.querySelector(
+        ) as HTMLInputElement).value = name;
+        (this.div.querySelector(
             '[data-targetcolor]',
-        ).value = marker.color.to_hash_string();
-        this.div.querySelector('[data-targetradius]').value = '';
-        this.div.querySelector(
+        ) as HTMLInputElement).value = marker.color.to_hash_string();
+        (this.div.querySelector('[data-targetradius]') as HTMLInputElement).value = '';
+        (this.div.querySelector(
             '[data-linecolor]',
-        ).value = marker.color.to_hash_string();
+        ) as HTMLInputElement).value = marker.color.to_hash_string();
         this.div.classList.add('is-active');
     }
 
-    hide() {
+    public hide(): void {
         this.div.classList.remove('is-active');
     }
 
-    go() {
+    public go(): void {
         const distance = parse_float(
-            this.div.querySelector('[data-distance]').value,
+            (this.div.querySelector('[data-distance]') as HTMLInputElement).value,
         );
         const bearing = parse_float(
-            this.div.querySelector('[data-bearing]').value,
+            (this.div.querySelector('[data-bearing]') as HTMLInputElement).value,
         );
-        const target_name = this.div.querySelector('[data-targetname]').value;
+        const target_name = (this.div.querySelector('[data-targetname]') as HTMLInputElement).value;
         const target_color = Color.from_string(
-            this.div.querySelector('[data-targetcolor]').value,
+            (this.div.querySelector('[data-targetcolor]') as HTMLInputElement).value,
         );
         const target_radius = parse_float(
-            this.div.querySelector('[data-targetradius]').value,
+            (this.div.querySelector('[data-targetradius]') as HTMLInputElement).value,
         );
-        const create_line = this.div.querySelector('[data-line]').checked;
+        const create_line = (this.div.querySelector('[data-line]') as HTMLInputElement).checked;
         const line_color = Color.from_string(
-            this.div.querySelector('[data-linecolor]').value,
+            (this.div.querySelector('[data-linecolor]') as HTMLInputElement).value,
         );
 
         if (distance === null || distance <= 0) {

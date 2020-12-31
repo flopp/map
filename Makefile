@@ -11,7 +11,11 @@ update-translation:
 	tools/find-i18n.py \
 		-t lang/en/translation.json \
 		-t lang/de/translation.json \
-		html/*.html js/*.js
+		html/*.html js/*.ts
+
+.PHONY: lint
+lint:
+	npm run lint-tslint
 
 .PHONY: build-local
 build-local:
@@ -19,8 +23,7 @@ build-local:
 	cp html/index.html ${LOCAL_DIR}/
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${LOCAL_DIR}/css/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${LOCAL_DIR}/img/
-	cp .secrets.js ${LOCAL_DIR}/js/api-keys.js
-	node_modules/.bin/webpack js/main.js --mode development -o ${LOCAL_DIR}/js/bundle.js
+	node_modules/.bin/webpack --mode development --output-path ${LOCAL_DIR}/js
 
 .PHONY: run-local
 run-local: build-local
@@ -32,8 +35,7 @@ build-upload:
 	sed -e "/<!--TRACKING-->/r .tracking" html/index.html > ${UPLOAD_DIR}/index.html
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${UPLOAD_DIR}/css/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${UPLOAD_DIR}/img
-	cp .secrets-production.js ${UPLOAD_DIR}/js/api-keys.js
-	node_modules/.bin/webpack js/main.js --mode production -o ./${UPLOAD_DIR}/js/bundle.js
+	node_modules/.bin/webpack --mode production
 
 .PHONY: upload
 upload: build-upload

@@ -1,24 +1,41 @@
 import jQuery from 'jquery';
 
-import {ApiKeysDialog} from './api_keys_dialog.js';
-import {Coordinates} from './coordinates.js';
-import {GoogleWrapper} from './google_wrapper.js';
-import {IconFactory} from './icon_factory.js';
-import {Language} from './language.js';
-import {LeafletWrapper} from './leaflet_wrapper.js';
-import {LinkDialog} from './link_dialog.js';
-import {MapMenu} from './map_menu.js';
-import {MapState, MapStateChange} from './map_state.js';
-import {MapType, isGoogle} from './map_type.js';
-import {MultiMarkersDialog} from './multi_markers_dialog.js';
-import {Notifications} from './notifications.js';
-import {ProjectionDialog} from './projection_dialog.js';
-import {Sidebar} from './sidebar.js';
-
-/* global GOOGLE_API_KEY */
+import {ApiKeysDialog} from './api_keys_dialog';
+import {Coordinates} from './coordinates';
+import {GoogleWrapper} from './google_wrapper';
+import {IconFactory} from './icon_factory';
+import {Language} from './language';
+import {LeafletWrapper} from './leaflet_wrapper';
+import {LinkDialog} from './link_dialog';
+import {MapMenu} from './map_menu';
+import {MapState, MapStateChange} from './map_state';
+import {MapType, isGoogle} from './map_type';
+import {Marker} from './marker';
+import {MultiMarkersDialog} from './multi_markers_dialog';
+import {Notifications} from './notifications';
+import {ProjectionDialog} from './projection_dialog';
+import {Sidebar} from './sidebar';
 
 export class App {
-    constructor(id_leaflet, id_google) {
+    private lang: Language;
+    private notifications: Notifications;
+    private google_maps_error: boolean;
+    public google_loading: boolean;
+
+    public map_state: MapState;
+    public icon_factory: IconFactory;
+    public api_keys_dialog: ApiKeysDialog;
+    public projection_dialog: ProjectionDialog;
+    public multi_markers_dialog: MultiMarkersDialog;
+    public link_dialog: LinkDialog;
+    public map_menu: MapMenu;
+    public id_leaflet: string;
+    public id_google: string;
+    public sidebar: Sidebar;
+    public leaflet: LeafletWrapper;
+    public google: GoogleWrapper;
+
+    constructor(id_leaflet: string, id_google: string) {
         this.lang = null;
         this.notifications = new Notifications();
 
@@ -44,7 +61,7 @@ export class App {
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
 
-        document.querySelector(`#${this.id_google}`).style.display = 'none';
+        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'none';
 
         this.sidebar = new Sidebar('#sidebar', '#sidebar-controls', this);
 
@@ -56,24 +73,16 @@ export class App {
         this.switch_map(this.map_state.map_type);
     }
 
-    message(text) {
+    public message(text: string): void {
         this.notifications.message(text, 'info');
     }
 
-    message_error(text) {
+    public message_error(text: string): void {
         this.notifications.message(text, 'danger');
     }
 
-    reset_maps() {
-        let google = true;
-        if (
-            this.map_state.google_api_key === '' &&
-            (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)
-        ) {
-            google = false;
-        }
-
-        if (google) {
+    public reset_maps(): void {
+        if (this.map_state.google_api_key !== '') {
             if (!this.has_google_maps()) {
                 this.google_maps_error = false;
                 this.sidebar.sidebar_layers.enable_google_layers();
@@ -83,11 +92,11 @@ export class App {
         }
     }
 
-    has_google_maps() {
+    public has_google_maps(): boolean {
         return !this.google_maps_error;
     }
 
-    initialize_google_map() {
+    public initialize_google_map(): void {
         if (this.google_maps_error) {
             this.switch_map(MapType.OPENSTREETMAP);
             return;
@@ -101,7 +110,7 @@ export class App {
         this.google_loading = false;
     }
 
-    switch_map(type) {
+    public switch_map(type: string): void {
         if (this.google_maps_error) {
             switch (type) {
                 case MapType.GOOGLE_ROADMAP:
@@ -138,7 +147,7 @@ export class App {
         }
     }
 
-    switch_to_leaflet() {
+    public switch_to_leaflet(): void {
         if (this.google) {
             this.google.deactivate();
         }
@@ -148,7 +157,7 @@ export class App {
         this.leaflet.invalidate_size();
     }
 
-    console_filter() {
+    public console_filter(): void {
         const console = window.console;
         if (!console) {
             return;
@@ -156,11 +165,11 @@ export class App {
 
         const self = this;
         const original = console.error;
-        console.error = (...args) => {
+        console.error = (...args): void => {
             // show original message
             Reflect.apply(original, console, args);
 
-            if (args[0] && typeof args[0] == 'string') {
+            if (args[0] && typeof args[0] === 'string') {
                 if (
                     args[0].indexOf('Google Maps JavaScript API error') >= 0 ||
                     args[0].indexOf('You are using this API without a key') >=
@@ -176,7 +185,7 @@ export class App {
         };
     }
 
-    google_maps_error_raised() {
+    public google_maps_error_raised(): void {
         this.message_error(
             this.translate('messages.layer_disabled').replace('{1}', 'Google Maps'),
         );
@@ -187,7 +196,7 @@ export class App {
         }
     }
 
-    switch_to_google() {
+    public switch_to_google(): void {
         const self = this;
         if (this.google_maps_error) {
             return;
@@ -206,27 +215,22 @@ export class App {
             return;
         }
 
-        let api_key = this.map_state.google_api_key;
-        if (
-            api_key === '' &&
-            (typeof GOOGLE_API_KEY == 'undefined' || GOOGLE_API_KEY.length < 32)
-        ) {
-            api_key = GOOGLE_API_KEY;
-        }
-
         console.log('ON DEMAND LOADING OF THE GOOGLE MAPS API');
+        const api_key = this.map_state.google_api_key;
         this.google_loading = true;
-        const promise = new Promise((resolve, reject) => {
+        const promise = new Promise<void>((resolve: (value?: void) => void, reject: (reason?: any) => void): void => {
             const callbackName = '__googleMapsApiOnLoadCallback';
             // Reject the promise after a timeout
-            const timeoutId = setTimeout(() => {
+            const timeoutId = setTimeout((): void => {
                 // Set the on load callback to a no-op
-                window[callbackName] = () => {};
+                window[callbackName] = (): void => {
+                    // empty
+                };
                 self.google_maps_error_raised();
                 reject(new Error('Could not load the Google Maps API'));
             }, 10000);
 
-            window[callbackName] = () => {
+            window[callbackName] = (): void => {
                 if (timeoutId !== null) {
                     clearTimeout(timeoutId);
                 }
@@ -239,47 +243,46 @@ export class App {
         });
 
         promise
-            .then(() => {
+            .then((): void => {
                 self.initialize_google_map();
             })
-            .catch((error) => {
+            .catch((error: any): void => {
                 console.log('Error in promise');
                 console.error(error);
                 self.google_maps_error_raised();
             });
     }
 
-    show_leaflet_div() {
-        document.querySelector(`#${this.id_leaflet}`).style.display = 'block';
-        document.querySelector(`#${this.id_google}`).style.display = 'none';
+    public show_leaflet_div(): void {
+        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = 'block';
+        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'none';
     }
 
-    show_google_div() {
-        document.querySelector(`#${this.id_leaflet}`).style.display = 'none';
-        document.querySelector(`#${this.id_google}`).style.display = 'block';
+    public show_google_div(): void {
+        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = 'none';
+        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'block';
     }
 
-    update_geometry() {
+    public update_geometry(): void {
         this.leaflet.invalidate_size();
         if (this.google) {
             this.google.invalidate_size();
         }
     }
 
-    locate_me() {
+    public locate_me(): void {
         const self = this;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (location) => {
+                (location: GeolocationPosition): void => {
                     self.map_state.set_center(
                         new Coordinates(
                             location.coords.latitude,
                             location.coords.longitude,
                         ),
-                        null,
                     );
                 },
-                (error) => {
+                (error: GeolocationPositionError): void => {
                     self.message_error(self.translate('messages.geolocation_error').replace('{1}', error.message));
                 },
             );
@@ -288,15 +291,15 @@ export class App {
         }
     }
 
-    search_location(location_string) {
-        if (location_string.length == 0) {
+    public search_location(location_string: string): void {
+        if (location_string.length === 0) {
             return;
         }
 
         // try to parse "location_string" as coordinates
         const coordinates = Coordinates.from_string(location_string);
         if (coordinates) {
-            this.map_state.set_center(coordinates, null);
+            this.map_state.set_center(coordinates);
             return;
         }
 
@@ -304,41 +307,40 @@ export class App {
         const self = this;
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${location_string}`;
         jQuery.get(url)
-            .done((data) => {
+            .done((data: any): void => {
                 if (data.length > 0) {
                     self.map_state.set_center(
-                        new Coordinates(data[0].lat, data[0].lon),
-                        null,
+                        new Coordinates(data[0].lat, data[0].lon)
                     );
                 } else {
                     self.message_error(self.lang.translate('search.noresult'));
                 }
             })
-            .fail(() => {
+            .fail((): void => {
                 self.message_error(self.lang.translate('search.servererror'));
             });
     }
 
-    show_api_keys_dialog() {
+    public show_api_keys_dialog(): void {
         if (this.api_keys_dialog === null) {
             this.api_keys_dialog = new ApiKeysDialog(this);
         }
         this.api_keys_dialog.show();
     }
 
-    show_projection_dialog(marker) {
+    public show_projection_dialog(marker: Marker): void {
         this.projection_dialog.show(marker);
     }
 
-    show_multi_markers_dialog() {
+    public show_multi_markers_dialog(): void {
         this.multi_markers_dialog.show();
     }
 
-    show_link_dialog() {
+    public show_link_dialog(): void {
         this.link_dialog.show();
     }
 
-    translate(key) {
+    public translate(key: string): string {
         if (this.lang === null) {
             return key;
         }

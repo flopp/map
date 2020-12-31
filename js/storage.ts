@@ -1,9 +1,11 @@
-import {Color} from './color.js';
-import {Coordinates, CoordinatesFormat} from './coordinates.js';
-import {MapType} from './map_type.js';
-import {parse_int, parse_float} from './utilities.js';
+import {Color} from './color';
+import {Coordinates, CoordinatesFormat} from './coordinates';
+import {MapType} from './map_type';
+import {parse_int, parse_float} from './utilities';
 
 export class Storage {
+    private ok: boolean;
+
     constructor() {
         this.ok = true;
         try {
@@ -19,7 +21,7 @@ export class Storage {
         this.set_int('version', 2);
     }
 
-    all_keys() {
+    public all_keys(): string[] {
         if (!this.ok) {
             return [];
         }
@@ -27,7 +29,7 @@ export class Storage {
         return Object.keys(window.localStorage);
     }
 
-    migrate() {
+    public migrate(): void {
         const version = this.get_int('version', 0);
         if (version === 1) {
             // from the old "Flopp's Map"
@@ -39,7 +41,7 @@ export class Storage {
         }
     }
 
-    migrate_from_v1() {
+    public migrate_from_v1(): void {
         const self = this;
 
         // clat + clon
@@ -93,12 +95,16 @@ export class Storage {
                 break;
         }
 
+        interface MarkerDict {
+            name: string, coordinates: Coordinates, radius: number, color: Color
+        }
+
         // markers (ID1:ID2:...); markerID1; markerID2; ...
         const markers = [];
         const marker_hash = new Map();
         this.get('markers', '')
             .split(':')
-            .forEach((id_string) => {
+            .forEach((id_string: string): void => {
                 const id_int = parse_int(id_string);
                 if (id_int === null) {
                     return;
@@ -135,18 +141,22 @@ export class Storage {
 
                 marker_hash.set(id_int, markers.length);
                 markers.push({
-                    name: name,
-                    coordinates: coordinates,
-                    color: color,
-                    radius: radius,
+                    name,
+                    coordinates,
+                    color,
+                    radius,
                 });
             });
+
+        interface LineDict {
+            from: number, to: number, color: Color
+        }
 
         // lines (FROM1:TO1*FROM2:TO2*...)
         const lines = [];
         this.get('lines', '')
             .split('*')
-            .forEach((ids) => {
+            .forEach((ids: string): void => {
                 const split_ids = ids.split(':');
                 if (split_ids.length !== 2) {
                     return;
@@ -160,8 +170,8 @@ export class Storage {
                     to = -1;
                 }
                 lines.push({
-                    from: from,
-                    to: to,
+                    from,
+                    to,
                     color: Color.from_string('#ff0000'),
                 });
             });
@@ -174,11 +184,11 @@ export class Storage {
         this.set('map_type', map_type);
         this.set('settings.marker.coordinates_format', coordinates_format);
 
-        const marker_ids = markers.map((_m, i) => {
+        const marker_ids = markers.map((_m: MarkerDict, i: number): number => {
             return i;
         });
         this.set('markers', marker_ids.join(';'));
-        markers.forEach((obj, i) => {
+        markers.forEach((obj: MarkerDict, i: number): void => {
             self.set(`marker[${i}].name`, obj.name);
             self.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
             self.set_float(`marker[${i}].radius`, obj.radius);
@@ -187,18 +197,18 @@ export class Storage {
             }
         });
 
-        const line_ids = lines.map((_l, i) => {
+        const line_ids = lines.map((_l, i: number): number => {
             return i;
         });
         this.set('lines', line_ids.join(';'));
-        lines.forEach((obj, i) => {
+        lines.forEach((obj: LineDict, i: number): void => {
             self.set(`line[${i}].marker1`, obj.from);
             self.set(`line[${i}].marker2`, obj.to);
             self.set_color(`line[${i}].color`, obj.color);
         });
     }
 
-    alpha2id_v1(s) {
+    public alpha2id_v1(s: string): number {
         const index_A = 'A'.charCodeAt(0);
         const index_0 = '0'.charCodeAt(0);
         const upper_s = s.toUpperCase();
@@ -218,7 +228,7 @@ export class Storage {
         return -1;
     }
 
-    set(key, value) {
+    public set(key: string, value: any): void {
         if (!this.ok) {
             return;
         }
@@ -230,14 +240,14 @@ export class Storage {
         }
     }
 
-    exists(key) {
+    public exists(key: string): boolean {
         if (!this.ok) {
             return false;
         }
         return window.localStorage.getItem(key) !== null;
     }
 
-    get(key, default_value) {
+    public get(key: string, default_value: string): string {
         if (!this.ok) {
             return default_value;
         }
@@ -249,54 +259,61 @@ export class Storage {
         return default_value;
     }
 
-    remove(key) {
+    public remove(key: string): void {
         if (!this.ok) {
             return;
         }
         window.localStorage.removeItem(key);
     }
 
-    set_int(key, value) {
+    public set_int(key: string, value: number): void {
         this.set(key, String(value));
     }
-    set_bool(key, value) {
+
+    public set_bool(key: string, value: boolean): void {
         if (value) {
             this.set_int(key, 1);
         } else {
             this.set_int(key, 0);
         }
     }
-    set_float(key, value) {
+
+    public set_float(key: string, value: number): void {
         this.set(key, String(value));
     }
-    set_color(key, value) {
+
+    public set_color(key: string, value: Color): void {
         this.set(key, value.to_string());
     }
-    set_coordinates(key, value) {
+
+    public set_coordinates(key: string, value: Coordinates): void {
         this.set(key, `${value.lat()};${value.lng()}`);
     }
 
-    get_int(key, default_value) {
+    public get_int(key: string, default_value: number): number {
         const s = this.get(key, null);
         if (s !== null) {
             return parseInt(s, 10);
         }
         return default_value;
     }
-    get_bool(key, default_value) {
+
+    public get_bool(key: string, default_value: boolean): boolean {
         if (default_value) {
-            return this.get_int(key, 1) != 0;
+            return this.get_int(key, 1) !== 0;
         }
-        return this.get_int(key, 0) != 0;
+        return this.get_int(key, 0) !== 0;
     }
-    get_float(key, default_value) {
+
+    public get_float(key: string, default_value: number): number {
         const s = this.get(key, null);
         if (s !== null) {
             return parseFloat(s);
         }
         return default_value;
     }
-    get_color(key, default_value) {
+
+    public get_color(key: string, default_value: Color): Color {
         const s = this.get(key, null);
         if (s === null) {
             return default_value;
@@ -309,7 +326,8 @@ export class Storage {
 
         return c;
     }
-    get_coordinates(key, default_value) {
+
+    public get_coordinates(key: string, default_value: Coordinates): Coordinates {
         const s = this.get(key, null);
         if (s === null) {
             return default_value;

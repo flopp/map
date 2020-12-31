@@ -1,9 +1,16 @@
-import {Color} from './color.js';
+import {Color} from './color';
 
-let next_line_id = 0;
+let next_line_id: number = 0;
 
 export class Line {
-    constructor(marker_id1, marker_id2) {
+    private line_id: number;
+    public marker1: number;
+    public marker2: number;
+    public color: Color;
+    public length: number;
+    public bearing: number;
+
+    constructor(marker_id1: number, marker_id2: number) {
         this.line_id = next_line_id;
         this.marker1 = marker_id1;
         this.marker2 = marker_id2;
@@ -15,15 +22,15 @@ export class Line {
         next_line_id += 1;
     }
 
-    static reset_ids() {
+    public static reset_ids(): void {
         next_line_id = 0;
     }
 
-    get_id() {
+    public get_id(): number {
         return this.line_id;
     }
 
-    to_json() {
+    public to_json(): {marker1: number, marker2: number, color: string} {
         return {
             marker1: this.marker1,
             marker2: this.marker2,

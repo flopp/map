@@ -1,7 +1,7 @@
-import {App} from './app.js';
+import {App} from './app';
 
-const main = () => {
-    window.app = new App(
+function main(): void {
+    (window as any).app = new App(
         'map-container-leaflet',
         'map-container-google'
     );

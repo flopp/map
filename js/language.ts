@@ -1,10 +1,15 @@
 import i18next from 'i18next';
-import resources from '@alienfast/i18next-loader!../lang/index.js';
+import resources from "../lang";
 // import {i18nextBrowserLanguageDetector} from 'i18next-browser-languagedetector';
-import {MapStateObserver, MapStateChange} from './map_state.js';
+
+import {App} from './app';
+import {MapStateChange} from './map_state';
+import {MapStateObserver} from "./map_state_observer";
 
 export class Language extends MapStateObserver {
-    constructor(app) {
+    private initialized: boolean;
+
+    constructor(app: App) {
         super(app);
 
         const self = this;
@@ -30,7 +35,7 @@ export class Language extends MapStateObserver {
                     defaultNS:'main',
                     resources
                 },
-                (err) => {
+                (err: any): void => {
                     if (!err) {
                         self.initialized = true;
                         self.localize();
@@ -39,52 +44,52 @@ export class Language extends MapStateObserver {
             );
     }
 
-    update_state(changes) {
-        if ((changes & MapStateChange.LANGUAGE) == MapStateChange.NOTHING) {
+    public update_state(changes: number): void {
+        if ((changes & MapStateChange.LANGUAGE) === MapStateChange.NOTHING) {
             return;
         }
 
         const self = this;
 
-        i18next.changeLanguage(this.app.map_state.language, (err) => {
+        i18next.changeLanguage(this.app.map_state.language, (err: any): void => {
             if (!err) {
                 self.localize();
             }
         });
     }
 
-    translate(key) {
+    public translate(key: string): string {
         if (!this.initialized) {
             console.log('i18n: not initialized, yet.');
             return key;
         }
 
         const translation = i18next.t(key);
-        if (translation == '') {
+        if (translation === '') {
             return key;
         }
 
         return translation;
     }
 
-    localize() {
+    public localize(): void {
         if (!this.initialized) {
             console.log('i18n: not initialized, yet.');
             return;
         }
 
-        document.querySelectorAll('[data-i18n]').forEach((element) => {
+        document.querySelectorAll('[data-i18n]').forEach((element: HTMLElement): void => {
             const key = element.getAttribute('data-i18n');
             let translation = i18next.t(key);
-            if (translation == '') {
+            if (translation === '') {
                 translation = key;
             }
 
             const target = element.getAttribute('data-i18n-target');
-            if (target === null || target ===  '' || target == 'text') {
+            if (target === null || target ===  '' || target === 'text') {
                 element.textContent = translation;
             } else if (target === 'placeholder') {
-                element.placeholder = translation;
+                (element as HTMLInputElement).placeholder = translation;
             } else {
                 console.log(
                     `i18n: bad i18n target attribute '${target}' in '${key}'`

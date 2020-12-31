@@ -1,5 +1,19 @@
+import {App} from "./app.js";
+import {Coordinates} from "./coordinates.js";
+import {Marker} from "./marker";
+import {MapWrapper} from "./map_wrapper.js";
+
 export class MapMenu {
-    constructor(app) {
+    public app: App;
+    public menu: HTMLElement;
+    public addmarker: HTMLElement;
+    public deletemarker: HTMLElement;
+    public projection: HTMLElement;
+    public centermap: HTMLElement;
+    public marker: Marker;
+    public coordinates: Coordinates;
+
+    constructor(app: App) {
         const self = this;
         this.app = app;
         this.menu = document.querySelector('#map-contextmenu');
@@ -10,13 +24,13 @@ export class MapMenu {
         this.marker = null;
         this.coordinates = null;
 
-        this.addmarker.addEventListener('click', () => {
+        this.addmarker.addEventListener('click', (): boolean => {
             self.hide();
             self.app.map_state.add_marker(self.coordinates);
             return false;
         });
 
-        this.deletemarker.addEventListener('click', () => {
+        this.deletemarker.addEventListener('click', (): boolean => {
             self.hide();
             if (self.marker) {
                 self.app.map_state.delete_marker(self.marker.get_id());
@@ -25,7 +39,7 @@ export class MapMenu {
             return false;
         });
 
-        this.projection.addEventListener('click', () => {
+        this.projection.addEventListener('click', (): boolean => {
             self.hide();
             if (self.marker) {
                 self.app.show_projection_dialog(self.marker);
@@ -33,7 +47,7 @@ export class MapMenu {
             return false;
         });
 
-        this.centermap.addEventListener('click', () => {
+        this.centermap.addEventListener('click', (): boolean => {
             self.hide();
             if (self.coordinates) {
                 self.app.map_state.set_center(self.coordinates);
@@ -46,11 +60,11 @@ export class MapMenu {
         this.hide();
     }
 
-    hide() {
+    public hide(): void {
         this.menu.style.display = 'none';
     }
 
-    showMap(wrapper, x, y, coordinates) {
+    public showMap(wrapper: MapWrapper, x: number, y: number, coordinates: Coordinates): void {
         this.addmarker.style.display = 'block';
         this.deletemarker.style.display = 'none';
         this.projection.style.display = 'none';
@@ -62,7 +76,7 @@ export class MapMenu {
         this.show(wrapper, x, y);
     }
 
-    showMarker(wrapper, x, y, marker) {
+    public showMarker(wrapper: MapWrapper, x: number, y: number, marker: Marker): void {
         this.addmarker.style.display = 'none';
         this.deletemarker.style.display = 'block';
         this.projection.style.display = 'block';
@@ -74,7 +88,7 @@ export class MapMenu {
         this.show(wrapper, x, y);
     }
 
-    show(wrapper, x, y) {
+    public show(wrapper: MapWrapper, x: number, y: number): void {
         this.menu.style.top = `${Math.min(y, wrapper.height() - this.menu.clientHeight)}px`;
         this.menu.style.left = `${Math.min(x, wrapper.width() - this.menu.clientWidth)}px`;
         this.menu.style.display = 'block';

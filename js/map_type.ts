@@ -13,11 +13,11 @@ if (Object.freeze) {
     Object.freeze(MapType);
 }
 
-const maptype2string = (type) => {
+function maptype2string(type: string): string {
     return type;
-};
+}
 
-const string2maptype = (s) => {
+function string2maptype(s: string): string {
     switch (s.toUpperCase()) {
         case MapType.OPENSTREETMAP:
             return MapType.OPENSTREETMAP;
@@ -37,9 +37,9 @@ const string2maptype = (s) => {
             return MapType.GOOGLE_TERRAIN;
     }
     return null;
-};
+}
 
-const maptype2human = (t) => {
+function maptype2human(t: string): string {
     switch (t) {
         case MapType.OPENSTREETMAP:
             return 'OpenStreetMap';
@@ -59,9 +59,9 @@ const maptype2human = (t) => {
             return 'Google Terrain';
     }
     return 'Unknown';
-};
+}
 
-const isGoogle = (t) => {
+function isGoogle(t: string): boolean {
     switch (t) {
         case MapType.GOOGLE_ROADMAP:
         case MapType.GOOGLE_SATELLITE:
@@ -70,7 +70,7 @@ const isGoogle = (t) => {
             return true;
     }
     return false;
-};
+}
 
 export {
     MapType,

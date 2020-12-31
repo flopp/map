@@ -1,19 +1,34 @@
 import * as L from 'leaflet';
 
-import {Coordinates} from './coordinates.js';
-import {MapType} from './map_type.js';
-import {MapWrapper} from './map_wrapper.js';
+import { App } from './app';
+import {Coordinates} from './coordinates';
+import {Line} from "./line";
+import {MapType} from './map_type';
+import {MapWrapper} from './map_wrapper';
+import {Marker} from "./marker";
 
-const from_coordinates = (c) => {
-    return L.latLng(c.raw_lat, c.raw_lng);
+function from_coordinates(c: Coordinates): L.LatLng {
+    return L.latLng(c.raw_lat(), c.raw_lng());
 };
 
-const to_coordinates = (leaflet_latlng) => {
+function to_coordinates(leaflet_latlng: L.LatLng): Coordinates {
     return new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
 };
 
 export class LeafletWrapper extends MapWrapper {
-    constructor(div_id, app) {
+    private automatic_event: boolean;
+    private hillshading_enabled: boolean;
+    private hillshading_layer: any;
+    private german_npa_enabled: boolean;
+    private german_npa_layer: any;
+    private map: L.Map;
+    private layer_openstreetmap: L.TileLayer;
+    private layer_opentopomap: L.TileLayer;
+    private layer_stamen_terrain: L.TileLayer;
+    private layer_arcgis_worldimagery: L.TileLayer;
+    private layers: L.TileLayer[];
+
+    constructor(div_id: string, app: App) {
         super(div_id, app);
         this.automatic_event = false;
         this.hillshading_enabled = false;
@@ -22,7 +37,7 @@ export class LeafletWrapper extends MapWrapper {
         this.german_npa_layer = null;
     }
 
-    create_map_object(div_id) {
+    public create_map_object(div_id: string): void {
         const self = this;
 
         this.map = L.map(div_id);
@@ -69,8 +84,8 @@ export class LeafletWrapper extends MapWrapper {
             this.layer_stamen_terrain,
             this.layer_arcgis_worldimagery,
         ];
-        ['zoom', 'move'].forEach((event_name) => {
-            self.map.on(event_name, () => {
+        ['zoom', 'move'].forEach((event_name: string): void => {
+            self.map.on(event_name, (): void => {
                 if (self.active && !self.automatic_event) {
                     self.app.map_state.set_view(
                         to_coordinates(self.map.getCenter()),
@@ -80,7 +95,7 @@ export class LeafletWrapper extends MapWrapper {
             });
         });
 
-        this.map.on('contextmenu', (event) => {
+        this.map.on('contextmenu', (event: L.Event): boolean => {
             self.app.map_menu.showMap(
                 self,
                 event.containerPoint.x,
@@ -89,14 +104,14 @@ export class LeafletWrapper extends MapWrapper {
             );
             return false;
         });
-        ['zoom', 'move', 'mousedown'].forEach((event_name) => {
-            self.map.on(event_name, () => {
+        ['zoom', 'move', 'mousedown'].forEach((event_name: string): void => {
+            self.map.on(event_name, (): void => {
                 self.app.map_menu.hide();
             });
         });
     }
 
-    set_map_type(map_type) {
+    public set_map_type(map_type: string): void {
         let layer = null;
         switch (map_type) {
             case MapType.OPENSTREETMAP:
@@ -117,8 +132,8 @@ export class LeafletWrapper extends MapWrapper {
 
         if (layer && !this.map.hasLayer(layer)) {
             const self = this;
-            this.layers.forEach((otherLayer) => {
-                if (otherLayer != layer) {
+            this.layers.forEach((otherLayer: L.TileLayer): void => {
+                if (otherLayer !== layer) {
                     self.map.removeLayer(otherLayer);
                 }
             });
@@ -127,8 +142,8 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    set_hillshading(enabled) {
-        if (this.hillshading_enabled == enabled) {
+    public set_hillshading(enabled: boolean): void {
+        if (this.hillshading_enabled === enabled) {
             return;
         }
 
@@ -146,8 +161,8 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    set_german_npa(enabled) {
-        if (this.german_npa_enabled == enabled) {
+    public set_german_npa(enabled: boolean): void {
+        if (this.german_npa_enabled === enabled) {
             return;
         }
 
@@ -168,47 +183,47 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    set_map_view(center, zoom) {
+    public set_map_view(center: Coordinates, zoom: number): void {
         this.automatic_event = true;
         this.map.setView(from_coordinates(center), zoom, {animate: false});
         this.automatic_event = false;
     }
 
-    invalidate_size() {
+    public invalidate_size(): void {
         this.map.invalidateSize();
     }
 
-    create_marker_object(marker) {
+    protected create_marker_object(marker: Marker): void {
         const self = this;
 
-        const obj = L.marker(from_coordinates(marker.coordinates), {
-            draggable: true,
-            autoPan: true,
-            icon: this.create_icon(marker),
-        }).addTo(this.map);
-
-        obj.meta = {
+        const obj = {
+            marker_obj: L.marker(from_coordinates(marker.coordinates), {
+                draggable: true,
+                autoPan: true,
+                icon: this.create_icon(marker),
+            }),
+            circle_obj: null,
             last_name: marker.name,
             last_color: marker.color,
-            circle: null,
         };
+        obj.marker_obj.addTo(this.map);
 
-        obj.on('drag', () => {
+
+        obj.marker_obj.on('drag', (): void => {
             self.app.map_state.set_marker_coordinates(
                 marker.get_id(),
-                to_coordinates(obj.getLatLng()),
-                null,
+                to_coordinates(obj.marker_obj.getLatLng())
             );
-            if (obj.meta.circle) {
-                const center = to_coordinates(obj.getLatLng());
+            if (obj.circle_obj) {
+                const center = to_coordinates(obj.marker_obj.getLatLng());
                 const points = center
                     .geodesic_circle(marker.radius)
                     .map(from_coordinates);
-                obj.meta.circle.setLatLngs(points);
+                obj.circle_obj.setLatLngs(points);
             }
         });
 
-        obj.on('contextmenu', (event) => {
+        obj.marker_obj.on('contextmenu', (event: L.Event): boolean => {
             self.app.map_menu.showMarker(
                 self,
                 event.containerPoint.x,
@@ -223,48 +238,48 @@ export class LeafletWrapper extends MapWrapper {
         this.update_marker_object(obj, marker);
     }
 
-    update_marker_object(obj, marker) {
-        obj.setLatLng(from_coordinates(marker.coordinates));
+    protected update_marker_object(obj: any, marker: Marker): void {
+        obj.marker_obj.setLatLng(from_coordinates(marker.coordinates));
         if (marker.radius > 0) {
-            if (!obj.meta.circle) {
-                obj.meta.circle = L.polygon([], {
+            if (!obj.circle_obj) {
+                obj.circle_obj = L.polygon([], {
                     color: marker.color.to_hash_string(),
                     weight: 1,
                     interactive: false,
                 }).addTo(this.map);
             }
-            obj.meta.circle.setLatLngs(
+            obj.circle_obj.setLatLngs(
                 marker.coordinates
                     .geodesic_circle(marker.radius)
                     .map(from_coordinates),
             );
-        } else if (obj.meta.circle) {
-            this.map.removeLayer(obj.meta.circle);
-            obj.meta.circle = null;
+        } else if (obj.circle_obj) {
+            this.map.removeLayer(obj.circle_obj);
+            obj.circle_obj = null;
         }
 
         if (
-            !marker.color.equals(obj.meta.last_color) ||
-            marker.name !== obj.meta.last_name
+            !marker.color.equals(obj.last_color) ||
+            marker.name !== obj.last_name
         ) {
-            obj.setIcon(this.create_icon(marker));
+            obj.marker_obj.setIcon(this.create_icon(marker));
         }
-        if (obj.meta.circle && !marker.color.equals(obj.meta.last_color)) {
-            obj.meta.circle.setStyle({color: marker.color.to_hash_string()});
+        if (obj.circle_obj && !marker.color.equals(obj.last_color)) {
+            obj.circle_obj.setStyle({color: marker.color.to_hash_string()});
         }
 
-        obj.meta.last_color = marker.color;
-        obj.meta.last_name = marker.name;
+        obj.last_color = marker.color;
+        obj.last_name = marker.name;
     }
 
-    delete_marker_object(obj) {
-        if (obj.meta.circle) {
-            this.map.removeLayer(obj.meta.circle);
+    public delete_marker_object(obj: any): void {
+        if (obj.circle_obj) {
+            this.map.removeLayer(obj.circle_obj);
         }
-        this.map.removeLayer(obj);
+        this.map.removeLayer(obj.marker_obj);
     }
 
-    create_line_object(line) {
+    public create_line_object(line: Line): void {
         if (
             !this.has_marker_object(line.marker1) ||
             !this.has_marker_object(line.marker2)
@@ -272,30 +287,32 @@ export class LeafletWrapper extends MapWrapper {
             return;
         }
 
-        const obj = L.polyline([], {
-            color: line.color.to_hash_string(),
-            weight: 2,
-            interactive: false,
-        }).addTo(this.map);
-
-        obj.meta = {
-            last_color: line.color,
-            arrow: L.polyline([], {
+        const obj = {
+            line_obj: L.polyline([], {
                 color: line.color.to_hash_string(),
                 weight: 2,
                 interactive: false,
             }),
+            arrow_obj: L.polyline([], {
+                color: line.color.to_hash_string(),
+                weight: 2,
+                interactive: false,
+            }),
+            last_color: line.color,
         };
-        obj.meta.arrow.addTo(this.map);
+
+        obj.line_obj.addTo(this.map);
+        obj.arrow_obj.addTo(this.map);
 
         this.lines.set(line.get_id(), obj);
 
         this.update_line_object(obj, line);
     }
 
-    arrow_head(p1, p2) {
-        const compute_heading = (a, b) => ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) %
-            360;
+    private arrow_head(p1: L.Point, p2: L.Point): L.Point[] {
+        const compute_heading = (a: L.Point, b: L.Point): number =>
+            ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) %
+            360
 
         const headAngle = 60;
         const pixelSize = 10;
@@ -330,7 +347,7 @@ export class LeafletWrapper extends MapWrapper {
         ];
     }
 
-    update_line_object(obj, line) {
+    public update_line_object(obj: any, line: Line): void {
         if (
             !this.has_marker_object(line.marker1) ||
             !this.has_marker_object(line.marker2)
@@ -347,32 +364,32 @@ export class LeafletWrapper extends MapWrapper {
                 this.app.map_state.zoom,
             );
         const leaflet_path = path.map(from_coordinates);
-        obj.setLatLngs(leaflet_path);
+        obj.line_obj.setLatLngs(leaflet_path);
         if (leaflet_path.length <= 1) {
-            obj.meta.arrow.setLatLngs([]);
+            obj.arrow_obj.setLatLngs([]);
         } else {
             const last = leaflet_path[leaflet_path.length - 1];
             const last1 = leaflet_path[leaflet_path.length - 2];
-            obj.meta.arrow.setLatLngs(this.arrow_head(last1, last));
+            obj.arrow_obj.setLatLngs(this.arrow_head(last1, last));
         }
 
-        if (!line.color.equals(obj.meta.last_color)) {
-            obj.setStyle({
+        if (!line.color.equals(obj.last_color)) {
+            obj.line_obj.setStyle({
                 color: line.color.to_hash_string(),
             });
-            obj.meta.arrow.setStyle({
+            obj.arrow_obj.setStyle({
                 color: line.color.to_hash_string(),
             });
-            obj.meta.last_color = line.color;
+            obj.last_color = line.color;
         }
     }
 
-    delete_line_object(obj) {
-        this.map.removeLayer(obj.meta.arrow);
-        this.map.removeLayer(obj);
+    public delete_line_object(obj: any): void {
+        this.map.removeLayer(obj.arrow_obj);
+        this.map.removeLayer(obj.line_obj);
     }
 
-    create_icon(marker) {
+    public create_icon(marker: Marker): L.icon {
         const icon = this.app.icon_factory.create_map_icon(
             marker.name,
             marker.color,

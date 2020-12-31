@@ -1,14 +1,16 @@
-let last_random_color = null;
+let last_random_color: Color = null;
 
 export class Color {
-    constructor(hex) {
+    private hex: string = "";
+
+    constructor(hex: string) {
         if (!RegExp('^[0-9A-Fa-f]{6}$').test(hex)) {
             throw new Error(`bad hex-color: ${hex}`);
         }
         this.hex = hex;
     }
 
-    static from_string(str) {
+    public static from_string(str: string) : Color|null {
         if (RegExp('^[0-9A-Fa-f]{6}$').test(str)) {
             return new Color(str);
         }
@@ -18,11 +20,11 @@ export class Color {
         return null;
     }
 
-    static random() {
+    public static random() : Color{
         return new Color((Math.random().toString(16) + '000000').slice(2, 8));
     }
 
-    static random_from_palette() {
+    public static random_from_palette() : Color {
         const colors = [
             'FF3860', // bulma red
             'FFDD57', // bulma yellow
@@ -35,40 +37,40 @@ export class Color {
         let hex = null;
         do {
             hex = colors[Math.floor(Math.random() * colors.length)];
-        } while (hex == last_random_color);
+        } while (hex === last_random_color);
         last_random_color = hex;
 
         return new Color(hex);
     }
 
-    to_string() {
+    public to_string() : string{
         return this.hex;
     }
 
-    to_hash_string() {
+    public to_hash_string() : string {
         return `#${this.hex}`;
     }
 
-    luma() {
-        const rgb = parseInt(this.hex, 16),
-            r = (rgb >> 16) & 0xff,
-            g = (rgb >> 8) & 0xff,
-            b = (rgb >> 0) & 0xff;
+    public luma() : number{
+        const rgb = parseInt(this.hex, 16);
+        const r = (rgb >> 16) & 0xff;
+        const g = (rgb >> 8) & 0xff;
+        const b = (rgb >> 0) & 0xff;
         // luma, per ITU-R BT.709
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
-    text_color() {
+    public text_color() : Color {
         if (this.luma() >= 128) {
             return new Color('000000');
         }
         return new Color('FFFFFF');
     }
 
-    equals(other) {
+    public equals(other?: Color) : boolean {
         if (other === null) {
             return false;
         }
-        return this.hex.toLowerCase() == other.hex.toLowerCase();
+        return this.hex.toLowerCase() === other.hex.toLowerCase();
     }
 }

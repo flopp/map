@@ -1,36 +1,41 @@
 import Clipboard from 'clipboard';
+import {App} from './app';
 
 export class LinkDialog {
-    constructor(app) {
+    private div: HTMLElement;
+    private app: App;
+    private clipboard: Clipboard;
+
+    constructor(app: App) {
         const self = this;
 
         this.div = document.querySelector('#link-dialog');
         this.app = app;
 
         this.clipboard = new Clipboard('#link-dialog-copy-button');
-        this.clipboard.on('success', () => {
+        this.clipboard.on('success', (): void => {
             self.app.message(self.app.translate('dialog.link.copied_message'));
         });
-        this.clipboard.on('error', () => {
+        this.clipboard.on('error', (): void => {
             self.app.message_error(
                 self.app.translate('dialog.link.failed_message'),
             );
         });
 
-        this.div.querySelectorAll('[data-cancel]').forEach((el) => {
-            el.onclick = () => {
+        this.div.querySelectorAll('[data-cancel]').forEach((element: HTMLElement): void => {
+            element.addEventListener('click', (): void => {
                 self.hide();
-            };
+            });
         });
     }
 
-    show() {
+    public show(): void {
         this.div.classList.add('is-active');
         const link = this.app.map_state.create_link();
-        document.querySelector('#link-dialog-input').value = link;
+        (document.querySelector('#link-dialog-input') as HTMLInputElement).value = link;
     }
 
-    hide() {
+    public hide(): void {
         this.div.classList.remove('is-active');
     }
 }

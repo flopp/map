@@ -1,4 +1,4 @@
-const parse_float = (str) => {
+function parse_float(str: string): number {
     if (!/[0-9]/.test(str)) {
         return null;
     }
@@ -6,9 +6,9 @@ const parse_float = (str) => {
         return null;
     }
     return parseFloat(str);
-};
+}
 
-const parse_int = (str) => {
+function parse_int (str: string): number {
     if (!/[0-9]/.test(str)) {
         return null;
     }
@@ -16,27 +16,27 @@ const parse_int = (str) => {
         return null;
     }
     return parseFloat(str);
-};
+}
 
-const create_element = (type, classes = [], attributes = {}) => {
+function create_element (type: string, classes: string[] = [], attributes: object = {}): HTMLElement {
     const element = document.createElement(type);
-    classes.forEach((cls) => {
+    classes.forEach((cls: string): void => {
         element.classList.add(cls);
     });
-    for (const [key, value] of Object.entries(attributes)) {
-        element.setAttribute(key, value);
+    for (const key of Object.keys(attributes)) {
+        element.setAttribute(key, attributes[key]);
     }
     return element;
-};
+}
 
-const remove_element = (node) => {
+function remove_element (node: HTMLElement): void {
     if (node === null) {
         return;
     }
     node.parentNode.removeChild(node);
 };
 
-const create_text_input = (label_text, data_tag, placeholder) => {
+function create_text_input(label_text: string, data_tag: string, placeholder: string): HTMLElement {
     const field = create_element('div', ["field"]);
     const label = create_element('label', ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -54,7 +54,7 @@ const create_text_input = (label_text, data_tag, placeholder) => {
     return field;
 };
 
-const create_color_input = (label_text, data_tag, placeholder) => {
+function create_color_input(label_text: string, data_tag: string, placeholder: string): HTMLElement {
     const field = create_element('div', ["field"]);
     const label = create_element('label', ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -72,7 +72,7 @@ const create_color_input = (label_text, data_tag, placeholder) => {
     return field;
 };
 
-const create_select_input = (label_text, data_tag) => {
+function create_select_input(label_text: string, data_tag: string): HTMLElement {
     const field = create_element('div', ["field"]);
     const label = create_element('label', ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -86,7 +86,7 @@ const create_select_input = (label_text, data_tag) => {
     return field;
 };
 
-const create_button = (label_text, callback) => {
+function create_button(label_text: string, callback: () => void): HTMLElement {
     const control = create_element('div', ["control"]);
     const button = create_element('button', ["button"]);
     button.textContent = label_text;
@@ -95,9 +95,13 @@ const create_button = (label_text, callback) => {
     return control;
 };
 
-const create_dropdown = (items) => {
+interface LabelCallback {
+    label: string,
+    callback: () => void
+};
+function create_dropdown(items: LabelCallback[]): HTMLElement {
     const dropdown = create_element("div", ["dropdown", "is-right"]);
-    dropdown.addEventListener('click', (event) => {
+    dropdown.addEventListener('click', (event: MouseEvent): void => {
         event.stopPropagation();
         dropdown.classList.toggle('is-active');
     });
@@ -115,7 +119,7 @@ const create_dropdown = (items) => {
     const menu_content = create_element('div', ["dropdown-content", "has-background-info-light"]);
     menu.appendChild(menu_content);
 
-    items.forEach((item) => {
+    items.forEach((item: LabelCallback):void => {
         const dropdown_item = create_element('a', ["dropdown-item"], {"href": "#"});
         dropdown_item.textContent = item.label;
         dropdown_item.addEventListener('click', item.callback);
@@ -125,9 +129,9 @@ const create_dropdown = (items) => {
     return dropdown;
 };
 
-const encode_parameters = (parameters) => {
+function encode_parameters(parameters: object): string {
     return Object.keys(parameters).reduce(
-        (a, k) => {
+        (a: string[], k: string): string[] => {
             a.push(`${k}=${encodeURIComponent(parameters[k])}`);
             return a;
         },

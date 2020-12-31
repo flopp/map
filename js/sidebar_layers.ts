@@ -1,9 +1,18 @@
-import {MapStateObserver, MapStateChange} from './map_state.js';
-import {MapType, maptype2human, isGoogle} from './map_type.js';
-import {remove_element} from "./utilities.js";
+import { App } from './app';
+import {MapStateChange} from './map_state';
+import {MapStateObserver} from "./map_state_observer";
+import {MapType, maptype2human, isGoogle} from './map_type';
+import {remove_element} from "./utilities";
 
+interface BaselayerDict {type: string, option?: HTMLOptionElement};
 export class SidebarLayers extends MapStateObserver {
-    constructor(app) {
+    private div: HTMLElement;
+    private baselayers: BaselayerDict[];
+    private baselayer_select: HTMLSelectElement;
+    private hillshading_checkbox: HTMLInputElement;
+    private german_npa_checkbox: HTMLInputElement;
+
+    constructor(app: App) {
         super(app);
         const self = this;
 
@@ -21,7 +30,7 @@ export class SidebarLayers extends MapStateObserver {
         ];
 
         this.baselayer_select = this.div.querySelector('[data-baselayer]');
-        this.baselayers.forEach((baselayer) => {
+        this.baselayers.forEach((baselayer: BaselayerDict): void => {
             baselayer.option = new Option(
                 maptype2human(baselayer.type),
                 baselayer.type,
@@ -30,13 +39,13 @@ export class SidebarLayers extends MapStateObserver {
             );
             self.baselayer_select.appendChild(baselayer.option);
         });
-        this.baselayer_select.onchange = () => {
+        this.baselayer_select.onchange = (): void => {
             app.switch_map(self.baselayer_select.value);
         };
 
-        this.div.querySelector('[data-add-keys-button]').onclick = () => {
+        this.div.querySelector('[data-add-keys-button]').addEventListener('click', (): void => {
             self.app.show_api_keys_dialog();
-        };
+        });
 
         if (!app.has_google_maps()) {
             this.disable_google_layers();
@@ -46,7 +55,7 @@ export class SidebarLayers extends MapStateObserver {
             '[data-hillshading-layer]',
         );
         this.hillshading_checkbox.checked = this.app.map_state.hillshading;
-        this.hillshading_checkbox.onchange = () => {
+        this.hillshading_checkbox.onchange = (): void => {
             self.app.map_state.set_hillshading(
                 self.hillshading_checkbox.checked,
             );
@@ -56,15 +65,15 @@ export class SidebarLayers extends MapStateObserver {
             '[data-german-npa-layer]',
         );
         this.german_npa_checkbox.checked = this.app.map_state.german_npa;
-        this.german_npa_checkbox.onchange = () => {
+        this.german_npa_checkbox.onchange = (): void => {
             self.app.map_state.set_german_npa(
                 self.german_npa_checkbox.checked,
             );
         };
     }
 
-    update_state(changes) {
-        if ((changes & MapStateChange.MAPTYPE) == MapStateChange.NOTHING) {
+    public update_state(changes: number): void {
+        if ((changes & MapStateChange.MAPTYPE) === MapStateChange.NOTHING) {
             return;
         }
 
@@ -73,8 +82,8 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    disable_layers(check_function) {
-        this.baselayers.forEach((baselayer) => {
+    public disable_layers(check_function: (layxer_type: string) => boolean): void {
+        this.baselayers.forEach((baselayer: BaselayerDict): void => {
             if (check_function(baselayer.type)) {
                 if (baselayer.option) {
                     remove_element(baselayer.option);
@@ -85,9 +94,9 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    enable_layers(check_function) {
+    public enable_layers(check_function: (layer_type: string) => boolean): void {
         const self = this;
-        this.baselayers.forEach((baselayer) => {
+        this.baselayers.forEach((baselayer: BaselayerDict): void => {
             if (check_function(baselayer.type)) {
                 if (!baselayer.option) {
                     baselayer.option = new Option(
@@ -103,16 +112,16 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    disable_google_layers() {
+    public disable_google_layers(): void {
         this.disable_layers(isGoogle);
     }
 
-    enable_google_layers() {
+    public enable_google_layers(): void {
         this.enable_layers(isGoogle);
     }
 
-    update_baselayer_help() {
-        const help_div = this.div.querySelector('[data-baselayer-help]');
+    public update_baselayer_help(): void {
+        const help_div = (this.div.querySelector('[data-baselayer-help]') as HTMLElement);
         if (this.app.has_google_maps()) {
             help_div.classList.add('is-hidden');
             return;

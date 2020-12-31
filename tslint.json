@@ -1,0 +1,44 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "max-line-length": {
+            "options": [
+                120
+            ]
+        },
+        "indent": [
+            true,
+            "spaces",
+            4
+        ],
+        "no-bitwise": false,
+        "no-console": false,
+        "variable-name": {
+            "options": [
+                "ban-keywords",
+                "check-format",
+                "allow-leading-underscore",
+                "allow-pascal-case",
+                "allow-snake-case"
+            ]
+        },
+        "typedef": [
+            true,
+            "call-signature",
+            "parameter",
+            "arrow-call-signature",
+            "member-variable-declaration",
+            "object-destructuring",
+            "array-destructuring"
+        ],
+        "member-access": [
+            true,
+            "check-accessor"
+        ]
+    },
+    "rulesDirectory": []
+}

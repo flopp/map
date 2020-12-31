@@ -1,1 +1,1 @@
-// intentionally empty
+export default {}

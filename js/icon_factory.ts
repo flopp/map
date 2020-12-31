@@ -1,19 +1,24 @@
-import {create_element} from "./utilities.js";
+import {Color} from './color';
+import {create_element} from "./utilities";
 
 export class IconFactory {
+    private font: string
+    private canvas: HTMLCanvasElement
+
     constructor() {
         this.font = '16px sans';
         this.canvas = null;
     }
 
-    create_map_icon(text, color) {
+    public create_map_icon(text: string, color: Color) : {url: string, size: number[], anchor: number[]} {
         const encoder = create_element('span');
         encoder.textContent = text;
         const domString = encoder.innerHTML;
-        // domString is UTF-16; we need to convert it to UTF-8.
+        // domString is UTF-16
+        // we need to convert it to UTF-8
         const encoded_text = encodeURIComponent(domString).replace(
             /%([0-9A-F]{2})/g,
-            (_match, p1) => {
+            (_match: any, p1: string) : string => {
                 return String.fromCharCode(parseInt(p1, 16));
             },
         );
@@ -21,11 +26,11 @@ export class IconFactory {
         const w = Math.max(
                 33.0,
                 16.0 + this.compute_text_width(text),
-            ),
-            w2 = 0.5 * w,
-            d = 4.0,
-            text_color = color.text_color().to_hash_string(),
-            svg = `<svg
+            );
+        const w2 = 0.5 * w;
+        const d = 4.0;
+        const text_color = color.text_color().to_hash_string();
+        const svg = `<svg
                        xmlns:svg="http://www.w3.org/2000/svg"
                        xmlns="http://www.w3.org/2000/svg"
                        width="${w}" height="37"
@@ -52,20 +57,20 @@ export class IconFactory {
                        <text
                          style="text-anchor:middle;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-weight:normal;font-size:16px;line-height:100%;font-family:sans;letter-spacing:0px;word-spacing:0px;fill:${text_color};fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
                          x="${w2}" y="21">${encoded_text}</text>
-                   </svg>`,
-            url = `data:image/svg+xml;charset=UTF-8;base64,${window.btoa(svg)}`;
+                   </svg>`;
+        const url = `data:image/svg+xml;charset=UTF-8;base64,${window.btoa(svg)}`;
 
         return {
-            url: url,
+            url,
             size: [w, 37],
             anchor: [w2, 37 - 4.0],
         };
     }
 
-    compute_text_width(text) {
+    private compute_text_width(text: string) : number {
         // re-use canvas object for better performance
         if (!this.canvas) {
-            this.canvas = create_element('canvas');
+            this.canvas = (create_element('canvas') as HTMLCanvasElement);
         }
 
         const context = this.canvas.getContext('2d');

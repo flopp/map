@@ -1,12 +1,23 @@
-import {MapStateChange, MapStateObserver} from './map_state.js';
-import {SidebarLayers} from './sidebar_layers.js';
-import {SidebarLines} from './sidebar_lines.js';
-import {SidebarMarkers} from './sidebar_markers.js';
-import {SidebarSearch} from './sidebar_search.js';
-import {SidebarTools} from './sidebar_tools.js';
+import { App } from "./app";
+import {MapStateChange} from "./map_state";
+import {MapStateObserver} from "./map_state_observer";
+import {SidebarLayers} from './sidebar_layers';
+import {SidebarLines} from './sidebar_lines';
+import {SidebarMarkers} from './sidebar_markers';
+import {SidebarSearch} from './sidebar_search';
+import {SidebarTools} from './sidebar_tools';
 
 export class Sidebar extends MapStateObserver {
-    constructor(sidebar_selector, sidebar_controls_selector, app) {
+    private sidebar_selector: string;
+    private sidebar_controls_selector: string;
+    private controls: HTMLElement[];
+    private sidebar_search: SidebarSearch;
+    public sidebar_layers: SidebarLayers;
+    private sidebar_markers: SidebarMarkers;
+    private sidebar_lines: SidebarLines;
+    private sidebar_tools: SidebarTools;
+
+    constructor(sidebar_selector: string, sidebar_controls_selector: string, app: App) {
         super(app);
 
         const self = this;
@@ -15,13 +26,13 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_controls_selector = sidebar_controls_selector;
 
         this.controls = [];
-        document.querySelectorAll('.sidebar-control-button').forEach((button) => {
-            button.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-control-button').forEach((button: HTMLElement): void => {
+            button.addEventListener('click', (): void => {
                 self.toggle(button);
             });
 
             const close_button = document.querySelector(`${button.dataset.container} > .header > .close`);
-            close_button.addEventListener('click', () => {
+            close_button.addEventListener('click', (): void => {
                 self.toggle(null);
             });
 
@@ -35,7 +46,7 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_tools = new SidebarTools(app);
     }
 
-    toggle(toggle_control) {
+    public toggle(toggle_control: HTMLElement): void {
         if (
             !toggle_control ||
             toggle_control.parentElement.classList.contains('active')
@@ -46,15 +57,15 @@ export class Sidebar extends MapStateObserver {
         }
     }
 
-    update_state(changes) {
-        if ((changes & MapStateChange.SIDEBAR) == MapStateChange.NOTHING) {
+    public update_state(changes: number): void {
+        if ((changes & MapStateChange.SIDEBAR) === MapStateChange.NOTHING) {
             return;
         }
 
         const section = this.app.map_state.sidebar_open;
 
         if (!section) {
-            this.controls.forEach((control) => {
+            this.controls.forEach((control: HTMLElement): void => {
                 const parent = control.parentElement;
                 const container = document.querySelector(control.dataset.container);
                 parent.classList.remove('active');
@@ -63,15 +74,15 @@ export class Sidebar extends MapStateObserver {
 
             document.querySelector(this.sidebar_selector).classList.remove('sidebar-open');
             document.querySelector(this.sidebar_controls_selector).classList.remove('sidebar-open');
-            document.querySelectorAll('.map-container').forEach((mapContainer) => {
+            document.querySelectorAll('.map-container').forEach((mapContainer: HTMLElement): void => {
                 mapContainer.classList.remove('sidebar-open');
             });
         } else {
             let found = false;
-            this.controls.forEach((control) => {
+            this.controls.forEach((control: HTMLElement): void => {
                 const parent = control.parentElement;
                 const container = document.querySelector(control.dataset.container);
-                if (section == control.id) {
+                if (section === control.id) {
                     found = true;
                     parent.classList.add('active');
                     container.classList.add('active');
@@ -89,7 +100,7 @@ export class Sidebar extends MapStateObserver {
 
             document.querySelector(this.sidebar_selector).classList.add('sidebar-open');
             document.querySelector(this.sidebar_controls_selector).classList.add('sidebar-open');
-            document.querySelectorAll('.map-container').forEach((mapContainer) => {
+            document.querySelectorAll('.map-container').forEach((mapContainer: HTMLElement): void => {
                 mapContainer.classList.add('sidebar-open');
             });
         }

@@ -12,20 +12,31 @@ if (Object.freeze) {
 
 export {CoordinatesFormat};
 
-let coordinates_format = CoordinatesFormat.DM;
+let coordinates_format: string = CoordinatesFormat.DM;
 
 export class Coordinates {
-    constructor(lat, lng) {
-        this.raw_lat = lat;
-        this.raw_lng = lng;
+    private _raw_lat: number
+    private _raw_lng: number
+
+    constructor(lat: number, lng: number) {
+        this._raw_lat = lat;
+        this._raw_lng = lng;
     }
 
-    lat() {
-        return this.raw_lat;
+    public raw_lat(): number {
+        return this._raw_lat;
     }
 
-    lng() {
-        let lng = this.raw_lng;
+    public raw_lng(): number {
+        return this._raw_lng;
+    }
+
+    public lat() : number {
+        return this.raw_lat();
+    }
+
+    public lng() : number {
+        let lng = this.raw_lng();
         while (lng < -180) {
             lng += 360;
         }
@@ -35,8 +46,8 @@ export class Coordinates {
         return lng;
     }
 
-    next_lng(other) {
-        let lng = this.raw_lng;
+    public next_lng(other: number) : number {
+        let lng = this.raw_lng();
         while (lng < other - 180) {
             lng += 360;
         }
@@ -46,16 +57,20 @@ export class Coordinates {
         return lng;
     }
 
-    static set_coordinates_format(format) {
+    public static set_coordinates_format(format: string) : void {
         coordinates_format = format;
     }
 
-    static get_coordinates_format() {
+    public static get_coordinates_format(): string {
         return coordinates_format;
     }
 
-    static from_components(h1, d1, m1, s1, h2, d2, m2, s2) {
-        let lat, lng;
+    public static from_components(
+        h1: string, d1: number, m1: number, s1: number,
+        h2: string, d2: number, m2: number, s2: number) : Coordinates
+    {
+        let lat: number;
+        let lng: number;
 
         if (h1 !== '+' && d1 < 0) {
             return null;
@@ -109,9 +124,9 @@ export class Coordinates {
         return new Coordinates(lat, lng);
     }
 
-    static from_string(str) {
-        const s = Coordinates.sanitize_string(str),
-            patterns = [
+    public static from_string(str: string): Coordinates {
+        const s = Coordinates.sanitize_string(str);
+        const patterns = [
                 // DM / H D M
                 {
                     "regexp": /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
@@ -268,22 +283,21 @@ export class Coordinates {
                 },
             ];
 
-        const extract_hemisphere = (match, index) => {
+        const extract_hemisphere = (match: RegExpMatchArray, index: string|number) : string => {
             if (typeof index === 'number') {
                 return match[index];
             }
             return index;
         };
 
-        const extract_component = (match, index) => {
+        const extract_component = (match: RegExpMatchArray, index: string|number) : number => {
             if (index > 0) {
                 return parseFloat(match[index]);
             }
             return 0;
         };
 
-        for (let i = 0; i < patterns.length; i += 1) {
-            const p = patterns[i];
+        for (const p of patterns) {
             const m = s.match(p.regexp);
             if (m) {
                 const c = Coordinates.from_components(
@@ -306,7 +320,7 @@ export class Coordinates {
         return null;
     }
 
-    to_string_format(format) {
+    public to_string_format(format: string) : string {
         switch (format) {
             case CoordinatesFormat.D:
                 return this.to_string_D();
@@ -318,17 +332,17 @@ export class Coordinates {
         }
     }
 
-    to_string() {
+    public to_string() : string {
         return this.to_string_format(coordinates_format);
     }
 
-    to_string_DM() {
-        let lat = Math.abs(this.lat()),
-            lat_min,
-            lat_mmin,
-            lng = Math.abs(this.lng()),
-            lng_min,
-            lng_mmin;
+    public to_string_DM() : string {
+        let lat = Math.abs(this.lat());
+        let lat_min: number;
+        let lat_mmin: number;
+        let lng = Math.abs(this.lng());
+        let lng_min: number;
+        let lng_mmin: number;
 
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
@@ -369,9 +383,9 @@ export class Coordinates {
         );
     }
 
-    to_string_DMS() {
-        let lat = Math.abs(this.lat()),
-            lng = Math.abs(this.lng());
+    public to_string_DMS() : string {
+        let lat = Math.abs(this.lat());
+        let lng = Math.abs(this.lng());
 
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
@@ -404,37 +418,37 @@ export class Coordinates {
         );
     }
 
-    to_string_D() {
+    public to_string_D() : string {
         return `${this.NS()} ${Math.abs(this.lat()).toFixed(
             6,
         )} ${this.EW()} ${Math.abs(this.lng()).toFixed(6)}`;
     }
 
-    distance(other) {
+    public distance(other: Coordinates) : number {
         const geod = Geodesic.WGS84;
         const r = geod.Inverse(
-            this.raw_lat,
-            this.raw_lng,
-            other.raw_lat,
-            other.next_lng(this.raw_lng),
+            this.raw_lat(),
+            this.raw_lng(),
+            other.raw_lat(),
+            other.next_lng(this.raw_lng()),
             Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
         return r.s12;
     }
 
-    distance_bearing(other) {
+    public distance_bearing(other: Coordinates) : {distance: number, bearing: number} {
         const geod = Geodesic.WGS84;
         const r = geod.Inverse(
-            this.raw_lat,
-            this.raw_lng,
-            other.raw_lat,
-            other.next_lng(this.raw_lng),
+            this.raw_lat(),
+            this.raw_lng(),
+            other.raw_lat(),
+            other.next_lng(this.raw_lng()),
             Geodesic.DISTANCE | Geodesic.AZIMUTH | Geodesic.LONG_UNROLL,
         );
         return {distance: r.s12, bearing: r.azi1};
     }
 
-    project(angle, distance) {
+    public project(angle: number, distance: number) : Coordinates {
         const geod = Geodesic.WGS84;
         const r = geod.Direct(
             this.lat(),
@@ -446,15 +460,15 @@ export class Coordinates {
         return new Coordinates(r.lat2, r.lon2);
     }
 
-    interpolate_geodesic_line(other, _zoom) {
+    public interpolate_geodesic_line(other: Coordinates, _zoom: number) : Coordinates[] {
         // const d = 6000000 / Math.pow(2, zoom);
         const maxk = 50;
         const geod = Geodesic.WGS84;
         const t = geod.Inverse(
-            this.raw_lat,
-            this.raw_lng,
-            other.raw_lat,
-            other.next_lng(this.raw_lng),
+            this.raw_lat(),
+            this.raw_lng(),
+            other.raw_lat(),
+            other.next_lng(this.raw_lng()),
             Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
 
@@ -462,14 +476,14 @@ export class Coordinates {
         const k = maxk;
         const points = new Array(k + 1);
         points[0] = this;
-        points[k] = new Coordinates(other.raw_lat, other.next_lng(this.raw_lng));
+        points[k] = new Coordinates(other.raw_lat(), other.next_lng(this.raw_lng()));
 
         if (k > 1) {
             const line = geod.InverseLine(
-                this.raw_lat,
-                this.raw_lng,
-                other.raw_lat,
-                other.next_lng(this.raw_lng),
+                this.raw_lat(),
+                this.raw_lng(),
+                other.raw_lat(),
+                other.next_lng(this.raw_lng()),
                 Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL,
             );
             const da12 = t.a12 / k;
@@ -488,7 +502,7 @@ export class Coordinates {
         return points;
     }
 
-    geodesic_circle(radius) {
+    public geodesic_circle(radius: number) : Coordinates[] {
         const delta_angle = 1;
         const points = [];
         for (let angle = 0; angle < 360; angle += delta_angle) {
@@ -497,21 +511,21 @@ export class Coordinates {
         return points;
     }
 
-    NS() {
+    public NS() : string {
         if (this.lat() >= 0) {
             return 'N';
         }
         return 'S';
     }
 
-    EW() {
+    public EW() : string {
         if (this.lng() >= 0) {
             return 'E';
         }
         return 'W';
     }
 
-    static zeropad(num, width) {
+    public static zeropad(num: number|string, width: number) : string {
         let s = String(num);
         while (s.length < width) {
             s = '0' + s;
@@ -519,23 +533,23 @@ export class Coordinates {
         return s;
     }
 
-    static sanitize_string(s) {
-        let sanitized = '',
-            commas = 0,
-            periods = 0;
+    public static sanitize_string(s: string) : string {
+        let sanitized = '';
+        let commas = 0;
+        let periods = 0;
 
-        for (let i = 0; i < s.length; i += 1) {
-            if (s[i] === 'o' || s[i] === 'O') {
+        for (const c of s) {
+            if (c === 'o' || c === 'O') {
                 // map 'O'/'o' to 'E' (German 'Ost' = 'East')
                 sanitized += 'E';
-            } else if (s[i].match(/[a-z0-9-]/i)) {
-                sanitized += s[i].toUpperCase();
-            } else if (s[i] === '.') {
+            } else if (c.match(/[a-z0-9-]/i)) {
+                sanitized += c.toUpperCase();
+            } else if (c === '.') {
                 periods += 1;
-                sanitized += s[i];
-            } else if (s[i] === ',') {
+                sanitized += c;
+            } else if (c === ',') {
                 commas += 1;
-                sanitized += s[i];
+                sanitized += c;
             } else {
                 sanitized += ' ';
             }
