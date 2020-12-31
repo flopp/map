@@ -57,10 +57,8 @@
             }
         },
         "general": {
-            "add": "Hinzuf\u00fcgen",
             "apply": "Anwenden",
             "cancel": "Abbrechen",
-            "delete_all": "Alle L\u00f6schen",
             "no_marker_tag": "<KEINER>",
             "submit": "Anwenden"
         },
@@ -98,7 +96,7 @@
                 "base_help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
                 "german_npa_button": "Offizielle Web-App",
-                "german_npa_help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (grüne Flächen). Die Daten werden vom Bundesamt für Naturschutz zur Verfügung gestellt.",
+                "german_npa_help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hillshading": "Schummerung (hillshading)",
                 "title": "Ebenen"

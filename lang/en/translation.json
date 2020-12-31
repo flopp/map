@@ -57,10 +57,8 @@
             }
         },
         "general": {
-            "add": "Add",
             "apply": "Apply",
             "cancel": "Cancel",
-            "delete_all": "Delete All",
             "no_marker_tag": "<NONE>",
             "submit": "Submit"
         },
@@ -98,7 +96,7 @@
                 "base_help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
                 "german_npa_button": "Official Web App",
-                "german_npa_help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt für Naturschutz.",
+                "german_npa_help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hillshading": "Hillshading",
                 "title": "Layers"
