@@ -12,13 +12,13 @@ export class IconFactory {
         const encoded_text = encodeURIComponent(domString).replace(
             /%([0-9A-F]{2})/g,
             (_match, p1) => {
-                return String.fromCharCode('0x' + p1);
+                return String.fromCharCode(parseInt(p1, 16));
             },
         );
 
         const w = Math.max(
                 33.0,
-                16.0 + this.compute_text_width(text, this.font),
+                16.0 + this.compute_text_width(text),
             ),
             w2 = 0.5 * w,
             d = 4.0,
