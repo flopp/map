@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import {MapStateChange, MapStateObserver} from './map_state.js';
 
 export class SidebarTools extends MapStateObserver {
@@ -23,23 +21,23 @@ export class SidebarTools extends MapStateObserver {
             self.app.map_state.set_language(self.language_select.value);
         };
 
-        $('#btn-link').click(() => {
+        document.querySelector('#btn-link').addEventListener('click', () => {
             self.app.show_link_dialog();
         });
 
-        $('#btn-export-json').click(() => {
+        document.querySelector('#btn-export-json').addEventListener('click', () => {
             self.export_json();
         });
 
-        $('#btn-import-json').click((event) => {
-            $('#inp-import-json').click();
+        document.querySelector('#btn-import-json').addEventListener('click', (event) => {
+            document.querySelector('#inp-import-json').click();
             event.preventDefault();
         });
-        $('#inp-import-json').change((event) => {
+        document.querySelector('#inp-import-json').onchange = (event) => {
             self.import_json(event.target.files[0]);
-        });
+        };
 
-        $('#btn-multi-markers').click(() => {
+        document.querySelector('#btn-multi-markers').addEventListener('click', () => {
             self.app.show_multi_markers_dialog();
         });
     }
@@ -69,16 +67,14 @@ export class SidebarTools extends MapStateObserver {
     import_json(file) {
         const self = this;
         const reader = new FileReader();
-        reader.readAsText(file);
         reader.onloadend = () => {
             const data = JSON.parse(reader.result);
             self.app.map_state.from_json(data);
             self.app.switch_map(self.app.map_state.map_type);
         };
+        reader.readAsText(file);
 
         // reset file input
-        const input = $('#inp-import-json');
-        input.wrap('<form>').closest('form').get(0).reset();
-        input.unwrap();
+        document.querySelector('#inp-import-json').value = '';
     }
 }

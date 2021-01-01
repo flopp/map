@@ -113,137 +113,159 @@ export class Coordinates {
         const s = Coordinates.sanitize_string(str),
             patterns = [
                 // DM / H D M
-                [
-                    /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
-                    1,
-                    2,
-                    3,
-                    0,
-                    4,
-                    5,
-                    6,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        1,
+                        2,
+                        3,
+                        0,
+                        4,
+                        5,
+                        6,
+                        0,
+                    ],
+                },
                 // DM / D H M
-                [
-                    /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
-                    2,
-                    1,
-                    3,
-                    0,
-                    5,
-                    4,
-                    6,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        2,
+                        1,
+                        3,
+                        0,
+                        5,
+                        4,
+                        6,
+                        0,
+                    ],
+                },
                 // DM / D M H
-                [
-                    /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    3,
-                    1,
-                    2,
-                    0,
-                    6,
-                    4,
-                    5,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    "fields": [
+                        3,
+                        1,
+                        2,
+                        0,
+                        6,
+                        4,
+                        5,
+                        0,
+                    ],
+                },
                 // DM / D M
-                [
-                    /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    'N',
-                    1,
-                    2,
-                    0,
-                    'E',
-                    3,
-                    4,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        'N',
+                        1,
+                        2,
+                        0,
+                        'E',
+                        3,
+                        4,
+                        0,
+                    ],
+                },
                 // DMS / H D M S
-                [
-                    /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8,
-                ],
+                {
+                    "regexp": /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                    ],
+                },
                 // DMS / D H M S
-                [
-                    /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
-                    2,
-                    1,
-                    3,
-                    4,
-                    6,
-                    5,
-                    7,
-                    8,
-                ],
+                {
+                    "regexp": /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        2,
+                        1,
+                        3,
+                        4,
+                        6,
+                        5,
+                        7,
+                        8,
+                    ],
+                },
                 // DMS / D M S H
-                [
-                    /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    4,
-                    1,
-                    2,
-                    3,
-                    6,
-                    5,
-                    6,
-                    7,
-                ],
+                {
+                    "regexp": /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    "fields": [
+                        4,
+                        1,
+                        2,
+                        3,
+                        6,
+                        5,
+                        6,
+                        7,
+                    ],
+                },
                 // DMS / D M S
-                [
-                    /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    'N',
-                    1,
-                    2,
-                    3,
-                    'E',
-                    4,
-                    5,
-                    6,
-                ],
+                {
+                    "regexp": /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        'N',
+                        1,
+                        2,
+                        3,
+                        'E',
+                        4,
+                        5,
+                        6,
+                    ],
+                },
                 // D / H D
-                [
-                    /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
-                    1,
-                    2,
-                    0,
-                    0,
-                    3,
-                    4,
-                    0,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                    "fields": [
+                        1,
+                        2,
+                        0,
+                        0,
+                        3,
+                        4,
+                        0,
+                        0,
+                    ],
+                },
                 // D / D H
-                [
-                    /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    2,
-                    1,
-                    0,
-                    0,
-                    4,
-                    3,
-                    0,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    "fields": [
+                        2,
+                        1,
+                        0,
+                        0,
+                        4,
+                        3,
+                        0,
+                        0,
+                    ],
+                },
                 // D / D
-                [
-                    /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
-                    '+',
-                    1,
-                    0,
-                    0,
-                    '+',
-                    2,
-                    0,
-                    0,
-                ],
+                {
+                    "regexp": /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                    "fields": [
+                        '+',
+                        1,
+                        0,
+                        0,
+                        '+',
+                        2,
+                        0,
+                        0,
+                    ],
+                },
             ];
 
         const extract_hemisphere = (match, index) => {
@@ -254,22 +276,25 @@ export class Coordinates {
         };
 
         const extract_component = (match, index) => {
-            return parseFloat(match[index]);
+            if (index > 0) {
+                return parseFloat(match[index]);
+            }
+            return 0;
         };
 
         for (let i = 0; i < patterns.length; i += 1) {
             const p = patterns[i];
-            const m = s.match(p[0]);
+            const m = s.match(p.regexp);
             if (m) {
                 const c = Coordinates.from_components(
-                    extract_hemisphere(m, p[1]),
-                    extract_component(m, p[2]),
-                    extract_component(m, p[3]),
-                    extract_component(m, p[4]),
-                    extract_hemisphere(m, p[5]),
-                    extract_component(m, p[6]),
-                    extract_component(m, p[7]),
-                    extract_component(m, p[8]),
+                    extract_hemisphere(m, p.fields[0]),
+                    extract_component(m, p.fields[1]),
+                    extract_component(m, p.fields[2]),
+                    extract_component(m, p.fields[3]),
+                    extract_hemisphere(m, p.fields[4]),
+                    extract_component(m, p.fields[5]),
+                    extract_component(m, p.fields[6]),
+                    extract_component(m, p.fields[7]),
                 );
 
                 if (c) {
