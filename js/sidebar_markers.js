@@ -185,7 +185,7 @@ export class SidebarMarkers extends MapStateObserver {
 
     create_marker_dropdown(marker) {
         const self = this;
-        return create_dropdown(`dropdown-marker-${marker.get_id()}`, [
+        return create_dropdown([
             {
                 label: self.app.translate('sidebar.markers.edit'),
                 callback: () => {

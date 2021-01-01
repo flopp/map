@@ -174,7 +174,7 @@ export class SidebarLines extends MapStateObserver {
 
     create_line_dropdown(line) {
         const self = this;
-        return create_dropdown(`dropdown-line-${line.get_id()}`, [
+        return create_dropdown([
             {
                 label: this.app.translate('sidebar.lines.edit'),
                 callback: () => {

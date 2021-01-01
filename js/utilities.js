@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 const parse_float = (str) => {
     if (!/[0-9]/.test(str)) {
         return null;
@@ -20,68 +18,119 @@ const parse_int = (str) => {
     return parseFloat(str);
 };
 
-const create_text_input = (label, data_tag, placeholder) => {
-    return $(`
-        <div class="field">
-            <label class="label" data-i18n="${label}">${label}</label>
-            <div class="control">
-                <input class="input is-fullwidth" type="text" ${data_tag} placeholder="${placeholder}" data-i18n="${placeholder}" data-i18n-target="placeholder">
-            </div>
-        </div>`);
+const create_text_input = (label_text, data_tag, placeholder) => {
+    const field = document.createElement('div');
+    field.classList.add("field");
+    const label = document.createElement('label');
+    label.classList.add("label");
+    label.setAttribute("data-i18n", label_text);
+    label.textContent = label_text;
+    field.appendChild(label);
+    const control = document.createElement('div');
+    control.classList.add("control");
+    const input = document.createElement('input');
+    input.classList.add("input");
+    input.classList.add("is-fullwidth");
+    input.setAttribute("type", "text");
+    input.setAttribute(data_tag, null);
+    input.setAttribute("placeholder", placeholder);
+    input.setAttribute("data-i18n", placeholder);
+    input.setAttribute("data-i18n-target", "placeholder");
+    control.appendChild(input);
+    field.appendChild(control);
+    return field;
 };
 
-const create_color_input = (label, data_tag, placeholder) => {
-    return $(`
-        <div class="field">
-            <label class="label" data-i18n="${label}">${label}</label>
-            <div class="control">
-                <input class="input is-fullwidth" type="color" ${data_tag} placeholder="${placeholder}" data-i18n="${placeholder}" data-i18n-target="placeholder">
-            </div>
-        </div>`);
+const create_color_input = (label_text, data_tag, placeholder) => {
+    const field = document.createElement('div');
+    field.classList.add("field");
+    const label = document.createElement('label');
+    label.classList.add("label");
+    label.setAttribute("data-i18n", label_text);
+    label.textContent = label_text;
+    field.appendChild(label);
+    const control = document.createElement('div');
+    control.classList.add("control");
+    const input = document.createElement('input');
+    input.classList.add("input");
+    input.classList.add("is-fullwidth");
+    input.setAttribute("type", "color");
+    input.setAttribute(data_tag, null);
+    input.setAttribute("placeholder", placeholder);
+    input.setAttribute("data-i18n", placeholder);
+    input.setAttribute("data-i18n-target", "placeholder");
+    control.appendChild(input);
+    field.appendChild(control);
+    return field;
 };
 
-const create_select_input = (label, data_tag) => {
-    return $(`
-        <div class="field">
-            <label class="label" data-i18n="${label}">${label}</label>
-            <div class="control">
-                <div class="select is-fullwidth">
-                    <select ${data_tag}></select>
-                </div>
-            </div>
-        </div>`);
+const create_select_input = (label_text, data_tag) => {
+    const field = document.createElement('div');
+    field.classList.add("field");
+    const label = document.createElement('label');
+    label.classList.add("label");
+    label.setAttribute("data-i18n", label_text);
+    label.textContent = label_text;
+    field.appendChild(label);
+    const control = document.createElement('div');
+    control.classList.add("control");
+    const div = document.createElement('div');
+    div.classList.add("select");
+    div.classList.add("is-fullwidth");
+    const select = document.createElement('select');
+    select.setAttribute(data_tag, null);
+    div.appendChild(select);
+    control.appendChild(div);
+    field.appendChild(control);
+    return field;
 };
 
-const create_button = (label, callback) => {
-    const button = $(`<button class="button">${label}</button>`).click(callback);
-    return $('<div class="control">').append(button);
+const create_button = (label_text, callback) => {
+    const control = document.createElement('div');
+    control.classList.add("control");
+    const button = document.createElement('button');
+    button.classList.add("button");
+    button.textContent = label_text;
+    button.addEventListener('click', callback);
+    control.appendChild(button);
+    return control;
 };
 
-const create_dropdown = (menu_id, items) => {
-    const dropdown = $('<div class="dropdown is-right">');
-    dropdown.click((event) => {
+const create_dropdown = (items) => {
+    const dropdown = document.createElement('div');
+    dropdown.classList.add("dropdown");
+    dropdown.classList.add("is-right");
+    dropdown.addEventListener('click', (event) => {
         event.stopPropagation();
-        dropdown.toggleClass('is-active');
+        dropdown.classList.toggle('is-active');
     });
 
-    const trigger = $('<div class="dropdown-trigger">');
-    dropdown.append(trigger);
-    const dropdown_button = $(`<button class="button is-white" aria-haspopup="true" aria-controls="${menu_id}">
-    <svg class="icon icon16"><use xlink:href="img/feather-sprite.svg#more-vertical"/></svg>
-    </button>`);
-    trigger.append(dropdown_button);
+    const trigger = document.createElement('div');
+    trigger.classList.add("dropdown-trigger");
+    dropdown.appendChild(trigger);
 
-    const menu = $(`<div class="dropdown-menu" id="${menu_id}" role="menu">`);
-    dropdown.append(menu);
-    const menu_content = $('<div class="dropdown-content">');
-    menu.append(menu_content);
+    const dropdown_button = document.createElement('button');
+    dropdown_button.classList.add("button");
+    dropdown_button.classList.add("is-white");
+    dropdown_button.innerHTML = '<svg class="icon icon16"><use xlink:href="img/feather-sprite.svg#more-vertical"/></svg>';
+    trigger.appendChild(dropdown_button);
+
+    const menu = document.createElement('div');
+    menu.classList.add("dropdown-menu");
+    dropdown.appendChild(menu);
+
+    const menu_content = document.createElement('div');
+    menu_content.classList.add("dropdown-content");
+    menu_content.classList.add("has-background-info-light");
+    menu.appendChild(menu_content);
 
     items.forEach((item) => {
-        const dropdown_item = $(
-            `<a href="#" class="dropdown-item">${item.label}</a>`,
-        );
-        dropdown_item.click(item.callback);
-        menu_content.append(dropdown_item);
+        const dropdown_item = document.createElement('a');
+        dropdown_item.classList.add("dropdown-item");
+        dropdown_item.setAttribute("href", "#");
+        dropdown_item.textContent = item.label;
+        dropdown_item.addEventListener('click', item.callback);
+        menu_content.appendChild(dropdown_item);
     });
 
     return dropdown;

@@ -2,7 +2,7 @@ import {MapStateChange, MapStateObserver} from './map_state.js';
 import {SidebarLayers} from './sidebar_layers.js';
 import {SidebarLines} from './sidebar_lines.js';
 import {SidebarMarkers} from './sidebar_markers.js';
-import {SidebarSearch} from './sidebar_location.js';
+import {SidebarSearch} from './sidebar_search.js';
 import {SidebarTools} from './sidebar_tools.js';
 
 export class Sidebar extends MapStateObserver {
@@ -28,7 +28,7 @@ export class Sidebar extends MapStateObserver {
             self.controls.push(button);
         });
 
-        this.sidebar_location = new SidebarSearch(app);
+        this.sidebar_search = new SidebarSearch(app);
         this.sidebar_layers = new SidebarLayers(app);
         this.sidebar_markers = new SidebarMarkers(app);
         this.sidebar_lines = new SidebarLines(app);
