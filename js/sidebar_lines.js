@@ -17,22 +17,22 @@ export class SidebarLines extends MapStateObserver {
 
         const self = this;
 
-        $('#btn-add-line').click(() => {
+        document.querySelector('#btn-add-line').addEventListener('click', () => {
             self.app.map_state.add_line();
         });
-        $('#btn-delete-lines').click(() => {
+        document.querySelector('#btn-delete-lines').addEventListener('click', () => {
             self.app.map_state.delete_all_lines();
         });
 
-        this.settingsDiv = $('#line-settings');
+        this.settingsDiv = document.querySelector('#line-settings');
         this.hide_settings();
-        $('#btn-line-settings').click(() => {
+        document.querySelector('#btn-line-settings').addEventListener('click', () => {
             self.toggle_settings();
         });
-        this.settingsDiv.find('[data-cancel]').click(() => {
+        this.settingsDiv.querySelector('[data-cancel]').addEventListener('click', () => {
             self.hide_settings();
         });
-        this.settingsDiv.find('[data-submit]').click(() => {
+        this.settingsDiv.querySelector('[data-submit]').addEventListener('click', () => {
             self.submit_settings();
         });
 
@@ -260,7 +260,7 @@ export class SidebarLines extends MapStateObserver {
     }
 
     settings_shown() {
-        return !this.settingsDiv.hasClass('is-hidden');
+        return !this.settingsDiv.classList.contains('is-hidden');
     }
 
     show_settings() {
@@ -268,12 +268,12 @@ export class SidebarLines extends MapStateObserver {
             return;
         }
 
-        this.settingsDiv.removeClass('is-hidden');
+        this.settingsDiv.classList.remove('is-hidden');
         this.update_settings_display();
     }
 
     hide_settings() {
-        this.settingsDiv.addClass('is-hidden');
+        this.settingsDiv.classList.add('is-hidden');
     }
 
     toggle_settings() {
@@ -286,10 +286,10 @@ export class SidebarLines extends MapStateObserver {
 
     submit_settings() {
         const random_color = this.settingsDiv
-            .find('[data-random-color]')
-            .prop('checked');
+            .querySelector('[data-random-color]')
+            .checked;
         const color = Color.from_string(
-            this.settingsDiv.find('[data-color]').val(),
+            this.settingsDiv.querySelector('[data-color]').value,
         );
 
         if (color === null) {
@@ -311,10 +311,10 @@ export class SidebarLines extends MapStateObserver {
         }
 
         this.settingsDiv
-            .find('[data-random-color]')
-            .prop('checked', this.app.map_state.settings_line_random_color);
+            .querySelector('[data-random-color]')
+            .checked = this.app.map_state.settings_line_random_color;
         this.settingsDiv
-            .find('[data-color]')
-            .val(this.app.map_state.settings_line_color.to_hash_string());
+            .querySelector('[data-color]')
+            .value = this.app.map_state.settings_line_color.to_hash_string();
     }
 }

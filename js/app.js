@@ -44,7 +44,7 @@ export class App {
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
 
-        $(`#${this.id_google}`).hide();
+        document.querySelector(`#${this.id_google}`).style.display = 'none';
 
         this.sidebar = new Sidebar('#sidebar', '#sidebar-controls', this);
 
@@ -250,13 +250,13 @@ export class App {
     }
 
     show_leaflet_div() {
-        $('#' + this.id_leaflet).show();
-        $('#' + this.id_google).hide();
+        document.querySelector(`#${this.id_leaflet}`).style.display = 'block';
+        document.querySelector(`#${this.id_google}`).style.display = 'none';
     }
 
     show_google_div() {
-        $('#' + this.id_leaflet).hide();
-        $('#' + this.id_google).show();
+        document.querySelector(`#${this.id_leaflet}`).style.display = 'none';
+        document.querySelector(`#${this.id_google}`).style.display = 'block';
     }
 
     update_geometry() {
