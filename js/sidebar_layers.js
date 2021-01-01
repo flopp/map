@@ -109,9 +109,8 @@ export class SidebarLayers extends MapStateObserver {
         if (this.app.has_google_maps()) {
             help_div.classList.add('is-hidden');
             return;
-        } else {
-            help_div.innerText = this.app.translate('sidebar.layers.google_disabled');
         }
+        help_div.innerText = this.app.translate('sidebar.layers.google_disabled');
         help_div.classList.remove('is-hidden');
     }
 }

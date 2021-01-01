@@ -246,23 +246,15 @@ export class Coordinates {
                 ],
             ];
 
-        const mm = (match, index) => {
+        const extract_hemisphere = (match, index) => {
             if (typeof index === 'number') {
-                if (index > 0) {
-                    const mi = match[index];
-                    if (
-                        mi === '+' ||
-                        mi === 'N' ||
-                        mi === 'E' ||
-                        mi === 'W' ||
-                        mi === 'S'
-                    ) {
-                        return mi;
-                    }
-                    return parseFloat(mi);
-                }
+                return match[index];
             }
             return index;
+        };
+
+        const extract_component = (match, index) => {
+            return parseFloat(match[index]);
         };
 
         for (let i = 0; i < patterns.length; i += 1) {
@@ -270,14 +262,14 @@ export class Coordinates {
             const m = s.match(p[0]);
             if (m) {
                 const c = Coordinates.from_components(
-                    mm(m, p[1]),
-                    mm(m, p[2]),
-                    mm(m, p[3]),
-                    mm(m, p[4]),
-                    mm(m, p[5]),
-                    mm(m, p[6]),
-                    mm(m, p[7]),
-                    mm(m, p[8]),
+                    extract_hemisphere(m, p[1]),
+                    extract_component(m, p[2]),
+                    extract_component(m, p[3]),
+                    extract_component(m, p[4]),
+                    extract_hemisphere(m, p[5]),
+                    extract_component(m, p[6]),
+                    extract_component(m, p[7]),
+                    extract_component(m, p[8]),
                 );
 
                 if (c) {
