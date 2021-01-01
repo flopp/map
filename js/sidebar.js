@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import {MapStateChange, MapStateObserver} from './map_state.js';
 import {SidebarLayers} from './sidebar_layers.js';
 import {SidebarLines} from './sidebar_lines.js';
@@ -17,16 +15,13 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_controls_selector = sidebar_controls_selector;
 
         this.controls = [];
-        $('.sidebar-control-button').each((_index, button) => {
-            const id = button.id;
+        document.querySelectorAll('.sidebar-control-button').forEach((button) => {
             button.addEventListener('click', () => {
-                self.toggle(id);
+                self.toggle(button);
             });
 
-            const close_button = $(
-                `${button.dataset.container} > .header > .close`,
-            );
-            close_button.click(() => {
+            const close_button = document.querySelector(`${button.dataset.container} > .header > .close`);
+            close_button.addEventListener('click', () => {
                 self.toggle(null);
             });
 
@@ -40,14 +35,14 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_tools = new SidebarTools(app);
     }
 
-    toggle(toggle_control_id) {
+    toggle(toggle_control) {
         if (
-            !toggle_control_id ||
-            $(`#${toggle_control_id}`).parent().hasClass('active')
+            !toggle_control ||
+            toggle_control.parentElement.classList.contains('active')
         ) {
             this.app.map_state.set_sidebar_open(null);
         } else {
-            this.app.map_state.set_sidebar_open(toggle_control_id);
+            this.app.map_state.set_sidebar_open(toggle_control.id);
         }
     }
 
@@ -61,41 +56,41 @@ export class Sidebar extends MapStateObserver {
         if (!section) {
             this.controls.forEach((control) => {
                 const parent = control.parentElement;
-                const container = $(control.dataset.container);
+                const container = document.querySelector(control.dataset.container);
                 parent.classList.remove('active');
-                container.removeClass('active');
+                container.classList.remove('active');
             });
 
-            $(this.sidebar_selector).removeClass('sidebar-open');
-            $(this.sidebar_controls_selector).removeClass('sidebar-open');
-            $('.map-container').each((_index, obj) => {
-                obj.classList.remove('sidebar-open');
+            document.querySelector(this.sidebar_selector).classList.remove('sidebar-open');
+            document.querySelector(this.sidebar_controls_selector).classList.remove('sidebar-open');
+            document.querySelectorAll('.map-container').forEach((mapContainer) => {
+                mapContainer.classList.remove('sidebar-open');
             });
         } else {
             let found = false;
             this.controls.forEach((control) => {
                 const parent = control.parentElement;
-                const container = $(control.dataset.container);
+                const container = document.querySelector(control.dataset.container);
                 if (section == control.id) {
                     found = true;
                     parent.classList.add('active');
-                    container.addClass('active');
+                    container.classList.add('active');
                 } else {
                     parent.classList.remove('active');
-                    container.removeClass('active');
+                    container.classList.remove('active');
                 }
             });
 
             if (!found) {
                 const control = this.controls[0];
                 control.parentElement.classList.add('active');
-                $(control.dataset.container).addClass('active');
+                document.querySelector(control.dataset.container).classList.add('active');
             }
 
-            $(this.sidebar_selector).addClass('sidebar-open');
-            $(this.sidebar_controls_selector).addClass('sidebar-open');
-            $('.map-container').each((_index, obj) => {
-                obj.classList.add('sidebar-open');
+            document.querySelector(this.sidebar_selector).classList.add('sidebar-open');
+            document.querySelector(this.sidebar_controls_selector).classList.add('sidebar-open');
+            document.querySelectorAll('.map-container').forEach((mapContainer) => {
+                mapContainer.classList.add('sidebar-open');
             });
         }
 
