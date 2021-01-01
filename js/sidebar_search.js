@@ -1,6 +1,6 @@
 import {MapStateObserver} from './map_state.js';
 
-export class SidebarLocation extends MapStateObserver {
+export class SidebarSearch extends MapStateObserver {
     constructor(app) {
         super(app);
 
