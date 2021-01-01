@@ -1,10 +1,14 @@
-import $ from 'jquery';
-
 import {App} from './app.js';
 
-$(document).ready(() => {
+const main = () => {
     window.app = new App(
         'map-container-leaflet',
         'map-container-google'
     );
-});
+};
+
+if (document.readyState === "loading") {
+    document.addEventListener('DOMContentLoaded', main);
+} else {
+    main();
+}
