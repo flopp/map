@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import Sortable from 'sortablejs';
 
 import {Color} from './color.js';
@@ -9,6 +8,7 @@ import {
     parse_int,
     create_button,
     create_dropdown,
+    create_element,
     create_text_input,
     create_color_input,
 } from './utilities.js';
@@ -33,7 +33,7 @@ export class SidebarMarkers extends MapStateObserver {
             {id: CoordinatesFormat.DM, name: 'Degrees+Minutes'},
             {id: CoordinatesFormat.DMS, name: 'Degrees+Minutes+Seconds'},
         ].forEach((item) => {
-            this.settingsDiv.querySelector('[data-coordinates-format]').append(
+            this.settingsDiv.querySelector('[data-coordinates-format]').appendChild(
                 new Option(
                     item.name,
                     item.id,
@@ -71,32 +71,28 @@ export class SidebarMarkers extends MapStateObserver {
 
         /* update and add markers */
         this.app.map_state.markers.forEach((marker) => {
-            if ($(`#marker-${marker.get_id()}`).length == 0) {
-                $('#markers').append(self.create_div(marker));
+            let div = document.querySelector(`#marker-${marker.get_id()}`);
+            if (div === null) {
+                div = self.create_div(marker);
+                document.querySelector('#markers').appendChild(div);
             }
-            const div = $(`#marker-${marker.get_id()}`);
 
             const circle =
                 marker.radius > 0
                     ? self.app.translate('sidebar.markers.circle').replace('{1}', marker.radius.toFixed(2))
                     : self.app.translate('sidebar.markers.no_circle');
-            div.find('.marker-color').css(
-                'background-color',
-                marker.color.to_hash_string(),
-            );
-            div.find('.marker-name').text(marker.name);
-            div.find('.marker-radius').text(circle);
-            div.find('.marker-coordinates').text(
-                marker.coordinates.to_string_format(
-                    self.app.map_state.settings_marker_coordinates_format,
-                ),
+            div.querySelector('.marker-color').style.backgroundColor = marker.color.to_hash_string();
+            div.querySelector('.marker-name').textContent = marker.name;
+            div.querySelector('.marker-radius').textContent = circle;
+            div.querySelector('.marker-coordinates').textContent = marker.coordinates.to_string_format(
+                self.app.map_state.settings_marker_coordinates_format,
             );
 
             self.update_edit_values(marker);
         });
 
         /* remove spurious markers */
-        const markers = $('#markers > .marker');
+        const markers = document.querySelectorAll('#markers > .marker');
         if (markers.length > this.app.map_state.markers.length) {
             const ids = new Set();
             this.app.map_state.markers.forEach((marker) => {
@@ -104,16 +100,21 @@ export class SidebarMarkers extends MapStateObserver {
             });
 
             const deleted_ids = [];
-            markers.each((i, m) => {
-                const id = parse_int(m.id.substring(7));
+            markers.forEach((m) => {
+                const id = parse_int(m.getAttribute("id").substring(7));
                 if (!ids.has(id)) {
                     deleted_ids.push(id);
                 }
             });
 
             deleted_ids.forEach((id) => {
-                $(`#marker-${id}`).remove();
-                $(`#marker-edit-${id}`).remove();
+                const div = document.querySelector(`#marker-${id}`);
+                div.parentElement.removeChild(div);
+
+                const edit_div = document.querySelector(`#marker-edit-${id}`);
+                if (edit_div !== null) {
+                    edit_div.parentElement.removeChild(edit_div);
+                }
             });
         }
 
@@ -122,25 +123,25 @@ export class SidebarMarkers extends MapStateObserver {
 
     create_div(marker) {
         const self = this;
-        const m = $(`<div id="marker-${marker.get_id()}" class="marker">`);
+        const m = create_element('div', ["marker"], {"id": `marker-${marker.get_id()}`});
 
-        const left = $(`<div class="marker-left">
-            <div class="marker-color"></div>
-        </div>`);
-        m.append(left);
+        const left = create_element('div', ["marker-left"]);
+        const color = create_element('div', ["marker-color"]);
+        left.appendChild(color);
+        m.appendChild(left);
 
-        const center = $(`<div class="marker-center">
-            <div class="marker-name"></div>
-            <div class="marker-coordinates"></div>
-            <div class="marker-radius"></div>
-        </div>`);
-        m.append(center);
+        const center = create_element('div', ["marker-center"]);
+        ["name", "coordinates", "radius"].forEach((name) => {
+            const div = create_element('div', [`marker-${name}`]);
+            center.appendChild(div);
+        });
+        m.appendChild(center);
 
-        const right = $('<div class="marker-right"></div>');
-        right.append(this.create_marker_dropdown(marker));
-        m.append(right);
+        const right = create_element('div', ["marker-right"]);
+        right.appendChild(this.create_marker_dropdown(marker));
+        m.appendChild(right);
 
-        m.click(() => {
+        m.addEventListener('click', () => {
             self.app.map_state.set_center(marker.coordinates, null);
         });
 
@@ -149,7 +150,8 @@ export class SidebarMarkers extends MapStateObserver {
 
     create_edit_div(marker) {
         const self = this;
-        const div = $(`<div id="marker-edit-${marker.get_id()}" class="edit">`);
+
+        const div = create_element("div", ["edit"], {"id": `marker-edit-${marker.get_id()}`});
 
         const name = create_text_input(this.app.translate('sidebar.markers.edit_name'), 'data-name', this.app.translate('sidebar.markers.edit_name_placeholder'));
         const coordinates = create_text_input(
@@ -170,15 +172,15 @@ export class SidebarMarkers extends MapStateObserver {
         const cancel_button = create_button(this.app.translate('general.cancel'), () => {
             div.remove();
         });
-        const buttons = $('<div class="field is-grouped">')
-            .append(submit_button)
-            .append(cancel_button);
+        const buttons = create_element("div", ["field", "is-grouped"]);
+        buttons.appendChild(submit_button);
+        buttons.appendChild(cancel_button);
 
-        div.append(name)
-            .append(coordinates)
-            .append(radius)
-            .append(color)
-            .append(buttons);
+        div.appendChild(name);
+        div.appendChild(coordinates);
+        div.appendChild(radius);
+        div.appendChild(color);
+        div.appendChild(buttons);
 
         return div;
     }
@@ -189,10 +191,10 @@ export class SidebarMarkers extends MapStateObserver {
             {
                 label: self.app.translate('sidebar.markers.edit'),
                 callback: () => {
-                    if ($(`#marker-edit-${marker.get_id()}`).length == 0) {
-                        self.create_edit_div(marker).insertAfter(
-                            `#marker-${marker.get_id()}`,
-                        );
+                    if (document.querySelector(`#marker-edit-${marker.get_id()}`) === null) {
+                        const div = document.querySelector(`#marker-${marker.get_id()}`);
+                        const edit_div = self.create_edit_div(marker);
+                        div.parentNode.insertBefore(edit_div, div.nextSibling);
                         self.update_edit_values(marker);
                     }
                 },
@@ -213,35 +215,34 @@ export class SidebarMarkers extends MapStateObserver {
     }
 
     update_edit_values(marker) {
-        const div = $(`#marker-edit-${marker.get_id()}`);
-        if (div.length == 0) {
+        const div = document.querySelector(`#marker-edit-${marker.get_id()}`);
+        if (div === null) {
             return;
         }
-        div.find('[data-name]').val(marker.name);
-        div.find('[data-coordinates]').val(
-            marker.coordinates.to_string_format(
-                this.app.map_state.settings_marker_coordinates_format,
-            ),
+
+        div.querySelector('[data-name]').value = marker.name;
+        div.querySelector('[data-coordinates]').value =  marker.coordinates.to_string_format(
+            this.app.map_state.settings_marker_coordinates_format,
         );
-        div.find('[data-radius]').val(marker.radius);
-        div.find('[data-color]').val(marker.color.to_hash_string());
+        div.querySelector('[data-radius]').value = marker.radius;
+        div.querySelector('[data-color]').value = marker.color.to_hash_string();
     }
 
     submit_edit(marker) {
-        const div = $(`#marker-edit-${marker.get_id()}`);
-        const name = div.find('[data-name]').val();
+        const div = document.querySelector(`#marker-edit-${marker.get_id()}`);
+        const name = div.querySelector('[data-name]').value;
         const coordinates = Coordinates.from_string(
-            div.find('[data-coordinates]').val(),
+            div.querySelector('[data-coordinates]').value,
         );
-        const radius = parse_float(div.find('[data-radius]').val());
-        const color = Color.from_string(div.find('[data-color]').val());
+        const radius = parse_float(div.querySelector('[data-radius]').value);
+        const color = Color.from_string(div.querySelector('[data-color]').value);
 
         if (name.length == 0 || !coordinates || radius === null || !color) {
             this.app.message_error(this.app.translate('sidebar.markers.bad_values_message'));
             return;
         }
 
-        div.remove();
+        div.parentNode.removeChild(div);
 
         marker.name = name;
         marker.coordinates = coordinates;

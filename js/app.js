@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import jQuery from 'jquery';
 
 import {ApiKeysDialog} from './api_keys_dialog.js';
 import {Coordinates} from './coordinates.js';
@@ -235,7 +235,7 @@ export class App {
             };
 
             const url = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=${callbackName}`;
-            $.getScript(url);
+            jQuery.getScript(url);
         });
 
         promise
@@ -303,7 +303,7 @@ export class App {
         // try to resolve "location_string" via a nominatim search
         const self = this;
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${location_string}`;
-        $.get(url)
+        jQuery.get(url)
             .done((data) => {
                 if (data.length > 0) {
                     self.map_state.set_center(

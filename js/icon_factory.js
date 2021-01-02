@@ -1,3 +1,5 @@
+import {create_element} from "./utilities.js";
+
 export class IconFactory {
     constructor() {
         this.font = '16px sans';
@@ -5,7 +7,7 @@ export class IconFactory {
     }
 
     create_map_icon(text, color) {
-        const encoder = document.createElement('span');
+        const encoder = create_element('span', []);
         encoder.textContent = text;
         const domString = encoder.innerHTML;
         // domString is UTF-16; we need to convert it to UTF-8; see https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#Solution_4_%E2%80%93_escaping_the_string_before_encoding_it
@@ -63,7 +65,7 @@ export class IconFactory {
     compute_text_width(text) {
         // re-use canvas object for better performance
         if (!this.canvas) {
-            this.canvas = document.createElement('canvas');
+            this.canvas = create_element('canvas', []);
         }
 
         const context = this.canvas.getContext('2d');

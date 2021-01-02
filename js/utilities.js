@@ -18,67 +18,68 @@ const parse_int = (str) => {
     return parseFloat(str);
 };
 
+const create_element = (type, classes, attributes = {}) => {
+    const element = document.createElement(type);
+    classes.forEach((cls) => {
+        element.classList.add(cls);
+    });
+    for (const [key, value] of Object.entries(attributes)) {
+        element.setAttribute(key, value);
+    }
+    return element;
+};
+
+const remove_element = (node) => {
+    if (node === null) {
+        return;
+    }
+    node.parentNode.removeChild(node);
+};
+
 const create_text_input = (label_text, data_tag, placeholder) => {
-    const field = document.createElement('div');
-    field.classList.add("field");
-    const label = document.createElement('label');
-    label.classList.add("label");
-    label.setAttribute("data-i18n", label_text);
+    const field = create_element('div', ["field"]);
+    const label = create_element('label', ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
     field.appendChild(label);
-    const control = document.createElement('div');
-    control.classList.add("control");
-    const input = document.createElement('input');
-    input.classList.add("input");
-    input.classList.add("is-fullwidth");
-    input.setAttribute("type", "text");
-    input.setAttribute(data_tag, null);
-    input.setAttribute("placeholder", placeholder);
-    input.setAttribute("data-i18n", placeholder);
-    input.setAttribute("data-i18n-target", "placeholder");
+    const control = create_element('div', ["control"]);
+    const input = create_element('input', ["input", "is-fullwidth"], {
+        "type": "text",
+        [data_tag]: null,
+        "placeholder": placeholder,
+        "data-i18n": placeholder,
+        "data-i18n-target": "placeholder"
+    });
     control.appendChild(input);
     field.appendChild(control);
     return field;
 };
 
 const create_color_input = (label_text, data_tag, placeholder) => {
-    const field = document.createElement('div');
-    field.classList.add("field");
-    const label = document.createElement('label');
-    label.classList.add("label");
-    label.setAttribute("data-i18n", label_text);
+    const field = create_element('div', ["field"]);
+    const label = create_element('label', ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
     field.appendChild(label);
-    const control = document.createElement('div');
-    control.classList.add("control");
-    const input = document.createElement('input');
-    input.classList.add("input");
-    input.classList.add("is-fullwidth");
-    input.setAttribute("type", "color");
-    input.setAttribute(data_tag, null);
-    input.setAttribute("placeholder", placeholder);
-    input.setAttribute("data-i18n", placeholder);
-    input.setAttribute("data-i18n-target", "placeholder");
+    const control = create_element('div', ["control"]);
+    const input = create_element('input', ["input", "is-fullwidth"], {
+        "type": "color",
+        [data_tag]: null,
+        "placeholder": placeholder,
+        "data-i18n": placeholder,
+        "data-i18n-target": "placeholder"
+    });
     control.appendChild(input);
     field.appendChild(control);
     return field;
 };
 
 const create_select_input = (label_text, data_tag) => {
-    const field = document.createElement('div');
-    field.classList.add("field");
-    const label = document.createElement('label');
-    label.classList.add("label");
-    label.setAttribute("data-i18n", label_text);
+    const field = create_element('div', ["field"]);
+    const label = create_element('label', ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
     field.appendChild(label);
-    const control = document.createElement('div');
-    control.classList.add("control");
-    const div = document.createElement('div');
-    div.classList.add("select");
-    div.classList.add("is-fullwidth");
-    const select = document.createElement('select');
-    select.setAttribute(data_tag, null);
+    const control = create_element('div', ["control"]);
+    const div = create_element('div', ["select", "is-fullwidth"]);
+    const select = create_element('select', [], {[data_tag]: null});
     div.appendChild(select);
     control.appendChild(div);
     field.appendChild(control);
@@ -86,10 +87,8 @@ const create_select_input = (label_text, data_tag) => {
 };
 
 const create_button = (label_text, callback) => {
-    const control = document.createElement('div');
-    control.classList.add("control");
-    const button = document.createElement('button');
-    button.classList.add("button");
+    const control = create_element('div', ["control"]);
+    const button = create_element('button', ["button"]);
     button.textContent = label_text;
     button.addEventListener('click', callback);
     control.appendChild(button);
@@ -97,37 +96,27 @@ const create_button = (label_text, callback) => {
 };
 
 const create_dropdown = (items) => {
-    const dropdown = document.createElement('div');
-    dropdown.classList.add("dropdown");
-    dropdown.classList.add("is-right");
+    const dropdown = create_element("div", ["dropdown", "is-right"]);
     dropdown.addEventListener('click', (event) => {
         event.stopPropagation();
         dropdown.classList.toggle('is-active');
     });
 
-    const trigger = document.createElement('div');
-    trigger.classList.add("dropdown-trigger");
+    const trigger = create_element('div', ["dropdown-trigger"]);
     dropdown.appendChild(trigger);
 
-    const dropdown_button = document.createElement('button');
-    dropdown_button.classList.add("button");
-    dropdown_button.classList.add("is-white");
+    const dropdown_button = create_element('button', ["button", "is-white"]);
     dropdown_button.innerHTML = '<svg class="icon icon16"><use xlink:href="img/feather-sprite.svg#more-vertical"/></svg>';
     trigger.appendChild(dropdown_button);
 
-    const menu = document.createElement('div');
-    menu.classList.add("dropdown-menu");
+    const menu = create_element('div', ["dropdown-menu"]);
     dropdown.appendChild(menu);
 
-    const menu_content = document.createElement('div');
-    menu_content.classList.add("dropdown-content");
-    menu_content.classList.add("has-background-info-light");
+    const menu_content = create_element('div', ["dropdown-content", "has-background-info-light"]);
     menu.appendChild(menu_content);
 
     items.forEach((item) => {
-        const dropdown_item = document.createElement('a');
-        dropdown_item.classList.add("dropdown-item");
-        dropdown_item.setAttribute("href", "#");
+        const dropdown_item = create_element('a', ["dropdown-item"], {"href": "#"});
         dropdown_item.textContent = item.label;
         dropdown_item.addEventListener('click', item.callback);
         menu_content.appendChild(dropdown_item);
@@ -149,10 +138,12 @@ const encode_parameters = (parameters) => {
 export {
     parse_float,
     parse_int,
+    create_element,
     create_button,
     create_dropdown,
     create_text_input,
     create_color_input,
     create_select_input,
     encode_parameters,
+    remove_element,
 };

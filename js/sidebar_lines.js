@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import Sortable from 'sortablejs';
 
 import {Color} from './color.js';
@@ -6,9 +5,11 @@ import {MapStateChange, MapStateObserver} from './map_state.js';
 import {
     create_button,
     create_dropdown,
+    create_element,
     create_color_input,
     create_select_input,
     parse_int,
+    remove_element,
 } from './utilities.js';
 
 export class SidebarLines extends MapStateObserver {
@@ -48,8 +49,10 @@ export class SidebarLines extends MapStateObserver {
         if (changes & MapStateChange.LINES) {
             // update and add lines
             this.app.map_state.lines.forEach((line) => {
-                if ($(`#line-${line.get_id()}`).length == 0) {
-                    $('#lines').append(self.create_div(line));
+                let div = document.querySelector(`#line-${line.get_id()}`);
+                if (div === null) {
+                    div = self.create_div(line);
+                    document.querySelector('#lines').appendChild(div);
                 }
 
                 const length =
@@ -59,22 +62,15 @@ export class SidebarLines extends MapStateObserver {
                         ? `${line.bearing.toFixed(2)}°`
                         : 'n/a';
 
-                $(`#line-${line.get_id()} .line-color`).css(
-                    'background-color',
-                    line.color.to_hash_string(),
-                );
-                $(`#line-${line.get_id()} .line-from`).text(
-                    self.marker_name(line.marker1),
-                );
-                $(`#line-${line.get_id()} .line-to`).text(
-                    self.marker_name(line.marker2),
-                );
-                $(`#line-${line.get_id()} .line-distance`).text(length);
-                $(`#line-${line.get_id()} .line-bearing`).text(bearing);
+                div.querySelector(".line-color").style.backgroundColor = line.color.to_hash_string();
+                div.querySelector(".line-from").textContent = self.marker_name(line.marker1);
+                div.querySelector(".line-to").textContent = self.marker_name(line.marker2);
+                div.querySelector(".line-distance").textContent = length;
+                div.querySelector(".line-bearing").textContent = bearing;
             });
 
             /* remove spurious lines */
-            const lines = $('#lines > .line');
+            const lines = document.querySelectorAll('#lines > .line');
             if (lines.length > this.app.map_state.lines.length) {
                 const ids = new Set();
                 this.app.map_state.lines.forEach((line) => {
@@ -82,16 +78,16 @@ export class SidebarLines extends MapStateObserver {
                 });
 
                 const deleted_ids = [];
-                lines.each((i, m) => {
-                    const id = parse_int(m.id.substring(5));
+                lines.forEach((m) => {
+                    const id = parse_int(m.getAttribute("id").substring(5));
                     if (!ids.has(id)) {
                         deleted_ids.push(id);
                     }
                 });
 
                 deleted_ids.forEach((id) => {
-                    $(`#line-${id}`).remove();
-                    $(`#line-edit-${id}`).remove();
+                    remove_element(document.querySelector(`#line-${id}`));
+                    remove_element(document.querySelector(`#line-element-${id}`));
                 });
             }
         }
@@ -105,35 +101,44 @@ export class SidebarLines extends MapStateObserver {
         }
     }
 
+    create_row(table, label, cls) {
+        const tr = create_element("tr", []);
+        const td1 = create_element("td", ["has-text-weight-semibold"]);
+        td1.textContent = label;
+        tr.appendChild(td1);
+        const td2 = create_element("td", [cls]);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+
     create_div(line) {
         const self = this;
-        const m = $(`<div id="line-${line.get_id()}" class="line">`);
 
-        const left = $(`<div class="line-left">
-            <div class="line-color"></div>
-        </div>`);
-        m.append(left);
+        const div = create_element("div", ["line"], {"id": `line-${line.get_id()}`});
 
-        const center = $('<div class="line-center"></div>');
-        center.append(
-            $(`<table>
-            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.from')}</td><td class="line-from"></td></tr>
-            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.to')}</td><td class="line-to"></td></tr>
-            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.length')}</td><td class="line-distance"></td></tr>
-            <tr><td class="has-text-weight-semibold">${self.app.translate('sidebar.lines.bearing')}</td><td class="line-bearing"></td></tr>
-        </table>`),
-        );
-        m.append(center);
+        const left = create_element("div", ["line-left"]);
+        const color = create_element("div", ["line-color"]);
+        left.appendChild(color);
+        div.appendChild(left);
 
-        const right = $('<div class="line-right"></div>');
-        right.append(this.create_line_dropdown(line));
-        m.append(right);
+        const center = create_element("div", ["line-center"]);
+        const table = create_element("table", []);
+        this.create_row(table, self.app.translate('sidebar.lines.from'), "line-from");
+        this.create_row(table, self.app.translate('sidebar.lines.to'), "line-to");
+        this.create_row(table, self.app.translate('sidebar.lines.length'), "line-distance");
+        this.create_row(table, self.app.translate('sidebar.lines.bearing'), "line-bearing");
+        center.appendChild(table);
+        div.appendChild(center);
 
-        m.click(() => {
+        const right = create_element("div", ["line-right"]);
+        right.appendChild(this.create_line_dropdown(line));
+        div.appendChild(right);
+
+        div.addEventListener('click', () => {
             self.app.map_state.show_line(line);
         });
 
-        return m;
+        return div;
     }
 
     marker_name(id) {
@@ -151,7 +156,8 @@ export class SidebarLines extends MapStateObserver {
 
     create_edit_div(line) {
         const self = this;
-        const div = $(`<div id="line-edit-${line.get_id()}" class="edit">`);
+
+        const div = create_element("div", ["edit"], {"id": `line-edit-${line.get_id()}`});
 
         const from = create_select_input(this.app.translate('sidebar.lines.edit_from'), 'data-from');
         const to = create_select_input(this.app.translate('sidebar.lines.edit_to'), 'data-to');
@@ -163,11 +169,14 @@ export class SidebarLines extends MapStateObserver {
         const cancel_button = create_button(this.app.translate('general.cancel'), () => {
             div.remove();
         });
-        const buttons = $('<div class="field is-grouped">')
-            .append(submit_button)
-            .append(cancel_button);
+        const buttons = create_element("div", ["field", "is-grouped"]);
+        buttons.appendChild(submit_button);
+        buttons.appendChild(cancel_button);
 
-        div.append(from).append(to).append(color).append(buttons);
+        div.appendChild(from);
+        div.appendChild(to);
+        div.appendChild(color);
+        div.appendChild(buttons);
 
         return div;
     }
@@ -178,10 +187,10 @@ export class SidebarLines extends MapStateObserver {
             {
                 label: this.app.translate('sidebar.lines.edit'),
                 callback: () => {
-                    if ($(`#line-edit-${line.get_id()}`).length == 0) {
-                        self.create_edit_div(line).insertAfter(
-                            `#line-${line.get_id()}`,
-                        );
+                    if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
+                        const div = document.querySelector(`#line-${line.get_id()}`);
+                        const edit_div = self.create_edit_div(line);
+                        div.parentNode.insertBefore(edit_div, div.nextSibling);
                         self.update_edit_values(line);
                     }
                 },
@@ -196,8 +205,8 @@ export class SidebarLines extends MapStateObserver {
     }
 
     update_edit_values(line) {
-        const div = $(`#line-edit-${line.get_id()}`);
-        if (div.length == 0) {
+        const div = document.querySelector(`#line-edit-${line.get_id()}`);
+        if (div === null) {
             return;
         }
 
@@ -215,41 +224,43 @@ export class SidebarLines extends MapStateObserver {
             return a.name.localeCompare(b.name);
         });
 
-        div.find('[data-from]').empty();
+        const from_select = div.querySelector('[data-from]');
+        from_select.innerHTML = "";
         markers.forEach((name_id) => {
-            const option = $(`<option value="${name_id.id}"></option>`);
-            option.text(name_id.name);
-            if (line.marker1 == name_id.id) {
-                option.prop('selected', true);
-            }
-            div.find('[data-from]').append(option);
+            from_select.appendChild(new Option(
+                name_id.name,
+                name_id.id,
+                false,
+                name_id.id === line.marker1)
+            );
         });
 
-        div.find('[data-to]').empty();
+        const to_select = div.querySelector('[data-to]');
+        to_select.innerHTML = "";
         markers.forEach((name_id) => {
-            const option = $(`<option value="${name_id.id}"></option>`);
-            option.text(name_id.name);
-            if (line.marker2 == name_id.id) {
-                option.prop('selected', true);
-            }
-            div.find('[data-to]').append(option);
+            to_select.appendChild(new Option(
+                name_id.name,
+                name_id.id,
+                false,
+                name_id.id === line.marker2)
+            );
         });
 
-        div.find('[data-color]').val(line.color.to_hash_string());
+        div.querySelector('[data-color]').value = line.color.to_hash_string();
     }
 
     submit_edit(line) {
-        const div = $(`#line-edit-${line.get_id()}`);
-        const marker1 = parse_int(div.find('[data-from]').val());
-        const marker2 = parse_int(div.find('[data-to]').val());
-        const color = Color.from_string(div.find('[data-color]').val());
+        const div = document.querySelector(`#line-edit-${line.get_id()}`);
+        const marker1 = parse_int(div.querySelector('[data-from]').value);
+        const marker2 = parse_int(div.querySelector('[data-to]').value);
+        const color = Color.from_string(div.querySelector('[data-color]').value);
 
         if (!color) {
             this.app.message_error(this.app.translate('sidebar.lines.bad_values_message'));
             return;
         }
 
-        div.remove();
+        remove_element(div);
 
         line.marker1 = marker1;
         line.marker2 = marker2;

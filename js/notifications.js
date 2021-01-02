@@ -1,11 +1,12 @@
+import {create_element} from "./utilities.js";
+
 class Notification {
     constructor(parent, id, text, type) {
         const self = this;
         this.parent = parent;
         this.id = id;
         this.hiding = false;
-        this.div = document.createElement('div');
-        this.div.className = `notification is-${type}`;
+        this.div = create_element('div', ["notification", `is-${type}`]);
         this.div.innerHTML = text;
         this.div.addEventListener('click', () => {
             self.hide();
@@ -24,7 +25,7 @@ class Notification {
             return;
         }
         this.hiding = true;
-        this.div.className += ' notification-fadeOut';
+        this.div.classList.add("notification-fadeOut");
         this.div.addEventListener(
             'animationend',
             () => {
@@ -58,8 +59,7 @@ export class Notifications {
     }
 
     init() {
-        this.container = document.createElement('div');
-        this.container.id = 'notification-container';
+        this.container = create_element('div', [], {"id": 'notification-container'});
         document.body.appendChild(this.container);
     }
 

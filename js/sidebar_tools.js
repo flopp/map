@@ -1,4 +1,5 @@
 import {MapStateChange, MapStateObserver} from './map_state.js';
+import {create_element} from "./utilities.js";
 
 export class SidebarTools extends MapStateObserver {
     constructor(app) {
@@ -12,10 +13,12 @@ export class SidebarTools extends MapStateObserver {
             {title: 'English', short: 'en'},
             {title: 'Deutsch', short: 'de'},
         ].forEach((language) => {
-            const option = document.createElement('option');
-            option.value = language.short;
-            option.text = language.title;
-            self.language_select.add(option);
+            self.language_select.appendChild(new Option(
+                language.title,
+                language.short,
+                language.short  === "en",
+                language.short === self.app.map_state.language)
+            );
         });
         this.language_select.onchange = () => {
             self.app.map_state.set_language(self.language_select.value);
@@ -52,12 +55,10 @@ export class SidebarTools extends MapStateObserver {
 
     export_json() {
         const data = JSON.stringify(this.app.map_state.to_json());
-        const element = document.createElement('a');
-        element.setAttribute(
-            'href',
-            'data:application/json;charset=utf-8,' + encodeURIComponent(data),
-        );
-        element.setAttribute('download', 'map_state.json');
+        const element = create_element('a', [], {
+            'href': `data:application/json;charset=utf-8,${encodeURIComponent(data)}`,
+            'download': 'map_state.json'
+        });
         element.style.display = 'none';
         document.body.appendChild(element);
         element.click();

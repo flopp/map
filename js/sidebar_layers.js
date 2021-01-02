@@ -1,5 +1,6 @@
 import {MapStateObserver, MapStateChange} from './map_state.js';
 import {MapType, maptype2human, isGoogle} from './map_type.js';
+import {create_element, remove_element} from "./utilities.js";
 
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {
@@ -21,10 +22,8 @@ export class SidebarLayers extends MapStateObserver {
 
         this.baselayer_select = this.div.querySelector('[data-baselayer]');
         this.baselayers.forEach((baselayer) => {
-            baselayer.option = document.createElement('option');
-            baselayer.option.value = baselayer.type;
-            baselayer.option.text = maptype2human(baselayer.type);
-            self.baselayer_select.add(baselayer.option);
+            baselayer.option = new Option(maptype2human(baselayer.type), baselayer.type, false, baselayer.type === self.app.map_state.map_type);
+            self.baselayer_select.appendChild(baselayer.option);
         });
         this.baselayer_select.onchange = () => {
             app.switch_map(self.baselayer_select.value);
@@ -73,7 +72,7 @@ export class SidebarLayers extends MapStateObserver {
         this.baselayers.forEach((baselayer) => {
             if (check_function(baselayer.type)) {
                 if (baselayer.option) {
-                    baselayer.option.remove();
+                    remove_element(baselayer.option);
                     baselayer.option = null;
                 }
             }
@@ -86,10 +85,8 @@ export class SidebarLayers extends MapStateObserver {
         this.baselayers.forEach((baselayer) => {
             if (check_function(baselayer.type)) {
                 if (!baselayer.option) {
-                    baselayer.option = document.createElement('option');
-                    baselayer.option.value = baselayer.type;
-                    baselayer.option.text = maptype2human(baselayer.type);
-                    self.baselayer_select.add(baselayer.option);
+                    baselayer.option = new Option(maptype2human(baselayer.type), baselayer.type, false, baselayer.type === self.app.map_state.map_type);
+                    self.baselayer_select.appendChild(baselayer.option);
                 }
             }
         });
