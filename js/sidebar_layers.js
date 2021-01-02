@@ -1,6 +1,6 @@
 import {MapStateObserver, MapStateChange} from './map_state.js';
 import {MapType, maptype2human, isGoogle} from './map_type.js';
-import {create_element, remove_element} from "./utilities.js";
+import {remove_element} from "./utilities.js";
 
 export class SidebarLayers extends MapStateObserver {
     constructor(app) {
@@ -22,7 +22,12 @@ export class SidebarLayers extends MapStateObserver {
 
         this.baselayer_select = this.div.querySelector('[data-baselayer]');
         this.baselayers.forEach((baselayer) => {
-            baselayer.option = new Option(maptype2human(baselayer.type), baselayer.type, false, baselayer.type === self.app.map_state.map_type);
+            baselayer.option = new Option(
+                maptype2human(baselayer.type),
+                baselayer.type,
+                false,
+                baselayer.type === self.app.map_state.map_type
+            );
             self.baselayer_select.appendChild(baselayer.option);
         });
         this.baselayer_select.onchange = () => {
@@ -85,7 +90,12 @@ export class SidebarLayers extends MapStateObserver {
         this.baselayers.forEach((baselayer) => {
             if (check_function(baselayer.type)) {
                 if (!baselayer.option) {
-                    baselayer.option = new Option(maptype2human(baselayer.type), baselayer.type, false, baselayer.type === self.app.map_state.map_type);
+                    baselayer.option = new Option(
+                        maptype2human(baselayer.type),
+                        baselayer.type,
+                        false,
+                        baselayer.type === self.app.map_state.map_type
+                    );
                     self.baselayer_select.appendChild(baselayer.option);
                 }
             }

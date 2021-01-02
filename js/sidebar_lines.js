@@ -102,7 +102,7 @@ export class SidebarLines extends MapStateObserver {
     }
 
     create_row(table, label, cls) {
-        const tr = create_element("tr", []);
+        const tr = create_element("tr");
         const td1 = create_element("td", ["has-text-weight-semibold"]);
         td1.textContent = label;
         tr.appendChild(td1);
@@ -122,7 +122,7 @@ export class SidebarLines extends MapStateObserver {
         div.appendChild(left);
 
         const center = create_element("div", ["line-center"]);
-        const table = create_element("table", []);
+        const table = create_element("table");
         this.create_row(table, self.app.translate('sidebar.lines.from'), "line-from");
         this.create_row(table, self.app.translate('sidebar.lines.to'), "line-to");
         this.create_row(table, self.app.translate('sidebar.lines.length'), "line-distance");

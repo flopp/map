@@ -18,7 +18,7 @@ const parse_int = (str) => {
     return parseFloat(str);
 };
 
-const create_element = (type, classes, attributes = {}) => {
+const create_element = (type, classes = [], attributes = {}) => {
     const element = document.createElement(type);
     classes.forEach((cls) => {
         element.classList.add(cls);
