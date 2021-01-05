@@ -45,7 +45,7 @@ export class SidebarLines extends MapStateObserver {
         });
 
         this.sortable = Sortable.create(document.getElementById('lines'), {
-            onEnd: (event: any): void => {
+            onEnd: (event: Sortable.SortableEvent): void => {
                 self.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
             },
         });

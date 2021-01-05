@@ -17,6 +17,12 @@
         ],
         "no-bitwise": false,
         "no-console": false,
+
+        "no-conditional-assignment": true,
+        "no-invalid-template-strings": true,
+        "no-sparse-arrays": true,
+        "no-unbound-method": true,
+        "restrict-plus-operands": true,
         "variable-name": {
             "options": [
                 "ban-keywords",

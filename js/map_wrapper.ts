@@ -1,5 +1,5 @@
-import { App } from './app';
-import { Coordinates } from './coordinates';
+import {App} from './app';
+import {Coordinates} from './coordinates';
 import {Line} from "./line";
 import {MapStateChange} from './map_state';
 import {MapStateObserver} from "./map_state_observer";

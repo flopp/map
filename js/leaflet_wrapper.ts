@@ -1,6 +1,7 @@
 import * as L from 'leaflet';
 
-import { App } from './app';
+import {App} from './app';
+import {Color} from './color';
 import {Coordinates} from './coordinates';
 import {Line} from "./line";
 import {MapType} from './map_type';
@@ -15,12 +16,25 @@ function to_coordinates(leaflet_latlng: L.LatLng): Coordinates {
     return new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
 };
 
+interface MarkerObjDict {
+    marker_obj: L.Marker;
+    circle_obj: L.Polygon;
+    last_name: string;
+    last_color: Color;
+};
+
+interface LineObjDict {
+    line_obj: L.Polyline;
+    arrow_obj: L.Polyline;
+    last_color: Color;
+};
+
 export class LeafletWrapper extends MapWrapper {
     private automatic_event: boolean;
     private hillshading_enabled: boolean;
-    private hillshading_layer: any;
+    private hillshading_layer: L.TileLayer;
     private german_npa_enabled: boolean;
-    private german_npa_layer: any;
+    private german_npa_layer: L.TileLayer;
     private map: L.Map;
     private layer_openstreetmap: L.TileLayer;
     private layer_opentopomap: L.TileLayer;
@@ -95,7 +109,7 @@ export class LeafletWrapper extends MapWrapper {
             });
         });
 
-        this.map.on('contextmenu', (event: L.Event): boolean => {
+        this.map.on('contextmenu', (event: L.LeafletMouseEvent): boolean => {
             self.app.map_menu.showMap(
                 self,
                 event.containerPoint.x,
@@ -170,7 +184,7 @@ export class LeafletWrapper extends MapWrapper {
         if (enabled) {
             if (!this.german_npa_layer) {
                 this.german_npa_layer = L.tileLayer.wms("https://geodienste.bfn.de/ogc/wms/schutzgebiet?", {
-                    layers: ['Naturschutzgebiete'],
+                    layers: 'Naturschutzgebiete',
                     format: 'image/png',
                     transparent: true,
                     opacity: 0.5,
@@ -223,7 +237,7 @@ export class LeafletWrapper extends MapWrapper {
             }
         });
 
-        obj.marker_obj.on('contextmenu', (event: L.Event): boolean => {
+        obj.marker_obj.on('contextmenu', (event: L.LeafletMouseEvent): boolean => {
             self.app.map_menu.showMarker(
                 self,
                 event.containerPoint.x,
@@ -238,7 +252,7 @@ export class LeafletWrapper extends MapWrapper {
         this.update_marker_object(obj, marker);
     }
 
-    protected update_marker_object(obj: any, marker: Marker): void {
+    protected update_marker_object(obj: MarkerObjDict, marker: Marker): void {
         obj.marker_obj.setLatLng(from_coordinates(marker.coordinates));
         if (marker.radius > 0) {
             if (!obj.circle_obj) {
@@ -272,7 +286,7 @@ export class LeafletWrapper extends MapWrapper {
         obj.last_name = marker.name;
     }
 
-    public delete_marker_object(obj: any): void {
+    public delete_marker_object(obj: MarkerObjDict): void {
         if (obj.circle_obj) {
             this.map.removeLayer(obj.circle_obj);
         }
@@ -309,7 +323,7 @@ export class LeafletWrapper extends MapWrapper {
         this.update_line_object(obj, line);
     }
 
-    private arrow_head(p1: L.Point, p2: L.Point): L.Point[] {
+    private arrow_head(p1: L.LatLng, p2: L.LatLng): L.LatLng[] {
         const compute_heading = (a: L.Point, b: L.Point): number =>
             ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) %
             360
@@ -317,8 +331,9 @@ export class LeafletWrapper extends MapWrapper {
         const headAngle = 60;
         const pixelSize = 10;
         const d2r = Math.PI / 180;
-        const prevPoint = this.map.project(p1);
-        const tipPoint = this.map.project(p2);
+        const zoom = this.map.getZoom();
+        const prevPoint = this.map.project(p1, zoom);
+        const tipPoint = this.map.project(p2, zoom);
         if (
             Math.abs(prevPoint.x - tipPoint.x) <= 1 &&
             Math.abs(prevPoint.y - tipPoint.y) <= 1
@@ -341,13 +356,13 @@ export class LeafletWrapper extends MapWrapper {
         );
 
         return [
-            this.map.unproject(arrowHead1),
+            this.map.unproject(arrowHead1, zoom),
             p2,
-            this.map.unproject(arrowHead2),
+            this.map.unproject(arrowHead2, zoom),
         ];
     }
 
-    public update_line_object(obj: any, line: Line): void {
+    public update_line_object(obj: LineObjDict, line: Line): void {
         if (
             !this.has_marker_object(line.marker1) ||
             !this.has_marker_object(line.marker2)
@@ -384,20 +399,20 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    public delete_line_object(obj: any): void {
+    public delete_line_object(obj: LineObjDict): void {
         this.map.removeLayer(obj.arrow_obj);
         this.map.removeLayer(obj.line_obj);
     }
 
-    public create_icon(marker: Marker): L.icon {
+    public create_icon(marker: Marker): L.Icon {
         const icon = this.app.icon_factory.create_map_icon(
             marker.name,
             marker.color,
         );
         return L.icon({
             iconUrl: icon.url,
-            iconSize: icon.size,
-            iconAnchor: icon.anchor,
+            iconSize: L.point(icon.size[0], icon.size[1]),
+            iconAnchor: L.point(icon.anchor[0], icon.anchor[1]),
         });
     }
 }

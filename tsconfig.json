@@ -6,7 +6,8 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
         "moduleResolution": "node",
-        "types": ["googlemaps"]
+        "types": ["googlemaps"],
+        "esModuleInterop": true
     },
     "include": ["./js/*"]
 }

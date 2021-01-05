@@ -681,7 +681,7 @@ export class MapState {
     }
 
     public delete_marker(id: number): void {
-        this.markers = this.markers.filter((marker: Marker, _index: number, _arr: any): boolean => {
+        this.markers = this.markers.filter((marker: Marker, _index: number, _arr: Marker[]): boolean => {
             return marker.get_id() !== id;
         });
         this.markers_hash.delete(id);

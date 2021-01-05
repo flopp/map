@@ -1,4 +1,4 @@
-import { App } from './app';
+import {App} from './app';
 import {MapStateChange} from './map_state';
 import {MapStateObserver} from "./map_state_observer";
 import {MapType, maptype2human, isGoogle} from './map_type';

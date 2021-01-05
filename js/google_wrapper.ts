@@ -1,5 +1,5 @@
 import {App} from "./app.js"
-import { Color } from "./color.js";
+import {Color} from "./color.js";
 import {Coordinates} from './coordinates';
 import {Line} from "./line";
 import {MapType} from './map_type';
@@ -73,11 +73,12 @@ export class GoogleWrapper extends MapWrapper {
             });
         });
 
-        google.maps.event.addListener(this.map, 'rightclick', (event: any): boolean => {
+        google.maps.event.addListener(this.map, 'rightclick', (event: google.maps.MapMouseEvent): boolean => {
+            const point = self.map.getProjection().fromLatLngToPoint(event.latLng);
             self.app.map_menu.showMap(
                 self,
-                event.pixel.x,
-                event.pixel.y,
+                point.x,
+                point.y,
                 to_coordinates(event.latLng),
             );
             return false;
@@ -162,7 +163,7 @@ export class GoogleWrapper extends MapWrapper {
                             transparent: true,
                             format: "png32",
                             layers: "show:4",
-                            BBOX: top.lng() + "," + bot.lat() + "," + bot.lng() + "," + top.lat(),
+                            BBOX: `${top.lng()},${bot.lat()},${bot.lng()},${top.lat()}`,
                             bboxSR: 4326,
                             imageSR: 102113,
                             size: "256,256",
@@ -225,11 +226,12 @@ export class GoogleWrapper extends MapWrapper {
             }
         });
 
-        google.maps.event.addListener(obj.marker_obj, 'rightclick', (event: any): boolean => {
+        google.maps.event.addListener(obj.marker_obj, 'rightclick', (event: google.maps.MapMouseEvent): boolean => {
+            const point = self.map.getProjection().fromLatLngToPoint(event.latLng);
             self.app.map_menu.showMarker(
                 self,
-                event.pixel.x + self.width() / 2,
-                event.pixel.y + self.height() / 2,
+                point.x + self.width() / 2,
+                point.y + self.height() / 2,
                 marker,
             );
             return false;

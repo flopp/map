@@ -18,7 +18,7 @@ export class IconFactory {
         // we need to convert it to UTF-8
         const encoded_text = encodeURIComponent(domString).replace(
             /%([0-9A-F]{2})/g,
-            (_match: any, p1: string) : string => {
+            (_match: string, p1: string) : string => {
                 return String.fromCharCode(parseInt(p1, 16));
             },
         );

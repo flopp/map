@@ -1,4 +1,4 @@
-import { App } from "./app";
+import {App} from "./app";
 import {MapStateObserver} from "./map_state_observer";
 
 export class SidebarSearch extends MapStateObserver {

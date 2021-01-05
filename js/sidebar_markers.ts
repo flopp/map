@@ -1,11 +1,11 @@
 import Sortable from 'sortablejs';
 
-import { App } from './app';
+import {App} from './app';
 import {Color} from './color';
 import {Coordinates, CoordinatesFormat} from './coordinates';
 import {MapStateChange} from './map_state';
 import {MapStateObserver} from "./map_state_observer";
-import { Marker } from './marker';
+import {Marker} from './marker';
 import {
     parse_float,
     parse_int,
@@ -60,7 +60,7 @@ export class SidebarMarkers extends MapStateObserver {
         });
 
         this.sortable = Sortable.create(document.getElementById('markers'), {
-            onEnd: (event: any): void => {
+            onEnd: (event: Sortable.SortableEvent): void => {
                 self.app.map_state.reorder_markers(
                     event.oldIndex,
                     event.newIndex,

@@ -163,6 +163,7 @@ export class App {
         }
 
         const self = this;
+        // tslint:disable-next-line:no-unbound-method
         const original = console.error;
         console.error = (...args): void => {
             // show original message
@@ -171,8 +172,7 @@ export class App {
             if (args[0] && typeof args[0] === 'string') {
                 if (
                     args[0].indexOf('Google Maps JavaScript API error') >= 0 ||
-                    args[0].indexOf('You are using this API without a key') >=
-                        0 ||
+                    args[0].indexOf('You are using this API without a key') >= 0 ||
                     args[0].indexOf('developers.google.com') >= 0
                 ) {
                     console.warn(
@@ -317,7 +317,7 @@ export class App {
                 }
                 return response.json();
             })
-            .then((json_data): any => {
+            .then((json_data): void => {
                 if (json_data.length > 0) {
                     self.map_state.set_center(
                         new Coordinates(json_data[0].lat, json_data[0].lon)
