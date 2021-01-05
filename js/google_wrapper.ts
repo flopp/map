@@ -1,4 +1,5 @@
 import {App} from "./app.js"
+import { Color } from "./color.js";
 import {Coordinates} from './coordinates';
 import {Line} from "./line";
 import {MapType} from './map_type';
@@ -8,21 +9,33 @@ import {encode_parameters} from './utilities';
 
 /* global google */
 
-const from_coordinates = (c: Coordinates): any => {
+const from_coordinates = (c: Coordinates): google.maps.LatLng => {
     return new google.maps.LatLng(c.raw_lat(), c.raw_lng());
 };
 
-const to_coordinates = (google_latlng: any): Coordinates => {
+const to_coordinates = (google_latlng: google.maps.LatLng): Coordinates => {
     return new Coordinates(google_latlng.lat(), google_latlng.lng());
+};
+
+interface MarkerObjDict {
+    marker_obj: google.maps.Marker;
+    circle_obj: google.maps.Circle;
+    last_name: string;
+    last_color: Color;
+};
+
+interface LineObjDict {
+    line_obj: google.maps.Polyline;
+    last_color: Color;
 };
 
 export class GoogleWrapper extends MapWrapper {
     private automatic_event: boolean;
     private hillshading_enabled: boolean;
-    private hillshading_layer: any;
+    private hillshading_layer: google.maps.MapType;
     private german_npa_enabled: boolean;
-    private german_npa_layer: any;
-    private map: any;
+    private german_npa_layer: google.maps.MapType;
+    private map: google.maps.Map;
 
     constructor(div_id: string, app: App) {
         super(div_id, app);
@@ -110,8 +123,8 @@ export class GoogleWrapper extends MapWrapper {
         if (enabled) {
             if (!this.hillshading_layer) {
                 this.hillshading_layer = new google.maps.ImageMapType({
-                    getTileUrl: (coord: any, zoom: number): string => {
-                        return `https://tiles.wmflabs.org/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
+                    getTileUrl: (coord: google.maps.Point, zoom: number): string => {
+                        return `https://tiles.wmflabs.orgLatLng/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
                     },
                     tileSize: new google.maps.Size(256, 256),
                     name: 'Hillshading',
@@ -120,9 +133,7 @@ export class GoogleWrapper extends MapWrapper {
             }
             this.map.overlayMapTypes.insertAt(0, this.hillshading_layer);
         } else if (this.hillshading_layer) {
-            this.map.overlayMapTypes.removeAt(
-                this.map.overlayMapTypes.indexOf(this.hillshading_layer),
-            );
+            this.remove_layer(this.hillshading_layer);
         }
     }
 
@@ -137,7 +148,7 @@ export class GoogleWrapper extends MapWrapper {
         if (enabled) {
             if (!this.german_npa_layer) {
                 this.german_npa_layer = new google.maps.ImageMapType({
-                    getTileUrl: (coord: any, zoom: number): string => {
+                    getTileUrl: (coord: google.maps.Point, zoom: number): string => {
                         const proj = self.map.getProjection();
                         const zfactor = 256 / Math.pow(2, zoom);
                         const top = proj.fromPointToLatLng(
@@ -167,9 +178,19 @@ export class GoogleWrapper extends MapWrapper {
             }
             this.map.overlayMapTypes.insertAt(0, this.german_npa_layer);
         } else if (this.german_npa_layer) {
-            this.map.overlayMapTypes.removeAt(
-                this.map.overlayMapTypes.indexOf(this.german_npa_layer),
-            );
+            this.remove_layer(this.german_npa_layer);
+        }
+    }
+
+    private remove_layer(layer: google.maps.MapType): void {
+        let index = -1;
+        this.map.overlayMapTypes.forEach((element: google.maps.MapType, i: number): void => {
+            if (element === layer) {
+                index = i;
+            }
+        });
+        if (index >= 0) {
+            this.map.overlayMapTypes.removeAt(index);
         }
     }
 
@@ -219,7 +240,7 @@ export class GoogleWrapper extends MapWrapper {
         this.update_marker_object(obj, marker);
     }
 
-    protected update_marker_object(obj: any, marker: Marker): void {
+    protected update_marker_object(obj: MarkerObjDict, marker: Marker): void {
         const position = from_coordinates(marker.coordinates);
 
         obj.marker_obj.setPosition(position);
@@ -265,7 +286,7 @@ export class GoogleWrapper extends MapWrapper {
         obj.last_name = marker.name;
     }
 
-    public delete_marker_object(obj: any): void {
+    public delete_marker_object(obj: MarkerObjDict): void {
         if (obj.circle_obj) {
             obj.circle_obj.setMap(null);
             obj.circle_obj = null;
@@ -306,7 +327,7 @@ export class GoogleWrapper extends MapWrapper {
         this.update_line_object(obj, line);
     }
 
-    public update_line_object(obj: any, line: Line): void {
+    public update_line_object(obj: LineObjDict, line: Line): void {
         if (
             !this.has_marker_object(line.marker1) ||
             !this.has_marker_object(line.marker2)
@@ -329,11 +350,11 @@ export class GoogleWrapper extends MapWrapper {
         }
     }
 
-    public delete_line_object(obj: any): void {
+    public delete_line_object(obj: LineObjDict): void {
         obj.line_obj.setMap(null);
     }
 
-    public create_icon(marker: Marker): any {
+    public create_icon(marker: Marker): google.maps.Icon {
         const icon = this.app.icon_factory.create_map_icon(
             marker.name,
             marker.color,

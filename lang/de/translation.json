@@ -77,7 +77,7 @@
         },
         "search": {
             "noresult": "Es konnte keine passender Ort gefunden werden.",
-            "servererror": "Fehler beim Kontaktieren des 'Nominatim'-Servers."
+            "servererror": "Fehler beim Kontaktieren des 'Nominatim'-Servers: {1}"
         },
         "sidebar": {
             "info": {

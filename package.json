@@ -39,7 +39,6 @@
         "geographiclib": "^1.50.0",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
-        "jquery": "^3.5.1",
         "leaflet": "^1.6.0",
         "sortablejs": "^1.10.2"
     }

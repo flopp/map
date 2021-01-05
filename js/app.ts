@@ -1,5 +1,3 @@
-import jQuery from 'jquery';
-
 import {ApiKeysDialog} from './api_keys_dialog';
 import {Coordinates} from './coordinates';
 import {GoogleWrapper} from './google_wrapper';
@@ -15,6 +13,7 @@ import {MultiMarkersDialog} from './multi_markers_dialog';
 import {Notifications} from './notifications';
 import {ProjectionDialog} from './projection_dialog';
 import {Sidebar} from './sidebar';
+import {getScript} from "./get_script";
 
 export class App {
     private lang: Language;
@@ -239,7 +238,7 @@ export class App {
             };
 
             const url = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=${callbackName}`;
-            jQuery.getScript(url);
+            getScript(url, null);
         });
 
         promise
@@ -292,6 +291,7 @@ export class App {
     }
 
     public search_location(location_string: string): void {
+        location_string = location_string.trim();
         if (location_string.length === 0) {
             return;
         }
@@ -306,18 +306,27 @@ export class App {
         // try to resolve "location_string" via a nominatim search
         const self = this;
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${location_string}`;
-        jQuery.get(url)
-            .done((data: any): void => {
-                if (data.length > 0) {
+        fetch(url)
+            .then((response: Response): Promise<any> => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new TypeError("Response is not JSON");
+                }
+                return response.json();
+            })
+            .then((json_data): any => {
+                if (json_data.length > 0) {
                     self.map_state.set_center(
-                        new Coordinates(data[0].lat, data[0].lon)
+                        new Coordinates(json_data[0].lat, json_data[0].lon)
                     );
                 } else {
                     self.message_error(self.lang.translate('search.noresult'));
                 }
-            })
-            .fail((): void => {
-                self.message_error(self.lang.translate('search.servererror'));
+            }).catch((error: any): void => {
+                self.message_error(self.lang.translate('search.servererror').replace("{1}", error));
             });
     }
 

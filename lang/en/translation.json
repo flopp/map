@@ -77,7 +77,7 @@
         },
         "search": {
             "noresult": "Cannot find matching location.",
-            "servererror": "Failed to contact 'Nominatim' server."
+            "servererror": "Failed to contact 'Nominatim' server: {1}"
         },
         "sidebar": {
             "info": {
