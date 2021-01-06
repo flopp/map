@@ -6,8 +6,6 @@ Demo site at https://2oc.de/
 
 
 ```
-echo "GOOGLE_API_KEY = \"...\";" > .secrets.js
-npm install
-npm run build
-npm run start
+make setup
+make run-local
 ```

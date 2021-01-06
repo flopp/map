@@ -11,7 +11,7 @@ update-translation:
 	tools/find-i18n.py \
 		-t lang/en/translation.json \
 		-t lang/de/translation.json \
-		html/*.html js/*.ts
+		html/*.html src/*.ts
 
 .PHONY: lint
 lint:

@@ -2,11 +2,11 @@
     "name": "map",
     "version": "0.0.1",
     "description": "",
-    "main": "js/main.ts",
+    "main": "src/main.ts",
     "scripts": {
-        "lint-tslint": "tslint --project tsconfig.json js/*.ts",
-        "fix-tslint": "tslint --fix js/*.ts",
-        "build": "mkdir -p .local .local/css .local/img .local/js && cp html/index.html .local/ && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css .local/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg .local/img/ && webpack js/main.ts --mode development -o .local/js/bundle.js",
+        "lint-tslint": "tslint --project tsconfig.json src/*.ts",
+        "fix-tslint": "tslint --fix src/*.ts",
+        "build": "mkdir -p .local .local/css .local/img .local/js && cp html/index.html .local/ && cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css .local/css/ && cp node_modules/feather-icons/dist/feather-sprite.svg .local/img/ && webpack src/main.ts --mode development -o .local/js/bundle.js",
         "start": "http-server .local"
     },
     "repository": {

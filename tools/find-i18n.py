@@ -58,7 +58,7 @@ for file_name in args.files:
     extension = os.path.splitext(file_name)[1]
     if extension == '.html':
         scan_html(file_name, hash)
-    elif extension == '.js':
+    elif extension in ['.js', '.ts']:
         scan_js(file_name, hash)
     else:
         print(f'{file_name}: unsupported file type')

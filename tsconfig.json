@@ -9,5 +9,5 @@
         "types": ["googlemaps"],
         "esModuleInterop": true
     },
-    "include": ["./js/*"]
+    "include": ["./src/*.ts"]
 }
