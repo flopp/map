@@ -2,6 +2,7 @@ const MapType = {
     OPENSTREETMAP: 'OPENSTREETMAP',
     OPENTOPOMAP: 'OPENTOPOMAP',
     STAMEN_TERRAIN: 'STAMEN_TERRAIN',
+    HUMANITARIAN: 'HUMANITARIAN',
     ARCGIS_WORLDIMAGERY: 'ARCGIS_WORLDIMAGERY',
     GOOGLE_ROADMAP: 'GOOGLE_ROADMAP',
     GOOGLE_SATELLITE: 'GOOGLE_SATELLITE',
@@ -25,6 +26,8 @@ function string2maptype(s: string): string {
             return MapType.OPENTOPOMAP;
         case MapType.STAMEN_TERRAIN:
             return MapType.STAMEN_TERRAIN;
+        case MapType.HUMANITARIAN:
+            return MapType.HUMANITARIAN;
         case MapType.ARCGIS_WORLDIMAGERY:
             return MapType.ARCGIS_WORLDIMAGERY;
         case MapType.GOOGLE_ROADMAP:
@@ -47,6 +50,8 @@ function maptype2human(t: string): string {
             return 'OpenTopoMap';
         case MapType.STAMEN_TERRAIN:
             return 'Stamen Terrain';
+        case MapType.HUMANITARIAN:
+            return 'Humanitarian';
         case MapType.ARCGIS_WORLDIMAGERY:
             return 'Arcgis World Imagery';
         case MapType.GOOGLE_ROADMAP:

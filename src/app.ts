@@ -132,6 +132,7 @@ export class App {
             case MapType.OPENSTREETMAP:
             case MapType.OPENTOPOMAP:
             case MapType.STAMEN_TERRAIN:
+            case MapType.HUMANITARIAN:
             case MapType.ARCGIS_WORLDIMAGERY:
                 this.switch_to_leaflet();
                 break;

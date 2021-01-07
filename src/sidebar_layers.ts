@@ -22,6 +22,7 @@ export class SidebarLayers extends MapStateObserver {
             {type: MapType.OPENSTREETMAP},
             {type: MapType.OPENTOPOMAP},
             {type: MapType.STAMEN_TERRAIN},
+            {type: MapType.HUMANITARIAN},
             {type: MapType.ARCGIS_WORLDIMAGERY},
             {type: MapType.GOOGLE_ROADMAP},
             {type: MapType.GOOGLE_SATELLITE},

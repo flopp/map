@@ -39,8 +39,9 @@ export class LeafletWrapper extends MapWrapper {
     private layer_openstreetmap: L.TileLayer;
     private layer_opentopomap: L.TileLayer;
     private layer_stamen_terrain: L.TileLayer;
+    private layer_humanitarian: L.TileLayer;
     private layer_arcgis_worldimagery: L.TileLayer;
-    private layers: L.TileLayer[];
+    private layers: Map<string, L.TileLayer>;
 
     constructor(div_id: string, app: App) {
         super(div_id, app);
@@ -60,8 +61,8 @@ export class LeafletWrapper extends MapWrapper {
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             {
                 attribution:
-                    'Map tiles by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-                maxZoom: 16,
+                    'Map tiles by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://creativecommons.org/licenses/by/3.0" target="_blank">CC BY 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
+                maxZoom: 17,
                 subdomains: 'abc',
             },
         );
@@ -69,7 +70,7 @@ export class LeafletWrapper extends MapWrapper {
             'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
             {
                 attribution:
-                    'Map tiles by <a href="http://opentopomap.org">OpenTopoMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+                    'Map tiles by <a href="https://opentopomap.org" target="_blank">OpenTopoMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
                 maxZoom: 17,
                 subdomains: 'abc',
             },
@@ -78,9 +79,18 @@ export class LeafletWrapper extends MapWrapper {
             'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
             {
                 attribution:
-                    'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-                maxZoom: 14,
+                    'Map tiles by <a href="https://stamen.com" target="_blank">Stamen Design</a>, under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href=https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
+                maxZoom: 17,
                 subdomains: 'abcd',
+            },
+        );
+        this.layer_humanitarian = L.tileLayer(
+            'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+            {
+                attribution:
+                    'Map tiles by the <a href="https://www.hotosm.org/updates/2013-09-29_a_new_window_on_openstreetmap_data" target="_blank">Humanitarian OSM Team</a>, under <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.fr" target="_blank">CC0</a>. Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>. Hosted by <a href="https://www.openstreetmap.fr/mentions-legales/" target="_blank">OSM France</a>.',
+                maxZoom: 17,
+                subdomains: 'abc',
             },
         );
         this.layer_arcgis_worldimagery = L.tileLayer(
@@ -92,12 +102,13 @@ export class LeafletWrapper extends MapWrapper {
             },
         );
 
-        this.layers = [
-            this.layer_openstreetmap,
-            this.layer_opentopomap,
-            this.layer_stamen_terrain,
-            this.layer_arcgis_worldimagery,
-        ];
+        this.layers = new Map();
+        this.layers.set(MapType.OPENSTREETMAP, this.layer_openstreetmap);
+        this.layers.set(MapType.OPENTOPOMAP, this.layer_opentopomap);
+        this.layers.set(MapType.STAMEN_TERRAIN, this.layer_stamen_terrain);
+        this.layers.set(MapType.HUMANITARIAN, this.layer_humanitarian);
+        this.layers.set(MapType.ARCGIS_WORLDIMAGERY, this.layer_arcgis_worldimagery);
+
         ['zoom', 'move'].forEach((event_name: string): void => {
             self.map.on(event_name, (): void => {
                 if (self.active && !self.automatic_event) {
@@ -127,30 +138,17 @@ export class LeafletWrapper extends MapWrapper {
 
     public set_map_type(map_type: string): void {
         let layer = null;
-        switch (map_type) {
-            case MapType.OPENSTREETMAP:
-                layer = this.layer_openstreetmap;
-                break;
-            case MapType.OPENTOPOMAP:
-                layer = this.layer_opentopomap;
-                break;
-            case MapType.STAMEN_TERRAIN:
-                layer = this.layer_stamen_terrain;
-                break;
-            case MapType.ARCGIS_WORLDIMAGERY:
-                layer = this.layer_arcgis_worldimagery;
-                break;
-            default:
-                break;
+        if (this.layers.has(map_type)) {
+            layer = this.layers.get(map_type);
         }
 
         if (layer && !this.map.hasLayer(layer)) {
             const self = this;
-            this.layers.forEach((otherLayer: L.TileLayer): void => {
+            for (const otherLayer of this.layers.values()) {
                 if (otherLayer !== layer) {
                     self.map.removeLayer(otherLayer);
                 }
-            });
+            }
             this.map.addLayer(layer);
             layer.bringToBack();
         }
