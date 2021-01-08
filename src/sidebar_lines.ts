@@ -53,7 +53,17 @@ export class SidebarLines extends MapStateObserver {
 
     public update_state(changes: number): void {
         const self = this;
-        if (changes & MapStateChange.LINES) {
+        if (changes & (MapStateChange.LINES | MapStateChange.LANGUAGE)) {
+            if (changes & MapStateChange.LANGUAGE) {
+                // The language has changed
+                // => remove all lines from the sidebar, such that they are all re-added.
+                for (const div of document.querySelectorAll('#lines > .line')) {
+                    const id = parse_int(div.getAttribute("id").substring(5));
+                    remove_element(div as HTMLElement);
+                    remove_element(document.querySelector(`#line-edit-${id}`));
+                }
+            }
+
             // update and add lines
             this.app.map_state.lines.forEach((line: Line): void => {
                 let div = document.querySelector(`#line-${line.get_id()}`);

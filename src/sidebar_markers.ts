@@ -14,6 +14,7 @@ import {
     create_element,
     create_text_input,
     create_color_input,
+    remove_element,
 } from './utilities';
 
 export class SidebarMarkers extends MapStateObserver {
@@ -70,11 +71,21 @@ export class SidebarMarkers extends MapStateObserver {
     }
 
     public update_state(changes: number): void {
-        if ((changes & MapStateChange.MARKERS) === MapStateChange.NOTHING) {
+        if ((changes & (MapStateChange.MARKERS | MapStateChange.LANGUAGE)) === MapStateChange.NOTHING) {
             return;
         }
 
         const self = this;
+
+        if (changes & MapStateChange.LANGUAGE) {
+            // The language has changed
+            // => remove all markers from the sidebar, such that they are all re-added.
+            for (const div of document.querySelectorAll('#markers > .marker')) {
+                const id = parse_int(div.getAttribute("id").substring(7));
+                remove_element(div as HTMLElement);
+                remove_element(document.querySelector(`#marker-edit-${id}`));
+            }
+        }
 
         /* update and add markers */
         this.app.map_state.markers.forEach((marker: Marker): void => {
@@ -116,12 +127,8 @@ export class SidebarMarkers extends MapStateObserver {
 
             deleted_ids.forEach((id: number): void => {
                 const div = document.querySelector(`#marker-${id}`);
-                div.parentElement.removeChild(div);
-
-                const edit_div = document.querySelector(`#marker-edit-${id}`);
-                if (edit_div !== null) {
-                    edit_div.parentElement.removeChild(edit_div);
-                }
+                remove_element(div as HTMLElement);
+                remove_element(document.querySelector(`#marker-edit-${id}`));
             });
         }
 
@@ -255,7 +262,7 @@ export class SidebarMarkers extends MapStateObserver {
             return;
         }
 
-        div.parentNode.removeChild(div);
+        remove_element(div as HTMLElement);
 
         marker.name = name;
         marker.coordinates = coordinates;
