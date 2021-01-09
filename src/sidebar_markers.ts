@@ -220,6 +220,20 @@ export class SidebarMarkers extends MapStateObserver {
                 },
             },
             {
+                label: self.app.translate('sidebar.markers.copy_coordinates'),
+                callback: (): void => {
+                    const coordinates_div = document.querySelector(`#marker-${marker.get_id()} .marker-coordinates`);
+                    const coordinates_text = coordinates_div.textContent;
+                    navigator.clipboard.writeText(coordinates_text).then((): void => {
+                        const message = this.app.translate('sidebar.markers.coordinates_copied_message');
+                        this.app.message(message.replace('{1}', coordinates_text));
+                    }, (err: any): void => {
+                        const message = this.app.translate('sidebar.markers.copy_coordinates_failed_message');
+                        this.app.message_error(message.replace('{1}', String(err)));
+                    });
+                },
+            },
+            {
                 label: self.app.translate('sidebar.markers.projection'),
                 callback: (): void => {
                     self.app.show_projection_dialog(marker);
