@@ -45,6 +45,7 @@ export class SidebarLines extends MapStateObserver {
         });
 
         this.sortable = Sortable.create(document.getElementById('lines'), {
+            handle: ".drag-handle",
             onEnd: (event: Sortable.SortableEvent): void => {
                 self.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
             },
@@ -133,7 +134,7 @@ export class SidebarLines extends MapStateObserver {
 
         const div = create_element("div", ["line"], {"id": `line-${line.get_id()}`});
 
-        const left = create_element("div", ["line-left"]);
+        const left = create_element("div", ["line-left", "drag-handle"]);
         const color = create_element("div", ["line-color"]);
         left.appendChild(color);
         div.appendChild(left);

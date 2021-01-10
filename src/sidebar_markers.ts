@@ -61,6 +61,7 @@ export class SidebarMarkers extends MapStateObserver {
         });
 
         this.sortable = Sortable.create(document.getElementById('markers'), {
+            handle: ".drag-handle",
             onEnd: (event: Sortable.SortableEvent): void => {
                 self.app.map_state.reorder_markers(
                     event.oldIndex,
@@ -139,7 +140,7 @@ export class SidebarMarkers extends MapStateObserver {
         const self = this;
         const m = create_element('div', ["marker"], {"id": `marker-${marker.get_id()}`});
 
-        const left = create_element('div', ["marker-left"]);
+        const left = create_element('div', ["marker-left", "drag-handle"]);
         const color = create_element('div', ["marker-color"]);
         left.appendChild(color);
         m.appendChild(left);
