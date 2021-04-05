@@ -34,6 +34,7 @@ export class MapState {
     public center: Coordinates;
     public hillshading: boolean;
     public german_npa: boolean;
+    public opencaching: boolean;
     public markers: Marker[];
     public markers_hash: Map<number, Marker>;
     public lines: Line[];
@@ -61,6 +62,7 @@ export class MapState {
         this.center = null;
         this.hillshading = false;
         this.german_npa = false;
+        this.opencaching = false;
 
         this.markers = [];
         this.markers_hash = new Map();
@@ -94,6 +96,7 @@ export class MapState {
         this.storage.set('map_type', maptype2string(this.map_type));
         this.storage.set_bool('hillshading', this.hillshading);
         this.storage.set_bool('german_npa', this.german_npa);
+        this.storage.set_bool('opencaching', this.opencaching);
         this.storage.set('markers', this.get_marker_ids_string());
         this.markers.forEach((marker: Marker): void => {
             self.update_marker_storage(marker);
@@ -154,6 +157,7 @@ export class MapState {
         );
         this.set_hillshading(this.storage.get_bool('hillshading', false));
         this.set_german_npa(this.storage.get_bool('german_npa', false));
+        this.set_opencaching(this.storage.get_bool('opencaching', false));
 
         // markers
         const marker_ids = new Map();
@@ -271,6 +275,7 @@ export class MapState {
         ok_keys.add('map_type');
         ok_keys.add('hillshading');
         ok_keys.add('german_npa');
+        ok_keys.add('opencaching');
         ok_keys.add('sidebar_open');
         ok_keys.add('markers');
         this.markers.forEach((obj: Marker): void => {
@@ -634,6 +639,12 @@ export class MapState {
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
+    public set_opencaching(enabled: boolean): void {
+        this.opencaching = enabled;
+        this.storage.set_bool('opencaching', this.opencaching);
+        this.update_observers(MapStateChange.MAPTYPE);
+    }
+
     public set_view(center: Coordinates, zoom: number): void {
         this.center = center;
         this.zoom = zoom;
@@ -903,6 +914,7 @@ export class MapState {
             zoom: this.zoom,
             hillshading: this.hillshading,
             german_npa: this.german_npa,
+            opencaching: this.opencaching,
             settings: {
                 markers: {
                     coordinates_format: this.settings_marker_coordinates_format,
@@ -956,6 +968,10 @@ export class MapState {
 
         if ('german_npa' in data) {
             this.german_npa = data.german_npa;
+        }
+
+        if ('opencaching' in data) {
+            this.opencaching = data.opencaching;
         }
 
         if ('settings' in data) {

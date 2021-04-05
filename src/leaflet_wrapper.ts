@@ -7,6 +7,7 @@ import {Line} from "./line";
 import {MapType} from './map_type';
 import {MapWrapper} from './map_wrapper';
 import {Marker} from "./marker";
+import {Opencaching, OkapiCache} from "./opencaching";
 
 function from_coordinates(c: Coordinates): L.LatLng {
     return L.latLng(c.raw_lat(), c.raw_lng());
@@ -29,12 +30,20 @@ interface LineObjDict {
     last_color: Color;
 };
 
+interface OpencachingMarker {
+    marker_obj: L.Marker;
+    data: OkapiCache;
+};
+
 export class LeafletWrapper extends MapWrapper {
     private automatic_event: boolean;
     private hillshading_enabled: boolean;
     private hillshading_layer: L.TileLayer;
     private german_npa_enabled: boolean;
     private german_npa_layer: L.TileLayer;
+    private opencaching: Opencaching;
+    private opencaching_markers: Map<string, OpencachingMarker>;
+    private opencaching_icons: Map<string, L.Icon>;
     private map: L.Map;
     private layer_openstreetmap: L.TileLayer;
     private layer_opentopomap: L.TileLayer;
@@ -50,6 +59,9 @@ export class LeafletWrapper extends MapWrapper {
         this.hillshading_layer = null;
         this.german_npa_enabled = false;
         this.german_npa_layer = null;
+        this.opencaching = null;
+        this.opencaching_markers = new Map();
+        this.opencaching_icons = new Map();
     }
 
     public create_map_object(div_id: string): void {
@@ -195,10 +207,37 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
+    public set_opencaching(enabled: boolean): void {
+        const self = this;
+        if (enabled) {
+            if (!this.opencaching) {
+                this.opencaching = new Opencaching(
+                    (caches: Map<string, OkapiCache>): void => {
+                        self.display_opencaching(caches);
+                    }
+                );
+                this.map.whenReady((): void => {
+                    self.update_opencaching()
+                });
+            }
+        } else if (this.opencaching) {
+            this.opencaching = null;
+
+            this.opencaching_markers.forEach((element): void => {
+                self.map.removeLayer(element.marker_obj);
+            });
+            this.opencaching_markers.clear();
+        }
+    }
+
     public set_map_view(center: Coordinates, zoom: number): void {
         this.automatic_event = true;
         this.map.setView(from_coordinates(center), zoom, {animate: false});
         this.automatic_event = false;
+        const self = this;
+        this.map.whenReady((): void => {
+            self.update_opencaching()
+        });
     }
 
     public invalidate_size(): void {
@@ -412,5 +451,59 @@ export class LeafletWrapper extends MapWrapper {
             iconSize: L.point(icon.size[0], icon.size[1]),
             iconAnchor: L.point(icon.anchor[0], icon.anchor[1]),
         });
+    }
+
+    public update_opencaching(): void {
+        if (!this.opencaching) {
+            return;
+        }
+
+        const bounds = this.map.getBounds();
+        this.opencaching.loadBbox(
+            bounds.getNorth(),
+            bounds.getSouth(),
+            bounds.getWest(),
+            bounds.getEast()
+        );
+    }
+
+    public display_opencaching(caches: Map<string, OkapiCache>): void {
+        const self = this;
+
+        this.opencaching_markers.forEach((element: OpencachingMarker): void => {
+            if (!caches.has(element.data.code)) {
+                self.map.removeLayer(element.marker_obj);
+            }
+        });
+
+        const new_markers: Map<string, OpencachingMarker> = new Map();
+        caches.forEach((data: OkapiCache, code: string): void => {
+            if (!self.opencaching_markers.has(code)) {
+                const m: OpencachingMarker = {
+                    marker_obj: L.marker(from_coordinates(self.opencaching.parseLocation(data.location)), {
+                        icon: self.opencaching_icon(data.type),
+                        draggable: false
+                    }),
+                    data
+                };
+                m.marker_obj.addTo(self.map);
+                m.marker_obj.bindPopup(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
+                new_markers.set(code, m);
+            } else {
+                new_markers.set(code, self.opencaching_markers.get(code));
+            }
+        });
+        this.opencaching_markers = new_markers;
+    }
+
+    public opencaching_icon(type: string): L.Icon {
+        if (!this.opencaching_icons.has(type)) {
+            const icon = L.icon({
+                iconUrl: this.opencaching.type_icon(type),
+                iconAnchor: [12, 25]
+            });
+            return icon;
+        }
+        return this.opencaching_icons.get(type);
     }
 }

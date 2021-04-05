@@ -45,6 +45,12 @@ export class MapWrapper extends MapStateObserver {
         );
     }
 
+    public set_opencaching(_enabled: boolean): void {
+        console.log(
+            "The 'opencaching' feature is not implemented for this map wrapper.",
+        );
+    }
+
     public set_map_view(_center: Coordinates, _zoom: number): void {
         throw new Error('not implemented');
     }
@@ -118,6 +124,7 @@ export class MapWrapper extends MapStateObserver {
             this.set_map_type(this.app.map_state.map_type);
             this.set_hillshading(this.app.map_state.hillshading);
             this.set_german_npa(this.app.map_state.german_npa);
+            this.set_opencaching(this.app.map_state.opencaching);
         }
         if (changes & MapStateChange.VIEW) {
             this.set_map_view(

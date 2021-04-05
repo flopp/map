@@ -22,6 +22,7 @@ build-local:
 	mkdir -p ${LOCAL_DIR} ${LOCAL_DIR}/css ${LOCAL_DIR}/img ${LOCAL_DIR}/lang ${LOCAL_DIR}/js
 	cp html/index.html ${LOCAL_DIR}/
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${LOCAL_DIR}/css/
+	cp img/* ${LOCAL_DIR}/img/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${LOCAL_DIR}/img/
 	node_modules/.bin/webpack --mode development --output-path ${LOCAL_DIR}/js
 
@@ -34,6 +35,7 @@ build-upload:
 	mkdir -p ${UPLOAD_DIR} ${UPLOAD_DIR}/css ${UPLOAD_DIR}/img ${UPLOAD_DIR}/lang ${UPLOAD_DIR}/js
 	sed -e "/<!--TRACKING-->/r .tracking" html/index.html > ${UPLOAD_DIR}/index.html
 	cp css/style.css node_modules/bulma/css/bulma.min.css node_modules/leaflet/dist/leaflet.css ${UPLOAD_DIR}/css/
+	cp img/* ${LOCAL_DIR}/img/
 	cp node_modules/feather-icons/dist/feather-sprite.svg ${UPLOAD_DIR}/img
 	node_modules/.bin/webpack --mode production
 

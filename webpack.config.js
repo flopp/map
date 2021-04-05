@@ -1,4 +1,9 @@
-var path = require('path');
+const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv').config({
+     path: path.join(__dirname, '.env')
+});
+
 module.exports = {
     entry: [
         './src/main.ts'
@@ -19,6 +24,11 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            _config: JSON.stringify(dotenv.parsed)
+        })
+    ],
     resolve: {
         extensions: [
             '.ts',

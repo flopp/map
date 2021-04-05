@@ -99,6 +99,8 @@
                 "german_npa_help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hillshading": "Schummerung (hillshading)",
+                "opencaching": "Geocaches (von Opencaching)",
+                "opencaching_help": "Zeige Geocaches von Opencaching-Seiten an.",
                 "title": "Ebenen"
             },
             "lines": {

@@ -119,7 +119,7 @@ function create_dropdown(items: LabelCallback[]): HTMLElement {
     const menu_content = create_element('div', ["dropdown-content", "has-background-info-light"]);
     menu.appendChild(menu_content);
 
-    items.forEach((item: LabelCallback):void => {
+    items.forEach((item: LabelCallback): void => {
         const dropdown_item = create_element('a', ["dropdown-item"], {"href": "#"});
         dropdown_item.textContent = item.label;
         dropdown_item.addEventListener('click', item.callback);

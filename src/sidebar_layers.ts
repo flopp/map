@@ -11,6 +11,7 @@ export class SidebarLayers extends MapStateObserver {
     private baselayer_select: HTMLSelectElement;
     private hillshading_checkbox: HTMLInputElement;
     private german_npa_checkbox: HTMLInputElement;
+    private opencaching_checkbox: HTMLInputElement;
 
     constructor(app: App) {
         super(app);
@@ -69,6 +70,16 @@ export class SidebarLayers extends MapStateObserver {
         this.german_npa_checkbox.onchange = (): void => {
             self.app.map_state.set_german_npa(
                 self.german_npa_checkbox.checked,
+            );
+        };
+
+        this.opencaching_checkbox = this.div.querySelector(
+            '[data-opencaching-layer]',
+        );
+        this.opencaching_checkbox.checked = this.app.map_state.opencaching;
+        this.opencaching_checkbox.onchange = (): void => {
+            self.app.map_state.set_opencaching(
+                self.opencaching_checkbox.checked,
             );
         };
     }

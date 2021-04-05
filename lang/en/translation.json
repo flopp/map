@@ -99,6 +99,8 @@
                 "german_npa_help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hillshading": "Hillshading",
+                "opencaching": "Geocaches (from Opencaching)",
+                "opencaching_help": "Display geocaches from Opencaching sites.",
                 "title": "Layers"
             },
             "lines": {
