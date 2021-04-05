@@ -93,6 +93,7 @@ export class MapState {
         this.storage.set_int('zoom', this.zoom);
         this.storage.set('map_type', maptype2string(this.map_type));
         this.storage.set_bool('hillshading', this.hillshading);
+        this.storage.set_bool('german_npa', this.german_npa);
         this.storage.set('markers', this.get_marker_ids_string());
         this.markers.forEach((marker: Marker): void => {
             self.update_marker_storage(marker);
