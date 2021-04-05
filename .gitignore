@@ -1,7 +1,10 @@
+.bing_api
+.google_api
+.tracking
 .vscode
 .local
 .upload
-node_modules
 .secrets.js
 .secrets-production.js
+node_modules
 package-lock.json
