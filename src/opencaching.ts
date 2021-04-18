@@ -30,6 +30,17 @@ export interface OkapiCache {
     type: string
 };
 
+interface OkapiError {
+    developer_message: string;
+    reason_stack: string[];
+    status: string;
+    more_info: string;
+};
+
+interface OkapiErrorMessage {
+    error: OkapiError;
+};
+
 type CachesCallback = (caches: Map<string, OkapiCache>) => void;
 
 export class Opencaching {
@@ -192,7 +203,7 @@ export class Opencaching {
                     .then((data: object): Map<string, OkapiCache> => {
                         const caches: Map<string, OkapiCache> = new Map();
                         if (("error" in data) && data.hasOwnProperty("error")) {
-                            throw data["error"];
+                            throw (data as OkapiErrorMessage).error;
                         }
                         for (const key in data) {
                             if (data.hasOwnProperty(key)) {
