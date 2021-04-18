@@ -14,7 +14,7 @@ export class SidebarSearch extends MapStateObserver {
             self.perform_search();
         });
         document.querySelector('#input-search').addEventListener('keyup', (event: KeyboardEvent): void => {
-            if (event.keyCode === 13) {
+            if (event.key === 'Enter') {
                 self.perform_search();
             }
         });
