@@ -139,7 +139,7 @@ export class GoogleWrapper extends MapWrapper {
             if (!this.hillshading_layer) {
                 this.hillshading_layer = new google.maps.ImageMapType({
                     getTileUrl: (coord: google.maps.Point, zoom: number): string => {
-                        return `https://tiles.wmflabs.orgLatLng/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
+                        return `https://tiles.wmflabs.org/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
                     },
                     tileSize: new google.maps.Size(256, 256),
                     name: 'Hillshading',
