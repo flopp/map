@@ -124,9 +124,8 @@
             "markers": {
                 "bad_values_message": "Bad values.",
                 "circle": "Circle: {1} m",
-                "coordinates_copied_message": "The coordinates have been copied to the clipboard: {1}",
-                "copy_coordinates": "Copy coordinates",
-                "copy_coordinates_failed_message": "The coordinates could no be copied to the clipboard: {1}",
+                "copy_coordinates_failure_message": "The coordinates could no be copied to the clipboard.",
+                "copy_coordinates_success_message": "The coordinates have been copied to the clipboard: {1}",
                 "delete": "Delete",
                 "edit": "Edit",
                 "edit_color": "Color",

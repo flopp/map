@@ -95,6 +95,17 @@ function create_button(label_text: string, callback: () => void): HTMLElement {
     return control;
 };
 
+function create_icon(icon: string, classes: string[] = []): SVGSVGElement {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    classes.forEach((c: string): void => {
+        svg.classList.add(c);
+    });
+    const use = document.createElementNS("http://www.w3.org/2000/svg", 'use');
+    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `img/feather-sprite.svg#${icon}`);
+    svg.appendChild(use);
+    return svg;
+};
+
 interface LabelCallback {
     label: string,
     callback: () => void

@@ -1,4 +1,5 @@
 import Sortable from 'sortablejs';
+import ClipboardJS from 'clipboard';
 
 import {App} from './app';
 import {Color} from './color';
@@ -12,10 +13,18 @@ import {
     create_button,
     create_dropdown,
     create_element,
+    create_icon,
     create_text_input,
     create_color_input,
     remove_element,
 } from './utilities';
+
+interface ClipboardJsEvent {
+    action: string;
+    text: string;
+    trigger: Element;
+    clearSelection(): void;
+}
 
 export class SidebarMarkers extends MapStateObserver {
     private settingsDiv: HTMLElement;
@@ -146,10 +155,31 @@ export class SidebarMarkers extends MapStateObserver {
         m.appendChild(left);
 
         const center = create_element('div', ["marker-center"]);
-        ["name", "coordinates", "radius"].forEach((name: string): void => {
-            const div = create_element('div', [`marker-${name}`]);
-            center.appendChild(div);
+        center.appendChild(create_element('div', ["marker-name"]));
+
+        const coordinates_div = create_element('div', ["is-flex"]);
+        coordinates_div.appendChild(create_element('div', ["marker-coordinates"]));
+        const copy_coordinates = create_element('button', ['button', 'is-small','is-white']);
+        copy_coordinates.appendChild(create_icon("copy", ["icon", "icon24"]));
+        coordinates_div.appendChild(copy_coordinates);
+        center.appendChild(coordinates_div);
+        const clip = new ClipboardJS(copy_coordinates, {
+            text: (_trigger: Element): string => {
+                return marker.coordinates.to_string_format(
+                    self.app.map_state.settings_marker_coordinates_format,
+                );
+            }
         });
+        clip.on('success', (e: ClipboardJsEvent): void => {
+            self.app.message(
+                self.app.translate('sidebar.markers.copy_coordinates_success_message').replace('{1}', e.text)
+            );
+        });
+        clip.on('error', (_e: ClipboardJsEvent): void => {
+            self.app.message_error(self.app.translate('sidebar.markers.copy_coordinates_failure_message'));
+        });
+
+        center.appendChild(create_element('div', ["marker-radius"]));
         m.appendChild(center);
 
         const right = create_element('div', ["marker-right"]);
@@ -218,20 +248,6 @@ export class SidebarMarkers extends MapStateObserver {
                         div.parentNode.insertBefore(edit_div, div.nextSibling);
                         self.update_edit_values(marker);
                     }
-                },
-            },
-            {
-                label: self.app.translate('sidebar.markers.copy_coordinates'),
-                callback: (): void => {
-                    const coordinates_div = document.querySelector(`#marker-${marker.get_id()} .marker-coordinates`);
-                    const coordinates_text = coordinates_div.textContent;
-                    navigator.clipboard.writeText(coordinates_text).then((): void => {
-                        const message = this.app.translate('sidebar.markers.coordinates_copied_message');
-                        this.app.message(message.replace('{1}', coordinates_text));
-                    }, (err: any): void => {
-                        const message = this.app.translate('sidebar.markers.copy_coordinates_failed_message');
-                        this.app.message_error(message.replace('{1}', String(err)));
-                    });
                 },
             },
             {
