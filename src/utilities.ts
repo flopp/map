@@ -159,6 +159,7 @@ export {
     create_text_input,
     create_color_input,
     create_select_input,
+    create_icon,
     encode_parameters,
     remove_element,
 };
