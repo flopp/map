@@ -88,11 +88,11 @@ export class GoogleWrapper extends MapWrapper {
         });
 
         google.maps.event.addListener(this.map, 'rightclick', (event: google.maps.MapMouseEvent): boolean => {
-            const point = self.map.getProjection().fromLatLngToPoint(event.latLng);
+            const domEvent = (event.domEvent as MouseEvent);
             self.app.map_menu.showMap(
                 self,
-                point.x,
-                point.y,
+                domEvent.clientX,
+                domEvent.clientY,
                 to_coordinates(event.latLng),
             );
             return false;
@@ -276,11 +276,11 @@ export class GoogleWrapper extends MapWrapper {
         });
 
         google.maps.event.addListener(obj.marker_obj, 'rightclick', (event: google.maps.MapMouseEvent): boolean => {
-            const point = self.map.getProjection().fromLatLngToPoint(event.latLng);
+            const domEvent = (event.domEvent as MouseEvent);
             self.app.map_menu.showMarker(
                 self,
-                point.x + self.width() / 2,
-                point.y + self.height() / 2,
+                domEvent.clientX,
+                domEvent.clientY,
                 marker,
             );
             return false;
