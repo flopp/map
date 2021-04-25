@@ -1,6 +1,7 @@
 import {Color} from './color';
 import {Coordinates, CoordinatesFormat} from './coordinates';
 import {MapType} from './map_type';
+import { Marker } from './marker';
 import {parse_int, parse_float} from './utilities';
 
 export class Storage {
@@ -100,7 +101,7 @@ export class Storage {
         }
 
         // markers (ID1:ID2:...); markerID1; markerID2; ...
-        const markers = [];
+        const markers: MarkerDict[] = [];
         const marker_hash = new Map();
         this.get('markers', '')
             .split(':')
@@ -153,7 +154,7 @@ export class Storage {
         }
 
         // lines (FROM1:TO1*FROM2:TO2*...)
-        const lines = [];
+        const lines: LineDict[] = [];
         this.get('lines', '')
             .split('*')
             .forEach((ids: string): void => {

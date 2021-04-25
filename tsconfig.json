@@ -1,13 +1,13 @@
 {
     "compilerOptions": {
-        "outDir": "./built",
-        "allowJs": true,
-        "target": "es6",
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
+        "outDir": "./dist/",
         "moduleResolution": "node",
-        "types": ["googlemaps"],
-        "esModuleInterop": true
-    },
-    "include": ["./src/*.ts"]
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "module": "es6",
+        "target": "es2015",
+        "jsx": "react",
+        "allowJs": true
+    }
 }

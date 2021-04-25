@@ -43,6 +43,19 @@ interface OkapiErrorMessage {
 
 type CachesCallback = (caches: Map<string, OkapiCache>) => void;
 
+const Icons = new Map([
+    ["Other", "assets/cachetype-1.png"],
+    ["Traditional", "assets/cachetype-2.png"],
+    ["Multi", "assets/cachetype-3.png"],
+    ["Virtual", "assets/cachetype-4.png"],
+    ["Webcam", "assets/cachetype-5.png"],
+    ["Event", "assets/cachetype-6.png"],
+    ["Quiz", "assets/cachetype-7.png"],
+    ["Math/Physics", "assets/cachetype-8.png"],
+    ["Moving", "assets/cachetype-9.png"],
+    ["Drive-In", "assets/cachetype-10.png"],
+]);
+
 export class Opencaching {
     private state: State;
     private timer: any;
@@ -96,51 +109,47 @@ export class Opencaching {
     }
 
     public type_icon(type: string): string {
-        const icons = {
-            "Other": "img/cachetype-1.png",
-            "Traditional": "img/cachetype-2.png",
-            "Multi": "img/cachetype-3.png",
-            "Virtual": "img/cachetype-4.png",
-            "Webcam": "img/cachetype-5.png",
-            "Event": "img/cachetype-6.png",
-            "Quiz": "img/cachetype-7.png",
-            "Math/Physics": "img/cachetype-8.png",
-            "Moving": "img/cachetype-9.png",
-            "Drive-In": "img/cachetype-10.png"
-        };
-        if (type in icons) {
-            return icons[type];
+        if (Icons.has(type)) {
+            return Icons.get(type);
         }
-        return "img/cachetype-1.png";
+        return "assets/cachetype-1.png";
     }
 
     private initialize(): void {
         this.state = State.Initializing;
 
         const self = this;
-        const keys = {
-            "Opencaching.DE": getConfig("OPENCACHING_DE_KEY"),
-            "Opencaching.PL": getConfig("OPENCACHING_PL_KEY"),
-            "Opencaching.NL": getConfig("OPENCACHING_NL_KEY"),
-            "Opencaching.US": getConfig("OPENCACHING_US_KEY"),
-            "Opencache.UK":   getConfig("OPENCACHING_UK_KEY"),
-            "Opencaching.RO": getConfig("OPENCACHING_RO_KEY"),
-        };
+        const keys = new Map();
+        keys.set("Opencaching.DE", getConfig("OPENCACHING_DE_KEY"));
+        keys.set("Opencaching.PL", getConfig("OPENCACHING_PL_KEY"));
+        keys.set("Opencaching.NL", getConfig("OPENCACHING_NL_KEY"));
+        keys.set("Opencaching.US", getConfig("OPENCACHING_US_KEY"));
+        keys.set("Opencache.UK",   getConfig("OPENCACHING_UK_KEY"));
+        keys.set("Opencaching.RO", getConfig("OPENCACHING_RO_KEY"));
 
         fetch("https://www.opencaching.de/okapi/services/apisrv/installations")
             .then((response: Response): Promise<any> => response.json())
             .then((data: OkapiInstallation[]): void => {
                 self.sites = [];
                 data.forEach((site: OkapiInstallation): void => {
-                    if ((site.site_name in keys) && site.okapi_base_url.startsWith("https://")) {
-                        self.sites.push(
-                            {
-                                "name": site.site_name,
-                                "url": site.okapi_base_url,
-                                "key": keys[site.site_name]
-                            }
-                        );
+                    if (!site.okapi_base_url.startsWith("https://")) {
+                        return;
                     }
+                    if (!keys.has(site.site_name)) {
+                        return;
+                    }
+                    const key = keys.get(site.site_name);
+                    if (key === "") {
+                        return;
+                    }
+
+                    self.sites.push(
+                        {
+                            "name": site.site_name,
+                            "url": site.okapi_base_url,
+                            "key": key
+                        }
+                    );
                 });
                 self.state = State.Ready;
                 self.scheduleLoad();
@@ -182,7 +191,7 @@ export class Opencaching {
         const [north, south, west, east]: [number, number, number, number] = this.bounds[this.bounds.length-1];
         this.bounds = [];
 
-        const promises = [];
+        const promises: Promise<Map<string, OkapiCache>>[] = [];
         self.sites.forEach((site: Site): void => {
             if (self.disabled_sites.has(site.name)) {
                 return;

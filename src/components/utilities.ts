@@ -101,7 +101,7 @@ function create_icon(icon: string, classes: string[] = []): SVGSVGElement {
         svg.classList.add(c);
     });
     const use = document.createElementNS("http://www.w3.org/2000/svg", 'use');
-    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `img/feather-sprite.svg#${icon}`);
+    use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `assets/feather-sprite.svg#${icon}`);
     svg.appendChild(use);
     return svg;
 };
@@ -121,7 +121,7 @@ function create_dropdown(items: LabelCallback[]): HTMLElement {
     dropdown.appendChild(trigger);
 
     const dropdown_button = create_element('button', ["button", "is-white"]);
-    dropdown_button.innerHTML = '<svg class="icon icon16"><use xlink:href="img/feather-sprite.svg#more-vertical"/></svg>';
+    dropdown_button.innerHTML = '<svg class="icon icon16"><use xlink:href="assets/feather-sprite.svg#more-vertical"/></svg>';
     trigger.appendChild(dropdown_button);
 
     const menu = create_element('div', ["dropdown-menu"]);

@@ -3,7 +3,6 @@
 .google_api
 .tracking
 .vscode
-.local
-.upload
+dist
 node_modules
 package-lock.json

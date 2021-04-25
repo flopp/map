@@ -330,10 +330,10 @@ export class MapState {
         let zoom = null;
         let map_type = null;
         interface MarkerDict {name: string, coordinates: Coordinates, color: Color, radius: number};
-        const markers = [];
+        const markers: MarkerDict[] = [];
         const marker_hash = new Map();
         interface LineDict {from: number, to: number, color: Color};
-        const lines = [];
+        const lines: LineDict[] = [];
 
         params.forEach((value: string, key: string): void => {
             switch (key) {

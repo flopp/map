@@ -1,4 +1,4 @@
-let last_random_color: Color = null;
+let last_random_color: string = null;
 
 export class Color {
     private hex: string = "";

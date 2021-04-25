@@ -102,8 +102,8 @@ export class MultiMarkersDialog {
             color: Color;
         }
 
-        const errors = [];
-        const data = [];
+        const errors: string[] = [];
+        const data: MarkerDict[] = [];
         let line_index = 0;
         let marker_index = 1;
         (this.div.querySelector('[data-marker-data]') as HTMLInputElement)

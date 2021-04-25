@@ -7,5 +7,5 @@ Demo site at https://2oc.de/
 
 ```
 make setup
-make run-local
+make run-dev
 ```

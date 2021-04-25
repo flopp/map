@@ -166,7 +166,7 @@ export class App {
         const self = this;
         // tslint:disable-next-line:no-unbound-method
         const original = console.error;
-        console.error = (...args): void => {
+        console.error = (...args: any[]): void => {
             // show original message
             Reflect.apply(original, console, args);
 

@@ -1,3 +1,5 @@
+import 'leaflet/dist/leaflet.css';
+
 import * as L from 'leaflet';
 
 import {App} from './app';

@@ -153,7 +153,7 @@ export class MapWrapper extends MapStateObserver {
                     ids.add(marker.get_id());
                 });
 
-                const deleted_ids = [];
+                const deleted_ids: number[] = [];
                 this.markers.forEach((_marker: any, id: number, _map: any): void => {
                     if (!ids.has(id)) {
                         deleted_ids.push(id);
@@ -184,7 +184,7 @@ export class MapWrapper extends MapStateObserver {
                     ids.add(line.get_id());
                 });
 
-                const deleted_ids = [];
+                const deleted_ids: number[] = [];
                 this.lines.forEach((_line: any, id: number, _map: any): void => {
                     if (!ids.has(id)) {
                         deleted_ids.push(id);
