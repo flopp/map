@@ -22,4 +22,8 @@ build:
 
 .PHONY: upload
 upload: build
-	(cd dist && rsync -v -r . ${UPLOAD_TARGET})
+	@echo "DRY RUN"
+	@(cd dist && rsync -v -r --delete --dry-run . ${UPLOAD_TARGET})
+	@echo "PRESS ENTER TO CONTINUE"
+	@read WAIT
+	(cd dist && rsync -v -r --delete . ${UPLOAD_TARGET})
