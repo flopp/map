@@ -10,7 +10,7 @@
                 "title": "Add Your Own API Keys"
             },
             "link": {
-                "copied_message": "The link has been copied to the clipboard.",
+                "copied_message": "The link has been copied to the clipboard: {1}",
                 "copy": "Copy",
                 "failed_message": "Copying of the link failed.",
                 "help": "You can share this link with others to enable them to view your current map state.",

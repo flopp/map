@@ -1,22 +1,28 @@
-import Clipboard from 'clipboard';
+import ClipboardJS from 'clipboard';
 import {App} from './app';
+
+interface ClipboardJsEvent {
+    action: string;
+    text: string;
+    trigger: Element;
+    clearSelection(): void;
+}
 
 export class LinkDialog {
     private div: HTMLElement;
     private app: App;
-    private clipboard: Clipboard;
+    private clipboard: ClipboardJS;
 
     constructor(app: App) {
         const self = this;
 
         this.div = document.querySelector('#link-dialog');
         this.app = app;
-
-        this.clipboard = new Clipboard('#link-dialog-copy-button');
-        this.clipboard.on('success', (): void => {
-            self.app.message(self.app.translate('dialog.link.copied_message'));
+        this.clipboard = new ClipboardJS('#link-dialog-copy-button');
+        this.clipboard.on('success', (e: ClipboardJsEvent): void => {
+            self.app.message(self.app.translate('dialog.link.copied_message').replace('{1}', e.text));
         });
-        this.clipboard.on('error', (): void => {
+        this.clipboard.on('error', (_e: ClipboardJsEvent): void => {
             self.app.message_error(
                 self.app.translate('dialog.link.failed_message'),
             );

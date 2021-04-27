@@ -10,7 +10,7 @@
                 "title": "Eigene API-Keys Hinzuf\u00fcgen"
             },
             "link": {
-                "copied_message": "Der Link wurde in die Zwischenablage kopiert.",
+                "copied_message": "Der Link wurde in die Zwischenablage kopiert: {1}",
                 "copy": "Kopieren",
                 "failed_message": "Kopieren des Links fehlgeschlagen.",
                 "help": "Du kannst diesen Link mit anderen Leute teilen, so dass sie deine aktuelle Karte sehen k\u00f6nnen.",
