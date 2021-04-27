@@ -1,5 +1,8 @@
 @import 'bulma/css/bulma.css';
 
+@import 'config.scss';
+@import 'notifications.scss';
+
 html {
     overflow: hidden;
 }
@@ -25,7 +28,7 @@ body {
     top: 0;
     bottom: 0;
     right: 0;
-    width: 270px;
+    width: $sidebar_width;
     z-index: 30;
     background: white;
 }
@@ -46,7 +49,7 @@ body {
 }
 
 #sidebar-controls.sidebar-open {
-    right: 270px;
+    right: $sidebar_width;
 }
 
 .sidebar-control {
@@ -218,7 +221,7 @@ body {
     overflow: hidden;
 }
 .map-container.sidebar-open {
-    right: 270px;
+    right: $sidebar_width;
 }
 
 .buttons.has-addons.is-vertical {
@@ -244,28 +247,6 @@ body {
 
 .buttons.has-addons.is-vertical .button i {
     width: 12px;
-}
-
-#notification-container {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 270px;
-    z-index: 41;
-    pointer-events: none;
-    padding: 4px;
-}
-
-.notification {
-    margin-bottom: 4px !important;
-    pointer-events: auto;
-}
-
-.notification-fadeOut {
-    animation-name: NotificationOut;
-    animation-duration: .3s;
-    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-    animation-fill-mode: forwards;
 }
 
 .icon24 {
@@ -302,26 +283,4 @@ body {
     fill: none;
     display: block;
     margin: 0 auto;
-}
-
-@keyframes NotificationIn {
-    from {
-        transform: translate3d(300px, 0, 0);;
-        opacity: 0;
-    }
-    to {
-        transform: translate3d(0, 0, 0);
-        opacity: 1;
-    }
-}
-  
-@keyframes NotificationOut {
-    from {
-        transform: translate3d(0, 0, 0);
-        opacity: 1;
-    }
-    to {
-        transform: translate3d(300px, 0, 0);
-        opacity: 0;
-    }
 }
