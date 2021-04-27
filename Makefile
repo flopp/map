@@ -4,6 +4,14 @@ UPLOAD_TARGET=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/2oc.de/
 setup:
 	npm install .
 
+.PHONY: spell
+spell:
+	node_modules/.bin/cspell \
+		--config .cspell.json \
+		src/**/*.html \
+		src/**/*.ts \
+		src/**/*.scss
+
 .PHONY: update-translation
 update-translation:
 	tools/find-i18n.py \

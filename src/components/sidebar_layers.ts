@@ -94,7 +94,7 @@ export class SidebarLayers extends MapStateObserver {
         this.update_baselayer_help();
     }
 
-    public disable_layers(check_function: (layxer_type: string) => boolean): void {
+    public disable_layers(check_function: (layer_type: string) => boolean): void {
         this.baselayers.forEach((baselayer: BaselayerDict): void => {
             if (check_function(baselayer.type)) {
                 if (baselayer.option) {

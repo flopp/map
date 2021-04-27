@@ -18,7 +18,7 @@
                 "toolong": "The link is probably too long. Browsers may not be able to handle it correctly."
             },
             "multimarkers": {
-                "bad_common_color_message": "Bad comon color.",
+                "bad_common_color_message": "Bad common color.",
                 "bad_common_radius_message": "Bad common radius.",
                 "color": "Color",
                 "color_message": "Line {1}: unable to parse color: {2}",
@@ -158,7 +158,7 @@
                 "createlink": "Create Link",
                 "createlink_help": "Create a link to this map, e.g. for sharing it with others.",
                 "createmarkers": "Create Multiple Markers",
-                "createmarkers_help": "Create multiple markes at once, i.e. by providing a list of coordinates.",
+                "createmarkers_help": "Create multiple markers at once, i.e. by providing a list of coordinates.",
                 "exportjson": "Export Map State",
                 "exportjson_help": "Export/import a JSON file containing the full map state.",
                 "importjson": "Import Map State",

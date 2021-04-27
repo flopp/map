@@ -25,6 +25,7 @@
         "@types/webpack": "^5.28.0",
         "clean-webpack-plugin": "*",
         "copy-webpack-plugin": "^8.1.1",
+        "cspell": "^5.3.12",
         "css-loader": "^5.2.4",
         "file-loader": "^6.2.0",
         "html-webpack-plugin": "^5.3.1",
