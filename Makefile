@@ -3,18 +3,26 @@ UPLOAD_TARGET=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/2oc.de/
 .PHONY: setup
 setup:
 	npm install .
+	./node_modules/.bin/cspell-dict-de-de-link
 
 .PHONY: spell
 spell:
-	node_modules/.bin/cspell \
+	./node_modules/.bin/cspell \
 		--config .cspell.json \
 		src/**/*.html \
 		src/**/*.ts \
 		src/**/*.scss
 
+.PHONY: lint
+lint:
+	./node_modules/.bin/tslint  \
+		--project tsconfig.json \
+		--config tslint.json \
+		src/**/*.ts
+
 .PHONY: update-translation
 update-translation:
-	tools/find-i18n.py \
+	./tools/find-i18n.py \
 		-t src/lang/en/translation.json \
 		-t src/lang/de/translation.json \
 		src/*.html \
@@ -22,11 +30,11 @@ update-translation:
 
 .PHONY: run-dev
 run-dev:
-	node_modules/.bin/webpack serve --open --config webpack.dev.js
+	./node_modules/.bin/webpack serve --open --config webpack.dev.js
 
 .PHONY: build
 build:
-	node_modules/.bin/webpack --config webpack.prod.js
+	./node_modules/.bin/webpack --config webpack.prod.js
 
 .PHONY: upload
 upload: build

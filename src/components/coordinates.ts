@@ -14,6 +14,14 @@ export {CoordinatesFormat};
 
 let coordinates_format: string = CoordinatesFormat.DM;
 
+function pad(num: number|string, width: number) : string {
+    let s = String(num);
+    while (s.length < width) {
+        s = '0' + s;
+    }
+    return s;
+}
+
 export class Coordinates {
     private _raw_lat: number
     private _raw_lng: number
@@ -338,48 +346,48 @@ export class Coordinates {
 
     public to_string_DM() : string {
         let lat = Math.abs(this.lat());
-        let lat_min: number;
-        let lat_mmin: number;
+        let lat_minutes: number;
+        let lat_milli_minutes: number;
         let lng = Math.abs(this.lng());
-        let lng_min: number;
-        let lng_mmin: number;
+        let lng_minutes: number;
+        let lng_milli_minutes: number;
 
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
-        lat_min = Math.floor(lat * 60);
-        lat = lat * 60 - lat_min;
-        lat_mmin = Math.floor(Math.round(lat * 1000));
-        while (lat_mmin >= 1000) {
-            lat_mmin -= 1000;
-            lat_min += 1;
+        lat_minutes = Math.floor(lat * 60);
+        lat = lat * 60 - lat_minutes;
+        lat_milli_minutes = Math.floor(Math.round(lat * 1000));
+        while (lat_milli_minutes >= 1000) {
+            lat_milli_minutes -= 1000;
+            lat_minutes += 1;
         }
 
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
-        lng_min = Math.floor(lng * 60);
-        lng = lng * 60 - lng_min;
-        lng_mmin = Math.floor(Math.round(lng * 1000));
-        while (lng_mmin >= 1000) {
-            lng_mmin -= 1000;
-            lng_min += 1;
+        lng_minutes = Math.floor(lng * 60);
+        lng = lng * 60 - lng_minutes;
+        lng_milli_minutes = Math.floor(Math.round(lng * 1000));
+        while (lng_milli_minutes >= 1000) {
+            lng_milli_minutes -= 1000;
+            lng_minutes += 1;
         }
 
         return (
             this.NS() +
             ' ' +
-            Coordinates.zeropad(lat_deg, 2) +
+            pad(lat_deg, 2) +
             ' ' +
-            Coordinates.zeropad(lat_min, 2) +
+            pad(lat_minutes, 2) +
             '.' +
-            Coordinates.zeropad(lat_mmin, 3) +
+            pad(lat_milli_minutes, 3) +
             ' ' +
             this.EW() +
             ' ' +
-            Coordinates.zeropad(lng_deg, 3) +
+            pad(lng_deg, 3) +
             ' ' +
-            Coordinates.zeropad(lng_min, 2) +
+            pad(lng_minutes, 2) +
             '.' +
-            Coordinates.zeropad(lng_mmin, 3)
+            pad(lng_milli_minutes, 3)
         );
     }
 
@@ -389,32 +397,32 @@ export class Coordinates {
 
         const lat_deg = Math.floor(lat);
         lat -= lat_deg;
-        const lat_min = Math.floor(lat * 60);
-        lat = lat * 60 - lat_min;
-        const lat_sec = lat * 60.0;
+        const lat_minutes = Math.floor(lat * 60);
+        lat = lat * 60 - lat_minutes;
+        const lat_seconds = lat * 60.0;
 
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
-        const lng_min = Math.floor(lng * 60);
-        lng = lng * 60 - lng_min;
-        const lng_sec = lng * 60.0;
+        const lng_minutes = Math.floor(lng * 60);
+        lng = lng * 60 - lng_minutes;
+        const lng_seconds = lng * 60.0;
 
         return (
             this.NS() +
             ' ' +
-            Coordinates.zeropad(lat_deg, 2) +
+            pad(lat_deg, 2) +
             ' ' +
-            Coordinates.zeropad(lat_min, 2) +
+            pad(lat_minutes, 2) +
             ' ' +
-            Coordinates.zeropad(lat_sec.toFixed(2), 5) +
+            pad(lat_seconds.toFixed(2), 5) +
             ' ' +
             this.EW() +
             ' ' +
-            Coordinates.zeropad(lng_deg, 3) +
+            pad(lng_deg, 3) +
             ' ' +
-            Coordinates.zeropad(lng_min, 2) +
+            pad(lng_minutes, 2) +
             ' ' +
-            Coordinates.zeropad(lng_sec.toFixed(2), 5)
+            pad(lng_seconds.toFixed(2), 5)
         );
     }
 
@@ -462,7 +470,7 @@ export class Coordinates {
 
     public interpolate_geodesic_line(other: Coordinates, _zoom: number) : Coordinates[] {
         // const d = 6000000 / Math.pow(2, zoom);
-        const maxk = 50;
+        const max_k = 50;
         const geod = Geodesic.WGS84;
         const t = geod.Inverse(
             this.raw_lat(),
@@ -472,8 +480,8 @@ export class Coordinates {
             Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
 
-        // const k = Math.min(maxk, Math.max(1, Math.ceil(t.s12 / d)));
-        const k = maxk;
+        // const k = Math.min(max_k, Math.max(1, Math.ceil(t.s12 / d)));
+        const k = max_k;
         const points = new Array(k + 1);
         points[0] = this;
         points[k] = new Coordinates(other.raw_lat(), other.next_lng(this.raw_lng()));
@@ -523,14 +531,6 @@ export class Coordinates {
             return 'E';
         }
         return 'W';
-    }
-
-    public static zeropad(num: number|string, width: number) : string {
-        let s = String(num);
-        while (s.length < width) {
-            s = '0' + s;
-        }
-        return s;
     }
 
     public static sanitize_string(s: string) : string {

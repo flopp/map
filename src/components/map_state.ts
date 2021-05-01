@@ -32,7 +32,7 @@ export class MapState {
     public map_type: string;;
     public zoom: number;
     public center: Coordinates;
-    public hillshading: boolean;
+    public hill_shading: boolean;
     public german_npa: boolean;
     public opencaching: boolean;
     public markers: Marker[];
@@ -60,7 +60,7 @@ export class MapState {
         this.map_type = null;
         this.zoom = null;
         this.center = null;
-        this.hillshading = false;
+        this.hill_shading = false;
         this.german_npa = false;
         this.opencaching = false;
 
@@ -94,7 +94,7 @@ export class MapState {
         this.storage.set_coordinates('center', this.center);
         this.storage.set_int('zoom', this.zoom);
         this.storage.set('map_type', maptype2string(this.map_type));
-        this.storage.set_bool('hillshading', this.hillshading);
+        this.storage.set_bool('hillshading', this.hill_shading);
         this.storage.set_bool('german_npa', this.german_npa);
         this.storage.set_bool('opencaching', this.opencaching);
         this.storage.set('markers', this.get_marker_ids_string());
@@ -155,7 +155,7 @@ export class MapState {
                 ),
             ),
         );
-        this.set_hillshading(this.storage.get_bool('hillshading', false));
+        this.set_hill_shading(this.storage.get_bool('hillshading', false));
         this.set_german_npa(this.storage.get_bool('german_npa', false));
         this.set_opencaching(this.storage.get_bool('opencaching', false));
 
@@ -627,9 +627,9 @@ export class MapState {
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
-    public set_hillshading(enabled: boolean): void {
-        this.hillshading = enabled;
-        this.storage.set_bool('hillshading', this.hillshading);
+    public set_hill_shading(enabled: boolean): void {
+        this.hill_shading = enabled;
+        this.storage.set_bool('hillshading', this.hill_shading);
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
@@ -912,7 +912,7 @@ export class MapState {
             maptype: this.map_type,
             center: this.center.to_string_D(),
             zoom: this.zoom,
-            hillshading: this.hillshading,
+            hill_shading: this.hill_shading,
             german_npa: this.german_npa,
             opencaching: this.opencaching,
             settings: {
@@ -962,8 +962,8 @@ export class MapState {
             }
         }
 
-        if ('hillshading' in data) {
-            this.hillshading = data.hillshading;
+        if ('hill_shading' in data) {
+            this.hill_shading = data.hill_shading;
         }
 
         if ('german_npa' in data) {

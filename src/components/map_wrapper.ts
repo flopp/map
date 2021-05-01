@@ -33,9 +33,9 @@ export class MapWrapper extends MapStateObserver {
         throw new Error('not implemented');
     }
 
-    public set_hillshading(_enabled: boolean): void {
+    public set_hill_shading(_enabled: boolean): void {
         console.log(
-            "The 'hillshading' feature is not implemented for this map wrapper.",
+            "The 'hill_shading' feature is not implemented for this map wrapper.",
         );
     }
 
@@ -122,7 +122,7 @@ export class MapWrapper extends MapStateObserver {
         /* update view */
         if (changes & MapStateChange.MAPTYPE) {
             this.set_map_type(this.app.map_state.map_type);
-            this.set_hillshading(this.app.map_state.hillshading);
+            this.set_hill_shading(this.app.map_state.hill_shading);
             this.set_german_npa(this.app.map_state.german_npa);
             this.set_opencaching(this.app.map_state.opencaching);
         }

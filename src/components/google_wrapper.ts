@@ -37,8 +37,8 @@ interface OpencachingMarker {
 
 export class GoogleWrapper extends MapWrapper {
     private automatic_event: boolean;
-    private hillshading_enabled: boolean;
-    private hillshading_layer: google.maps.MapType;
+    private hill_shading_enabled: boolean;
+    private hill_shading_layer: google.maps.MapType;
     private german_npa_enabled: boolean;
     private german_npa_layer: google.maps.MapType;
     private opencaching: Opencaching;
@@ -50,8 +50,8 @@ export class GoogleWrapper extends MapWrapper {
     constructor(div_id: string, app: App) {
         super(div_id, app);
         this.automatic_event = false;
-        this.hillshading_enabled = false;
-        this.hillshading_layer = null;
+        this.hill_shading_enabled = false;
+        this.hill_shading_layer = null;
         this.german_npa_enabled = false;
         this.german_npa_layer = null;
         this.opencaching = null;
@@ -129,26 +129,26 @@ export class GoogleWrapper extends MapWrapper {
         }
     }
 
-    public set_hillshading(enabled: boolean): void {
-        if (this.hillshading_enabled === enabled) {
+    public set_hill_shading(enabled: boolean): void {
+        if (this.hill_shading_enabled === enabled) {
             return;
         }
 
-        this.hillshading_enabled = enabled;
+        this.hill_shading_enabled = enabled;
         if (enabled) {
-            if (!this.hillshading_layer) {
-                this.hillshading_layer = new google.maps.ImageMapType({
+            if (!this.hill_shading_layer) {
+                this.hill_shading_layer = new google.maps.ImageMapType({
                     getTileUrl: (coord: google.maps.Point, zoom: number): string => {
                         return `https://tiles.wmflabs.org/hillshading/${zoom}/${coord.x}/${coord.y}.png`;
                     },
                     tileSize: new google.maps.Size(256, 256),
-                    name: 'Hillshading',
+                    name: 'Hill-shading',
                     maxZoom: 15,
                 });
             }
-            this.map.overlayMapTypes.insertAt(0, this.hillshading_layer);
-        } else if (this.hillshading_layer) {
-            this.remove_layer(this.hillshading_layer);
+            this.map.overlayMapTypes.insertAt(0, this.hill_shading_layer);
+        } else if (this.hill_shading_layer) {
+            this.remove_layer(this.hill_shading_layer);
         }
     }
 
@@ -165,19 +165,19 @@ export class GoogleWrapper extends MapWrapper {
                 this.german_npa_layer = new google.maps.ImageMapType({
                     getTileUrl: (coord: google.maps.Point, zoom: number): string => {
                         const proj = self.map.getProjection();
-                        const zfactor = 256 / Math.pow(2, zoom);
+                        const z_factor = 256 / Math.pow(2, zoom);
                         const top = proj.fromPointToLatLng(
-                            new google.maps.Point(coord.x * zfactor, coord.y * zfactor)
+                            new google.maps.Point(coord.x * z_factor, coord.y * z_factor)
                         );
-                        const bot = proj.fromPointToLatLng(
-                            new google.maps.Point((coord.x + 1) * zfactor, (coord.y + 1) * zfactor)
+                        const bottom = proj.fromPointToLatLng(
+                            new google.maps.Point((coord.x + 1) * z_factor, (coord.y + 1) * z_factor)
                         );
                         const data = {
                             dpi: 96,
                             transparent: true,
                             format: "png32",
                             layers: "show:4",
-                            BBOX: `${top.lng()},${bot.lat()},${bot.lng()},${top.lat()}`,
+                            BBOX: `${top.lng()},${bottom.lat()},${bottom.lng()},${top.lat()}`,
                             bboxSR: 4326,
                             imageSR: 102113,
                             size: "256,256",

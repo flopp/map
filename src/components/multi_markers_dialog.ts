@@ -70,7 +70,7 @@ export class MultiMarkersDialog {
         if (use_common_color && common_color === null) {
             this.app.message_error(
                 this.app.translate(
-                    'dialog.multimarkers.bad_common_color_message',
+                    'dialog.multi-markers.bad_common_color_message',
                 ),
             );
             return;
@@ -78,7 +78,7 @@ export class MultiMarkersDialog {
         if (use_common_radius && common_radius === null) {
             this.app.message_error(
                 this.app.translate(
-                    'dialog.multimarkers.bad_common_radius_message',
+                    'dialog.multi-markers.bad_common_radius_message',
                 ),
             );
             return;
@@ -120,7 +120,7 @@ export class MultiMarkersDialog {
                 if (tokens.length !== tokens_per_line) {
                     errors.push(
                         self.app
-                            .translate('dialog.multimarkers.tokens_message')
+                            .translate('dialog.multi-markers.tokens_message')
                             .replace('{1}', String(line_index))
                             .replace('{2}', String(tokens_per_line)),
                     );
@@ -136,7 +136,7 @@ export class MultiMarkersDialog {
                     errors.push(
                         self.app
                             .translate(
-                                'dialog.multimarkers.coordinates_message',
+                                'dialog.multi-markers.coordinates_message',
                             )
                             .replace('{1}', String(line_index))
                             .replace('{2}', tokens[token_index].trim()),
@@ -151,7 +151,7 @@ export class MultiMarkersDialog {
                     if (name === '') {
                         errors.push(
                             self.app
-                                .translate('dialog.multimarkers.name_message')
+                                .translate('dialog.multi-markers.name_message')
                                 .replace('{1}', String(line_index)),
                         );
                         line_has_errors = true;
@@ -165,7 +165,7 @@ export class MultiMarkersDialog {
                     if (color === null) {
                         errors.push(
                             self.app
-                                .translate('dialog.multimarkers.color_message')
+                                .translate('dialog.multi-markers.color_message')
                                 .replace('{1}', String(line_index))
                                 .replace('{2}', tokens[token_index].trim()),
                         );
@@ -180,7 +180,7 @@ export class MultiMarkersDialog {
                     if (radius === null) {
                         errors.push(
                             self.app
-                                .translate('dialog.multimarkers.radius_message')
+                                .translate('dialog.multi-markers.radius_message')
                                 .replace('{1}', String(line_index))
                                 .replace('{2}', tokens[token_index].trim()),
                         );
@@ -226,27 +226,27 @@ export class MultiMarkersDialog {
 
         const description = [
             '<' +
-                this.app.translate('dialog.multimarkers.coordinates_token') +
+                this.app.translate('dialog.multi-markers.coordinates_token') +
                 '>',
         ];
         if (!use_common_name) {
             description.push(
                 '<' +
-                    this.app.translate('dialog.multimarkers.name_token') +
+                    this.app.translate('dialog.multi-markers.name_token') +
                     '>',
             );
         }
         if (!use_common_color) {
             description.push(
                 '<' +
-                    this.app.translate('dialog.multimarkers.color_token') +
+                    this.app.translate('dialog.multi-markers.color_token') +
                     '>',
             );
         }
         if (!use_common_radius) {
             description.push(
                 '<' +
-                    this.app.translate('dialog.multimarkers.radius_token') +
+                    this.app.translate('dialog.multi-markers.radius_token') +
                     '>',
             );
         }

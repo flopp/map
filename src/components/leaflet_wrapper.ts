@@ -39,8 +39,8 @@ interface OpencachingMarker {
 
 export class LeafletWrapper extends MapWrapper {
     private automatic_event: boolean;
-    private hillshading_enabled: boolean;
-    private hillshading_layer: L.TileLayer;
+    private hill_shading_enabled: boolean;
+    private hill_shading_layer: L.TileLayer;
     private german_npa_enabled: boolean;
     private german_npa_layer: L.TileLayer;
     private opencaching: Opencaching;
@@ -57,8 +57,8 @@ export class LeafletWrapper extends MapWrapper {
     constructor(div_id: string, app: App) {
         super(div_id, app);
         this.automatic_event = false;
-        this.hillshading_enabled = false;
-        this.hillshading_layer = null;
+        this.hill_shading_enabled = false;
+        this.hill_shading_layer = null;
         this.german_npa_enabled = false;
         this.german_npa_layer = null;
         this.opencaching = null;
@@ -168,22 +168,22 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    public set_hillshading(enabled: boolean): void {
-        if (this.hillshading_enabled === enabled) {
+    public set_hill_shading(enabled: boolean): void {
+        if (this.hill_shading_enabled === enabled) {
             return;
         }
 
-        this.hillshading_enabled = enabled;
+        this.hill_shading_enabled = enabled;
         if (enabled) {
-            if (!this.hillshading_layer) {
-                this.hillshading_layer = L.tileLayer(
+            if (!this.hill_shading_layer) {
+                this.hill_shading_layer = L.tileLayer(
                     'https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
-                    {attribution: 'Hillshading by wmflabs.org', maxZoom: 15},
+                    {attribution: 'Hill-shading by wmflabs.org', maxZoom: 15},
                 );
             }
-            this.map.addLayer(this.hillshading_layer);
-        } else if (this.hillshading_layer) {
-            this.map.removeLayer(this.hillshading_layer);
+            this.map.addLayer(this.hill_shading_layer);
+        } else if (this.hill_shading_layer) {
+            this.map.removeLayer(this.hill_shading_layer);
         }
     }
 

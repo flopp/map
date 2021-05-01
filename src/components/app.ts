@@ -324,10 +324,10 @@ export class App {
                         new Coordinates(json_data[0].lat, json_data[0].lon)
                     );
                 } else {
-                    self.message_error(self.lang.translate('search.noresult'));
+                    self.message_error(self.lang.translate('search.no-result'));
                 }
             }).catch((error: any): void => {
-                self.message_error(self.lang.translate('search.servererror').replace("{1}", error));
+                self.message_error(self.lang.translate('search.server-error').replace("{1}", error));
             });
     }
 

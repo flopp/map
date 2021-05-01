@@ -63,7 +63,7 @@ export class SidebarTools extends MapStateObserver {
         const data = JSON.stringify(this.app.map_state.to_json());
         const element = create_element('a', [], {
             'href': `data:application/json;charset=utf-8,${encodeURIComponent(data)}`,
-            'download': 'map_stateon'
+            'download': 'map_state.json'
         });
         element.style.display = 'none';
         document.body.appendChild(element);

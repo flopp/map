@@ -113,24 +113,24 @@
                             <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
                             <div class="control">
                                 <div class="select is-fullwidth">
-                                    <select data-baselayer></select>
+                                    <select data-base-layer></select>
                                 </div>
                             </div>
-                            <p class="help is-hidden" data-baselayer-help data-i18n="sidebar.layers.base_help">Google Maps layers have been disabled</p>
+                            <p class="help is-hidden" data-base-layer-help data-i18n="sidebar.layers.base_help">Google Maps layers have been disabled</p>
                         </div>
 
                         <hr />
 
                         <div class="buttons">
-                            <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button data-i18n="sidebar.layers.apikeys">Add Your Own API Keys</a>
+                            <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button data-i18n="sidebar.layers.api-keys">Add Your Own API Keys</a>
                         </div>
 
                         <div class="field">
                             <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
                             <div class="control">
                                 <label class="checkbox">
-                                    <input data-hillshading-layer type="checkbox" />
-                                    <span data-i18n="sidebar.layers.hillshading">Hillshading</span>
+                                    <input data-hill-shading-layer type="checkbox" />
+                                    <span data-i18n="sidebar.layers.hill-shading">Hill-shading</span>
                                 </label>
                             </div>
                         </div>
@@ -206,11 +206,11 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label" data-i18n="sidebar.markers.settings.defaultcolor">Default Color</label>
+                                <label class="label" data-i18n="sidebar.markers.settings.default-color">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
                                         <input data-random-color type="checkbox" />
-                                        <span data-i18n="sidebar.markers.settings.randomcolors">Use random colors</span>
+                                        <span data-i18n="sidebar.markers.settings.random-colors">Use random colors</span>
                                     </label>
                                 </div>
                                 <div class="control">
@@ -218,9 +218,9 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label" data-i18n="sidebar.markers.settings.defaultradius">Default Circle Radius (m)</label>
+                                <label class="label" data-i18n="sidebar.markers.settings.default-radius">Default Circle Radius (m)</label>
                                 <div class="control">
-                                    <input class="input" data-radius type="text" placeholder="Circle Radius" data-i18n="sidebar.markers.settings.defaultradius_placeholder" data-i18n-target="placeholder">
+                                    <input class="input" data-radius type="text" placeholder="Circle Radius" data-i18n="sidebar.markers.settings.default-radius-placeholder" data-i18n-target="placeholder">
                                 </div>
                             </div>
                             <div class="field is-grouped">
@@ -273,11 +273,11 @@
                         </div>
                         <div id="line-settings">
                             <div class="field">
-                                <label class="label" data-i18n="sidebar.lines.settings.defaultcolor">Default Color</label>
+                                <label class="label" data-i18n="sidebar.lines.settings.default-color">Default Color</label>
                                 <div class="control">
                                     <label class="checkbox">
                                         <input data-random-color type="checkbox" />
-                                        <span data-i18n="sidebar.lines.settings.randomcolors">Use random colors</span>
+                                        <span data-i18n="sidebar.lines.settings.random-colors">Use random colors</span>
                                     </label>
                                 </div>
                                 <div class="control">
@@ -322,9 +322,9 @@
 
                         <div class="field">
                             <div class="control">
-                                <a id="btn-link" class="button is-fullwidth is-success" data-i18n="sidebar.tools.createlink">Create Link</a>
+                                <a id="btn-link" class="button is-fullwidth is-success" data-i18n="sidebar.tools.create-link">Create Link</a>
                             </div>
-                            <p class="help" data-i18n="sidebar.tools.createlink_help">Create a link to this map, e.g. for sharing it with others.</p>
+                            <p class="help" data-i18n="sidebar.tools.create-link-help">Create a link to this map, e.g. for sharing it with others.</p>
                         </div>
 
                         <hr />
@@ -332,25 +332,25 @@
                         <div class="field">
                             <div class="field"></span>
                                 <div class="control">
-                                    <a id="btn-export-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.exportjson">Export Full Map State (JSON)</a>
+                                    <a id="btn-export-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.export-json">Export Full Map State (JSON)</a>
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="control">
                                     <input id="inp-import-json" style="display: none;" type="file" name="files" />
-                                    <a id="btn-import-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.importjson">Import Full Map State (JSON)</a>
+                                    <a id="btn-import-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.import-json">Import Full Map State (JSON)</a>
                                 </div>
                             </div>
-                            <p class="help" data-i18n="sidebar.tools.exportjson_help">Export/import a JSON file containing the full map state.</p>
+                            <p class="help" data-i18n="sidebar.tools.export-json-help">Export/import a JSON file containing the full map state.</p>
                         </div>
 
                         <hr />
 
                         <div class="field">
                             <div class="control">
-                                <a id="btn-multi-markers" class="button is-fullwidth is-success" data-i18n="sidebar.tools.createmarkers">Create Multiple Markers</a>
+                                <a id="btn-multi-markers" class="button is-fullwidth is-success" data-i18n="sidebar.tools.create-markers">Create Multiple Markers</a>
                             </div>
-                            <p class="help" data-i18n="sidebar.tools.createmarkers_help">Create multiple markes at once, i.e. by providing a list of coordinates.</p>
+                            <p class="help" data-i18n="sidebar.tools.create-markers-help">Create multiple markers at once, i.e. by providing a list of coordinates.</p>
                         </div>
                     </div>
                 </div>
@@ -416,10 +416,10 @@
 
             <div id="map-contextmenu" class="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                    <a id="map-contextmenu-addmarker" class="dropdown-item" data-i18n="menu.addmarker">ADD MARKER</a>
-                    <a id="map-contextmenu-deletemarker" class="dropdown-item" data-i18n="menu.deletemarker">DELETE MARKER</a>
-                    <a id="map-contextmenu-projection" class="dropdown-item" data-i18n="menu.waypointprojection">WAYPOINT PROJECTION</a>
-                    <a id="map-contextmenu-centermap" class="dropdown-item" data-i18n="menu.centermap">CENTER MAP HERE</a>
+                    <a id="map-contextmenu-add-marker" class="dropdown-item" data-i18n="menu.add-marker">ADD MARKER</a>
+                    <a id="map-contextmenu-delete-marker" class="dropdown-item" data-i18n="menu.delete-marker">DELETE MARKER</a>
+                    <a id="map-contextmenu-projection" class="dropdown-item" data-i18n="menu.waypoint-projection">WAYPOINT PROJECTION</a>
+                    <a id="map-contextmenu-center-map" class="dropdown-item" data-i18n="menu.center-map">CENTER MAP HERE</a>
                 </div>
             </div>
 
@@ -427,20 +427,20 @@
                 <div class="modal-background"></div>
                     <div class="modal-card">
                         <header class="modal-card-head">
-                            <h2 class="modal-card-title" data-i18n="dialog.apikeys.title">Add Your Own API Keys</h2>
+                            <h2 class="modal-card-title" data-i18n="dialog.api-keys.title">Add Your Own API Keys</h2>
                             <button class="delete" data-cancel aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            <p data-i18n="dialog.apikeys.help">Adding your own API keys enables access to map layers from Google Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.</p>
+                            <p data-i18n="dialog.api-keys.help">Adding your own API keys enables access to map layers from Google Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.</p>
 
-                            <h3 class="is-size-4" data-i18n="dialog.apikeys.google">Google Maps API Key</h3>
-                            <p data-i18n="dialog.apikeys.google_help">
+                            <h3 class="is-size-4" data-i18n="dialog.api-keys.google">Google Maps API Key</h3>
+                            <p data-i18n="dialog.api-keys.google_help">
                                 Get your API Key for the Google Maps Javascript API from Google's API console.
                             </p>
                             <div class="field">
                                 <div class="control">
                                     <a class="button is-warning" href="https://console.developers.google.com" target="_blank">
-                                        <span data-i18n="dialog.apikeys.google_link">Google API Console</span>
+                                        <span data-i18n="dialog.api-keys.google_link">Google API Console</span>
                                         <svg class="icon icon-small">
                                             <use xlink:href="assets/feather-sprite.svg#external-link"/>
                                         </svg>
@@ -449,7 +449,7 @@
                             </div>
                             <div class="field">
                                 <div class="control">
-                                    <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.apikeys.google_placeholder" data-i18n-target="placeholder">
+                                    <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.api-keys.google_placeholder" data-i18n-target="placeholder">
                                 </div>
                             </div>
                         </section>
@@ -484,17 +484,17 @@
                         <h3 class="is-size-4" data-i18n="dialog.projection.marker">Created Marker</h3>
                         <div class="field">
                             <div class="control">
-                                <input data-targetname class="input" type="text" placeholder="Name of created marker" data-i18n="dialog.projection.marker_name" data-i18n-target="placeholder">
+                                <input data-target-name class="input" type="text" placeholder="Name of created marker" data-i18n="dialog.projection.marker_name" data-i18n-target="placeholder">
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                <input data-targetcolor class="input" type="color" placeholder="Color of created marker" data-i18n="dialog.projection.marker_color" data-i18n-target="placeholder">
+                                <input data-target-color class="input" type="color" placeholder="Color of created marker" data-i18n="dialog.projection.marker_color" data-i18n-target="placeholder">
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                <input data-targetradius class="input" type="text" placeholder="Circle radius of created marker" data-i18n="dialog.projection.marker_radius" data-i18n-target="placeholder">
+                                <input data-target-radius class="input" type="text" placeholder="Circle radius of created marker" data-i18n="dialog.projection.marker_radius" data-i18n-target="placeholder">
                             </div>
                         </div>
 
@@ -503,13 +503,13 @@
                             <div class="control">
                                 <label class="checkbox">
                                     <input data-line type="checkbox">
-                                    <span data-i18n="dialog.projection.createline">Create line?</span>
+                                    <span data-i18n="dialog.projection.create-line">Create line?</span>
                                 </label>
                             </div>
                         </div>
                         <div class="field">
                             <div class="control">
-                                <input data-linecolor class="input" type="color" placeholder="Color of created line" data-i18n="dialog.projection.line_color" data-i18n-target="placeholder">
+                                <input data-line-color class="input" type="color" placeholder="Color of created line" data-i18n="dialog.projection.line_color" data-i18n-target="placeholder">
                             </div>
                         </div>
                     </section>
@@ -539,7 +539,7 @@
                                         Copy
                                     </a>
                                 </div>
-                                <p class="help is-hidden" data-i18n="dialog.link.toolong">TODO: Link too long</p>
+                                <p class="help is-hidden" data-i18n="dialog.link.too-long">TODO: Link too long</p>
                             </div>
                         </section>
                         <footer class="modal-card-foot">
@@ -553,17 +553,17 @@
                 <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head">
-                        <h2 class="modal-card-title" data-i18n="dialog.multimarkers.title">Create Multiple Markers</h2>
+                        <h2 class="modal-card-title" data-i18n="dialog.multi-markers.title">Create Multiple Markers</h2>
                         <button class="delete" data-cancel aria-label="close"></button>
                     </header>
                     <section class="modal-card-body">
-                        <h3 class="is-size-4" data-i18n="dialog.multimarkers.commonattributes">Common Marker Attributes</h3>
+                        <h3 class="is-size-4" data-i18n="dialog.multi-markers.common-attributes">Common Marker Attributes</h3>
 
                         <div class="columns">
                             <div class="column">
                                 <label class="checkbox">
                                     <input type="checkbox" data-use-common-name>
-                                    <span data-i18n="dialog.multimarkers.name">Name Prefix</span>
+                                    <span data-i18n="dialog.multi-markers.name">Name Prefix</span>
                                 </label>
                                 <div class="field">
                                     <div class="control">
@@ -574,7 +574,7 @@
                             <div class="column">
                                 <label class="checkbox">
                                     <input type="checkbox" data-use-common-color>
-                                    <span data-i18n="dialog.multimarkers.color">Color</span>
+                                    <span data-i18n="dialog.multi-markers.color">Color</span>
                                 </label>
                                 <div class="field">
                                     <div class="control">
@@ -585,7 +585,7 @@
                             <div class="column">
                                 <label class="checkbox">
                                     <input type="checkbox" data-use-common-radius>
-                                    <span data-i18n="dialog.multimarkers.radius">Circle Radius (m)</span>
+                                    <span data-i18n="dialog.multi-markers.radius">Circle Radius (m)</span>
                                 </label>
                                 <div class="field">
                                     <div class="control">
@@ -595,16 +595,16 @@
                             </div>
                         </div>
 
-                        <h3 class="is-size-4" data-i18n="dialog.multimarkers.data">Marker Data</h3>
+                        <h3 class="is-size-4" data-i18n="dialog.multi-markers.data">Marker Data</h3>
                         <p>
-                            <span data-i18n="dialog.multimarkers.format">Data format per line:</span><br />
+                            <span data-i18n="dialog.multi-markers.format">Data format per line:</span><br />
                             <span data-format class="is-family-code"></span>
                         </p>
 
                         <textarea data-marker-data class="textarea is-family-code" placeholder="Marker Data"></textarea>
                     </section>
                     <footer class="modal-card-foot">
-                        <button class="button is-success" data-go data-i18n="dialog.multimarkers.create">Create Markers</button>
+                        <button class="button is-success" data-go data-i18n="dialog.multi-markers.create">Create Markers</button>
                         <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                     </footer>
                 </div>

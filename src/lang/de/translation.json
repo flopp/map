@@ -1,7 +1,7 @@
 {
     "main": {
         "dialog": {
-            "apikeys": {
+            "api-keys": {
                 "google": "Google Maps API-Schl\u00fcssel",
                 "google_help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr die Google Maps Javascript API in Googles API Console.",
                 "google_link": "Google API Console",
@@ -15,15 +15,15 @@
                 "failed_message": "Kopieren des Links fehlgeschlagen.",
                 "help": "Du kannst diesen Link mit anderen Leute teilen, so dass sie deine aktuelle Karte sehen k\u00f6nnen.",
                 "title": "Link Erzeugen",
-                "toolong": "Der Link ist vermutlich zu lang. Es kann sein, dass Browser damit nicht korrekt umgehen k\u00f6nnen."
+                "too-long": "Der Link ist vermutlich zu lang. Es kann sein, dass Browser damit nicht korrekt umgehen k\u00f6nnen."
             },
-            "multimarkers": {
+            "multi-markers": {
                 "bad_common_color_message": "Fehlerhafte gemeinsame Farbe.",
                 "bad_common_radius_message": "Fehlerhafter gemeinsamer Radius.",
                 "color": "Farbe",
                 "color_message": "Zeile {1}: Farbe kann nicht geparst werden: {2}",
                 "color_token": "FARBE",
-                "commonattributes": "Gemeinsame Marker-Attribute",
+                "common-attributes": "Gemeinsame Marker-Attribute",
                 "coordinates_message": "Zeile {1}: Koordinaten k\u00f6nnen nicht geparst werden: {2}",
                 "coordinates_token": "KOORDINATEN",
                 "create": "Erzeugen",
@@ -42,7 +42,7 @@
                 "bad_bearing_message": "Fehlerhafter Richtungswert",
                 "bad_distance_message": "Fehlerhafter Distanzwert.",
                 "bearing": "Richtung (\u00b0)",
-                "createline": "Erzeuge Linie?",
+                "create-line": "Erzeuge Linie?",
                 "data": "Projektions-Daten",
                 "distance": "Distanz (m)",
                 "line": "Erzeugte Linie",
@@ -63,10 +63,10 @@
             "submit": "Anwenden"
         },
         "menu": {
-            "addmarker": "Marker hinzuf\u00fcgen",
-            "centermap": "Karte hier zentrieren",
-            "deletemarker": "Marker l\u00f6schen",
-            "waypointprojection": "Wegpunkt-Projektion"
+            "add-marker": "Marker hinzuf\u00fcgen",
+            "center-map": "Karte hier zentrieren",
+            "delete-marker": "Marker l\u00f6schen",
+            "waypoint-projection": "Wegpunkt-Projektion"
         },
         "messages": {
             "geolocation_error": "Geolocation-Fehler: {1}",
@@ -76,8 +76,8 @@
             "marker_created": "Ein neuer Marker wurde hinzugef\u00fcgt."
         },
         "search": {
-            "noresult": "Es konnte keine passender Ort gefunden werden.",
-            "servererror": "Fehler beim Kontaktieren des 'Nominatim'-Servers: {1}"
+            "no-result": "Es konnte keine passender Ort gefunden werden.",
+            "server-error": "Fehler beim Kontaktieren des 'Nominatim'-Servers: {1}"
         },
         "sidebar": {
             "info": {
@@ -91,14 +91,14 @@
             },
             "layers": {
                 "additional": "Zus\u00e4tzliche Ebenen",
-                "apikeys": "Eigene API-Schl\u00fcssel",
+                "api-keys": "Eigene API-Schl\u00fcssel",
                 "base": "Hintergrundebene",
                 "base_help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
                 "german_npa_button": "Offizielle Web-App",
                 "german_npa_help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
-                "hillshading": "Schummerung (hillshading)",
+                "hill-shading": "Schummerung (hill-shading)",
                 "opencaching": "Geocaches (von Opencaching)",
                 "opencaching_help": "Zeige Geocaches von Opencaching-Seiten an.",
                 "title": "Ebenen"
@@ -115,8 +115,8 @@
                 "from": "Von:",
                 "length": "L\u00e4nge:",
                 "settings": {
-                    "defaultcolor": "Standardfarbe",
-                    "randomcolors": "Zuf\u00e4llige Farbe"
+                    "default-color": "Standardfarbe",
+                    "random-colors": "Zuf\u00e4llige Farbe"
                 },
                 "title": "Linien",
                 "to": "Nach:"
@@ -140,10 +140,10 @@
                 "projection": "Wegpunkt-Projektion",
                 "settings": {
                     "coordinates": "Koordinaten",
-                    "defaultcolor": "Standardfarbe",
-                    "defaultradius": "Standardradius (m)",
-                    "defaultradius_placeholder": "Radius",
-                    "randomcolors": "Zuf\u00e4llige Farbe"
+                    "default-color": "Standardfarbe",
+                    "default-radius": "Standardradius (m)",
+                    "default-radius-placeholder": "Radius",
+                    "random-colors": "Zuf\u00e4llige Farbe"
                 },
                 "title": "Marker"
             },
@@ -155,13 +155,13 @@
                 "title": "Suche"
             },
             "tools": {
-                "createlink": "Erzeuge Link",
-                "createlink_help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
-                "createmarkers": "Ereuge mehrere Marker",
-                "createmarkers_help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
-                "exportjson": "Exportiere Karten-Zustand",
-                "exportjson_help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
-                "importjson": "Importiere Karten-Zustand",
+                "create-link": "Erzeuge Link",
+                "create-link-help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
+                "create-markers": "Ereuge mehrere Marker",
+                "create-markers-help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
+                "export-json": "Exportiere Karten-Zustand",
+                "export-json-help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
+                "import-json": "Importiere Karten-Zustand",
                 "language": "Sprache",
                 "title": "Werkzeuge"
             }

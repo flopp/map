@@ -1,7 +1,7 @@
 {
     "main": {
         "dialog": {
-            "apikeys": {
+            "api-keys": {
                 "google": "Google Maps API Key",
                 "google_help": "Get your API Key for the Google Maps Javascript API from Google's API console.",
                 "google_link": "Google API Console",
@@ -15,15 +15,15 @@
                 "failed_message": "Copying of the link failed.",
                 "help": "You can share this link with others to enable them to view your current map state.",
                 "title": "Create Link",
-                "toolong": "The link is probably too long. Browsers may not be able to handle it correctly."
+                "too-long": "The link is probably too long. Browsers may not be able to handle it correctly."
             },
-            "multimarkers": {
+            "multi-markers": {
                 "bad_common_color_message": "Bad common color.",
                 "bad_common_radius_message": "Bad common radius.",
                 "color": "Color",
                 "color_message": "Line {1}: unable to parse color: {2}",
                 "color_token": "COLOR",
-                "commonattributes": "Common Marker Attributes",
+                "common-attributes": "Common Marker Attributes",
                 "coordinates_message": "Line {1}: unable to parse coordinates: {2}",
                 "coordinates_token": "COORDINATES",
                 "create": "Create",
@@ -42,7 +42,7 @@
                 "bad_bearing_message": "Bad bearing value.",
                 "bad_distance_message": "Bad distance value.",
                 "bearing": "Bearing (\u00b0)",
-                "createline": "Create Line?",
+                "create-line": "Create Line?",
                 "data": "Projection Data",
                 "distance": "Distance (m)",
                 "line": "Created Line",
@@ -63,10 +63,10 @@
             "submit": "Submit"
         },
         "menu": {
-            "addmarker": "Add Marker",
-            "centermap": "Center Map",
-            "deletemarker": "Delete Marker",
-            "waypointprojection": "Waypoint Projection"
+            "add-marker": "Add Marker",
+            "center-map": "Center Map",
+            "delete-marker": "Delete Marker",
+            "waypoint-projection": "Waypoint Projection"
         },
         "messages": {
             "geolocation_error": "Geolocation error: {1}",
@@ -76,8 +76,8 @@
             "marker_created": "A new marker has been created."
         },
         "search": {
-            "noresult": "Cannot find matching location.",
-            "servererror": "Failed to contact 'Nominatim' server: {1}"
+            "no-result": "Cannot find matching location.",
+            "server-error": "Failed to contact 'Nominatim' server: {1}"
         },
         "sidebar": {
             "info": {
@@ -91,14 +91,14 @@
             },
             "layers": {
                 "additional": "Additional Layers",
-                "apikeys": "Own API Keys",
+                "api-keys": "Own API Keys",
                 "base": "Base Layer",
                 "base_help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
                 "german_npa_button": "Official Web App",
                 "german_npa_help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
-                "hillshading": "Hillshading",
+                "hill-shading": "Hill-shading",
                 "opencaching": "Geocaches (from Opencaching)",
                 "opencaching_help": "Display geocaches from Opencaching sites.",
                 "title": "Layers"
@@ -115,8 +115,8 @@
                 "from": "From:",
                 "length": "Length:",
                 "settings": {
-                    "defaultcolor": "Default Color",
-                    "randomcolors": "Random Color"
+                    "default-color": "Default Color",
+                    "random-colors": "Random Color"
                 },
                 "title": "Lines",
                 "to": "To:"
@@ -140,10 +140,10 @@
                 "projection": "Waypoint Projection",
                 "settings": {
                     "coordinates": "Coordinates",
-                    "defaultcolor": "Default Color",
-                    "defaultradius": "Default Radius (m)",
-                    "defaultradius_placeholder": "Radius",
-                    "randomcolors": "Random Color"
+                    "default-color": "Default Color",
+                    "default-radius": "Default Radius (m)",
+                    "default-radius-placeholder": "Radius",
+                    "random-colors": "Random Color"
                 },
                 "title": "Markers"
             },
@@ -155,13 +155,13 @@
                 "title": "Search"
             },
             "tools": {
-                "createlink": "Create Link",
-                "createlink_help": "Create a link to this map, e.g. for sharing it with others.",
-                "createmarkers": "Create Multiple Markers",
-                "createmarkers_help": "Create multiple markers at once, i.e. by providing a list of coordinates.",
-                "exportjson": "Export Map State",
-                "exportjson_help": "Export/import a JSON file containing the full map state.",
-                "importjson": "Import Map State",
+                "create-link": "Create Link",
+                "create-link-help": "Create a link to this map, e.g. for sharing it with others.",
+                "create-markers": "Create Multiple Markers",
+                "create-markers-help": "Create multiple markers at once, i.e. by providing a list of coordinates.",
+                "export-json": "Export Map State",
+                "export-json-help": "Export/import a JSON file containing the full map state.",
+                "import-json": "Import Map State",
                 "language": "Language",
                 "title": "Tools"
             }

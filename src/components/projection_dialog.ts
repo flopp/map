@@ -34,14 +34,14 @@ export class ProjectionDialog {
         (this.div.querySelector('[data-bearing]') as HTMLInputElement).value = '';
         const name = this.app.translate('dialog.projection.new_marker_name').replace('{1}', marker.name);
         (this.div.querySelector(
-            '[data-targetname]',
+            '[data-target-name]',
         ) as HTMLInputElement).value = name;
         (this.div.querySelector(
-            '[data-targetcolor]',
+            '[data-target-color]',
         ) as HTMLInputElement).value = marker.color.to_hash_string();
-        (this.div.querySelector('[data-targetradius]') as HTMLInputElement).value = '';
+        (this.div.querySelector('[data-target-radius]') as HTMLInputElement).value = '';
         (this.div.querySelector(
-            '[data-linecolor]',
+            '[data-line-color]',
         ) as HTMLInputElement).value = marker.color.to_hash_string();
         this.div.classList.add('is-active');
     }
@@ -57,16 +57,16 @@ export class ProjectionDialog {
         const bearing = parse_float(
             (this.div.querySelector('[data-bearing]') as HTMLInputElement).value,
         );
-        const target_name = (this.div.querySelector('[data-targetname]') as HTMLInputElement).value;
+        const target_name = (this.div.querySelector('[data-target-name]') as HTMLInputElement).value;
         const target_color = Color.from_string(
-            (this.div.querySelector('[data-targetcolor]') as HTMLInputElement).value,
+            (this.div.querySelector('[data-target-color]') as HTMLInputElement).value,
         );
         const target_radius = parse_float(
-            (this.div.querySelector('[data-targetradius]') as HTMLInputElement).value,
+            (this.div.querySelector('[data-target-radius]') as HTMLInputElement).value,
         );
         const create_line = (this.div.querySelector('[data-line]') as HTMLInputElement).checked;
         const line_color = Color.from_string(
-            (this.div.querySelector('[data-linecolor]') as HTMLInputElement).value,
+            (this.div.querySelector('[data-line-color]') as HTMLInputElement).value,
         );
 
         if (distance === null || distance <= 0) {
