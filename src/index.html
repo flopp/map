@@ -8,606 +8,595 @@
     </head>
 
     <body>
-        <div id="layout">
-            <div id="sidebar-controls">
-                <div class="sidebar-control">
-                    <a href="#" class="sidebar-control-button" id="btn-search" data-container="#sidebar-search">
-                        <svg class="icon24">
-                            <use xlink:href="assets/feather-sprite.svg#search"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="sidebar-control">
-                    <a href="#" class="sidebar-control-button" id="btn-layers" data-container="#sidebar-layers">
-                        <svg class="icon24">
-                            <use xlink:href="assets/feather-sprite.svg#layers"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="sidebar-control">
-                    <a href="#" class="sidebar-control-button" id="btn-markers" data-container="#sidebar-markers">
-                        <svg class="icon24">
-                            <use xlink:href="assets/feather-sprite.svg#map-pin"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="sidebar-control">
-                    <a href="#" class="sidebar-control-button" id="btn-lines" data-container="#sidebar-lines">
-                        <svg class="icon24">
-                            <use xlink:href="assets/feather-sprite.svg#maximize-2"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="sidebar-control">
-                    <a href="#" class="sidebar-control-button" id="btn-tools" data-container="#sidebar-tools">
-                        <svg class="icon24">
-                            <use xlink:href="assets/feather-sprite.svg#tool"/>
-                        </svg>
-                    </a>
-                </div>
-
-                <div class="sidebar-control">
-                    <a href="#" class="sidebar-control-button" id="btn-info" data-container="#sidebar-info">
-                        <svg class="icon24">
-                            <use xlink:href="assets/feather-sprite.svg#help-circle"/>
-                        </svg>
-                    </a>
-                </div>
+        <div id="sidebar-controls">
+            <div class="sidebar-control">
+                <a href="#" class="sidebar-control-button" id="btn-search" data-container="#sidebar-search">
+                    <svg class="icon24">
+                        <use xlink:href="assets/feather-sprite.svg#search"/>
+                    </svg>
+                </a>
             </div>
 
-            <div id="sidebar">
-                <div class="sidebar-container" id="sidebar-search">
-                    <div class="header">
-                        <h2 data-i18n="sidebar.search.title">Search</h2>
-                        <span class="close">
-                            <svg class="icon24">
-                                <use xlink:href="assets/feather-sprite.svg#x"/>
-                            </svg>
-                        </span>
-                    </div>
+            <div class="sidebar-control">
+                <a href="#" class="sidebar-control-button" id="btn-layers" data-container="#sidebar-layers">
+                    <svg class="icon24">
+                        <use xlink:href="assets/feather-sprite.svg#layers"/>
+                    </svg>
+                </a>
+            </div>
 
-                    <div class="content">
-                        <div class="field">
-                            <div class="control">
-                                <a id="btn-locate" data-i18n="sidebar.search.locate_me" class="button is-fullwidth is-success">Locate Me</a>
-                            </div>
-                            <p data-i18n="sidebar.search.locate_me_help" class="help">Center the map on your current location.</p>
-                        </div>
+            <div class="sidebar-control">
+                <a href="#" class="sidebar-control-button" id="btn-markers" data-container="#sidebar-markers">
+                    <svg class="icon24">
+                        <use xlink:href="assets/feather-sprite.svg#map-pin"/>
+                    </svg>
+                </a>
+            </div>
 
-                        <hr />
-                        
-                        <div class="field">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <input id="input-search" class="input" type="text" placeholder="Location" data-i18n="sidebar.search.search_placeholder" data-i18n-target="placeholder">
-                                </div>
-                                <div class="control">
-                                    <a id="btn-search" class="button is-info">
-                                        <svg class="icon icon16">
-                                            <use xlink:href="assets/feather-sprite.svg#search"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <p data-i18n="sidebar.search.search_help" class="help">Search for a location (enter e.g. a city name or coordinates in various formats) and center the map.</p>
-                        </div>
-                    </div>
+            <div class="sidebar-control">
+                <a href="#" class="sidebar-control-button" id="btn-lines" data-container="#sidebar-lines">
+                    <svg class="icon24">
+                        <use xlink:href="assets/feather-sprite.svg#maximize-2"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="sidebar-control">
+                <a href="#" class="sidebar-control-button" id="btn-tools" data-container="#sidebar-tools">
+                    <svg class="icon24">
+                        <use xlink:href="assets/feather-sprite.svg#tool"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="sidebar-control">
+                <a href="#" class="sidebar-control-button" id="btn-info" data-container="#sidebar-info">
+                    <svg class="icon24">
+                        <use xlink:href="assets/feather-sprite.svg#help-circle"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div id="sidebar">
+            <div class="sidebar-container" id="sidebar-search">
+                <div class="header">
+                    <h2 data-i18n="sidebar.search.title">Search</h2>
+                    <span class="close">
+                        <svg class="icon24">
+                            <use xlink:href="assets/feather-sprite.svg#x"/>
+                        </svg>
+                    </span>
                 </div>
 
-                <div class="sidebar-container" id="sidebar-layers">
-                    <div class="header">
-                        <h2 data-i18n="sidebar.layers.title">Layers</h2>
-                        <span class="close">
-                            <svg class="icon24">
-                                <use xlink:href="assets/feather-sprite.svg#x"/>
-                            </svg>
-                        </span>
+                <div class="content">
+                    <div class="field">
+                        <div class="control">
+                            <a id="btn-locate" data-i18n="sidebar.search.locate_me" class="button is-fullwidth is-success">Locate Me</a>
+                        </div>
+                        <p data-i18n="sidebar.search.locate_me_help" class="help">Center the map on your current location.</p>
                     </div>
 
-                    <div class="content">
-                        <div class="field">
-                            <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
+                    <hr />
+                    
+                    <div class="field">
+                        <div class="field has-addons">
                             <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select data-base-layer></select>
-                                </div>
+                                <input id="input-search" class="input" type="text" placeholder="Location" data-i18n="sidebar.search.search_placeholder" data-i18n-target="placeholder">
                             </div>
-                            <p class="help is-hidden" data-base-layer-help data-i18n="sidebar.layers.base_help">Google Maps layers have been disabled</p>
-                        </div>
-
-                        <hr />
-
-                        <div class="buttons">
-                            <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button data-i18n="sidebar.layers.api-keys">Add Your Own API Keys</a>
-                        </div>
-
-                        <div class="field">
-                            <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
                             <div class="control">
-                                <label class="checkbox">
-                                    <input data-hill-shading-layer type="checkbox" />
-                                    <span data-i18n="sidebar.layers.hill-shading">Hill-shading</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <label class="checkbox">
-                                    <input data-german-npa-layer type="checkbox" />
-                                    <span data-i18n="sidebar.layers.german_npa">German NPA</span>
-                                </label>
-                            </div>
-                            <p class="help" data-i18n="sidebar.layers.german_npa_help"></p>
-                            <div class="control">
-                                <a class="button is-fullwidth is-warning" href="https://geodienste.bfn.de/schutzgebiete" target="_blank">
-                                    <span data-i18n="sidebar.layers.german_npa_button">Official Web App</span>
-                                    <svg class="icon icon-small">
-                                        <use xlink:href="assets/feather-sprite.svg#external-link"/>
+                                <a id="btn-search" class="button is-info">
+                                    <svg class="icon icon16">
+                                        <use xlink:href="assets/feather-sprite.svg#search"/>
                                     </svg>
                                 </a>
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <label class="checkbox">
-                                    <input data-opencaching-layer type="checkbox" />
-                                    <span data-i18n="sidebar.layers.opencaching">Opencaching</span>
-                                </label>
-                            </div>
-                            <p class="help" data-i18n="sidebar.layers.opencaching_help"></p>
-                        </div>
+                        <p data-i18n="sidebar.search.search_help" class="help">Search for a location (enter e.g. a city name or coordinates in various formats) and center the map.</p>
                     </div>
                 </div>
+            </div>
 
-                <div class="sidebar-container" id="sidebar-markers">
-                    <div class="header">
-                        <h2 data-i18n="sidebar.markers.title">Markers</h2>
-                        <span class="close">
-                            <svg class="icon24">
-                                <use xlink:href="assets/feather-sprite.svg#x"/>
-                            </svg>
-                        </span>
+            <div class="sidebar-container" id="sidebar-layers">
+                <div class="header">
+                    <h2 data-i18n="sidebar.layers.title">Layers</h2>
+                    <span class="close">
+                        <svg class="icon24">
+                            <use xlink:href="assets/feather-sprite.svg#x"/>
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="content">
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select data-base-layer></select>
+                            </div>
+                        </div>
+                        <p class="help is-hidden" data-base-layer-help data-i18n="sidebar.layers.base_help">Google Maps layers have been disabled</p>
                     </div>
-                    <div class="content">
+
+                    <hr />
+
+                    <div class="buttons">
+                        <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button data-i18n="sidebar.layers.api-keys">Add Your Own API Keys</a>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input data-hill-shading-layer type="checkbox" />
+                                <span data-i18n="sidebar.layers.hill-shading">Hill-shading</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input data-german-npa-layer type="checkbox" />
+                                <span data-i18n="sidebar.layers.german_npa">German NPA</span>
+                            </label>
+                        </div>
+                        <p class="help" data-i18n="sidebar.layers.german_npa_help"></p>
+                        <div class="control">
+                            <a class="button is-fullwidth is-warning" href="https://geodienste.bfn.de/schutzgebiete" target="_blank">
+                                <span data-i18n="sidebar.layers.german_npa_button">Official Web App</span>
+                                <svg class="icon icon-small">
+                                    <use xlink:href="assets/feather-sprite.svg#external-link"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input data-opencaching-layer type="checkbox" />
+                                <span data-i18n="sidebar.layers.opencaching">Opencaching</span>
+                            </label>
+                        </div>
+                        <p class="help" data-i18n="sidebar.layers.opencaching_help"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-container" id="sidebar-markers">
+                <div class="header">
+                    <h2 data-i18n="sidebar.markers.title">Markers</h2>
+                    <span class="close">
+                        <svg class="icon24">
+                            <use xlink:href="assets/feather-sprite.svg#x"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="content">
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <a id="btn-add-marker" class="button is-success">
+                                <svg class="icon icon24">
+                                    <use xlink:href="assets/feather-sprite.svg#plus"/>
+                                </svg>
+                            </a>
+                        </p>
+                        <p class="control">
+                            <a id="btn-delete-markers" class="button is-danger">
+                                <svg class="icon icon24">
+                                    <use xlink:href="assets/feather-sprite.svg#trash-2"/>
+                                </svg>
+                            </a>
+                        </p>
+                        <p class="control">
+                            <a id="btn-marker-settings" class="button">
+                                <svg class="icon icon24">
+                                    <use xlink:href="assets/feather-sprite.svg#sliders"/>
+                                </svg>
+                            </a>
+                        </p>
+                    </div>
+                    <div id="marker-settings">
+                        <div class="field">
+                            <label class="label" data-i18n="sidebar.markers.settings.coordinates">Coordinates Display Format</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select data-coordinates-format></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" data-i18n="sidebar.markers.settings.default-color">Default Color</label>
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input data-random-color type="checkbox" />
+                                    <span data-i18n="sidebar.markers.settings.random-colors">Use random colors</span>
+                                </label>
+                            </div>
+                            <div class="control">
+                                <input class="input" data-color type="color" placeholder="Color">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label" data-i18n="sidebar.markers.settings.default-radius">Default Circle Radius (m)</label>
+                            <div class="control">
+                                <input class="input" data-radius type="text" placeholder="Circle Radius" data-i18n="sidebar.markers.settings.default-radius-placeholder" data-i18n-target="placeholder">
+                            </div>
+                        </div>
                         <div class="field is-grouped">
-                            <p class="control">
-                                <a id="btn-add-marker" class="button is-success">
-                                    <svg class="icon icon24">
-                                        <use xlink:href="assets/feather-sprite.svg#plus"/>
-                                    </svg>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a id="btn-delete-markers" class="button is-danger">
-                                    <svg class="icon icon24">
-                                        <use xlink:href="assets/feather-sprite.svg#trash-2"/>
-                                    </svg>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a id="btn-marker-settings" class="button">
-                                    <svg class="icon icon24">
-                                        <use xlink:href="assets/feather-sprite.svg#sliders"/>
-                                    </svg>
-                                </a>
-                            </p>
-                        </div>
-                        <div id="marker-settings">
-                            <div class="field">
-                                <label class="label" data-i18n="sidebar.markers.settings.coordinates">Coordinates Display Format</label>
-                                <div class="control">
-                                    <div class="select">
-                                        <select data-coordinates-format></select>
-                                    </div>
-                                </div>
+                            <div class="control">
+                                <button class="button" data-submit data-i18n="general.submit">Submit</button>
                             </div>
-                            <div class="field">
-                                <label class="label" data-i18n="sidebar.markers.settings.default-color">Default Color</label>
-                                <div class="control">
-                                    <label class="checkbox">
-                                        <input data-random-color type="checkbox" />
-                                        <span data-i18n="sidebar.markers.settings.random-colors">Use random colors</span>
-                                    </label>
-                                </div>
-                                <div class="control">
-                                    <input class="input" data-color type="color" placeholder="Color">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label" data-i18n="sidebar.markers.settings.default-radius">Default Circle Radius (m)</label>
-                                <div class="control">
-                                    <input class="input" data-radius type="text" placeholder="Circle Radius" data-i18n="sidebar.markers.settings.default-radius-placeholder" data-i18n-target="placeholder">
-                                </div>
-                            </div>
-                            <div class="field is-grouped">
-                                <div class="control">
-                                    <button class="button" data-submit data-i18n="general.submit">Submit</button>
-                                </div>
-                                <div class="control">
-                                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                                </div>
+                            <div class="control">
+                                <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="scrollable-content">
-                        <div id="markers" class="scrollable-list"></div>
                     </div>
                 </div>
+                <div class="scrollable-content">
+                    <div id="markers" class="scrollable-list"></div>
+                </div>
+            </div>
 
-                <div class="sidebar-container" id="sidebar-lines">
-                    <div class="header">
-                        <h2 data-i18n="sidebar.lines.title">Lines</h2>
-                        <span class="close">
-                            <svg class="icon24">
-                                <use xlink:href="assets/feather-sprite.svg#x"/>
-                            </svg>
-                        </span>
+            <div class="sidebar-container" id="sidebar-lines">
+                <div class="header">
+                    <h2 data-i18n="sidebar.lines.title">Lines</h2>
+                    <span class="close">
+                        <svg class="icon24">
+                            <use xlink:href="assets/feather-sprite.svg#x"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="content">
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <a id="btn-add-line" class="button is-success">
+                                <svg class="icon icon24">
+                                    <use xlink:href="assets/feather-sprite.svg#plus"/>
+                                </svg>
+                            </a>
+                        </p>
+                        <p class="control">
+                            <a id="btn-delete-lines" class="button is-danger">
+                                <svg class="icon icon24">
+                                    <use xlink:href="assets/feather-sprite.svg#trash-2"/>
+                                </svg>
+                            </a>
+                        </p>
+                        <p class="control">
+                            <a id="btn-line-settings" class="button">
+                                <svg class="icon icon24">
+                                    <use xlink:href="assets/feather-sprite.svg#sliders"/>
+                                </svg>
+                            </a>
+                        </p>
                     </div>
-                    <div class="content">
+                    <div id="line-settings">
+                        <div class="field">
+                            <label class="label" data-i18n="sidebar.lines.settings.default-color">Default Color</label>
+                            <div class="control">
+                                <label class="checkbox">
+                                    <input data-random-color type="checkbox" />
+                                    <span data-i18n="sidebar.lines.settings.random-colors">Use random colors</span>
+                                </label>
+                            </div>
+                            <div class="control">
+                                <input class="input" data-color type="color" placeholder="Color">
+                            </div>
+                        </div>
                         <div class="field is-grouped">
-                            <p class="control">
-                                <a id="btn-add-line" class="button is-success">
-                                    <svg class="icon icon24">
-                                        <use xlink:href="assets/feather-sprite.svg#plus"/>
-                                    </svg>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a id="btn-delete-lines" class="button is-danger">
-                                    <svg class="icon icon24">
-                                        <use xlink:href="assets/feather-sprite.svg#trash-2"/>
-                                    </svg>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a id="btn-line-settings" class="button">
-                                    <svg class="icon icon24">
-                                        <use xlink:href="assets/feather-sprite.svg#sliders"/>
-                                    </svg>
-                                </a>
-                            </p>
-                        </div>
-                        <div id="line-settings">
-                            <div class="field">
-                                <label class="label" data-i18n="sidebar.lines.settings.default-color">Default Color</label>
-                                <div class="control">
-                                    <label class="checkbox">
-                                        <input data-random-color type="checkbox" />
-                                        <span data-i18n="sidebar.lines.settings.random-colors">Use random colors</span>
-                                    </label>
-                                </div>
-                                <div class="control">
-                                    <input class="input" data-color type="color" placeholder="Color">
-                                </div>
-                            </div>
-                            <div class="field is-grouped">
-                                <div class="control">
-                                    <button class="button" data-submit data-i18n="general.submit">Submit</button>
-                                </div>
-                                <div class="control">
-                                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="scrollable-content">
-                        <div id="lines" class="scrollable-list"></div>
-                    </div>
-                </div>
-
-                <div class="sidebar-container" id="sidebar-tools">
-                    <div class="header">
-                        <h2 data-i18n="sidebar.tools.title">Tools</h2>
-                        <span class="close">
-                            <svg class="icon24">
-                                <use xlink:href="assets/feather-sprite.svg#x"/>
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="content">
-                        <div class="field">
-                            <label class="label" data-i18n="sidebar.tools.language">Language</label>
                             <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select data-language></select>
-                                </div>
+                                <button class="button" data-submit data-i18n="general.submit">Submit</button>
                             </div>
-                        </div>
-
-                        <hr />
-
-                        <div class="field">
                             <div class="control">
-                                <a id="btn-link" class="button is-fullwidth is-success" data-i18n="sidebar.tools.create-link">Create Link</a>
+                                <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                             </div>
-                            <p class="help" data-i18n="sidebar.tools.create-link-help">Create a link to this map, e.g. for sharing it with others.</p>
-                        </div>
-
-                        <hr />
-
-                        <div class="field">
-                            <div class="field"></span>
-                                <div class="control">
-                                    <a id="btn-export-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.export-json">Export Full Map State (JSON)</a>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="control">
-                                    <input id="inp-import-json" style="display: none;" type="file" name="files" />
-                                    <a id="btn-import-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.import-json">Import Full Map State (JSON)</a>
-                                </div>
-                            </div>
-                            <p class="help" data-i18n="sidebar.tools.export-json-help">Export/import a JSON file containing the full map state.</p>
-                        </div>
-
-                        <hr />
-
-                        <div class="field">
-                            <div class="control">
-                                <a id="btn-multi-markers" class="button is-fullwidth is-success" data-i18n="sidebar.tools.create-markers">Create Multiple Markers</a>
-                            </div>
-                            <p class="help" data-i18n="sidebar.tools.create-markers-help">Create multiple markers at once, i.e. by providing a list of coordinates.</p>
                         </div>
                     </div>
                 </div>
+                <div class="scrollable-content">
+                    <div id="lines" class="scrollable-list"></div>
+                </div>
+            </div>
 
-                <div class="sidebar-container" id="sidebar-info">
-                    <div class="header">
-                        <h2 data-i18n="sidebar.info.title">Info</h2>
-                        <span class="close">
-                            <svg class="icon24">
-                                <use xlink:href="assets/feather-sprite.svg#x"/>
-                            </svg>
-                        </span>
+            <div class="sidebar-container" id="sidebar-tools">
+                <div class="header">
+                    <h2 data-i18n="sidebar.tools.title">Tools</h2>
+                    <span class="close">
+                        <svg class="icon24">
+                            <use xlink:href="assets/feather-sprite.svg#x"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="content">
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.tools.language">Language</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select data-language></select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="content">
-                        <div class="field">
-                            <label class="label" data-i18n="sidebar.info.contact">Contact/Mail</label>
-                            <p class="help" data-i18n="sidebar.info.contact_help">If you have any suggestions please feel free to contact me via e-mail.</p>
+
+                    <hr />
+
+                    <div class="field">
+                        <div class="control">
+                            <a id="btn-link" class="button is-fullwidth is-success" data-i18n="sidebar.tools.create-link">Create Link</a>
+                        </div>
+                        <p class="help" data-i18n="sidebar.tools.create-link-help">Create a link to this map, e.g. for sharing it with others.</p>
+                    </div>
+
+                    <hr />
+
+                    <div class="field">
+                        <div class="field"></span>
                             <div class="control">
-                                <a class="button is-fullwidth is-warning" href="mailto:mail@florian-pigorsch.de" target="_blank">
-                                    <span>mail@florian-pigorsch.de</span>
-                                    <svg class="icon icon-small">
-                                        <use xlink:href="assets/feather-sprite.svg#mail"/>
-                                    </svg>
-                                </a>
+                                <a id="btn-export-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.export-json">Export Full Map State (JSON)</a>
                             </div>
                         </div>
-
-                        <hr />
-
                         <div class="field">
-                            <label class="label" data-i18n="sidebar.info.sources">Source Code/Github</label>
-                            <p class="help" data-i18n="sidebar.info.sources_help">The code for this website is open source, hosted at Github.</p>
                             <div class="control">
-                                <a class="button is-fullwidth is-warning" href="https://github.com/flopp/map" target="_blank">
-                                    <span>github.com/flopp/map</span>
-                                    <svg class="icon icon-small">
-                                        <use xlink:href="assets/feather-sprite.svg#external-link"/>
-                                    </svg>
-                                </a>
+                                <input id="inp-import-json" style="display: none;" type="file" name="files" />
+                                <a id="btn-import-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.import-json">Import Full Map State (JSON)</a>
                             </div>
                         </div>
+                        <p class="help" data-i18n="sidebar.tools.export-json-help">Export/import a JSON file containing the full map state.</p>
+                    </div>
 
-                        <hr />
+                    <hr />
 
-                        <div class="field">
-                            <label class="label" data-i18n="sidebar.info.support">Support/Paypal</label>
-                            <p class="help" data-i18n="sidebar.info.support_help">This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.</p>
-                            <div class="control">
-                                <a class="button is-fullwidth is-warning" href="https://paypal.me/FPigorsch" target="_blank">
-                                    <span>paypal.me/FPigorsch</span>
-                                    <svg class="icon icon-small">
-                                        <use xlink:href="assets/feather-sprite.svg#external-link"/>
-                                    </svg>
-                                </a>
-                            </div>
+                    <div class="field">
+                        <div class="control">
+                            <a id="btn-multi-markers" class="button is-fullwidth is-success" data-i18n="sidebar.tools.create-markers">Create Multiple Markers</a>
                         </div>
+                        <p class="help" data-i18n="sidebar.tools.create-markers-help">Create multiple markers at once, i.e. by providing a list of coordinates.</p>
                     </div>
                 </div>
             </div>
 
-            <div id="map-container-leaflet" class="map-container"></div>
-            <div id="map-container-google" class="map-container"></div>
-
-            <div id="map-contextmenu" class="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                    <a id="map-contextmenu-add-marker" class="dropdown-item" data-i18n="menu.add-marker">ADD MARKER</a>
-                    <a id="map-contextmenu-delete-marker" class="dropdown-item" data-i18n="menu.delete-marker">DELETE MARKER</a>
-                    <a id="map-contextmenu-projection" class="dropdown-item" data-i18n="menu.waypoint-projection">WAYPOINT PROJECTION</a>
-                    <a id="map-contextmenu-center-map" class="dropdown-item" data-i18n="menu.center-map">CENTER MAP HERE</a>
+            <div class="sidebar-container" id="sidebar-info">
+                <div class="header">
+                    <h2 data-i18n="sidebar.info.title">Info</h2>
+                    <span class="close">
+                        <svg class="icon24">
+                            <use xlink:href="assets/feather-sprite.svg#x"/>
+                        </svg>
+                    </span>
                 </div>
-            </div>
+                <div class="content">
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.info.contact">Contact/Mail</label>
+                        <p class="help" data-i18n="sidebar.info.contact_help">If you have any suggestions please feel free to contact me via e-mail.</p>
+                        <div class="control">
+                            <a class="button is-fullwidth is-warning" href="mailto:mail@florian-pigorsch.de" target="_blank">
+                                <span>mail@florian-pigorsch.de</span>
+                                <svg class="icon icon-small">
+                                    <use xlink:href="assets/feather-sprite.svg#mail"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
 
-            <div id="api-keys-dialog" class="modal">
-                <div class="modal-background"></div>
-                    <div class="modal-card">
-                        <header class="modal-card-head">
-                            <h2 class="modal-card-title" data-i18n="dialog.api-keys.title">Add Your Own API Keys</h2>
-                            <button class="delete" data-cancel aria-label="close"></button>
-                        </header>
-                        <section class="modal-card-body">
-                            <p data-i18n="dialog.api-keys.help">Adding your own API keys enables access to map layers from Google Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.</p>
+                    <hr />
 
-                            <h3 class="is-size-4" data-i18n="dialog.api-keys.google">Google Maps API Key</h3>
-                            <p data-i18n="dialog.api-keys.google_help">
-                                Get your API Key for the Google Maps Javascript API from Google's API console.
-                            </p>
-                            <div class="field">
-                                <div class="control">
-                                    <a class="button is-warning" href="https://console.developers.google.com" target="_blank">
-                                        <span data-i18n="dialog.api-keys.google_link">Google API Console</span>
-                                        <svg class="icon icon-small">
-                                            <use xlink:href="assets/feather-sprite.svg#external-link"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="control">
-                                    <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.api-keys.google_placeholder" data-i18n-target="placeholder">
-                                </div>
-                            </div>
-                        </section>
-                        <footer class="modal-card-foot">
-                            <button class="button is-success" data-ok data-i18n="general.apply">Apply</button>
-                            <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                        </footer>
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.info.sources">Source Code/Github</label>
+                        <p class="help" data-i18n="sidebar.info.sources_help">The code for this website is open source, hosted at Github.</p>
+                        <div class="control">
+                            <a class="button is-fullwidth is-warning" href="https://github.com/flopp/map" target="_blank">
+                                <span>github.com/flopp/map</span>
+                                <svg class="icon icon-small">
+                                    <use xlink:href="assets/feather-sprite.svg#external-link"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.info.support">Support/Paypal</label>
+                        <p class="help" data-i18n="sidebar.info.support_help">This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.</p>
+                        <div class="control">
+                            <a class="button is-fullwidth is-warning" href="https://paypal.me/FPigorsch" target="_blank">
+                                <span>paypal.me/FPigorsch</span>
+                                <svg class="icon icon-small">
+                                    <use xlink:href="assets/feather-sprite.svg#external-link"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="projection-dialog" class="modal">
-                <div class="modal-background"></div>
+        <div id="map-container-leaflet" class="map-container"></div>
+        <div id="map-container-google" class="map-container"></div>
+
+        <div id="api-keys-dialog" class="modal">
+            <div class="modal-background"></div>
                 <div class="modal-card">
                     <header class="modal-card-head">
-                        <h2 class="modal-card-title" data-i18n="dialog.projection.title">Waypoint Projection</h2>
-                        <button class="delete" data-cancel></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <h3 class="is-size-4" data-i18n="dialog.projection.data">Projection Data</h3>
-                        <div class="field">
-                            <div class="control">
-                                <input data-distance class="input" type="text" placeholder="Distance (m)" data-i18n="dialog.projection.distance" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-bearing class="input" type="text" placeholder="Bearing (°)" data-i18n="dialog.projection.bearing" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-
-                        <h3 class="is-size-4" data-i18n="dialog.projection.marker">Created Marker</h3>
-                        <div class="field">
-                            <div class="control">
-                                <input data-target-name class="input" type="text" placeholder="Name of created marker" data-i18n="dialog.projection.marker_name" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-target-color class="input" type="color" placeholder="Color of created marker" data-i18n="dialog.projection.marker_color" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-target-radius class="input" type="text" placeholder="Circle radius of created marker" data-i18n="dialog.projection.marker_radius" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-
-                        <h3 class="is-size-4" data-i18n="dialog.projection.line">Created Line</h3>
-                        <div class="field">
-                            <div class="control">
-                                <label class="checkbox">
-                                    <input data-line type="checkbox">
-                                    <span data-i18n="dialog.projection.create-line">Create line?</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-line-color class="input" type="color" placeholder="Color of created line" data-i18n="dialog.projection.line_color" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button is-success" data-project data-i18n="dialog.projection.project">Perform Projection</button>
-                        <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                    </footer>
-                </div>
-            </div>
-
-            <div id="link-dialog" class="modal">
-                <div class="modal-background"></div>
-                    <div class="modal-card">
-                        <header class="modal-card-head">
-                            <h2 class="modal-card-title" data-i18n="dialog.link.title">Create Map Link</h2>
-                            <button class="delete" data-cancel aria-label="close"></button>
-                        </header>
-                        <section class="modal-card-body">
-                            <p data-i18n="dialog.link.help">You can share this link with others to enable them to view your current map state.</p>
-
-                            <div class="field has-addons">
-                                <div class="control is-expanded">
-                                    <input id="link-dialog-input" class="input" type="text" />
-                                </div>
-                                <div class="control">
-                                    <a id="link-dialog-copy-button" data-clipboard-target="#link-dialog-input" class="button is-info" data-i18n="dialog.link.copy">
-                                        Copy
-                                    </a>
-                                </div>
-                                <p class="help is-hidden" data-i18n="dialog.link.too-long">TODO: Link too long</p>
-                            </div>
-                        </section>
-                        <footer class="modal-card-foot">
-                            <button class="button" data-cancel data-i18n="general.cancel">Close</button>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-
-            <div id="multi-markers-dialog" class="modal">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <h2 class="modal-card-title" data-i18n="dialog.multi-markers.title">Create Multiple Markers</h2>
+                        <h2 class="modal-card-title" data-i18n="dialog.api-keys.title">Add Your Own API Keys</h2>
                         <button class="delete" data-cancel aria-label="close"></button>
                     </header>
                     <section class="modal-card-body">
-                        <h3 class="is-size-4" data-i18n="dialog.multi-markers.common-attributes">Common Marker Attributes</h3>
+                        <p data-i18n="dialog.api-keys.help">Adding your own API keys enables access to map layers from Google Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.</p>
 
-                        <div class="columns">
-                            <div class="column">
-                                <label class="checkbox">
-                                    <input type="checkbox" data-use-common-name>
-                                    <span data-i18n="dialog.multi-markers.name">Name Prefix</span>
-                                </label>
-                                <div class="field">
-                                    <div class="control">
-                                        <input data-common-name class="input" type="text">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <label class="checkbox">
-                                    <input type="checkbox" data-use-common-color>
-                                    <span data-i18n="dialog.multi-markers.color">Color</span>
-                                </label>
-                                <div class="field">
-                                    <div class="control">
-                                        <input data-common-color class="input" type="color">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <label class="checkbox">
-                                    <input type="checkbox" data-use-common-radius>
-                                    <span data-i18n="dialog.multi-markers.radius">Circle Radius (m)</span>
-                                </label>
-                                <div class="field">
-                                    <div class="control">
-                                        <input data-common-radius class="input" type="text">
-                                    </div>
-                                </div>
+                        <h3 class="is-size-4" data-i18n="dialog.api-keys.google">Google Maps API Key</h3>
+                        <p data-i18n="dialog.api-keys.google_help">
+                            Get your API Key for the Google Maps Javascript API from Google's API console.
+                        </p>
+                        <div class="field">
+                            <div class="control">
+                                <a class="button is-warning" href="https://console.developers.google.com" target="_blank">
+                                    <span data-i18n="dialog.api-keys.google_link">Google API Console</span>
+                                    <svg class="icon icon-small">
+                                        <use xlink:href="assets/feather-sprite.svg#external-link"/>
+                                    </svg>
+                                </a>
                             </div>
                         </div>
-
-                        <h3 class="is-size-4" data-i18n="dialog.multi-markers.data">Marker Data</h3>
-                        <p>
-                            <span data-i18n="dialog.multi-markers.format">Data format per line:</span><br />
-                            <span data-format class="is-family-code"></span>
-                        </p>
-
-                        <textarea data-marker-data class="textarea is-family-code" placeholder="Marker Data"></textarea>
+                        <div class="field">
+                            <div class="control">
+                                <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.api-keys.google_placeholder" data-i18n-target="placeholder">
+                            </div>
+                        </div>
                     </section>
                     <footer class="modal-card-foot">
-                        <button class="button is-success" data-go data-i18n="dialog.multi-markers.create">Create Markers</button>
+                        <button class="button is-success" data-ok data-i18n="general.apply">Apply</button>
                         <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
                     </footer>
                 </div>
+            </div>
+        </div>
+
+        <div id="projection-dialog" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h2 class="modal-card-title" data-i18n="dialog.projection.title">Waypoint Projection</h2>
+                    <button class="delete" data-cancel></button>
+                </header>
+                <section class="modal-card-body">
+                    <h3 class="is-size-4" data-i18n="dialog.projection.data">Projection Data</h3>
+                    <div class="field">
+                        <div class="control">
+                            <input data-distance class="input" type="text" placeholder="Distance (m)" data-i18n="dialog.projection.distance" data-i18n-target="placeholder">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input data-bearing class="input" type="text" placeholder="Bearing (°)" data-i18n="dialog.projection.bearing" data-i18n-target="placeholder">
+                        </div>
+                    </div>
+
+                    <h3 class="is-size-4" data-i18n="dialog.projection.marker">Created Marker</h3>
+                    <div class="field">
+                        <div class="control">
+                            <input data-target-name class="input" type="text" placeholder="Name of created marker" data-i18n="dialog.projection.marker_name" data-i18n-target="placeholder">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input data-target-color class="input" type="color" placeholder="Color of created marker" data-i18n="dialog.projection.marker_color" data-i18n-target="placeholder">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input data-target-radius class="input" type="text" placeholder="Circle radius of created marker" data-i18n="dialog.projection.marker_radius" data-i18n-target="placeholder">
+                        </div>
+                    </div>
+
+                    <h3 class="is-size-4" data-i18n="dialog.projection.line">Created Line</h3>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input data-line type="checkbox">
+                                <span data-i18n="dialog.projection.create-line">Create line?</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input data-line-color class="input" type="color" placeholder="Color of created line" data-i18n="dialog.projection.line_color" data-i18n-target="placeholder">
+                        </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" data-project data-i18n="dialog.projection.project">Perform Projection</button>
+                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
+                </footer>
+            </div>
+        </div>
+
+        <div id="link-dialog" class="modal">
+            <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <h2 class="modal-card-title" data-i18n="dialog.link.title">Create Map Link</h2>
+                        <button class="delete" data-cancel aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <p data-i18n="dialog.link.help">You can share this link with others to enable them to view your current map state.</p>
+
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                <input id="link-dialog-input" class="input" type="text" />
+                            </div>
+                            <div class="control">
+                                <a id="link-dialog-copy-button" data-clipboard-target="#link-dialog-input" class="button is-info" data-i18n="dialog.link.copy">
+                                    Copy
+                                </a>
+                            </div>
+                            <p class="help is-hidden" data-i18n="dialog.link.too-long">TODO: Link too long</p>
+                        </div>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button" data-cancel data-i18n="general.cancel">Close</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+
+        <div id="multi-markers-dialog" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h2 class="modal-card-title" data-i18n="dialog.multi-markers.title">Create Multiple Markers</h2>
+                    <button class="delete" data-cancel aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <h3 class="is-size-4" data-i18n="dialog.multi-markers.common-attributes">Common Marker Attributes</h3>
+
+                    <div class="columns">
+                        <div class="column">
+                            <label class="checkbox">
+                                <input type="checkbox" data-use-common-name>
+                                <span data-i18n="dialog.multi-markers.name">Name Prefix</span>
+                            </label>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-common-name class="input" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="checkbox">
+                                <input type="checkbox" data-use-common-color>
+                                <span data-i18n="dialog.multi-markers.color">Color</span>
+                            </label>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-common-color class="input" type="color">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="checkbox">
+                                <input type="checkbox" data-use-common-radius>
+                                <span data-i18n="dialog.multi-markers.radius">Circle Radius (m)</span>
+                            </label>
+                            <div class="field">
+                                <div class="control">
+                                    <input data-common-radius class="input" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="is-size-4" data-i18n="dialog.multi-markers.data">Marker Data</h3>
+                    <p>
+                        <span data-i18n="dialog.multi-markers.format">Data format per line:</span><br />
+                        <span data-format class="is-family-code"></span>
+                    </p>
+
+                    <textarea data-marker-data class="textarea is-family-code" placeholder="Marker Data"></textarea>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" data-go data-i18n="dialog.multi-markers.create">Create Markers</button>
+                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
+                </footer>
             </div>
         </div>
 
