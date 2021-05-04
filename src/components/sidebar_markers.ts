@@ -127,7 +127,7 @@ export class SidebarMarkers extends MapStateObserver {
                 ids.add(marker.get_id());
             });
 
-            const deleted_ids = [];
+            const deleted_ids: number[] = [];
             markers.forEach((m: HTMLElement): void => {
                 const id = parse_int(m.getAttribute("id").substring(7));
                 if (!ids.has(id)) {

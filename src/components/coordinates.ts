@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Geodesic} from 'geographiclib';
 
 const CoordinatesFormat = {
@@ -298,7 +299,7 @@ export class Coordinates {
             return index;
         };
 
-        const extract_component = (match: RegExpMatchArray, index: string|number) : number => {
+        const extract_component = (match: RegExpMatchArray, index: number) : number => {
             if (index > 0) {
                 return parseFloat(match[index]);
             }
@@ -310,13 +311,13 @@ export class Coordinates {
             if (m) {
                 const c = Coordinates.from_components(
                     extract_hemisphere(m, p.fields[0]),
-                    extract_component(m, p.fields[1]),
-                    extract_component(m, p.fields[2]),
-                    extract_component(m, p.fields[3]),
+                    extract_component(m, <number>p.fields[1]),
+                    extract_component(m, <number>p.fields[2]),
+                    extract_component(m, <number>p.fields[3]),
                     extract_hemisphere(m, p.fields[4]),
-                    extract_component(m, p.fields[5]),
-                    extract_component(m, p.fields[6]),
-                    extract_component(m, p.fields[7]),
+                    extract_component(m, <number>p.fields[5]),
+                    extract_component(m, <number>p.fields[6]),
+                    extract_component(m, <number>p.fields[7]),
                 );
 
                 if (c) {

@@ -2,6 +2,12 @@ import {Color} from './color';
 
 let next_line_id: number = 0;
 
+export interface LineJson {
+    marker1: number;
+    marker2: number;
+    color: string;
+};
+  
 export class Line {
     private line_id: number;
     public marker1: number;
@@ -30,7 +36,7 @@ export class Line {
         return this.line_id;
     }
 
-    public to_json(): {marker1: number, marker2: number, color: string} {
+    public to_json(): LineJson {
         return {
             marker1: this.marker1,
             marker2: this.marker2,

@@ -255,7 +255,7 @@ export class LeafletWrapper extends MapWrapper {
                 autoPan: true,
                 icon: this.create_icon(marker),
             }),
-            circle_obj: null,
+            circle_obj: (null as L.Polygon),
             last_name: marker.name,
             last_color: marker.color,
         };

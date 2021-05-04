@@ -58,7 +58,7 @@ const Icons = new Map([
 
 export class Opencaching {
     private state: State;
-    private timer: any;
+    private timer: number;
     private callback: CachesCallback;
     private bounds: [number, number, number, number][];
     private sites: Site[];
@@ -216,7 +216,7 @@ export class Opencaching {
                         }
                         for (const key in data) {
                             if (data.hasOwnProperty(key)) {
-                                caches.set(key, data[key]);
+                                caches.set(key, (data as Record<string, OkapiCache>)[key]);
                             }
                         };
                         return caches;

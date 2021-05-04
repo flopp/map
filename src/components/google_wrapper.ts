@@ -172,7 +172,7 @@ export class GoogleWrapper extends MapWrapper {
                         const bottom = proj.fromPointToLatLng(
                             new google.maps.Point((coord.x + 1) * z_factor, (coord.y + 1) * z_factor)
                         );
-                        const data = {
+                        const data: Record<string, string|number|boolean> = {
                             dpi: 96,
                             transparent: true,
                             format: "png32",
@@ -260,9 +260,9 @@ export class GoogleWrapper extends MapWrapper {
                 map: self.map,
                 draggable: true,
             }),
-            circle_obj: null,
-            last_name: null,
-            last_color: null,
+            circle_obj: (null as google.maps.Circle),
+            last_name: (null as string),
+            last_color: (null as Color),
         };
 
         google.maps.event.addListener(obj.marker_obj, 'drag', (): void => {

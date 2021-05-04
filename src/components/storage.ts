@@ -203,8 +203,8 @@ export class Storage {
         });
         this.set('lines', line_ids.join(';'));
         lines.forEach((obj: LineDict, i: number): void => {
-            self.set(`line[${i}].marker1`, obj.from);
-            self.set(`line[${i}].marker2`, obj.to);
+            self.set_int(`line[${i}].marker1`, obj.from);
+            self.set_int(`line[${i}].marker2`, obj.to);
             self.set_color(`line[${i}].color`, obj.color);
         });
     }
@@ -229,7 +229,7 @@ export class Storage {
         return -1;
     }
 
-    public set(key: string, value: any): void {
+    public set(key: string, value: string): void {
         if (!this.ok) {
             return;
         }

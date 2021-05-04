@@ -3,6 +3,14 @@ import {Coordinates} from './coordinates';
 
 let next_marker_id = 0;
 
+export interface MarkerJson {
+    marker_id: number;
+    coordinates: string;
+    name: string;
+    color: string;
+    radius: number;
+};
+
 export class Marker {
     private marker_id: number
     public coordinates: Coordinates
@@ -28,7 +36,7 @@ export class Marker {
         return this.marker_id;
     }
 
-    public to_json() : {marker_id: number, coordinates: string, name: string, color: string, radius: number} {
+    public to_json() : MarkerJson {
         return {
             marker_id: this.get_id(),
             coordinates: this.coordinates.to_string_D(),

@@ -95,7 +95,7 @@ export class SidebarLines extends MapStateObserver {
                     ids.add(line.get_id());
                 });
 
-                const deleted_ids = [];
+                const deleted_ids: number[] = [];
                 lines.forEach((obj: HTMLElement): void => {
                     const id = parse_int(obj.getAttribute("id").substring(5));
                     if (!ids.has(id)) {
@@ -103,7 +103,7 @@ export class SidebarLines extends MapStateObserver {
                     }
                 });
 
-                deleted_ids.forEach((id: string): void => {
+                deleted_ids.forEach((id: number): void => {
                     remove_element(document.querySelector(`#line-${id}`));
                     remove_element(document.querySelector(`#line-element-${id}`));
                 });

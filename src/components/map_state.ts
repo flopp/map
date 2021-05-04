@@ -1,10 +1,10 @@
 import {App} from './app';
 import {Color} from './color';
 import {Coordinates, CoordinatesFormat} from './coordinates';
-import {Line} from './line';
+import {Line, LineJson} from './line';
 import {MapStateObserver} from "./map_state_observer";
 import {MapType, maptype2string, string2maptype} from './map_type';
-import {Marker} from './marker';
+import {Marker, MarkerJson} from './marker';
 import {Storage} from './storage';
 import {parse_float, parse_int} from './utilities';
 
@@ -493,8 +493,8 @@ export class MapState {
         });
         this.storage.set('lines', line_ids.join(';'));
         lines.forEach((obj: LineDict, i: number): void => {
-            self.storage.set(`line[${i}].marker1`, obj.from);
-            self.storage.set(`line[${i}].marker2`, obj.to);
+            self.storage.set_int(`line[${i}].marker1`, obj.from);
+            self.storage.set_int(`line[${i}].marker2`, obj.to);
             self.storage.set_color(`line[${i}].color`, obj.color);
         });
     }
@@ -927,8 +927,8 @@ export class MapState {
                     color: this.settings_line_color.to_hash_string(),
                 },
             },
-            markers: [],
-            lines: [],
+            markers: ([] as MarkerJson[]),
+            lines: ([] as LineJson[]),
         };
 
         this.markers.forEach((marker: Marker): void => {

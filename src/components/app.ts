@@ -223,14 +223,14 @@ export class App {
             // Reject the promise after a timeout
             const timeoutId = setTimeout((): void => {
                 // Set the on load callback to a no-op
-                window[callbackName] = (): void => {
+                (window as any).__googleMapsApiOnLoadCallback = (): void => {
                     // empty
                 };
                 self.google_maps_error_raised();
                 reject(new Error('Could not load the Google Maps API'));
             }, 10000);
 
-            window[callbackName] = (): void => {
+            (window as any).__googleMapsApiOnLoadCallback = (): void => {
                 if (timeoutId !== null) {
                     clearTimeout(timeoutId);
                 }

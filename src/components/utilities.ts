@@ -18,7 +18,7 @@ function parse_int (str: string): number {
     return parseFloat(str);
 }
 
-function create_element (type: string, classes: string[] = [], attributes: object = {}): HTMLElement {
+function create_element (type: string, classes: string[] = [], attributes: Record<string, string> = {}): HTMLElement {
     const element = document.createElement(type);
     classes.forEach((cls: string): void => {
         element.classList.add(cls);
@@ -140,7 +140,7 @@ function create_dropdown(items: LabelCallback[]): HTMLElement {
     return dropdown;
 };
 
-function encode_parameters(parameters: object): string {
+function encode_parameters(parameters: Record<string, string|number|boolean>): string {
     return Object.keys(parameters).reduce(
         (a: string[], k: string): string[] => {
             a.push(`${k}=${encodeURIComponent(parameters[k])}`);
