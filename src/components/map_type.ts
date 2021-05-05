@@ -14,11 +14,11 @@ if (Object.freeze) {
     Object.freeze(MapType);
 }
 
-function maptype2string(type: string): string {
+function maptype2string(type: string|null): string|null {
     return type;
 }
 
-function string2maptype(s: string): string {
+function string2maptype(s: string): string|null {
     switch (s.toUpperCase()) {
         case MapType.OPENSTREETMAP:
             return MapType.OPENSTREETMAP;

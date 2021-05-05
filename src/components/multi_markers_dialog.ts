@@ -4,6 +4,7 @@ import {Coordinates} from './coordinates';
 import {MapStateChange} from './map_state';
 import {parse_float} from './utilities';
 
+
 export class MultiMarkersDialog {
     private app: App;
     private div: HTMLElement;

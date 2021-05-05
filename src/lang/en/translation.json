@@ -54,6 +54,22 @@
                 "new_marker_name": "Projection from {1}",
                 "project": "Project",
                 "title": "Waypoint Projection"
+            },
+            "marker-settings": {
+                "title": "Marker Settings",
+                "coordinates-format": "Coordinates Format",
+                "default-color": "Default Color",
+                "random-colors": "Use Random Colors",
+                "default-radius": "Default Radius (m)",
+                "default-radius-placeholder": "radius",
+                "apply": "Apply"
+            },
+            "line-settings": {
+                "title": "Line Settings",
+                "distance-format": "Distance Units",
+                "default-color": "Default Color",
+                "random-colors": "Use Random Colors",
+                "apply": "Apply"
             }
         },
         "general": {
@@ -114,10 +130,6 @@
                 "edit_to": "To",
                 "from": "From:",
                 "length": "Length:",
-                "settings": {
-                    "default-color": "Default Color",
-                    "random-colors": "Random Color"
-                },
                 "title": "Lines",
                 "to": "To:"
             },
@@ -138,13 +150,6 @@
                 "edit_radius_placeholder": "Radius",
                 "no_circle": "No circle",
                 "projection": "Waypoint Projection",
-                "settings": {
-                    "coordinates": "Coordinates",
-                    "default-color": "Default Color",
-                    "default-radius": "Default Radius (m)",
-                    "default-radius-placeholder": "Radius",
-                    "random-colors": "Random Color"
-                },
                 "title": "Markers"
             },
             "search": {

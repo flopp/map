@@ -3,6 +3,7 @@ import Sortable from 'sortablejs';
 import {App} from './app';
 import {Color} from './color';
 import {Line} from './line';
+import {LineSettingsDialog} from './line_settings_dialog';
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {Marker} from './marker';
@@ -17,8 +18,8 @@ import {
 } from './utilities';
 
 export class SidebarLines extends MapStateObserver {
-    private settingsDiv: HTMLElement;
     private sortable: Sortable;
+    private settingsDialog: LineSettingsDialog;
 
     constructor(app: App) {
         super(app);
@@ -32,16 +33,10 @@ export class SidebarLines extends MapStateObserver {
             self.app.map_state.delete_all_lines();
         });
 
-        this.settingsDiv = document.querySelector('#line-settings')!;
-        this.hide_settings();
+        this.settingsDialog = new LineSettingsDialog(app);
+
         document.querySelector('#btn-line-settings')!.addEventListener('click', (): void => {
-            self.toggle_settings();
-        });
-        this.settingsDiv.querySelector('[data-cancel]')!.addEventListener('click', (): void => {
-            self.hide_settings();
-        });
-        this.settingsDiv.querySelector('[data-submit]')!.addEventListener('click', (): void => {
-            self.submit_settings();
+            self.settingsDialog.show();
         });
 
         this.sortable = Sortable.create(document.getElementById('lines')!, {
@@ -76,13 +71,13 @@ export class SidebarLines extends MapStateObserver {
                 }
 
                 const length =
-                    line.length !== null ? `${line.length.toFixed(2)} m` : 'n/a';
+                    line.length !== null ? line.length.to_string(this.app.map_state.settings_line_distance_format) : 'n/a';
                 const bearing =
                     line.bearing !== null
                         ? `${line.bearing.toFixed(2)}°`
                         : 'n/a';
 
-                (div.querySelector(".line-color") as HTMLElement).style.backgroundColor = line.color.to_hash_string();
+                (div.querySelector(".line-color")! as HTMLElement).style.backgroundColor = line.color.to_hash_string();
                 div.querySelector(".line-from")!.textContent = self.marker_name(line.marker1);
                 div.querySelector(".line-to")!.textContent = self.marker_name(line.marker2);
                 div.querySelector(".line-distance")!.textContent = length;
@@ -111,8 +106,6 @@ export class SidebarLines extends MapStateObserver {
                 });
             }
         }
-
-        this.update_settings_display();
 
         if (changes & (MapStateChange.MARKERS | MapStateChange.LINES)) {
             this.app.map_state.lines.forEach((line: Line): void => {
@@ -293,61 +286,5 @@ export class SidebarLines extends MapStateObserver {
 
         this.app.map_state.update_line_storage(line);
         this.app.map_state.update_observers(MapStateChange.LINES);
-    }
-
-    private settings_shown(): boolean {
-        return !this.settingsDiv.classList.contains('is-hidden');
-    }
-
-    private show_settings(): void {
-        if (this.settings_shown()) {
-            return;
-        }
-
-        this.settingsDiv.classList.remove('is-hidden');
-        this.update_settings_display();
-    }
-
-    private hide_settings(): void {
-        this.settingsDiv.classList.add('is-hidden');
-    }
-
-    private toggle_settings(): void {
-        if (this.settings_shown()) {
-            this.hide_settings();
-        } else {
-            this.show_settings();
-        }
-    }
-
-    private submit_settings(): void {
-        const random_color = (this.settingsDiv
-            .querySelector('[data-random-color]') as HTMLInputElement)
-            .checked;
-        const color = Color.from_string(
-            (this.settingsDiv.querySelector('[data-color]') as HTMLInputElement).value,
-        );
-
-        if (color === null) {
-            this.app.message_error(this.app.translate('sidebar.lines.bad_values_message'));
-            return;
-        }
-
-        this.app.map_state.set_default_line_settings({random_color, color});
-
-        this.hide_settings();
-    }
-
-    private update_settings_display(): void {
-        if (!this.settings_shown()) {
-            return;
-        }
-
-        (this.settingsDiv
-            .querySelector('[data-random-color]') as HTMLInputElement)
-            .checked = this.app.map_state.settings_line_random_color!;
-        (this.settingsDiv
-            .querySelector('[data-color]') as HTMLInputElement)
-            .value = this.app.map_state.settings_line_color!.to_hash_string();
     }
 }

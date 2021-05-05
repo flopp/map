@@ -73,4 +73,8 @@ export class Color {
         }
         return this.hex.toLowerCase() === other.hex.toLowerCase();
     }
+
+    public static default_color(): Color {
+        return new Color("3273DC");
+    }
 }

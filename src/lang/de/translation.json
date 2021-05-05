@@ -54,6 +54,22 @@
                 "new_marker_name": "Projektion von {1}",
                 "project": "Projiziere",
                 "title": "Wegpunkt-Projektion"
+            },
+            "marker-settings": {
+                "title": "Markereinstellungen",
+                "coordinates-format": "Koordinatenformat",
+                "default-color": "Standardfarbe",
+                "random-colors": "Zuf\u00e4llige Farbe",
+                "default-radius": "Standardradius (m)",
+                "default-radius-placeholder": "Radius",
+                "apply": "Anwenden"
+            },
+            "line-settings": {
+                "title": "Linieneinstellungen",
+                "distance-format": "Distanzeinheiten",
+                "default-color": "Standardfarbe",
+                "random-colors": "Zuf\u00e4llige Farbe",
+                "apply": "Anwenden"
             }
         },
         "general": {
@@ -114,10 +130,6 @@
                 "edit_to": "Nach",
                 "from": "Von:",
                 "length": "L\u00e4nge:",
-                "settings": {
-                    "default-color": "Standardfarbe",
-                    "random-colors": "Zuf\u00e4llige Farbe"
-                },
                 "title": "Linien",
                 "to": "Nach:"
             },
@@ -138,13 +150,6 @@
                 "edit_radius_placeholder": "Radius",
                 "no_circle": "Kein Kreis",
                 "projection": "Wegpunkt-Projektion",
-                "settings": {
-                    "coordinates": "Koordinaten",
-                    "default-color": "Standardfarbe",
-                    "default-radius": "Standardradius (m)",
-                    "default-radius-placeholder": "Radius",
-                    "random-colors": "Zuf\u00e4llige Farbe"
-                },
                 "title": "Marker"
             },
             "search": {

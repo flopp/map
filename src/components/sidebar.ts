@@ -31,7 +31,7 @@ export class Sidebar extends MapStateObserver {
                 self.toggle(button);
             });
 
-            const close_button = document.querySelector(`${button.dataset.container} > .header > .close`);
+            const close_button = document.querySelector(`${button.dataset.container} > .header > .close`)!;
             close_button.addEventListener('click', (): void => {
                 self.toggle(null);
             });
@@ -46,9 +46,10 @@ export class Sidebar extends MapStateObserver {
         this.sidebar_tools = new SidebarTools(app);
     }
 
-    public toggle(toggle_control: HTMLElement): void {
+    public toggle(toggle_control: HTMLElement|null): void {
         if (
-            !toggle_control ||
+            toggle_control === null ||
+            toggle_control.parentElement === null ||
             toggle_control.parentElement.classList.contains('active')
         ) {
             this.app.map_state.set_sidebar_open(null);

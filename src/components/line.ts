@@ -1,4 +1,5 @@
 import {Color} from './color';
+import {Distance} from './distance';
 
 let next_line_id: number = 0;
 
@@ -13,7 +14,7 @@ export class Line {
     public marker1: number;
     public marker2: number;
     public color: Color;
-    public length: number|null;
+    public length: Distance|null;
     public bearing: number|null;
 
     constructor(marker_id1: number, marker_id2: number) {

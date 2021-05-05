@@ -144,7 +144,7 @@ export class Storage {
                 markers.push({
                     name,
                     coordinates,
-                    color,
+                    color: ((color !== null) ? color : Color.random_from_palette()),
                     radius,
                 });
             });
@@ -267,11 +267,21 @@ export class Storage {
         window.localStorage.removeItem(key);
     }
 
-    public set_int(key: string, value: number): void {
+    public set_int(key: string, value: number|null): void {
+        if (value === null) {
+            this.set(key, null);
+            return;
+        }
+
         this.set(key, String(value));
     }
 
-    public set_bool(key: string, value: boolean): void {
+    public set_bool(key: string, value: boolean|null): void {
+        if (value === null) {
+            this.set(key, null);
+            return;
+        }
+
         if (value) {
             this.set_int(key, 1);
         } else {
@@ -279,15 +289,30 @@ export class Storage {
         }
     }
 
-    public set_float(key: string, value: number): void {
+    public set_float(key: string, value: number|null): void {
+        if (value === null) {
+            this.set(key, null);
+            return;
+        }
+
         this.set(key, String(value));
     }
 
-    public set_color(key: string, value: Color): void {
+    public set_color(key: string, value: Color|null): void {
+        if (value === null) {
+            this.set(key, null);
+            return;
+        }
+
         this.set(key, value.to_string());
     }
 
-    public set_coordinates(key: string, value: Coordinates): void {
+    public set_coordinates(key: string, value: Coordinates|null): void {
+        if (value === null) {
+            this.set(key, null);
+            return;
+        }
+
         this.set(key, `${value.lat()};${value.lng()}`);
     }
 

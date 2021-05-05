@@ -1,6 +1,7 @@
 import {App} from './app';
 import {Color} from './color';
-import {Coordinates, CoordinatesFormat} from './coordinates';
+import {Coordinates, CoordinatesFormat, parseCoordinatesFormat} from './coordinates';
+import {Distance, DistanceFormat, parseDistanceFormat} from './distance';
 import {Line, LineJson} from './line';
 import {MapStateObserver} from "./map_state_observer";
 import {MapType, maptype2string, string2maptype} from './map_type';
@@ -22,8 +23,10 @@ export const MapStateChange = {
     EVERYTHING: 255,
 };
 
-interface MarkerSettingsDict {coordinates_format: string, random_color: boolean, color: Color, radius: number};
-interface LineSettingsDict {random_color: boolean, color: Color};
+interface MarkerSettingsDict {
+    coordinates_format: CoordinatesFormat, random_color: boolean, color: Color, radius: number
+};
+interface LineSettingsDict {distance_format: DistanceFormat, random_color: boolean, color: Color};
 export class MapState {
     public app: App;
     public language: string;
@@ -39,12 +42,13 @@ export class MapState {
     public markers_hash: Map<number, Marker>;
     public lines: Line[];
     public lines_hash: Map<number, Line>;
-    public settings_marker_coordinates_format: string|null;
-    public settings_marker_random_color: boolean|null;
-    public settings_marker_color: Color|null;
-    public settings_marker_radius: number|null;
-    public settings_line_random_color: boolean|null;
-    public settings_line_color: Color|null;
+    public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DMS;
+    public settings_marker_random_color: boolean;
+    public settings_marker_color: Color = Color.default_color();
+    public settings_marker_radius: number = 0;;
+    public settings_line_distance_format: DistanceFormat = DistanceFormat.m;
+    public settings_line_random_color: boolean = true;
+    public settings_line_color: Color = Color.default_color();
     public observers: MapStateObserver[];
     public storage: Storage;
 
@@ -69,14 +73,6 @@ export class MapState {
 
         this.lines = [];
         this.lines_hash = new Map();
-
-        this.settings_marker_coordinates_format = null;
-        this.settings_marker_random_color = null;
-        this.settings_marker_color = null;
-        this.settings_marker_radius = null;
-
-        this.settings_line_random_color = null;
-        this.settings_line_color = null;
 
         this.observers = [];
 
@@ -123,6 +119,10 @@ export class MapState {
             this.settings_marker_radius,
         );
 
+        this.storage.set(
+            'settings.line.distance_format',
+            this.settings_line_distance_format,
+        );
         this.storage.set_bool(
             'settings.line.random_color',
             this.settings_line_random_color,
@@ -134,26 +134,26 @@ export class MapState {
         const self = this;
 
         // language
-        this.set_language(this.storage.get('language', ''));
+        this.set_language(this.storage.get('language', '')!);
 
         // api keys
-        this.set_google_api_key(this.storage.get('google_api_key', ''));
+        this.set_google_api_key(this.storage.get('google_api_key', '')!);
 
         // sidebar
         this.set_sidebar_open(this.storage.get('sidebar_open', null));
 
         // map view
         this.set_view(
-            this.storage.get_coordinates('center', new Coordinates(48, 8)),
+            this.storage.get_coordinates('center', new Coordinates(48, 8))!,
             this.storage.get_int('zoom', 13),
         );
         this.set_map_type(
             string2maptype(
                 this.storage.get(
                     'map_type',
-                    maptype2string(MapType.STAMEN_TERRAIN),
-                ),
-            ),
+                    maptype2string(MapType.STAMEN_TERRAIN)!,
+                )!,
+            )!,
         );
         this.set_hill_shading(this.storage.get_bool('hillshading', false));
         this.set_german_npa(this.storage.get_bool('german_npa', false));
@@ -229,15 +229,10 @@ export class MapState {
         this.recompute_lines();
 
         // settings
-        let coordinates_format = this.storage.get(
+        const coordinates_format = parseCoordinatesFormat(this.storage.get(
             'settings.marker.coordinates_format',
-            CoordinatesFormat.DM
-        );
-        if (coordinates_format !== CoordinatesFormat.D &&
-            coordinates_format !== CoordinatesFormat.DM &&
-            coordinates_format !== CoordinatesFormat.DMS) {
-            coordinates_format = CoordinatesFormat.DM;
-        }
+            ''
+        )!, this.settings_marker_coordinates_format);
         this.set_default_marker_settings({
             coordinates_format,
             random_color: this.storage.get_bool(
@@ -251,7 +246,13 @@ export class MapState {
             radius: this.storage.get_float('settings.marker.radius', 0)!,
         });
 
+
+        const distance_format = parseDistanceFormat(this.storage.get(
+            'settings.marker.distance_format',
+            ''
+        )!, this.settings_line_distance_format);
         this.set_default_line_settings({
+            distance_format,
             random_color: this.storage.get_bool(
                 'settings.line.random_color',
                 true,
@@ -296,6 +297,7 @@ export class MapState {
         ok_keys.add('settings.marker.random_color');
         ok_keys.add('settings.marker.color');
         ok_keys.add('settings.marker.radius');
+        ok_keys.add('settings.line.distance_format');
         ok_keys.add('settings.line.random_color');
         ok_keys.add('settings.line.color');
 
@@ -377,9 +379,9 @@ export class MapState {
                             return;
                         }
                         const id = tokens[0];
-                        const lat = parse_float(tokens[1]);
-                        const lon = parse_float(tokens[2]);
-                        let radius = 0;
+                        const lat: number|null = parse_float(tokens[1]);
+                        const lon: number|null = parse_float(tokens[2]);
+                        let radius: number|null = 0;
                         if (tokens.length > 3) {
                             radius = parse_float(tokens[3]);
                         }
@@ -387,7 +389,7 @@ export class MapState {
                         if (tokens.length > 4) {
                             name = self.decode(tokens[4]);
                         }
-                        let color = Color.random_from_palette();
+                        let color: Color|null = Color.random_from_palette();
                         if (tokens.length > 5) {
                             color = Color.from_string(tokens[5]);
                         }
@@ -520,9 +522,9 @@ export class MapState {
             })
             .join('*');
 
-        return `${base}?c=${this.center
+        return `${base}?c=${this.center!
             .lat()
-            .toFixed(6)}:${this.center.lng().toFixed(6)}&z=${this.zoom}&t=${
+            .toFixed(6)}:${this.center!.lng().toFixed(6)}&z=${this.zoom}&t=${
             this.map_type
         }&m=${markers}&d=${lines}`;
     }
@@ -566,9 +568,12 @@ export class MapState {
                 const db = marker1.coordinates.distance_bearing(
                     marker2.coordinates,
                 );
-                if (db.distance !== line.length) {
+                if (line.length === null) {
                     changed = true;
-                    line.length = db.distance;
+                    line.length = new Distance(db.distance, DistanceFormat.m);
+                } else if (db.distance !== line.length.m()) {
+                    changed = true;
+                    line.length.set(db.distance, DistanceFormat.m);
                 }
                 if (db.distance < 1.0) {
                     if (line.bearing !== null) {
@@ -615,7 +620,7 @@ export class MapState {
         this.update_observers(MapStateChange.API_KEYS);
     }
 
-    public set_sidebar_open(section: string): void {
+    public set_sidebar_open(section: string|null): void {
         this.sidebar_open = section;
         this.storage.set('sidebar_open', section);
         this.update_observers(MapStateChange.SIDEBAR);
@@ -665,10 +670,10 @@ export class MapState {
         this.update_observers(MapStateChange.CENTER);
     }
 
-    public add_marker(coordinates: Coordinates): Marker {
+    public add_marker(coordinates: Coordinates|null): Marker {
         let marker = null;
         if (!coordinates) {
-            marker = new Marker(this.center);
+            marker = new Marker(this.center!);
         } else {
             marker = new Marker(coordinates);
         }
@@ -688,8 +693,12 @@ export class MapState {
         return marker;
     }
 
-    public get_marker(id: number): Marker {
-        return this.markers_hash.get(id);
+    public get_marker(id: number): Marker|null {
+        const marker = this.markers_hash.get(id);
+        if (marker === undefined) {
+            return null;
+        }
+        return marker;
     }
 
     public delete_marker(id: number): void {
@@ -710,25 +719,41 @@ export class MapState {
     }
 
     public set_marker_coordinates(id: number, coordinates: Coordinates): void {
-        this.markers_hash.get(id).coordinates = coordinates;
+        if (!this.markers_hash.has(id)) {
+            console.log("bad marker id", id);
+            return;
+        }
+        this.markers_hash.get(id)!.coordinates = coordinates;
         this.storage.set_coordinates(`marker[${id}].coordinates`, coordinates);
         this.update_observers(MapStateChange.MARKERS);
     }
 
     public set_marker_name(id: number, name: string): void {
-        this.markers_hash.get(id).name = name;
+        if (!this.markers_hash.has(id)) {
+            console.log("bad marker id", id);
+            return;
+        }
+        this.markers_hash.get(id)!.name = name;
         this.storage.set(`marker[${id}].name`, name);
         this.update_observers(MapStateChange.MARKERS);
     }
 
     public set_marker_color(id: number, color: Color): void {
-        this.markers_hash.get(id).color = color;
+        if (!this.markers_hash.has(id)) {
+            console.log("bad marker id", id);
+            return;
+        }
+        this.markers_hash.get(id)!.color = color;
         this.storage.set_color(`marker[${id}].color`, color);
         this.update_observers(MapStateChange.MARKERS);
     }
 
     public set_marker_radius(id: number, radius: number): void {
-        this.markers_hash.get(id).radius = radius;
+        if (!this.markers_hash.has(id)) {
+            console.log("bad marker id", id);
+            return;
+        }
+        this.markers_hash.get(id)!.radius = radius;
         this.storage.set_float(`marker[${id}].radius`, radius);
         this.update_observers(MapStateChange.MARKERS);
     }
@@ -774,8 +799,12 @@ export class MapState {
         return line;
     }
 
-    public get_line(id: number): Line {
-        return this.lines_hash.get(id);
+    public get_line(id: number): Line|null {
+        const line = this.lines_hash.get(id);
+        if (line === undefined) {
+            return null;
+        }
+        return line;
     }
 
     public delete_line(id: number): void {
@@ -796,19 +825,31 @@ export class MapState {
     }
 
     public set_line_marker1(id: number, marker_id: number): void {
-        this.lines_hash.get(id).marker1 = marker_id;
+        if (!this.lines_hash.has(id)) {
+            console.log("bad line id", id);
+            return;
+        }
+        this.lines_hash.get(id)!.marker1 = marker_id;
         this.storage.set_int(`line[${id}].marker1`, marker_id);
         this.update_observers(MapStateChange.LINES);
     }
 
     public set_line_marker2(id: number, marker_id: number): void {
-        this.lines_hash.get(id).marker2 = marker_id;
+        if (!this.lines_hash.has(id)) {
+            console.log("bad line id", id);
+            return;
+        }
+        this.lines_hash.get(id)!.marker2 = marker_id;
         this.storage.set_int(`line[${id}].marker2`, marker_id);
         this.update_observers(MapStateChange.LINES);
     }
 
     public set_line_color(id: number, color: Color): void {
-        this.lines_hash.get(id).color = color;
+        if (!this.lines_hash.has(id)) {
+            console.log("bad line id", id);
+            return;
+        }
+        this.lines_hash.get(id)!.color = color;
         this.storage.set_color(`line[${id}].color`, color);
         this.update_observers(MapStateChange.LINES);
     }
@@ -858,16 +899,7 @@ export class MapState {
     }
 
     public set_default_marker_settings(settings: MarkerSettingsDict): void {
-        switch (settings.coordinates_format) {
-            case CoordinatesFormat.D:
-            case CoordinatesFormat.DM:
-            case CoordinatesFormat.DMS:
-                this.settings_marker_coordinates_format =
-                    settings.coordinates_format;
-                break;
-            default:
-                this.settings_marker_coordinates_format = CoordinatesFormat.DM;
-        }
+        this.settings_marker_coordinates_format = settings.coordinates_format;
         this.storage.set(
             'settings.marker.coordinates_format',
             this.settings_marker_coordinates_format,
@@ -895,6 +927,12 @@ export class MapState {
     }
 
     public set_default_line_settings(settings: LineSettingsDict): void {
+        this.settings_line_distance_format = settings.distance_format;
+        this.storage.set(
+            'settings.line.distance_format',
+            this.settings_line_distance_format,
+        );
+
         this.settings_line_random_color = settings.random_color;
         this.storage.set_bool(
             'settings.line.random_color',
@@ -910,7 +948,7 @@ export class MapState {
     public to_json(): object {
         const data = {
             maptype: this.map_type,
-            center: this.center.to_string_D(),
+            center: this.center!.to_string_D(),
             zoom: this.zoom,
             hill_shading: this.hill_shading,
             german_npa: this.german_npa,
@@ -923,6 +961,7 @@ export class MapState {
                     radius: this.settings_marker_radius,
                 },
                 lines: {
+                    distance_format: this.settings_line_distance_format,
                     random_color: this.settings_line_random_color,
                     color: this.settings_line_color.to_hash_string(),
                 },
@@ -977,14 +1016,10 @@ export class MapState {
         if ('settings' in data) {
             if ('markers' in data.settings) {
                 if ('coordinates_format' in data.settings.markers) {
-                    const coordinates_format = data.settings.markers.coordinates_format;
-                    if (
-                        coordinates_format === CoordinatesFormat.D ||
-                        coordinates_format === CoordinatesFormat.DM ||
-                        coordinates_format === CoordinatesFormat.DMS
-                    ) {
-                        this.settings_marker_coordinates_format = coordinates_format;
-                    }
+                    this.settings_marker_coordinates_format = parseCoordinatesFormat(
+                        data.settings.markers.coordinates_format,
+                        this.settings_marker_coordinates_format
+                    );
                 }
                 if ('random_color' in data.settings.markers) {
                     this.settings_marker_random_color =
@@ -1004,6 +1039,13 @@ export class MapState {
                 }
             }
             if ('lines' in data.settings) {
+                if ('distance_format' in data.settings.lines) {
+                    this.settings_line_distance_format =
+                        parseDistanceFormat(
+                            data.settings.lines.random_color,
+                            this.settings_line_distance_format
+                        );
+                }
                 if ('random_color' in data.settings.lines) {
                     this.settings_line_random_color =
                         data.settings.lines.random_color;

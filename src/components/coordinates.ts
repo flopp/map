@@ -1,19 +1,24 @@
 // @ts-ignore
 import {Geodesic} from 'geographiclib';
 
-const CoordinatesFormat = {
-    D: 'D',
-    DM: 'DM',
-    DMS: 'DMS',
+export enum CoordinatesFormat {
+    D = 'D',
+    DM = 'DM',
+    DMS = 'DMS',
 };
 
-if (Object.freeze) {
-    Object.freeze(CoordinatesFormat);
+export function parseCoordinatesFormat(value: string, fallback: CoordinatesFormat): CoordinatesFormat {
+    switch (value.toUpperCase()) {
+        case "D":
+            return CoordinatesFormat.D;
+        case "DM":
+            return CoordinatesFormat.DM;
+        case "DMS":
+            return CoordinatesFormat.DMS;
+        default:
+            return fallback;
+    }
 }
-
-export {CoordinatesFormat};
-
-let coordinates_format: string = CoordinatesFormat.DM;
 
 function pad(num: number|string, width: number) : string {
     let s = String(num);
@@ -64,14 +69,6 @@ export class Coordinates {
             lng -= 360;
         }
         return lng;
-    }
-
-    public static set_coordinates_format(format: string) : void {
-        coordinates_format = format;
-    }
-
-    public static get_coordinates_format(): string {
-        return coordinates_format;
     }
 
     public static from_components(
@@ -329,7 +326,7 @@ export class Coordinates {
         return null;
     }
 
-    public to_string_format(format: string) : string {
+    public to_string(format: string) : string {
         switch (format) {
             case CoordinatesFormat.D:
                 return this.to_string_D();
@@ -339,10 +336,6 @@ export class Coordinates {
             default:
                 return this.to_string_DM();
         }
-    }
-
-    public to_string() : string {
-        return this.to_string_format(coordinates_format);
     }
 
     public to_string_DM() : string {
