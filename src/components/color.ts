@@ -1,4 +1,4 @@
-let last_random_color: string = null;
+let last_random_color: string|null = null;
 
 export class Color {
     private hex: string = "";
@@ -67,7 +67,7 @@ export class Color {
         return new Color('FFFFFF');
     }
 
-    public equals(other?: Color) : boolean {
+    public equals(other: Color|null) : boolean {
         if (other === null) {
             return false;
         }

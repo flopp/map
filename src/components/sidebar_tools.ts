@@ -11,8 +11,8 @@ export class SidebarTools extends MapStateObserver {
 
         const self = this;
 
-        const div = document.querySelector('#sidebar-tools');
-        this.language_select = div.querySelector('[data-language]');
+        const div = document.querySelector('#sidebar-tools')!;
+        this.language_select = div.querySelector('[data-language]')!;
 
         interface TitleShort { title: string, short: string};
         [
@@ -30,23 +30,30 @@ export class SidebarTools extends MapStateObserver {
             self.app.map_state.set_language(self.language_select.value);
         };
 
-        document.querySelector('#btn-link').addEventListener('click', (): void => {
+        document.querySelector('#btn-link')!.addEventListener('click', (): void => {
             self.app.show_link_dialog();
         });
 
-        document.querySelector('#btn-export-json').addEventListener('click', (): void => {
+        document.querySelector('#btn-export-json')!.addEventListener('click', (): void => {
             self.export_json();
         });
 
-        document.querySelector('#btn-import-json').addEventListener('click', (event: InputEvent): void => {
+        document.querySelector('#btn-import-json')!.addEventListener('click', (event: InputEvent): void => {
             (document.querySelector('#inp-import-json') as HTMLButtonElement).click();
             event.preventDefault();
         });
         (document.querySelector('#inp-import-json') as HTMLInputElement).onchange = (event: InputEvent): void => {
-            self.import_json((event.target as HTMLInputElement).files[0]);
+            if (event.target === null) {
+                return;
+            }
+            const files = (event.target as HTMLInputElement).files;
+            if (files === null) {
+                return;
+            }
+            self.import_json(files[0]);
         };
 
-        document.querySelector('#btn-multi-markers').addEventListener('click', (): void => {
+        document.querySelector('#btn-multi-markers')!.addEventListener('click', (): void => {
             self.app.show_multi_markers_dialog();
         });
     }

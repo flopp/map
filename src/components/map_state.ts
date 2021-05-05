@@ -27,11 +27,11 @@ interface LineSettingsDict {random_color: boolean, color: Color};
 export class MapState {
     public app: App;
     public language: string;
-    public sidebar_open: string;
+    public sidebar_open: string|null;
     public google_api_key: string;
-    public map_type: string;;
-    public zoom: number;
-    public center: Coordinates;
+    public map_type: string|null;
+    public zoom: number|null;
+    public center: Coordinates|null;
     public hill_shading: boolean;
     public german_npa: boolean;
     public opencaching: boolean;
@@ -39,12 +39,12 @@ export class MapState {
     public markers_hash: Map<number, Marker>;
     public lines: Line[];
     public lines_hash: Map<number, Line>;
-    public settings_marker_coordinates_format: string;
-    public settings_marker_random_color: boolean;
-    public settings_marker_color: Color;
-    public settings_marker_radius: number;
-    public settings_line_random_color: boolean;
-    public settings_line_color: Color;
+    public settings_marker_coordinates_format: string|null;
+    public settings_marker_random_color: boolean|null;
+    public settings_marker_color: Color|null;
+    public settings_marker_radius: number|null;
+    public settings_line_random_color: boolean|null;
+    public settings_line_color: Color|null;
     public observers: MapStateObserver[];
     public storage: Storage;
 
@@ -162,7 +162,7 @@ export class MapState {
         // markers
         const marker_ids = new Map();
         this.storage
-            .get('markers', '')
+            .get('markers', '')!
             .split(';')
             .forEach((id: string): void => {
                 if (id === '') {
@@ -172,12 +172,12 @@ export class MapState {
                     `marker[${id}].coordinates`,
                     null,
                 );
-                const name = self.storage.get(`marker[${id}].name`, id);
+                const name = self.storage.get(`marker[${id}].name`, id)!;
                 const color = self.storage.get_color(
                     `marker[${id}].color`,
                     new Color('FF0000'),
-                );
-                const radius = self.storage.get_float(`marker[${id}].radius`, 0);
+                )!;
+                const radius = self.storage.get_float(`marker[${id}].radius`, 0)!;
                 if (coordinates) {
                     const marker = new Marker(coordinates);
                     marker.name = name;
@@ -191,7 +191,7 @@ export class MapState {
 
         // lines
         this.storage
-            .get('lines', '')
+            .get('lines', '')!
             .split(';')
             .forEach((id: string): void => {
                 if (id === '') {
@@ -200,15 +200,15 @@ export class MapState {
                 const old_marker1 = self.storage.get_int(
                     `line[${id}].marker1`,
                     -1,
-                );
+                )!;
                 const old_marker2 = self.storage.get_int(
                     `line[${id}].marker2`,
                     -1,
-                );
+                )!;
                 const color = self.storage.get_color(
                     `line[${id}].color`,
                     new Color('FF0000'),
-                );
+                )!;
 
                 let marker1 = -1;
                 if (marker_ids.has(old_marker1)) {
@@ -248,7 +248,7 @@ export class MapState {
                 'settings.marker.color',
                 new Color('FF0000'),
             ),
-            radius: this.storage.get_float('settings.marker.radius', 0),
+            radius: this.storage.get_float('settings.marker.radius', 0)!,
         });
 
         this.set_default_line_settings({

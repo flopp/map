@@ -7,13 +7,13 @@ export class SidebarSearch extends MapStateObserver {
 
         const self = this;
 
-        document.querySelector('#btn-locate').addEventListener('click', (): void => {
+        document.querySelector('#btn-locate')!.addEventListener('click', (): void => {
             self.app.locate_me();
         });
-        document.querySelector('#btn-search').addEventListener('click', (): void => {
+        document.querySelector('#btn-search')!.addEventListener('click', (): void => {
             self.perform_search();
         });
-        document.querySelector('#input-search').addEventListener('keyup', (event: KeyboardEvent): void => {
+        document.querySelector('#input-search')!.addEventListener('keyup', (event: KeyboardEvent): void => {
             if (event.key === 'Enter') {
                 self.perform_search();
             }

@@ -1,4 +1,4 @@
-function parse_float(str: string): number {
+function parse_float(str: string): number|null {
     if (!/[0-9]/.test(str)) {
         return null;
     }
@@ -8,7 +8,7 @@ function parse_float(str: string): number {
     return parseFloat(str);
 }
 
-function parse_int (str: string): number {
+function parse_int (str: string): number|null {
     if (!/[0-9]/.test(str)) {
         return null;
     }
@@ -18,19 +18,27 @@ function parse_int (str: string): number {
     return parseFloat(str);
 }
 
-function create_element (type: string, classes: string[] = [], attributes: Record<string, string> = {}): HTMLElement {
+function create_element(
+    type: string,
+    classes: string[] = [],
+    attributes: Record<string, string | null> = {},
+): HTMLElement {
     const element = document.createElement(type);
     classes.forEach((cls: string): void => {
         element.classList.add(cls);
     });
     for (const key of Object.keys(attributes)) {
-        element.setAttribute(key, attributes[key]);
+        const value = attributes[key];
+        element.setAttribute(key, value !== null ? value : '');
     }
     return element;
 }
 
-function remove_element (node: HTMLElement): void {
+function remove_element (node: HTMLElement|null): void {
     if (node === null) {
+        return;
+    }
+    if (node.parentNode === null) {
         return;
     }
     node.parentNode.removeChild(node);

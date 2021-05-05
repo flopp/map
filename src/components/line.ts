@@ -7,14 +7,14 @@ export interface LineJson {
     marker2: number;
     color: string;
 };
-  
+
 export class Line {
     private line_id: number;
     public marker1: number;
     public marker2: number;
     public color: Color;
-    public length: number;
-    public bearing: number;
+    public length: number|null;
+    public bearing: number|null;
 
     constructor(marker_id1: number, marker_id2: number) {
         this.line_id = next_line_id;

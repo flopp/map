@@ -76,7 +76,7 @@ export class Coordinates {
 
     public static from_components(
         h1: string, d1: number, m1: number, s1: number,
-        h2: string, d2: number, m2: number, s2: number) : Coordinates
+        h2: string, d2: number, m2: number, s2: number) : Coordinates|null
     {
         let lat: number;
         let lng: number;
@@ -133,7 +133,7 @@ export class Coordinates {
         return new Coordinates(lat, lng);
     }
 
-    public static from_string(str: string): Coordinates {
+    public static from_string(str: string): Coordinates|null {
         const s = Coordinates.sanitize_string(str);
         const patterns = [
                 // DM / H D M
@@ -311,13 +311,13 @@ export class Coordinates {
             if (m) {
                 const c = Coordinates.from_components(
                     extract_hemisphere(m, p.fields[0]),
-                    extract_component(m, <number>p.fields[1]),
-                    extract_component(m, <number>p.fields[2]),
-                    extract_component(m, <number>p.fields[3]),
+                    extract_component(m, p.fields[1] as number),
+                    extract_component(m, p.fields[2] as number),
+                    extract_component(m, p.fields[3] as number),
                     extract_hemisphere(m, p.fields[4]),
-                    extract_component(m, <number>p.fields[5]),
-                    extract_component(m, <number>p.fields[6]),
-                    extract_component(m, <number>p.fields[7]),
+                    extract_component(m, p.fields[5] as number),
+                    extract_component(m, p.fields[6] as number),
+                    extract_component(m, p.fields[7] as number),
                 );
 
                 if (c) {

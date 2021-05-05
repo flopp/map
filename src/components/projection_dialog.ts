@@ -7,12 +7,12 @@ import {parse_float} from './utilities';
 export class ProjectionDialog {
     private div: HTMLElement;
     private app: App;
-    private marker: Marker;
+    private marker: Marker|null;
 
     constructor(app: App) {
         const self = this;
 
-        this.div = document.querySelector('#projection-dialog');
+        this.div = document.querySelector('#projection-dialog')!;
         this.app = app;
         this.marker = null;
 
@@ -78,19 +78,19 @@ export class ProjectionDialog {
             return;
         }
 
-        const coordinates = this.marker.coordinates.project(bearing, distance);
+        const coordinates = this.marker!.coordinates.project(bearing, distance);
         const target_marker = this.app.map_state.add_marker(coordinates);
         target_marker.name = target_name;
         target_marker.radius = target_radius !== null ? target_radius : -1;
         target_marker.color =
-            target_color !== null ? target_color : this.marker.color;
+            target_color !== null ? target_color : this.marker!.color;
         this.app.map_state.update_marker_storage(target_marker);
 
         if (create_line) {
             const line = this.app.map_state.add_line();
-            line.marker1 = this.marker.get_id();
+            line.marker1 = this.marker!.get_id();
             line.marker2 = target_marker.get_id();
-            line.color = line_color !== null ? line_color : this.marker.color;
+            line.color = line_color !== null ? line_color : this.marker!.color;
             this.app.map_state.update_line_storage(line);
             this.app.map_state.update_observers(
                 MapStateChange.MARKERS | MapStateChange.LINES,

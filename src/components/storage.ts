@@ -103,7 +103,7 @@ export class Storage {
         // markers (ID1:ID2:...); markerID1; markerID2; ...
         const markers: MarkerDict[] = [];
         const marker_hash = new Map();
-        this.get('markers', '')
+        this.get('markers', '')!
             .split(':')
             .forEach((id_string: string): void => {
                 const id_int = parse_int(id_string);
@@ -155,7 +155,7 @@ export class Storage {
 
         // lines (FROM1:TO1*FROM2:TO2*...)
         const lines: LineDict[] = [];
-        this.get('lines', '')
+        this.get('lines', '')!
             .split('*')
             .forEach((ids: string): void => {
                 const split_ids = ids.split(':');
@@ -173,7 +173,7 @@ export class Storage {
                 lines.push({
                     from,
                     to,
-                    color: Color.from_string('#ff0000'),
+                    color: Color.from_string('#ff0000')!,
                 });
             });
 
@@ -229,7 +229,7 @@ export class Storage {
         return -1;
     }
 
-    public set(key: string, value: string): void {
+    public set(key: string, value: string|null): void {
         if (!this.ok) {
             return;
         }
@@ -248,7 +248,7 @@ export class Storage {
         return window.localStorage.getItem(key) !== null;
     }
 
-    public get(key: string, default_value: string): string {
+    public get(key: string, default_value: string|null): string|null {
         if (!this.ok) {
             return default_value;
         }
@@ -306,7 +306,7 @@ export class Storage {
         return this.get_int(key, 0) !== 0;
     }
 
-    public get_float(key: string, default_value: number): number {
+    public get_float(key: string, default_value: number|null): number|null {
         const s = this.get(key, null);
         if (s !== null) {
             return parseFloat(s);
@@ -328,7 +328,7 @@ export class Storage {
         return c;
     }
 
-    public get_coordinates(key: string, default_value: Coordinates): Coordinates {
+    public get_coordinates(key: string, default_value: Coordinates|null): Coordinates|null {
         const s = this.get(key, null);
         if (s === null) {
             return default_value;

@@ -25,29 +25,31 @@ export class SidebarLines extends MapStateObserver {
 
         const self = this;
 
-        document.querySelector('#btn-add-line').addEventListener('click', (): void => {
+        document.querySelector('#btn-add-line')!.addEventListener('click', (): void => {
             self.app.map_state.add_line();
         });
-        document.querySelector('#btn-delete-lines').addEventListener('click', (): void => {
+        document.querySelector('#btn-delete-lines')!.addEventListener('click', (): void => {
             self.app.map_state.delete_all_lines();
         });
 
-        this.settingsDiv = document.querySelector('#line-settings');
+        this.settingsDiv = document.querySelector('#line-settings')!;
         this.hide_settings();
-        document.querySelector('#btn-line-settings').addEventListener('click', (): void => {
+        document.querySelector('#btn-line-settings')!.addEventListener('click', (): void => {
             self.toggle_settings();
         });
-        this.settingsDiv.querySelector('[data-cancel]').addEventListener('click', (): void => {
+        this.settingsDiv.querySelector('[data-cancel]')!.addEventListener('click', (): void => {
             self.hide_settings();
         });
-        this.settingsDiv.querySelector('[data-submit]').addEventListener('click', (): void => {
+        this.settingsDiv.querySelector('[data-submit]')!.addEventListener('click', (): void => {
             self.submit_settings();
         });
 
-        this.sortable = Sortable.create(document.getElementById('lines'), {
+        this.sortable = Sortable.create(document.getElementById('lines')!, {
             handle: ".drag-handle",
             onEnd: (event: Sortable.SortableEvent): void => {
-                self.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
+                if ((event.oldIndex !== undefined) && (event.newIndex !== undefined)) {
+                    self.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
+                }
             },
         });
     }
@@ -59,7 +61,7 @@ export class SidebarLines extends MapStateObserver {
                 // The language has changed
                 // => remove all lines from the sidebar, such that they are all re-added.
                 for (const div of document.querySelectorAll('#lines > .line')) {
-                    const id = parse_int(div.getAttribute("id").substring(5));
+                    const id = parse_int(div.getAttribute("id")!.substring(5));
                     remove_element(div as HTMLElement);
                     remove_element(document.querySelector(`#line-edit-${id}`));
                 }
@@ -70,7 +72,7 @@ export class SidebarLines extends MapStateObserver {
                 let div = document.querySelector(`#line-${line.get_id()}`);
                 if (div === null) {
                     div = self.create_div(line);
-                    document.querySelector('#lines').appendChild(div);
+                    document.querySelector('#lines')!.appendChild(div);
                 }
 
                 const length =
@@ -81,10 +83,10 @@ export class SidebarLines extends MapStateObserver {
                         : 'n/a';
 
                 (div.querySelector(".line-color") as HTMLElement).style.backgroundColor = line.color.to_hash_string();
-                div.querySelector(".line-from").textContent = self.marker_name(line.marker1);
-                div.querySelector(".line-to").textContent = self.marker_name(line.marker2);
-                div.querySelector(".line-distance").textContent = length;
-                div.querySelector(".line-bearing").textContent = bearing;
+                div.querySelector(".line-from")!.textContent = self.marker_name(line.marker1);
+                div.querySelector(".line-to")!.textContent = self.marker_name(line.marker2);
+                div.querySelector(".line-distance")!.textContent = length;
+                div.querySelector(".line-bearing")!.textContent = bearing;
             });
 
             /* remove spurious lines */
@@ -92,18 +94,18 @@ export class SidebarLines extends MapStateObserver {
             if (lines.length > this.app.map_state.lines.length) {
                 const ids = new Set();
                 this.app.map_state.lines.forEach((line: Line): void => {
-                    ids.add(line.get_id());
+                    ids.add(line.get_id().toString());
                 });
 
-                const deleted_ids: number[] = [];
+                const deleted_ids: string[] = [];
                 lines.forEach((obj: HTMLElement): void => {
-                    const id = parse_int(obj.getAttribute("id").substring(5));
+                    const id = obj.getAttribute("id")!.substring(5);
                     if (!ids.has(id)) {
                         deleted_ids.push(id);
                     }
                 });
 
-                deleted_ids.forEach((id: number): void => {
+                deleted_ids.forEach((id: string): void => {
                     remove_element(document.querySelector(`#line-${id}`));
                     remove_element(document.querySelector(`#line-element-${id}`));
                 });
@@ -209,9 +211,9 @@ export class SidebarLines extends MapStateObserver {
                 label: this.app.translate('sidebar.lines.edit'),
                 callback: (): void => {
                     if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
-                        const div = document.querySelector(`#line-${line.get_id()}`);
+                        const div = document.querySelector(`#line-${line.get_id()}`)!;
                         const edit_div = self.create_edit_div(line);
-                        div.parentNode.insertBefore(edit_div, div.nextSibling);
+                        div.parentNode!.insertBefore(edit_div, div.nextSibling);
                         self.update_edit_values(line);
                     }
                 },
@@ -247,7 +249,7 @@ export class SidebarLines extends MapStateObserver {
             return a.name.localeCompare(b.name);
         });
 
-        const from_select = div.querySelector('[data-from]');
+        const from_select = div.querySelector('[data-from]')!;
         from_select.innerHTML = "";
         markers.forEach((name_id: NameId): void => {
             from_select.appendChild(new Option(
@@ -258,7 +260,7 @@ export class SidebarLines extends MapStateObserver {
             );
         });
 
-        const to_select = div.querySelector('[data-to]');
+        const to_select = div.querySelector('[data-to]')!;
         to_select.innerHTML = "";
         markers.forEach((name_id: NameId): void => {
             to_select.appendChild(new Option(
@@ -285,8 +287,8 @@ export class SidebarLines extends MapStateObserver {
 
         remove_element(div);
 
-        line.marker1 = marker1;
-        line.marker2 = marker2;
+        line.marker1 = (marker1 !== null) ? marker1 : -1;
+        line.marker2 = (marker2 !== null) ? marker2 : -1;
         line.color = color;
 
         this.app.map_state.update_line_storage(line);
@@ -343,9 +345,9 @@ export class SidebarLines extends MapStateObserver {
 
         (this.settingsDiv
             .querySelector('[data-random-color]') as HTMLInputElement)
-            .checked = this.app.map_state.settings_line_random_color;
+            .checked = this.app.map_state.settings_line_random_color!;
         (this.settingsDiv
             .querySelector('[data-color]') as HTMLInputElement)
-            .value = this.app.map_state.settings_line_color.to_hash_string();
+            .value = this.app.map_state.settings_line_color!.to_hash_string();
     }
 }

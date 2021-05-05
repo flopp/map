@@ -58,10 +58,10 @@ const Icons = new Map([
 
 export class Opencaching {
     private state: State;
-    private timer: number;
+    private timer: number|null;
     private callback: CachesCallback;
     private bounds: [number, number, number, number][];
-    private sites: Site[];
+    private sites: Site[]|null;
     private disabled_sites: Set<string>;
 
     constructor(callback: CachesCallback) {
@@ -110,7 +110,7 @@ export class Opencaching {
 
     public type_icon(type: string): string {
         if (Icons.has(type)) {
-            return Icons.get(type);
+            return Icons.get(type)!;
         }
         return "assets/cachetype-1.png";
     }
@@ -130,27 +130,26 @@ export class Opencaching {
         fetch("https://www.opencaching.de/okapi/services/apisrv/installations")
             .then((response: Response): Promise<any> => response.json())
             .then((data: OkapiInstallation[]): void => {
-                self.sites = [];
-                data.forEach((site: OkapiInstallation): void => {
+                self.sites = data.filter((site: OkapiInstallation): boolean => {
                     if (!site.okapi_base_url.startsWith("https://")) {
-                        return;
+                        return false;
                     }
                     if (!keys.has(site.site_name)) {
-                        return;
+                        return false;
                     }
                     const key = keys.get(site.site_name);
                     if (key === "") {
-                        return;
+                        return false;
                     }
-
-                    self.sites.push(
-                        {
-                            "name": site.site_name,
-                            "url": site.okapi_base_url,
-                            "key": key
-                        }
-                    );
+                    return true;
+                }).map((site: OkapiInstallation): Site => {
+                    return {
+                        "name": site.site_name,
+                        "url": site.okapi_base_url,
+                        "key": keys.get(site.site_name)!
+                    };
                 });
+
                 self.state = State.Ready;
                 self.scheduleLoad();
             })
