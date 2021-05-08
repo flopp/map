@@ -3,6 +3,7 @@ import {Coordinates} from './coordinates';
 import {Line} from "./line";
 import {MapStateChange} from './map_state';
 import {MapStateObserver} from "./map_state_observer";
+import {MapType} from "./map_type";
 import {Marker} from "./marker";
 
 export class MapWrapper extends MapStateObserver {
@@ -18,7 +19,7 @@ export class MapWrapper extends MapStateObserver {
 
         this.active = false;
         this.div_id = div_id;
-        this.div = document.getElementById(div_id);
+        this.div = document.getElementById(div_id)!;
         this.markers = new Map();
         this.lines = new Map();
 
@@ -29,7 +30,7 @@ export class MapWrapper extends MapStateObserver {
         throw new Error('not implemented');
     }
 
-    public set_map_type(_map_type: string): void {
+    public set_map_type(_map_type: MapType): void {
         throw new Error('not implemented');
     }
 
@@ -121,15 +122,15 @@ export class MapWrapper extends MapStateObserver {
 
         /* update view */
         if (changes & MapStateChange.MAPTYPE) {
-            this.set_map_type(this.app.map_state.map_type);
+            this.set_map_type(this.app.map_state.map_type!);
             this.set_hill_shading(this.app.map_state.hill_shading);
             this.set_german_npa(this.app.map_state.german_npa);
             this.set_opencaching(this.app.map_state.opencaching);
         }
         if (changes & MapStateChange.VIEW) {
             this.set_map_view(
-                this.app.map_state.center,
-                this.app.map_state.zoom,
+                this.app.map_state.center!,
+                this.app.map_state.zoom!,
             );
         }
 

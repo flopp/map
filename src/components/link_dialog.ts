@@ -16,7 +16,7 @@ export class LinkDialog {
     constructor(app: App) {
         const self = this;
 
-        this.div = document.querySelector('#link-dialog');
+        this.div = document.querySelector('#link-dialog')!;
         this.app = app;
         this.clipboard = new ClipboardJS('#link-dialog-copy-button');
         this.clipboard.on('success', (e: ClipboardJsEvent): void => {

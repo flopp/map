@@ -16,14 +16,14 @@ import {Sidebar} from './sidebar';
 import {getScript} from "./get_script";
 
 export class App {
-    private lang: Language;
+    private _lang: Language|null = null;
     private notifications: Notifications;
-    private google_maps_error: boolean;
-    public google_loading: boolean;
+    private google_maps_error: boolean = false;
+    public google_loading: boolean = false;
 
     public map_state: MapState;
     public icon_factory: IconFactory;
-    public api_keys_dialog: ApiKeysDialog;
+    public api_keys_dialog: ApiKeysDialog|null = null;
     public projection_dialog: ProjectionDialog;
     public multi_markers_dialog: MultiMarkersDialog;
     public link_dialog: LinkDialog;
@@ -32,26 +32,22 @@ export class App {
     public id_google: string;
     public sidebar: Sidebar;
     public leaflet: LeafletWrapper;
-    public google: GoogleWrapper;
+    public google: GoogleWrapper|null = null;
 
     constructor(id_leaflet: string, id_google: string) {
-        this.lang = null;
         this.notifications = new Notifications();
-
-        this.google_maps_error = false;
 
         this.console_filter();
 
         this.map_state = new MapState(this);
 
-        this.lang = new Language(this);
+        this._lang = new Language(this);
 
         this.map_state.restore_from_url();
         this.map_state.restore();
         this.map_state.clear_storage();
 
         this.icon_factory = new IconFactory();
-        this.api_keys_dialog = null;
         this.projection_dialog = new ProjectionDialog(this);
         this.multi_markers_dialog = new MultiMarkersDialog(this);
         this.link_dialog = new LinkDialog(this);
@@ -65,8 +61,6 @@ export class App {
         this.sidebar = new Sidebar('#sidebar', '#sidebar-controls', this);
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
-        this.google = null;
-        this.google_loading = false;
 
         this.reset_maps();
         this.switch_map(this.map_state.map_type);
@@ -109,7 +103,7 @@ export class App {
         this.google_loading = false;
     }
 
-    public switch_map(type: string): void {
+    public switch_map(type: MapType|null): void {
         if (this.google_maps_error) {
             switch (type) {
                 case MapType.GOOGLE_ROADMAP:
@@ -239,7 +233,7 @@ export class App {
             };
 
             const url = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=${callbackName}`;
-            getScript(url, null);
+            getScript(url);
         });
 
         promise
@@ -324,10 +318,10 @@ export class App {
                         new Coordinates(json_data[0].lat, json_data[0].lon)
                     );
                 } else {
-                    self.message_error(self.lang.translate('search.no-result'));
+                    self.message_error(self.translate('search.no-result'));
                 }
             }).catch((error: any): void => {
-                self.message_error(self.lang.translate('search.server-error').replace("{1}", error));
+                self.message_error(self.translate('search.server-error').replace("{1}", error));
             });
     }
 
@@ -351,9 +345,9 @@ export class App {
     }
 
     public translate(key: string): string {
-        if (this.lang === null) {
+        if (this._lang === null) {
             return key;
         }
-        return this.lang.translate(key);
+        return this._lang.translate(key);
     }
 }

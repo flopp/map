@@ -1,16 +1,13 @@
-export function getScript(url: string, callback: () => void): void {
+export function getScript(url: string): void {
     const prior = document.getElementsByTagName('script')[0];
-    let script = document.createElement('script');
+    let script: HTMLScriptElement|undefined = document.createElement('script');
     script.async = true;
 
     script.addEventListener('load', (): void => {
-        script.onload = null;
+        script!.onload = null;
         script = undefined;
-        if (callback) {
-            callback();
-        }
     });
 
     script.src = url;
-    prior.parentNode.insertBefore(script, prior);
+    prior.parentNode!.insertBefore(script, prior);
 };

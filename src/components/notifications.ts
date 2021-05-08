@@ -2,18 +2,13 @@ import {create_element} from "./utilities";
 import {Notification} from "./notification";
 
 export class Notifications {
-    private next_id: number;
-    private notifications: Map<number, Notification>;
-    private container: HTMLElement;
-    private max: number;
+    private next_id: number = 0;
+    private notifications: Map<number, Notification>|null = null;
+    private container: HTMLElement|null = null;
+    private max: number = 3;
 
     constructor() {
         const self = this;
-
-        this.next_id = 0;
-        this.notifications = new Map<number, Notification>();
-        this.container = null;
-        this.max = 3;
 
         // We need DOM to be ready
         if (
@@ -29,6 +24,7 @@ export class Notifications {
     }
 
     public init(): void {
+        this.notifications = new Map<number, Notification>();
         this.container = create_element('div', [], {"id": 'notification-container'});
         document.body.appendChild(this.container);
     }
@@ -38,9 +34,9 @@ export class Notifications {
             return;
         }
 
-        if (this.notifications.size >= this.max) {
-            let hide_count = 1 + this.notifications.size - this.max;
-            this.notifications.forEach((value: Notification): void => {
+        if (this.notifications!.size >= this.max) {
+            let hide_count = 1 + this.notifications!.size - this.max;
+            this.notifications!.forEach((value: Notification): void => {
                 if (hide_count > 0) {
                     value.hide();
                 }
@@ -52,12 +48,12 @@ export class Notifications {
         this.next_id += 1;
 
         const notification = new Notification(this, id, text, type);
-        this.notifications.set(id, notification);
-        this.container.insertBefore(notification.get_div(), this.container.firstChild);
+        this.notifications!.set(id, notification);
+        this.container!.insertBefore(notification.get_div(), this.container!.firstChild);
     }
 
     public removeNotification(notification: Notification): void {
-        this.container.removeChild(notification.get_div());
-        this.notifications.delete(notification.get_id());
+        this.container!.removeChild(notification.get_div());
+        this.notifications!.delete(notification.get_id());
     }
 }

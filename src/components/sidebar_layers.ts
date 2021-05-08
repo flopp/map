@@ -1,10 +1,10 @@
 import {App} from './app';
 import {MapStateChange} from './map_state';
 import {MapStateObserver} from "./map_state_observer";
-import {MapType, maptype2human, isGoogle} from './map_type';
+import {MapType, maptype2human, maptype2string, isGoogle, string2maptype} from './map_type';
 import {remove_element} from "./utilities";
 
-interface BaseLayerDict {type: string, option?: HTMLOptionElement};
+interface BaseLayerDict {type: MapType, option: HTMLOptionElement|null};
 export class SidebarLayers extends MapStateObserver {
     private div: HTMLElement;
     private base_layers: BaseLayerDict[];
@@ -17,35 +17,35 @@ export class SidebarLayers extends MapStateObserver {
         super(app);
         const self = this;
 
-        this.div = document.querySelector('#sidebar-layers');
+        this.div = document.querySelector('#sidebar-layers')!;
 
         this.base_layers = [
-            {type: MapType.OPENSTREETMAP},
-            {type: MapType.OPENTOPOMAP},
-            {type: MapType.STAMEN_TERRAIN},
-            {type: MapType.HUMANITARIAN},
-            {type: MapType.ARCGIS_WORLDIMAGERY},
-            {type: MapType.GOOGLE_ROADMAP},
-            {type: MapType.GOOGLE_SATELLITE},
-            {type: MapType.GOOGLE_HYBRID},
-            {type: MapType.GOOGLE_TERRAIN},
+            {type: MapType.OPENSTREETMAP, option: null},
+            {type: MapType.OPENTOPOMAP, option: null},
+            {type: MapType.STAMEN_TERRAIN, option: null},
+            {type: MapType.HUMANITARIAN, option: null},
+            {type: MapType.ARCGIS_WORLDIMAGERY, option: null},
+            {type: MapType.GOOGLE_ROADMAP, option: null},
+            {type: MapType.GOOGLE_SATELLITE, option: null},
+            {type: MapType.GOOGLE_HYBRID, option: null},
+            {type: MapType.GOOGLE_TERRAIN, option: null},
         ];
 
-        this.base_layer_select = this.div.querySelector('[data-base-layer]');
+        this.base_layer_select = this.div.querySelector('[data-base-layer]')!;
         this.base_layers.forEach((base_layer: BaseLayerDict): void => {
             base_layer.option = new Option(
                 maptype2human(base_layer.type),
-                base_layer.type,
+                maptype2string(base_layer.type)!,
                 false,
                 base_layer.type === self.app.map_state.map_type
             );
             self.base_layer_select.appendChild(base_layer.option);
         });
         this.base_layer_select.onchange = (): void => {
-            app.switch_map(self.base_layer_select.value);
+            app.switch_map(string2maptype(self.base_layer_select.value));
         };
 
-        this.div.querySelector('[data-add-keys-button]').addEventListener('click', (): void => {
+        this.div.querySelector('[data-add-keys-button]')!.addEventListener('click', (): void => {
             self.app.show_api_keys_dialog();
         });
 
@@ -55,7 +55,7 @@ export class SidebarLayers extends MapStateObserver {
 
         this.hill_shading_checkbox = this.div.querySelector(
             '[data-hill-shading-layer]',
-        );
+        )!;
         this.hill_shading_checkbox.checked = this.app.map_state.hill_shading;
         this.hill_shading_checkbox.onchange = (): void => {
             self.app.map_state.set_hill_shading(
@@ -65,7 +65,7 @@ export class SidebarLayers extends MapStateObserver {
 
         this.german_npa_checkbox = this.div.querySelector(
             '[data-german-npa-layer]',
-        );
+        )!;
         this.german_npa_checkbox.checked = this.app.map_state.german_npa;
         this.german_npa_checkbox.onchange = (): void => {
             self.app.map_state.set_german_npa(
@@ -75,7 +75,7 @@ export class SidebarLayers extends MapStateObserver {
 
         this.opencaching_checkbox = this.div.querySelector(
             '[data-opencaching-layer]',
-        );
+        )!;
         this.opencaching_checkbox.checked = this.app.map_state.opencaching;
         this.opencaching_checkbox.onchange = (): void => {
             self.app.map_state.set_opencaching(
@@ -88,13 +88,16 @@ export class SidebarLayers extends MapStateObserver {
         if ((changes & MapStateChange.MAPTYPE) === MapStateChange.NOTHING) {
             return;
         }
+        if (this.app.map_state.map_type === null) {
+            return;
+        }
 
         /* base_layer */
-        this.base_layer_select.value = this.app.map_state.map_type;
+        this.base_layer_select.value = maptype2string(this.app.map_state.map_type)!;
         this.update_base_layer_help();
     }
 
-    public disable_layers(check_function: (layer_type: string) => boolean): void {
+    public disable_layers(check_function: (layer_type: MapType|null) => boolean): void {
         this.base_layers.forEach((base_layer: BaseLayerDict): void => {
             if (check_function(base_layer.type)) {
                 if (base_layer.option) {
@@ -106,14 +109,14 @@ export class SidebarLayers extends MapStateObserver {
         this.update_base_layer_help();
     }
 
-    public enable_layers(check_function: (layer_type: string) => boolean): void {
+    public enable_layers(check_function: (layer_type: MapType|null) => boolean): void {
         const self = this;
         this.base_layers.forEach((base_layer: BaseLayerDict): void => {
             if (check_function(base_layer.type)) {
                 if (!base_layer.option) {
                     base_layer.option = new Option(
                         maptype2human(base_layer.type),
-                        base_layer.type,
+                        maptype2string(base_layer.type)!,
                         false,
                         base_layer.type === self.app.map_state.map_type
                     );

@@ -21,7 +21,7 @@ function to_coordinates(leaflet_latlng: L.LatLng): Coordinates {
 
 interface MarkerObjDict {
     marker_obj: L.Marker;
-    circle_obj: L.Polygon;
+    circle_obj: L.Polygon|null;
     last_name: string;
     last_color: Color;
 };
@@ -38,12 +38,12 @@ interface OpencachingMarker {
 };
 
 export class LeafletWrapper extends MapWrapper {
-    private automatic_event: boolean;
-    private hill_shading_enabled: boolean;
-    private hill_shading_layer: L.TileLayer;
-    private german_npa_enabled: boolean;
-    private german_npa_layer: L.TileLayer;
-    private opencaching: Opencaching;
+    private automatic_event: boolean = false;
+    private hill_shading_enabled: boolean = false;
+    private hill_shading_layer: L.TileLayer|null = null;
+    private german_npa_enabled: boolean = false;
+    private german_npa_layer: L.TileLayer|null = null;
+    private opencaching: Opencaching|null = null;
     private opencaching_markers: Map<string, OpencachingMarker>;
     private opencaching_icons: Map<string, L.Icon>;
     private map: L.Map;
@@ -56,12 +56,6 @@ export class LeafletWrapper extends MapWrapper {
 
     constructor(div_id: string, app: App) {
         super(div_id, app);
-        this.automatic_event = false;
-        this.hill_shading_enabled = false;
-        this.hill_shading_layer = null;
-        this.german_npa_enabled = false;
-        this.german_npa_layer = null;
-        this.opencaching = null;
         this.opencaching_markers = new Map();
         this.opencaching_icons = new Map();
     }
@@ -150,7 +144,7 @@ export class LeafletWrapper extends MapWrapper {
         });
     }
 
-    public set_map_type(map_type: string): void {
+    public set_map_type(map_type: MapType): void {
         let layer = null;
         if (this.layers.has(map_type)) {
             layer = this.layers.get(map_type);
@@ -249,13 +243,13 @@ export class LeafletWrapper extends MapWrapper {
     protected create_marker_object(marker: Marker): void {
         const self = this;
 
-        const obj = {
+        const obj: MarkerObjDict = {
             marker_obj: L.marker(from_coordinates(marker.coordinates), {
                 draggable: true,
                 autoPan: true,
                 icon: this.create_icon(marker),
             }),
-            circle_obj: (null as L.Polygon),
+            circle_obj: null,
             last_name: marker.name,
             last_color: marker.color,
         };
@@ -267,12 +261,13 @@ export class LeafletWrapper extends MapWrapper {
                 marker.get_id(),
                 to_coordinates(obj.marker_obj.getLatLng())
             );
-            if (obj.circle_obj) {
+            const marker_obj = (self.markers.get(marker.get_id()) as MarkerObjDict);
+            if (marker_obj.circle_obj) {
                 const center = to_coordinates(obj.marker_obj.getLatLng());
                 const points = center
                     .geodesic_circle(marker.radius)
                     .map(from_coordinates);
-                obj.circle_obj.setLatLngs(points);
+                    marker_obj.circle_obj.setLatLngs(points);
             }
         });
 
@@ -411,20 +406,22 @@ export class LeafletWrapper extends MapWrapper {
             return;
         }
 
-        const path = this.app.map_state
-            .get_marker(line.marker1)
-            .coordinates.interpolate_geodesic_line(
-                this.app.map_state.get_marker(line.marker2).coordinates,
-                this.app.map_state.zoom,
+        const marker1 = this.app.map_state.get_marker(line.marker1);
+        const marker2 = this.app.map_state.get_marker(line.marker2);
+        if (marker1 !== null && marker2 !== null) {
+            const path = marker1.coordinates.interpolate_geodesic_line(
+                marker2.coordinates,
+                this.app.map_state.zoom!,
             );
-        const leaflet_path = path.map(from_coordinates);
-        obj.line_obj.setLatLngs(leaflet_path);
-        if (leaflet_path.length <= 1) {
-            obj.arrow_obj.setLatLngs([]);
-        } else {
-            const last = leaflet_path[leaflet_path.length - 1];
-            const last1 = leaflet_path[leaflet_path.length - 2];
-            obj.arrow_obj.setLatLngs(this.arrow_head(last1, last));
+            const leaflet_path = path.map(from_coordinates);
+            obj.line_obj.setLatLngs(leaflet_path);
+            if (leaflet_path.length <= 1) {
+                obj.arrow_obj.setLatLngs([]);
+            } else {
+                const last = leaflet_path[leaflet_path.length - 1];
+                const last1 = leaflet_path[leaflet_path.length - 2];
+                obj.arrow_obj.setLatLngs(this.arrow_head(last1, last));
+            }
         }
 
         if (!line.color.equals(obj.last_color)) {
@@ -478,11 +475,15 @@ export class LeafletWrapper extends MapWrapper {
             }
         });
 
+        if (this.opencaching === null) {
+            return;
+        }
+
         const new_markers: Map<string, OpencachingMarker> = new Map();
         caches.forEach((data: OkapiCache, code: string): void => {
             if (!self.opencaching_markers.has(code)) {
                 const m: OpencachingMarker = {
-                    marker_obj: L.marker(from_coordinates(self.opencaching.parseLocation(data.location)), {
+                    marker_obj: L.marker(from_coordinates(Opencaching.parseLocation(data.location)), {
                         icon: self.opencaching_icon(data.type),
                         draggable: false
                     }),
@@ -492,7 +493,7 @@ export class LeafletWrapper extends MapWrapper {
                 m.marker_obj.bindPopup(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
                 new_markers.set(code, m);
             } else {
-                new_markers.set(code, self.opencaching_markers.get(code));
+                new_markers.set(code, self.opencaching_markers.get(code)!);
             }
         });
         this.opencaching_markers = new_markers;
@@ -501,11 +502,11 @@ export class LeafletWrapper extends MapWrapper {
     public opencaching_icon(type: string): L.Icon {
         if (!this.opencaching_icons.has(type)) {
             const icon = L.icon({
-                iconUrl: this.opencaching.type_icon(type),
+                iconUrl: Opencaching.type_icon(type),
                 iconAnchor: [12, 25]
             });
-            return icon;
+            this.opencaching_icons.set(type, icon);
         }
-        return this.opencaching_icons.get(type);
+        return this.opencaching_icons.get(type)!;
     }
 }

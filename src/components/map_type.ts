@@ -1,24 +1,20 @@
-const MapType = {
-    OPENSTREETMAP: 'OPENSTREETMAP',
-    OPENTOPOMAP: 'OPENTOPOMAP',
-    STAMEN_TERRAIN: 'STAMEN_TERRAIN',
-    HUMANITARIAN: 'HUMANITARIAN',
-    ARCGIS_WORLDIMAGERY: 'ARCGIS_WORLDIMAGERY',
-    GOOGLE_ROADMAP: 'GOOGLE_ROADMAP',
-    GOOGLE_SATELLITE: 'GOOGLE_SATELLITE',
-    GOOGLE_HYBRID: 'GOOGLE_HYBRID',
-    GOOGLE_TERRAIN: 'GOOGLE_TERRAIN',
+export enum MapType {
+    OPENSTREETMAP = 'OPENSTREETMAP',
+    OPENTOPOMAP = 'OPENTOPOMAP',
+    STAMEN_TERRAIN = 'STAMEN_TERRAIN',
+    HUMANITARIAN = 'HUMANITARIAN',
+    ARCGIS_WORLDIMAGERY = 'ARCGIS_WORLDIMAGERY',
+    GOOGLE_ROADMAP = 'GOOGLE_ROADMAP',
+    GOOGLE_SATELLITE = 'GOOGLE_SATELLITE',
+    GOOGLE_HYBRID = 'GOOGLE_HYBRID',
+    GOOGLE_TERRAIN = 'GOOGLE_TERRAIN',
 };
 
-if (Object.freeze) {
-    Object.freeze(MapType);
+export function maptype2string(type: MapType|null): string|null {
+    return String(type);
 }
 
-function maptype2string(type: string|null): string|null {
-    return type;
-}
-
-function string2maptype(s: string): string|null {
+export function string2maptype(s: string): MapType|null {
     switch (s.toUpperCase()) {
         case MapType.OPENSTREETMAP:
             return MapType.OPENSTREETMAP;
@@ -42,7 +38,7 @@ function string2maptype(s: string): string|null {
     return null;
 }
 
-function maptype2human(t: string): string {
+export function maptype2human(t: MapType|null): string {
     switch (t) {
         case MapType.OPENSTREETMAP:
             return 'OpenStreetMap';
@@ -66,7 +62,7 @@ function maptype2human(t: string): string {
     return 'Unknown';
 }
 
-function isGoogle(t: string): boolean {
+export function isGoogle(t: MapType|null): boolean {
     switch (t) {
         case MapType.GOOGLE_ROADMAP:
         case MapType.GOOGLE_SATELLITE:
@@ -76,11 +72,3 @@ function isGoogle(t: string): boolean {
     }
     return false;
 }
-
-export {
-    MapType,
-    maptype2string,
-    maptype2human,
-    string2maptype,
-    isGoogle,
-};

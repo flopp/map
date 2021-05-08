@@ -9,18 +9,18 @@ import {Marker, MarkerJson} from './marker';
 import {Storage} from './storage';
 import {parse_float, parse_int} from './utilities';
 
-export const MapStateChange = {
-    NOTHING: 0,
-    SIDEBAR: 1,
-    MAPTYPE: 2,
-    CENTER: 4,
-    ZOOM: 8,
-    VIEW: 12,
-    MARKERS: 16,
-    LINES: 32,
-    API_KEYS: 64,
-    LANGUAGE: 128,
-    EVERYTHING: 255,
+export enum MapStateChange {
+    NOTHING = 0,
+    SIDEBAR = 1,
+    MAPTYPE = 2,
+    CENTER = 4,
+    ZOOM = 8,
+    VIEW = 12,
+    MARKERS = 16,
+    LINES = 32,
+    API_KEYS = 64,
+    LANGUAGE = 128,
+    EVERYTHING = 255,
 };
 
 interface MarkerSettingsDict {
@@ -29,18 +29,18 @@ interface MarkerSettingsDict {
 interface LineSettingsDict {distance_format: DistanceFormat, random_color: boolean, color: Color};
 export class MapState {
     public app: App;
-    public language: string;
-    public sidebar_open: string|null;
-    public google_api_key: string;
-    public map_type: string|null;
-    public zoom: number|null;
-    public center: Coordinates|null;
-    public hill_shading: boolean;
-    public german_npa: boolean;
-    public opencaching: boolean;
-    public markers: Marker[];
+    public language: string = "";
+    public sidebar_open: string|null = null;
+    public google_api_key: string = "";
+    public map_type: MapType|null = null;
+    public zoom: number|null = null;
+    public center: Coordinates|null = null;
+    public hill_shading: boolean = false;
+    public german_npa: boolean = false;
+    public opencaching: boolean = false;
+    public markers: Marker[] = [];
     public markers_hash: Map<number, Marker>;
-    public lines: Line[];
+    public lines: Line[] = [];
     public lines_hash: Map<number, Line>;
     public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DMS;
     public settings_marker_random_color: boolean;
@@ -49,33 +49,13 @@ export class MapState {
     public settings_line_distance_format: DistanceFormat = DistanceFormat.m;
     public settings_line_random_color: boolean = true;
     public settings_line_color: Color = Color.default_color();
-    public observers: MapStateObserver[];
+    public observers: MapStateObserver[] = [];
     public storage: Storage;
 
     constructor(app: App) {
         this.app = app;
-
-        this.language = '';
-
-        this.sidebar_open = null;
-
-        this.google_api_key = '';
-
-        this.map_type = null;
-        this.zoom = null;
-        this.center = null;
-        this.hill_shading = false;
-        this.german_npa = false;
-        this.opencaching = false;
-
-        this.markers = [];
         this.markers_hash = new Map();
-
-        this.lines = [];
         this.lines_hash = new Map();
-
-        this.observers = [];
-
         this.storage = new Storage();
     }
 
@@ -626,7 +606,7 @@ export class MapState {
         this.update_observers(MapStateChange.SIDEBAR);
     }
 
-    public set_map_type(map_type: string): void {
+    public set_map_type(map_type: MapType|null): void {
         this.map_type = map_type;
         this.storage.set('map_type', maptype2string(this.map_type));
         this.update_observers(MapStateChange.MAPTYPE);

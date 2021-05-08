@@ -7,7 +7,7 @@ export class ApiKeysDialog {
     constructor(app: App) {
         const self = this;
 
-        this.div = document.querySelector('#api-keys-dialog');
+        this.div = document.querySelector('#api-keys-dialog')!;
         this.app = app;
 
         this.div.querySelectorAll('[data-cancel]').forEach((element: HTMLElement): void => {

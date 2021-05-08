@@ -57,19 +57,16 @@ const Icons = new Map([
 ]);
 
 export class Opencaching {
-    private state: State;
-    private timer: number|null;
+    private state: State = State.Uninitialized;
+    private timer: number|null = null;
     private callback: CachesCallback;
-    private bounds: [number, number, number, number][];
-    private sites: Site[]|null;
+    private bounds: [number, number, number, number][] = [];
+    private sites: Site[]|null = null;
     private disabled_sites: Set<string>;
 
     constructor(callback: CachesCallback) {
-        this.state = State.Uninitialized;
-        this.timer = null;
         this.callback = callback;
         this.bounds = [];
-        this.sites = null;
         this.disabled_sites = new Set();
     }
 
@@ -103,12 +100,12 @@ export class Opencaching {
         this.unscheduleLoad();
     }
 
-    public parseLocation(loc: string): Coordinates {
+    public static parseLocation(loc: string): Coordinates {
         const lat_lng = loc.split("|");
         return new Coordinates(parseFloat(lat_lng[0]), parseFloat(lat_lng[1]));
     }
 
-    public type_icon(type: string): string {
+    public static type_icon(type: string): string {
         if (Icons.has(type)) {
             return Icons.get(type)!;
         }
@@ -138,7 +135,7 @@ export class Opencaching {
                         return false;
                     }
                     const key = keys.get(site.site_name);
-                    if (key === "") {
+                    if (key === null || key === "") {
                         return false;
                     }
                     return true;
@@ -191,7 +188,7 @@ export class Opencaching {
         this.bounds = [];
 
         const promises: Promise<Map<string, OkapiCache>>[] = [];
-        self.sites.forEach((site: Site): void => {
+        this.sites.forEach((site: Site): void => {
             if (self.disabled_sites.has(site.name)) {
                 return;
             }

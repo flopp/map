@@ -79,7 +79,7 @@ export class Language extends MapStateObserver {
         }
 
         document.querySelectorAll('[data-i18n]').forEach((element: HTMLElement): void => {
-            const key = element.getAttribute('data-i18n');
+            const key = element.getAttribute('data-i18n')!;
             let translation = i18next.t(key);
             if (translation === '') {
                 translation = key;

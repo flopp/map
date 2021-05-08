@@ -12,7 +12,7 @@ export class MultiMarkersDialog {
     constructor(app: App) {
         const self = this;
 
-        this.div = document.querySelector('#multi-markers-dialog');
+        this.div = document.querySelector('#multi-markers-dialog')!;
         this.app = app;
 
         (this.div.querySelector('[data-use-common-name]') as HTMLInputElement).onchange = (): void => {
@@ -191,7 +191,7 @@ export class MultiMarkersDialog {
                 }
 
                 if (!line_has_errors) {
-                    data.push({name, coordinates, color, radius});
+                    data.push({name, coordinates: coordinates!, color: color!, radius:  radius!});
                     marker_index += 1;
                 }
             });
@@ -226,29 +226,21 @@ export class MultiMarkersDialog {
         ) as HTMLInputElement).checked;
 
         const description = [
-            '<' +
-                this.app.translate('dialog.multi-markers.coordinates_token') +
-                '>',
+            `<${this.app.translate('dialog.multi-markers.coordinates_token')}>`,
         ];
         if (!use_common_name) {
             description.push(
-                '<' +
-                    this.app.translate('dialog.multi-markers.name_token') +
-                    '>',
+                `<${this.app.translate('dialog.multi-markers.name_token')}>`,
             );
         }
         if (!use_common_color) {
             description.push(
-                '<' +
-                    this.app.translate('dialog.multi-markers.color_token') +
-                    '>',
+                `<${this.app.translate('dialog.multi-markers.color_token')}>`,
             );
         }
         if (!use_common_radius) {
             description.push(
-                '<' +
-                    this.app.translate('dialog.multi-markers.radius_token') +
-                    '>',
+                `<${this.app.translate('dialog.multi-markers.radius_token')}>`,
             );
         }
         (this.div.querySelector('[data-format]') as HTMLTextAreaElement).innerText = description.join(

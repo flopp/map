@@ -2,13 +2,8 @@ import {Color} from './color';
 import {create_element} from "./utilities";
 
 export class IconFactory {
-    private font: string
-    private canvas: HTMLCanvasElement
-
-    constructor() {
-        this.font = '16px sans';
-        this.canvas = null;
-    }
+    private font: string = '16px sans';
+    private canvas: HTMLCanvasElement|null = null;
 
     public create_map_icon(text: string, color: Color) : {url: string, size: number[], anchor: number[]} {
         const encoder = create_element('span');
@@ -74,8 +69,11 @@ export class IconFactory {
         }
 
         const context = this.canvas.getContext('2d');
-        context.font = this.font;
+        if (!context) {
+           return 8 * text.length;
+        }
 
+        context.font = this.font;
         return context.measureText(text).width;
     }
 }

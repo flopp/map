@@ -7,14 +7,13 @@ import {parse_float} from './utilities';
 export class ProjectionDialog {
     private div: HTMLElement;
     private app: App;
-    private marker: Marker|null;
+    private marker: Marker|null = null;
 
     constructor(app: App) {
         const self = this;
 
         this.div = document.querySelector('#projection-dialog')!;
         this.app = app;
-        this.marker = null;
 
         this.div.querySelectorAll('[data-cancel]').forEach((element: HTMLElement): void => {
             element.addEventListener('click', (): void => {
