@@ -5,7 +5,7 @@
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
-        "strictNullChecks": false,
+        "strictNullChecks": true,
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "module": "es6",

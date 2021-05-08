@@ -10,8 +10,8 @@ export class MapMenu {
     public addMarker: HTMLElement;
     public deleteMarker: HTMLElement;
     public projection: HTMLElement;
-    public marker: Marker;
-    public coordinates: Coordinates;
+    public marker: Marker|null = null;
+    public coordinates: Coordinates|null = null;
 
     constructor(app: App) {
         const self = this;
@@ -62,9 +62,6 @@ export class MapMenu {
             }
             return false;
         });
-
-        this.marker = null;
-        this.coordinates = null;
 
         this.hide();
     }

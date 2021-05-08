@@ -8,56 +8,7 @@
     </head>
 
     <body>
-        <div id="sidebar-controls">
-            <div class="sidebar-control">
-                <a href="#" class="sidebar-control-button" id="btn-search" data-container="#sidebar-search">
-                    <svg class="icon24">
-                        <use xlink:href="assets/feather-sprite.svg#search"/>
-                    </svg>
-                </a>
-            </div>
-
-            <div class="sidebar-control">
-                <a href="#" class="sidebar-control-button" id="btn-layers" data-container="#sidebar-layers">
-                    <svg class="icon24">
-                        <use xlink:href="assets/feather-sprite.svg#layers"/>
-                    </svg>
-                </a>
-            </div>
-
-            <div class="sidebar-control">
-                <a href="#" class="sidebar-control-button" id="btn-markers" data-container="#sidebar-markers">
-                    <svg class="icon24">
-                        <use xlink:href="assets/feather-sprite.svg#map-pin"/>
-                    </svg>
-                </a>
-            </div>
-
-            <div class="sidebar-control">
-                <a href="#" class="sidebar-control-button" id="btn-lines" data-container="#sidebar-lines">
-                    <svg class="icon24">
-                        <use xlink:href="assets/feather-sprite.svg#maximize-2"/>
-                    </svg>
-                </a>
-            </div>
-
-            <div class="sidebar-control">
-                <a href="#" class="sidebar-control-button" id="btn-tools" data-container="#sidebar-tools">
-                    <svg class="icon24">
-                        <use xlink:href="assets/feather-sprite.svg#tool"/>
-                    </svg>
-                </a>
-            </div>
-
-            <div class="sidebar-control">
-                <a href="#" class="sidebar-control-button" id="btn-info" data-container="#sidebar-info">
-                    <svg class="icon24">
-                        <use xlink:href="assets/feather-sprite.svg#help-circle"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-
+        <div id="sidebar-controls"></div>
         <div id="sidebar">
             <div class="sidebar-container" id="sidebar-search">
                 <div class="header">
@@ -69,7 +20,7 @@
                     </span>
                 </div>
 
-                <div class="content">
+                <div class="scrollable-content content">
                     <div class="field">
                         <div class="control">
                             <a id="btn-locate" data-i18n="sidebar.search.locate_me" class="button is-fullwidth is-success">Locate Me</a>
@@ -107,7 +58,7 @@
                     </span>
                 </div>
 
-                <div class="content">
+                <div class="scrollable-content content">
                     <div class="field">
                         <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
                         <div class="control">
@@ -249,7 +200,7 @@
                         </svg>
                     </span>
                 </div>
-                <div class="content">
+                <div class="scrollable-content content">
                     <div class="field">
                         <label class="label" data-i18n="sidebar.tools.language">Language</label>
                         <div class="control">
@@ -305,7 +256,7 @@
                         </svg>
                     </span>
                 </div>
-                <div class="content">
+                <div class="scrollable-content content">
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.contact">Contact/Mail</label>
                         <p class="help" data-i18n="sidebar.info.contact_help">If you have any suggestions please feel free to contact me via e-mail.</p>

@@ -18,4 +18,12 @@ export class SidebarItem extends MapStateObserver {
             });
         }
     }
+
+    public activate(): void {
+        this._div.classList.add("active");
+    }
+
+    public deactivate(): void {
+        this._div.classList.remove("active");
+    }
 };
