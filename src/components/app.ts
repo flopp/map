@@ -58,7 +58,7 @@ export class App {
 
         (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'none';
 
-        this.sidebar = new Sidebar('#sidebar', '#sidebar-controls', this);
+        this.sidebar = new Sidebar(this);
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
 

@@ -5,7 +5,6 @@ import {Color} from './color';
 import {Line} from './line';
 import {LineSettingsDialog} from './line_settings_dialog';
 import {MapStateChange} from "./map_state";
-import {MapStateObserver} from "./map_state_observer";
 import {Marker} from './marker';
 import {
     create_button,
@@ -16,13 +15,14 @@ import {
     parse_int,
     remove_element,
 } from './utilities';
+import {SidebarItem} from "./sidebar_item";
 
-export class SidebarLines extends MapStateObserver {
+export class SidebarLines extends SidebarItem {
     private sortable: Sortable;
     private settingsDialog: LineSettingsDialog;
 
-    constructor(app: App) {
-        super(app);
+    constructor(app: App, id: string) {
+        super(app, id);
 
         const self = this;
 

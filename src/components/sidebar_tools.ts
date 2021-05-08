@@ -1,18 +1,17 @@
 import {App} from './app';
 import {MapStateChange} from './map_state';
-import {MapStateObserver} from "./map_state_observer";
 import {create_element} from "./utilities";
+import {SidebarItem} from "./sidebar_item";
 
-export class SidebarTools extends MapStateObserver {
+export class SidebarTools extends SidebarItem {
     private language_select: HTMLInputElement;
 
-    constructor(app: App) {
-        super(app);
+    constructor(app: App, id: string) {
+        super(app, id);
 
         const self = this;
 
-        const div = document.querySelector('#sidebar-tools')!;
-        this.language_select = div.querySelector('[data-language]')!;
+        this.language_select = this._div.querySelector('[data-language]')!;
 
         interface TitleShort { title: string, short: string};
         [

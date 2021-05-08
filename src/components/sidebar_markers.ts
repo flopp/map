@@ -5,7 +5,6 @@ import {App} from './app';
 import {Color} from './color';
 import {Coordinates} from './coordinates';
 import {MapStateChange} from './map_state';
-import {MapStateObserver} from "./map_state_observer";
 import {Marker} from './marker';
 import {MarkerSettingsDialog} from './marker_settings_dialog';
 import {
@@ -19,6 +18,7 @@ import {
     create_color_input,
     remove_element,
 } from './utilities';
+import {SidebarItem} from "./sidebar_item";
 
 interface ClipboardJsEvent {
     action: string;
@@ -27,12 +27,12 @@ interface ClipboardJsEvent {
     clearSelection(): void;
 }
 
-export class SidebarMarkers extends MapStateObserver {
+export class SidebarMarkers extends SidebarItem {
     private sortable: Sortable;
     private settingsDialog: MarkerSettingsDialog;
 
-    constructor(app: App) {
-        super(app);
+    constructor(app: App, id: string) {
+        super(app, id);
 
         const self = this;
 

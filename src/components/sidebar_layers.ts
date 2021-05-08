@@ -1,23 +1,22 @@
 import {App} from './app';
 import {MapStateChange} from './map_state';
-import {MapStateObserver} from "./map_state_observer";
 import {MapType, maptype2human, maptype2string, isGoogle, string2maptype} from './map_type';
 import {remove_element} from "./utilities";
+import {SidebarItem} from "./sidebar_item";
 
 interface BaseLayerDict {type: MapType, option: HTMLOptionElement|null};
-export class SidebarLayers extends MapStateObserver {
-    private div: HTMLElement;
+
+export class SidebarLayers extends SidebarItem {
     private base_layers: BaseLayerDict[];
     private base_layer_select: HTMLSelectElement;
     private hill_shading_checkbox: HTMLInputElement;
     private german_npa_checkbox: HTMLInputElement;
     private opencaching_checkbox: HTMLInputElement;
 
-    constructor(app: App) {
-        super(app);
-        const self = this;
+    constructor(app: App, id: string) {
+        super(app, id);
 
-        this.div = document.querySelector('#sidebar-layers')!;
+        const self = this;
 
         this.base_layers = [
             {type: MapType.OPENSTREETMAP, option: null},
@@ -31,7 +30,7 @@ export class SidebarLayers extends MapStateObserver {
             {type: MapType.GOOGLE_TERRAIN, option: null},
         ];
 
-        this.base_layer_select = this.div.querySelector('[data-base-layer]')!;
+        this.base_layer_select = this._div.querySelector('[data-base-layer]')!;
         this.base_layers.forEach((base_layer: BaseLayerDict): void => {
             base_layer.option = new Option(
                 maptype2human(base_layer.type),
@@ -45,7 +44,7 @@ export class SidebarLayers extends MapStateObserver {
             app.switch_map(string2maptype(self.base_layer_select.value));
         };
 
-        this.div.querySelector('[data-add-keys-button]')!.addEventListener('click', (): void => {
+        this._div.querySelector('[data-add-keys-button]')!.addEventListener('click', (): void => {
             self.app.show_api_keys_dialog();
         });
 
@@ -53,7 +52,7 @@ export class SidebarLayers extends MapStateObserver {
             this.disable_google_layers();
         }
 
-        this.hill_shading_checkbox = this.div.querySelector(
+        this.hill_shading_checkbox = this._div.querySelector(
             '[data-hill-shading-layer]',
         )!;
         this.hill_shading_checkbox.checked = this.app.map_state.hill_shading;
@@ -63,7 +62,7 @@ export class SidebarLayers extends MapStateObserver {
             );
         };
 
-        this.german_npa_checkbox = this.div.querySelector(
+        this.german_npa_checkbox = this._div.querySelector(
             '[data-german-npa-layer]',
         )!;
         this.german_npa_checkbox.checked = this.app.map_state.german_npa;
@@ -73,7 +72,7 @@ export class SidebarLayers extends MapStateObserver {
             );
         };
 
-        this.opencaching_checkbox = this.div.querySelector(
+        this.opencaching_checkbox = this._div.querySelector(
             '[data-opencaching-layer]',
         )!;
         this.opencaching_checkbox.checked = this.app.map_state.opencaching;
@@ -136,7 +135,7 @@ export class SidebarLayers extends MapStateObserver {
     }
 
     public update_base_layer_help(): void {
-        const help_div = (this.div.querySelector('[data-base-layer-help]') as HTMLElement);
+        const help_div = (this._div.querySelector('[data-base-layer-help]') as HTMLElement);
         if (this.app.has_google_maps()) {
             help_div.classList.add('is-hidden');
             return;

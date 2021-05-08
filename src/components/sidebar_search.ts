@@ -1,9 +1,9 @@
 import {App} from "./app";
-import {MapStateObserver} from "./map_state_observer";
+import {SidebarItem} from "./sidebar_item";
 
-export class SidebarSearch extends MapStateObserver {
-    constructor(app: App) {
-        super(app);
+export class SidebarSearch extends SidebarItem {
+    constructor(app: App, id: string) {
+        super(app, id);
 
         const self = this;
 
