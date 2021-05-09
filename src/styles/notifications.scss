@@ -5,7 +5,7 @@
     bottom: 0;
     right: 0;
     width: $sidebar_width;
-    z-index: 41;
+    z-index: $z_index_notifications;
     pointer-events: none;
     padding: 4px;
 }

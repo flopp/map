@@ -11,7 +11,6 @@ import {create_element, create_icon} from './utilities';
 import {SidebarItem} from './sidebar_item';
 
 export class Sidebar extends MapStateObserver {
-    private _sidebar: HTMLDivElement;
     private _sidebar_controls: HTMLDivElement;
     private _sidebars: Map<string, [HTMLDivElement, SidebarItem]>;
     public sidebar_layers: SidebarLayers;
@@ -21,7 +20,6 @@ export class Sidebar extends MapStateObserver {
 
         const self = this;
 
-        this._sidebar = document.getElementById('sidebar')! as HTMLDivElement;
         this._sidebar_controls = document.getElementById(
             'sidebar-controls',
         )! as HTMLDivElement;
@@ -105,13 +103,7 @@ export class Sidebar extends MapStateObserver {
                 },
             );
 
-            this._sidebar.classList.remove('sidebar-open');
-            this._sidebar_controls.classList.remove('sidebar-open');
-            document
-                .querySelectorAll('.map-container')
-                .forEach((mapContainer: HTMLElement): void => {
-                    mapContainer.classList.remove('sidebar-open');
-                });
+            document.getElementsByTagName("body")[0]!.classList.remove("sidebar-open");
         } else {
             let found = false;
             this._sidebars.forEach(
@@ -133,13 +125,7 @@ export class Sidebar extends MapStateObserver {
                 value[1].activate();
             }
 
-            this._sidebar.classList.add('sidebar-open');
-            this._sidebar_controls.classList.add('sidebar-open');
-            document
-                .querySelectorAll('.map-container')
-                .forEach((mapContainer: HTMLElement): void => {
-                    mapContainer.classList.add('sidebar-open');
-                });
+            document.getElementsByTagName("body")[0]!.classList.add("sidebar-open");
         }
 
         this.app.update_geometry();

@@ -1,0 +1,108 @@
+@import 'config.scss';
+
+#sidebar {
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: $sidebar_width;
+    z-index: $z_index_sidebar;
+    background: white;
+}
+
+body.sidebar-open #sidebar {
+    display: flex;
+    flex-direction: column;    
+}
+
+#sidebar-controls {
+    display: block;
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    bottom: 0;
+    z-index: $z_index_sidebar;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+body.sidebar-open #sidebar-controls {
+    right: $sidebar_width;
+}
+
+.sidebar-control {
+    margin-right: 0px;
+    margin-top: 10px;
+
+    background-color: rgba(0,0,0,0.6);
+    text-align: center;
+    pointer-events: all;
+
+    &.active {
+        background-color: hsl(204, 86%, 53%);
+    }
+}
+
+.sidebar-control-button {
+    display: flex;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.sidebar-control .sidebar-control-button:hover {
+    color: hsl(204, 86%, 53%);
+}
+
+.sidebar-control.active .sidebar-control-button:hover {
+    color: rgba(0,0,0,0.6);
+}
+
+.sidebar-container {
+    display: none;
+    width: 100%;
+
+    &.active {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        /* for Firefox */
+        min-height: 0;
+    }
+
+    & > .header {
+        padding: 10px 20px;
+        background-color: hsl(204, 86%, 53%);
+        color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+
+        & > .close {
+            cursor: pointer;    
+        }
+
+        & > h2 {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    }
+
+    & > .content {
+        padding: 8px;
+    }
+
+    & > .scrollable-content {
+        flex-grow: 1;
+        overflow: auto;
+        /* for Firefox */
+        min-height: 0;
+    }
+}
