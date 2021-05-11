@@ -1,47 +1,47 @@
-import {Coordinates} from './coordinates';
-import {getConfig} from './config';
+import {getConfig} from "./config";
+import {Coordinates} from "./coordinates";
 
 enum State {
     Uninitialized = 0,
     Initializing,
     Querying,
     Error,
-    Ready
-};
+    Ready,
+}
 
-interface Site {
-    name: string,
-    url: string,
-    key: string
-};
+interface ISite {
+    name: string;
+    url: string;
+    key: string;
+}
 
-interface OkapiInstallation {
-    site_url: string,
-    site_name: string,
-    okapi_base_url: string
-};
+interface IOkapiInstallation {
+    site_url: string;
+    site_name: string;
+    okapi_base_url: string;
+}
 
-export interface OkapiCache {
-    code: string,
-    name: string,
-    location: string,
-    status: string,
-    url: string,
-    type: string
-};
+export interface IOkapiCache {
+    code: string;
+    name: string;
+    location: string;
+    status: string;
+    url: string;
+    type: string;
+}
 
-interface OkapiError {
+interface IOkapiError {
     developer_message: string;
     reason_stack: string[];
     status: string;
     more_info: string;
-};
+}
 
-interface OkapiErrorMessage {
-    error: OkapiError;
-};
+interface IOkapiErrorMessage {
+    error: IOkapiError;
+}
 
-type CachesCallback = (caches: Map<string, OkapiCache>) => void;
+type CachesCallback = (caches: Map<string, IOkapiCache>) => void;
 
 const Icons = new Map([
     ["Other", "assets/cachetype-1.png"],
@@ -59,10 +59,10 @@ const Icons = new Map([
 export class Opencaching {
     private state: State = State.Uninitialized;
     private timer: number|null = null;
-    private callback: CachesCallback;
-    private bounds: [number, number, number, number][] = [];
-    private sites: Site[]|null = null;
-    private disabled_sites: Set<string>;
+    private readonly callback: CachesCallback;
+    private bounds: Array<[number, number, number, number]> = [];
+    private sites: ISite[]|null = null;
+    private readonly disabled_sites: Set<string>;
 
     constructor(callback: CachesCallback) {
         this.callback = callback;
@@ -93,6 +93,7 @@ export class Opencaching {
                 this.scheduleLoad();
                 break;
             }
+            default:
         }
     }
 
@@ -126,8 +127,8 @@ export class Opencaching {
 
         fetch("https://www.opencaching.de/okapi/services/apisrv/installations")
             .then((response: Response): Promise<any> => response.json())
-            .then((data: OkapiInstallation[]): void => {
-                self.sites = data.filter((site: OkapiInstallation): boolean => {
+            .then((data: IOkapiInstallation[]): void => {
+                self.sites = data.filter((site: IOkapiInstallation): boolean => {
                     if (!site.okapi_base_url.startsWith("https://")) {
                         return false;
                     }
@@ -139,13 +140,12 @@ export class Opencaching {
                         return false;
                     }
                     return true;
-                }).map((site: OkapiInstallation): Site => {
-                    return {
-                        "name": site.site_name,
-                        "url": site.okapi_base_url,
-                        "key": keys.get(site.site_name)!
-                    };
-                });
+                }).map((site: IOkapiInstallation): ISite =>
+                    ({
+                        name: site.site_name,
+                        url: site.okapi_base_url,
+                        key: keys.get(site.site_name)!,
+                    }));
 
                 self.state = State.Ready;
                 self.scheduleLoad();
@@ -169,7 +169,7 @@ export class Opencaching {
     }
 
     private unscheduleLoad(): void {
-        if (this.timer) {
+        if (this.timer !== null) {
             window.clearTimeout(this.timer);
             this.timer = null;
         }
@@ -187,8 +187,8 @@ export class Opencaching {
         const [north, south, west, east]: [number, number, number, number] = this.bounds[this.bounds.length-1];
         this.bounds = [];
 
-        const promises: Promise<Map<string, OkapiCache>>[] = [];
-        this.sites.forEach((site: Site): void => {
+        const promises: Array<Promise<Map<string, IOkapiCache>>> = [];
+        this.sites.forEach((site: ISite): void => {
             if (self.disabled_sites.has(site.name)) {
                 return;
             }
@@ -196,39 +196,39 @@ export class Opencaching {
             const bbox = `${south}|${west}|${north}|${east}`;
             const parameters = [
                 `consumer_key=${encodeURIComponent(site.key)}`,
-                `search_method=${encodeURIComponent('services/caches/search/bbox')}`,
+                `search_method=${encodeURIComponent("services/caches/search/bbox")}`,
                 `search_params=${encodeURIComponent(`{"bbox": "${bbox}", "limit": "500"}`)}`,
-                `retr_method=${encodeURIComponent('services/caches/geocaches')}`,
+                `retr_method=${encodeURIComponent("services/caches/geocaches")}`,
                 `retr_params=${encodeURIComponent('{"fields": "code|name|location|type|status|url"}')}`,
-                `wrap=${encodeURIComponent('false')}`
+                `wrap=${encodeURIComponent("false")}`,
             ];
             promises.push(
-                fetch(url + '?' + parameters.join('&'))
+                fetch(`${url}?${parameters.join("&")}`)
                     .then((response: Response): Promise<any> => response.json())
-                    .then((data: object): Map<string, OkapiCache> => {
-                        const caches: Map<string, OkapiCache> = new Map();
+                    .then((data: object): Map<string, IOkapiCache> => {
+                        const caches: Map<string, IOkapiCache> = new Map();
                         if (("error" in data) && data.hasOwnProperty("error")) {
-                            throw (data as OkapiErrorMessage).error;
+                            throw (data as IOkapiErrorMessage).error;
                         }
                         for (const key in data) {
                             if (data.hasOwnProperty(key)) {
-                                caches.set(key, (data as Record<string, OkapiCache>)[key]);
+                                caches.set(key, (data as Record<string, IOkapiCache>)[key]);
                             }
-                        };
+                        }
                         return caches;
-                    }).catch((error: any): Map<string, OkapiCache> => {
+                    }).catch((error: any): Map<string, IOkapiCache> => {
                         console.log(site.name, error);
                         console.log("Disabling site for future requests:", site.name);
                         self.disabled_sites.add(site.name);
                         return new Map();
-                    })
+                    }),
             );
         });
 
-        Promise.all(promises).then((cache_maps: Map<string, OkapiCache>[]): void => {
+        Promise.all(promises).then((cache_maps: Array<Map<string, IOkapiCache>>): void => {
             self.state = State.Ready;
-            const caches: Map<string, OkapiCache> = new Map();
-            cache_maps.forEach((caches_map: Map<string, OkapiCache>): void => {
+            const caches: Map<string, IOkapiCache> = new Map();
+            cache_maps.forEach((caches_map: Map<string, IOkapiCache>): void => {
                 caches_map.forEach((value: any, key: string): void => {
                     caches.set(key, value);
                 });

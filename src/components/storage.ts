@@ -1,25 +1,25 @@
-import {Color} from './color';
-import {Coordinates, CoordinatesFormat} from './coordinates';
-import {MapType} from './map_type';
-import { Marker } from './marker';
-import {parse_int, parse_float} from './utilities';
+import {Color} from "./color";
+import {Coordinates, CoordinatesFormat} from "./coordinates";
+import {MapType} from "./map_type";
+import { Marker } from "./marker";
+import {parse_float, parse_int} from "./utilities";
 
 export class Storage {
-    private ok: boolean;
+    private readonly ok: boolean;
 
     constructor() {
         this.ok = true;
         try {
-            const x = '__storage_test__';
+            const x = "__storage_test__";
             window.localStorage.setItem(x, x);
             window.localStorage.removeItem(x);
         } catch (e) {
             this.ok = false;
-            console.error('Local storage not available!');
+            console.error("Local storage not available!");
         }
 
         this.migrate();
-        this.set_int('version', 2);
+        this.set_int("version", 2);
     }
 
     public all_keys(): string[] {
@@ -31,80 +31,82 @@ export class Storage {
     }
 
     public migrate(): void {
-        const version = this.get_int('version', 0);
+        const version = this.get_int("version", 0);
         if (version === 1) {
-            // from the old "Flopp's Map"
+            // From the old "Flopp's Map"
             this.migrate_from_v1();
         } else if (version === 2) {
-            // already current => nothing to do
+            // Already current => nothing to do
         } else {
-            // something else => nothing to do
+            // Something else => nothing to do
         }
     }
 
     public migrate_from_v1(): void {
         const self = this;
 
-        // clat + clon
+        // Clat + clon
         let center = null;
-        if (this.exists('clat') && this.exists('clon')) {
-            const clat = this.get_float('clat', null);
-            const clon = this.get_float('clon', null);
+        if (this.exists("clat") && this.exists("clon")) {
+            const clat = this.get_float("clat", null);
+            const clon = this.get_float("clon", null);
             if (clat !== null && clon !== null) {
                 center = new Coordinates(clat, clon);
             }
         }
 
-        // zoom
-        const zoom = this.get_int('zoom', 13);
+        // Zoom
+        const zoom = this.get_int("zoom", 13);
 
-        // maptype
+        // Maptype
         let map_type = MapType.STAMEN_TERRAIN;
-        switch (this.get('maptype', null)) {
-            case 'OSM':
-            case 'OSM/DE':
+        switch (this.get("maptype", null)) {
+            case "OSM":
+            case "OSM/DE":
                 map_type = MapType.OPENSTREETMAP;
                 break;
-            case 'TOPO':
+            case "TOPO":
                 map_type = MapType.OPENTOPOMAP;
                 break;
-            case 'roadmap':
+            case "roadmap":
                 map_type = MapType.GOOGLE_ROADMAP;
                 break;
-            case 'terrain':
+            case "terrain":
                 map_type = MapType.GOOGLE_TERRAIN;
                 break;
-            case 'satellite':
+            case "satellite":
                 map_type = MapType.GOOGLE_SATELLITE;
                 break;
-            case 'hybrid':
+            case "hybrid":
                 map_type = MapType.GOOGLE_HYBRID;
                 break;
+            default:
         }
 
-        // coordinatesFormat
+        // CoordinatesFormat
         let coordinates_format = CoordinatesFormat.DM;
-        switch (this.get('coordinatesFormat', null)) {
-            case 'D':
+        switch (this.get("coordinatesFormat", null)) {
+            case "D":
                 coordinates_format = CoordinatesFormat.D;
                 break;
-            case 'DM':
+            case "DM":
                 coordinates_format = CoordinatesFormat.DM;
                 break;
-            case 'DMS':
+            case "DMS":
                 coordinates_format = CoordinatesFormat.DMS;
                 break;
+            default:
         }
 
-        interface MarkerDict {
-            name: string, coordinates: Coordinates, radius: number, color: Color
+        interface IMarkerDict {
+            name: string; coordinates: Coordinates; radius: number; color: Color;
         }
 
-        // markers (ID1:ID2:...); markerID1; markerID2; ...
-        const markers: MarkerDict[] = [];
+        // Markers (ID1:ID2:...); markerID1; markerID2; ...
+        const markers: IMarkerDict[] = [];
         const marker_hash = new Map();
-        this.get('markers', '')!
-            .split(':')
+        this.get("markers", "")!
+            .split(":")
             .forEach((id_string: string): void => {
                 const id_int = parse_int(id_string);
                 if (id_int === null) {
@@ -116,7 +118,7 @@ export class Storage {
                     return;
                 }
 
-                const data = raw_data.split(':');
+                const data = raw_data.split(":");
                 if (data.length !== 4 && data.length !== 5) {
                     return;
                 }
@@ -149,16 +151,16 @@ export class Storage {
                 });
             });
 
-        interface LineDict {
-            from: number, to: number, color: Color
+        interface ILineDict {
+            from: number; to: number; color: Color;
         }
 
-        // lines (FROM1:TO1*FROM2:TO2*...)
-        const lines: LineDict[] = [];
-        this.get('lines', '')!
-            .split('*')
+        // Lines (FROM1:TO1*FROM2:TO2*...)
+        const lines: ILineDict[] = [];
+        this.get("lines", "")!
+            .split("*")
             .forEach((ids: string): void => {
-                const split_ids = ids.split(':');
+                const split_ids = ids.split(":");
                 if (split_ids.length !== 2) {
                     return;
                 }
@@ -173,36 +175,30 @@ export class Storage {
                 lines.push({
                     from,
                     to,
-                    color: Color.from_string('#ff0000')!,
+                    color: Color.from_string("#ff0000")!,
                 });
             });
 
-        // write out everything
+        // Write out everything
         if (center !== null) {
-            this.set_coordinates('center', center);
+            this.set_coordinates("center", center);
         }
-        this.set_int('zoom', zoom);
-        this.set('map_type', map_type);
-        this.set('settings.marker.coordinates_format', coordinates_format);
+        this.set_int("zoom", zoom);
+        this.set("map_type", map_type);
+        this.set("settings.marker.coordinates_format", coordinates_format);
 
-        const marker_ids = markers.map((_m: MarkerDict, i: number): number => {
-            return i;
-        });
-        this.set('markers', marker_ids.join(';'));
-        markers.forEach((obj: MarkerDict, i: number): void => {
+        const marker_ids = markers.map((_m: IMarkerDict, i: number): number => i);
+        this.set("markers", marker_ids.join(";"));
+        markers.forEach((obj: IMarkerDict, i: number): void => {
             self.set(`marker[${i}].name`, obj.name);
             self.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
             self.set_float(`marker[${i}].radius`, obj.radius);
-            if (obj.color !== null) {
-                self.set_color(`marker[${i}].color`, obj.color);
-            }
+            self.set_color(`marker[${i}].color`, obj.color);
         });
 
-        const line_ids = lines.map((_l, i: number): number => {
-            return i;
-        });
-        this.set('lines', line_ids.join(';'));
-        lines.forEach((obj: LineDict, i: number): void => {
+        const line_ids = lines.map((_l, i: number): number => i);
+        this.set("lines", line_ids.join(";"));
+        lines.forEach((obj: ILineDict, i: number): void => {
             self.set_int(`line[${i}].marker1`, obj.from);
             self.set_int(`line[${i}].marker2`, obj.to);
             self.set_color(`line[${i}].color`, obj.color);
@@ -210,8 +206,8 @@ export class Storage {
     }
 
     public alpha2id_v1(s: string): number {
-        const index_A = 'A'.charCodeAt(0);
-        const index_0 = '0'.charCodeAt(0);
+        const index_A = "A".charCodeAt(0);
+        const index_0 = "0".charCodeAt(0);
         const upper_s = s.toUpperCase();
 
         if (/^[A-Z]$/.test(upper_s)) {

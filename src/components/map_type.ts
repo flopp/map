@@ -1,14 +1,14 @@
 export enum MapType {
-    OPENSTREETMAP = 'OPENSTREETMAP',
-    OPENTOPOMAP = 'OPENTOPOMAP',
-    STAMEN_TERRAIN = 'STAMEN_TERRAIN',
-    HUMANITARIAN = 'HUMANITARIAN',
-    ARCGIS_WORLDIMAGERY = 'ARCGIS_WORLDIMAGERY',
-    GOOGLE_ROADMAP = 'GOOGLE_ROADMAP',
-    GOOGLE_SATELLITE = 'GOOGLE_SATELLITE',
-    GOOGLE_HYBRID = 'GOOGLE_HYBRID',
-    GOOGLE_TERRAIN = 'GOOGLE_TERRAIN',
-};
+    OPENSTREETMAP = "OPENSTREETMAP",
+    OPENTOPOMAP = "OPENTOPOMAP",
+    STAMEN_TERRAIN = "STAMEN_TERRAIN",
+    HUMANITARIAN = "HUMANITARIAN",
+    ARCGIS_WORLDIMAGERY = "ARCGIS_WORLDIMAGERY",
+    GOOGLE_ROADMAP = "GOOGLE_ROADMAP",
+    GOOGLE_SATELLITE = "GOOGLE_SATELLITE",
+    GOOGLE_HYBRID = "GOOGLE_HYBRID",
+    GOOGLE_TERRAIN = "GOOGLE_TERRAIN",
+}
 
 export function maptype2string(type: MapType|null): string|null {
     return String(type);
@@ -34,32 +34,34 @@ export function string2maptype(s: string): MapType|null {
             return MapType.GOOGLE_HYBRID;
         case MapType.GOOGLE_TERRAIN:
             return MapType.GOOGLE_TERRAIN;
+        default:
+            return null;
     }
-    return null;
 }
 
 export function maptype2human(t: MapType|null): string {
     switch (t) {
         case MapType.OPENSTREETMAP:
-            return 'OpenStreetMap';
+            return "OpenStreetMap";
         case MapType.OPENTOPOMAP:
-            return 'OpenTopoMap';
+            return "OpenTopoMap";
         case MapType.STAMEN_TERRAIN:
-            return 'Stamen Terrain';
+            return "Stamen Terrain";
         case MapType.HUMANITARIAN:
-            return 'Humanitarian';
+            return "Humanitarian";
         case MapType.ARCGIS_WORLDIMAGERY:
-            return 'Arcgis World Imagery';
+            return "Arcgis World Imagery";
         case MapType.GOOGLE_ROADMAP:
-            return 'Google Roadmap';
+            return "Google Roadmap";
         case MapType.GOOGLE_SATELLITE:
-            return 'Google Satellite';
+            return "Google Satellite";
         case MapType.GOOGLE_HYBRID:
-            return 'Google Hybrid';
+            return "Google Hybrid";
         case MapType.GOOGLE_TERRAIN:
-            return 'Google Terrain';
+            return "Google Terrain";
+        default:
+            return "Unknown";
     }
-    return 'Unknown';
 }
 
 export function isGoogle(t: MapType|null): boolean {
@@ -69,6 +71,7 @@ export function isGoogle(t: MapType|null): boolean {
         case MapType.GOOGLE_HYBRID:
         case MapType.GOOGLE_TERRAIN:
             return true;
+        default:
+            return false;
     }
-    return false;
 }

@@ -1,15 +1,14 @@
-import {App} from './app';
-import {Coordinates} from './coordinates';
+import {App} from "./app";
+import {Coordinates} from "./coordinates";
 import {Line} from "./line";
-import {MapStateChange} from './map_state';
+import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {MapType} from "./map_type";
 import {Marker} from "./marker";
 
 export class MapWrapper extends MapStateObserver {
     public active: boolean;
-    private div_id: string;
-    private div: HTMLElement;
+    private readonly div: HTMLElement;
 
     protected markers: Map<number, any>;
     protected lines: Map<number, any>;
@@ -18,7 +17,6 @@ export class MapWrapper extends MapStateObserver {
         super(app);
 
         this.active = false;
-        this.div_id = div_id;
         this.div = document.getElementById(div_id)!;
         this.markers = new Map();
         this.lines = new Map();
@@ -27,11 +25,11 @@ export class MapWrapper extends MapStateObserver {
     }
 
     public create_map_object(_div_id: string): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public set_map_type(_map_type: MapType): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public set_hill_shading(_enabled: boolean): void {
@@ -53,7 +51,7 @@ export class MapWrapper extends MapStateObserver {
     }
 
     public set_map_view(_center: Coordinates, _zoom: number): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public width(): number {
@@ -65,19 +63,19 @@ export class MapWrapper extends MapStateObserver {
     }
 
     public invalidate_size(): void {
-        // nothing
+        // Nothing
     }
 
     protected create_marker_object(_marker: Marker): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     protected update_marker_object(_obj: any, _marker: Marker): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public delete_marker_object(_obj: any): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public has_marker_object(id: number): boolean {
@@ -89,19 +87,19 @@ export class MapWrapper extends MapStateObserver {
     }
 
     public create_line_object(_line: Line): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public update_line_object(_obj: any, _line: Line): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public delete_line_object(_obj: any): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public create_icon(_marker: Marker): any {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 
     public activate(): void {
@@ -121,21 +119,21 @@ export class MapWrapper extends MapStateObserver {
         const self = this;
 
         /* update view */
-        if (changes & MapStateChange.MAPTYPE) {
+        if ((changes & MapStateChange.MAPTYPE) !== 0) {
             this.set_map_type(this.app.map_state.map_type!);
             this.set_hill_shading(this.app.map_state.hill_shading);
             this.set_german_npa(this.app.map_state.german_npa);
             this.set_opencaching(this.app.map_state.opencaching);
         }
-        if (changes & MapStateChange.VIEW) {
+        if ((changes & MapStateChange.VIEW) !== 0) {
             this.set_map_view(
                 this.app.map_state.center!,
                 this.app.map_state.zoom!,
             );
         }
 
-        if (changes & MapStateChange.MARKERS) {
-            // update and add markers
+        if ((changes & MapStateChange.MARKERS) !== 0) {
+            // Update and add markers
             this.app.map_state.markers.forEach((marker: Marker): void => {
                 if (self.markers.has(marker.get_id())) {
                     self.update_marker_object(
@@ -168,8 +166,8 @@ export class MapWrapper extends MapStateObserver {
             }
         }
 
-        if (changes & (MapStateChange.LINES | MapStateChange.ZOOM)) {
-            // update and add lines; also update lines on zoom to redraw arrow heads!
+        if ((changes & (MapStateChange.LINES | MapStateChange.ZOOM)) !== 0) {
+            // Update and add lines; also update lines on zoom to redraw arrow heads!
             this.app.map_state.lines.forEach((line: Line): void => {
                 if (self.lines.has(line.get_id())) {
                     self.update_line_object(self.lines.get(line.get_id()), line);

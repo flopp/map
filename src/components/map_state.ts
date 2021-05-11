@@ -1,13 +1,13 @@
-import {App} from './app';
-import {Color} from './color';
-import {Coordinates, CoordinatesFormat, parseCoordinatesFormat} from './coordinates';
-import {Distance, DistanceFormat, parseDistanceFormat} from './distance';
-import {Line, LineJson} from './line';
-import {MapStateObserver} from "./map_state_observer";
-import {MapType, maptype2string, string2maptype} from './map_type';
-import {Marker, MarkerJson} from './marker';
-import {Storage} from './storage';
-import {parse_float, parse_int} from './utilities';
+import { App } from "./app";
+import { Color } from "./color";
+import { Coordinates, CoordinatesFormat, parseCoordinatesFormat } from "./coordinates";
+import { Distance, DistanceFormat, parseDistanceFormat } from "./distance";
+import { ILineJson, Line } from "./line";
+import { MapStateObserver } from "./map_state_observer";
+import { MapType, maptype2string, string2maptype } from "./map_type";
+import { IMarkerJson, Marker } from "./marker";
+import { Storage } from "./storage";
+import { parse_float, parse_int } from "./utilities";
 
 export enum MapStateChange {
     NOTHING = 0,
@@ -21,20 +21,20 @@ export enum MapStateChange {
     API_KEYS = 64,
     LANGUAGE = 128,
     EVERYTHING = 255,
-};
+}
 
-interface MarkerSettingsDict {
-    coordinates_format: CoordinatesFormat, random_color: boolean, color: Color, radius: number
-};
-interface LineSettingsDict {distance_format: DistanceFormat, random_color: boolean, color: Color};
+interface IMarkerSettingsDict {
+    coordinates_format: CoordinatesFormat; random_color: boolean; color: Color; radius: number;
+}
+interface ILineSettingsDict {distance_format: DistanceFormat; random_color: boolean; color: Color;}
 export class MapState {
     public app: App;
     public language: string = "";
-    public sidebar_open: string|null = null;
+    public sidebar_open: string | null = null;
     public google_api_key: string = "";
-    public map_type: MapType|null = null;
-    public zoom: number|null = null;
-    public center: Coordinates|null = null;
+    public map_type: MapType | null = null;
+    public zoom: number | null = null;
+    public center: Coordinates | null = null;
     public hill_shading: boolean = false;
     public german_npa: boolean = false;
     public opencaching: boolean = false;
@@ -45,7 +45,7 @@ export class MapState {
     public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DMS;
     public settings_marker_random_color: boolean;
     public settings_marker_color: Color = Color.default_color();
-    public settings_marker_radius: number = 0;;
+    public settings_marker_radius: number = 0;
     public settings_line_distance_format: DistanceFormat = DistanceFormat.m;
     public settings_line_random_color: boolean = true;
     public settings_line_color: Color = Color.default_color();
@@ -62,90 +62,90 @@ export class MapState {
     public store(): void {
         const self = this;
 
-        this.storage.set('language', this.language);
+        this.storage.set("language", this.language);
 
-        this.storage.set('google_api_key', this.google_api_key);
+        this.storage.set("google_api_key", this.google_api_key);
 
-        this.storage.set('sidebar_open', this.sidebar_open);
-        this.storage.set_coordinates('center', this.center);
-        this.storage.set_int('zoom', this.zoom);
-        this.storage.set('map_type', maptype2string(this.map_type));
-        this.storage.set_bool('hillshading', this.hill_shading);
-        this.storage.set_bool('german_npa', this.german_npa);
-        this.storage.set_bool('opencaching', this.opencaching);
-        this.storage.set('markers', this.get_marker_ids_string());
+        this.storage.set("sidebar_open", this.sidebar_open);
+        this.storage.set_coordinates("center", this.center);
+        this.storage.set_int("zoom", this.zoom);
+        this.storage.set("map_type", maptype2string(this.map_type));
+        this.storage.set_bool("hillshading", this.hill_shading);
+        this.storage.set_bool("german_npa", this.german_npa);
+        this.storage.set_bool("opencaching", this.opencaching);
+        this.storage.set("markers", this.get_marker_ids_string());
         this.markers.forEach((marker: Marker): void => {
             self.update_marker_storage(marker);
         });
-        this.storage.set('lines', this.get_line_ids_string());
+        this.storage.set("lines", this.get_line_ids_string());
         this.lines.forEach((line: Line): void => {
             self.update_line_storage(line);
         });
 
         this.storage.set(
-            'settings.marker.coordinates_format',
+            "settings.marker.coordinates_format",
             this.settings_marker_coordinates_format,
         );
         this.storage.set_bool(
-            'settings.marker.random_color',
+            "settings.marker.random_color",
             this.settings_marker_random_color,
         );
         this.storage.set_color(
-            'settings.marker.color',
+            "settings.marker.color",
             this.settings_marker_color,
         );
         this.storage.set_float(
-            'settings.marker.radius',
+            "settings.marker.radius",
             this.settings_marker_radius,
         );
 
         this.storage.set(
-            'settings.line.distance_format',
+            "settings.line.distance_format",
             this.settings_line_distance_format,
         );
         this.storage.set_bool(
-            'settings.line.random_color',
+            "settings.line.random_color",
             this.settings_line_random_color,
         );
-        this.storage.set_color('settings.line.color', this.settings_line_color);
+        this.storage.set_color("settings.line.color", this.settings_line_color);
     }
 
     public restore(): void {
         const self = this;
 
-        // language
-        this.set_language(this.storage.get('language', '')!);
+        // Language
+        this.set_language(this.storage.get("language", "")!);
 
-        // api keys
-        this.set_google_api_key(this.storage.get('google_api_key', '')!);
+        // Api keys
+        this.set_google_api_key(this.storage.get("google_api_key", "")!);
 
-        // sidebar
-        this.set_sidebar_open(this.storage.get('sidebar_open', null));
+        // Sidebar
+        this.set_sidebar_open(this.storage.get("sidebar_open", null));
 
-        // map view
+        // Map view
         this.set_view(
-            this.storage.get_coordinates('center', new Coordinates(48, 8))!,
-            this.storage.get_int('zoom', 13),
+            this.storage.get_coordinates("center", new Coordinates(48, 8))!,
+            this.storage.get_int("zoom", 13),
         );
         this.set_map_type(
             string2maptype(
                 this.storage.get(
-                    'map_type',
+                    "map_type",
                     maptype2string(MapType.STAMEN_TERRAIN)!,
                 )!,
             )!,
         );
-        this.set_hill_shading(this.storage.get_bool('hillshading', false));
-        this.set_german_npa(this.storage.get_bool('german_npa', false));
-        this.set_opencaching(this.storage.get_bool('opencaching', false));
+        this.set_hill_shading(this.storage.get_bool("hillshading", false));
+        this.set_german_npa(this.storage.get_bool("german_npa", false));
+        this.set_opencaching(this.storage.get_bool("opencaching", false));
 
-        // markers
-        const marker_ids = new Map();
+        // Markers
+        const marker_ids: Map<number, number> = new Map();
         this.storage
-            .get('markers', '')!
-            .split(';')
+            .get("markers", "")!
+            .split(";")
             .forEach((id: string): void => {
-                if (id === '') {
+                if (id === "") {
                     return;
                 }
                 const coordinates = self.storage.get_coordinates(
@@ -155,10 +155,10 @@ export class MapState {
                 const name = self.storage.get(`marker[${id}].name`, id)!;
                 const color = self.storage.get_color(
                     `marker[${id}].color`,
-                    new Color('FF0000'),
-                )!;
+                    new Color("FF0000"),
+                );
                 const radius = self.storage.get_float(`marker[${id}].radius`, 0)!;
-                if (coordinates) {
+                if (coordinates !== null) {
                     const marker = new Marker(coordinates);
                     marker.name = name;
                     marker.color = color;
@@ -169,35 +169,35 @@ export class MapState {
                 }
             });
 
-        // lines
+        // Lines
         this.storage
-            .get('lines', '')!
-            .split(';')
+            .get("lines", "")!
+            .split(";")
             .forEach((id: string): void => {
-                if (id === '') {
+                if (id === "") {
                     return;
                 }
                 const old_marker1 = self.storage.get_int(
                     `line[${id}].marker1`,
                     -1,
-                )!;
+                );
                 const old_marker2 = self.storage.get_int(
                     `line[${id}].marker2`,
                     -1,
-                )!;
+                );
                 const color = self.storage.get_color(
                     `line[${id}].color`,
-                    new Color('FF0000'),
-                )!;
+                    new Color("FF0000"),
+                );
 
                 let marker1 = -1;
                 if (marker_ids.has(old_marker1)) {
-                    marker1 = marker_ids.get(old_marker1);
+                    marker1 = marker_ids.get(old_marker1)!;
                 }
 
                 let marker2 = -1;
                 if (marker_ids.has(old_marker2)) {
-                    marker2 = marker_ids.get(old_marker2);
+                    marker2 = marker_ids.get(old_marker2)!;
                 }
 
                 const line = new Line(marker1, marker2);
@@ -208,38 +208,38 @@ export class MapState {
 
         this.recompute_lines();
 
-        // settings
+        // Settings
         const coordinates_format = parseCoordinatesFormat(this.storage.get(
-            'settings.marker.coordinates_format',
-            ''
+            "settings.marker.coordinates_format",
+            "",
         )!, this.settings_marker_coordinates_format);
         this.set_default_marker_settings({
             coordinates_format,
             random_color: this.storage.get_bool(
-                'settings.marker.random_color',
+                "settings.marker.random_color",
                 true,
             ),
             color: this.storage.get_color(
-                'settings.marker.color',
-                new Color('FF0000'),
+                "settings.marker.color",
+                new Color("FF0000"),
             ),
-            radius: this.storage.get_float('settings.marker.radius', 0)!,
+            radius: this.storage.get_float("settings.marker.radius", 0)!,
         });
 
-
+        // Settings
         const distance_format = parseDistanceFormat(this.storage.get(
-            'settings.marker.distance_format',
-            ''
+            "settings.marker.distance_format",
+            "",
         )!, this.settings_line_distance_format);
         this.set_default_line_settings({
             distance_format,
             random_color: this.storage.get_bool(
-                'settings.line.random_color',
+                "settings.line.random_color",
                 true,
             ),
             color: this.storage.get_color(
-                'settings.line.color',
-                new Color('FF0000'),
+                "settings.line.color",
+                new Color("FF0000"),
             ),
         });
     }
@@ -248,17 +248,17 @@ export class MapState {
         const self = this;
 
         const ok_keys = new Set();
-        ok_keys.add('version');
-        ok_keys.add('language');
-        ok_keys.add('google_api_key');
-        ok_keys.add('center');
-        ok_keys.add('zoom');
-        ok_keys.add('map_type');
-        ok_keys.add('hillshading');
-        ok_keys.add('german_npa');
-        ok_keys.add('opencaching');
-        ok_keys.add('sidebar_open');
-        ok_keys.add('markers');
+        ok_keys.add("version");
+        ok_keys.add("language");
+        ok_keys.add("google_api_key");
+        ok_keys.add("center");
+        ok_keys.add("zoom");
+        ok_keys.add("map_type");
+        ok_keys.add("hillshading");
+        ok_keys.add("german_npa");
+        ok_keys.add("opencaching");
+        ok_keys.add("sidebar_open");
+        ok_keys.add("markers");
         this.markers.forEach((obj: Marker): void => {
             const id = obj.get_id();
             ok_keys.add(`marker[${id}].coordinates`);
@@ -266,26 +266,25 @@ export class MapState {
             ok_keys.add(`marker[${id}].color`);
             ok_keys.add(`marker[${id}].radius`);
         });
-        ok_keys.add('lines');
+        ok_keys.add("lines");
         this.lines.forEach((obj: Line): void => {
             const id = obj.get_id();
             ok_keys.add(`line[${id}].marker1`);
             ok_keys.add(`line[${id}].marker2`);
             ok_keys.add(`line[${id}].color`);
         });
-        ok_keys.add('settings.marker.coordinates_format');
-        ok_keys.add('settings.marker.random_color');
-        ok_keys.add('settings.marker.color');
-        ok_keys.add('settings.marker.radius');
-        ok_keys.add('settings.line.distance_format');
-        ok_keys.add('settings.line.random_color');
-        ok_keys.add('settings.line.color');
+        ok_keys.add("settings.marker.coordinates_format");
+        ok_keys.add("settings.marker.random_color");
+        ok_keys.add("settings.marker.color");
+        ok_keys.add("settings.marker.radius");
+        ok_keys.add("settings.line.distance_format");
+        ok_keys.add("settings.line.random_color");
+        ok_keys.add("settings.line.color");
 
-        const bad_keys = this.storage.all_keys().filter((key: string): boolean => {
-            return !ok_keys.has(key);
-        });
+        const bad_keys = this.storage.all_keys().filter((key: string): boolean =>
+            !ok_keys.has(key));
         bad_keys.forEach((key: string): void => {
-            console.log('bad key: ', key);
+            console.log("bad key: ", key);
             self.storage.remove(key);
         });
     }
@@ -296,72 +295,78 @@ export class MapState {
         const params = new Map();
         window.location.search
             .substr(1)
-            .split('&')
+            .split("&")
             .forEach((token: string): void => {
-                const tokens = token.split('=', 2);
+                const tokens = token.split("=", 2);
                 if (tokens[0].length > 0) {
                     if (tokens.length === 1) {
-                        params.set(tokens[0], '');
+                        params.set(tokens[0], "");
                     } else {
                         params.set(tokens[0], tokens[1]);
                     }
                 }
             });
 
-        let center = null;
-        let zoom = null;
-        let map_type = null;
-        interface MarkerDict {name: string, coordinates: Coordinates, color: Color, radius: number};
-        const markers: MarkerDict[] = [];
-        const marker_hash = new Map();
-        interface LineDict {from: number, to: number, color: Color};
-        const lines: LineDict[] = [];
+        let center: Coordinates|null = null;
+        let zoom: number|null = null;
+        let map_type: MapType|null = null;
+        interface IMarkerDict {
+            name: string;
+            coordinates: Coordinates;
+            color: Color;
+            radius: number;
+        }
+        const markers: IMarkerDict[] = [];
+        const marker_hash: Map<string, number> = new Map();
+        interface ILineDict {from: number; to: number; color: Color;}
+        const lines: ILineDict[] = [];
 
         params.forEach((value: string, key: string): void => {
             switch (key) {
-                case 'c':
+                case "c":
                     center = Coordinates.from_string(value);
                     break;
-                case 'z':
+                case "z":
                     zoom = parse_int(value);
                     break;
-                case 't':
+                case "t":
                     map_type = string2maptype(value);
                     if (map_type === null) {
                         switch (value) {
-                            case 'OSM':
-                            case 'OSM/DE':
+                            case "OSM":
+                            case "OSM/DE":
                                 map_type = MapType.OPENSTREETMAP;
                                 break;
-                            case 'TOPO':
+                            case "TOPO":
                                 map_type = MapType.OPENTOPOMAP;
                                 break;
-                            case 'roadmap':
+                            case "roadmap":
                                 map_type = MapType.GOOGLE_ROADMAP;
                                 break;
-                            case 'terrain':
+                            case "terrain":
                                 map_type = MapType.GOOGLE_TERRAIN;
                                 break;
-                            case 'satellite':
+                            case "satellite":
                                 map_type = MapType.GOOGLE_SATELLITE;
                                 break;
-                            case 'hybrid':
+                            case "hybrid":
                                 map_type = MapType.GOOGLE_HYBRID;
-                                break;
+                            default:
+                                map_type = null;
                         }
                     }
                     break;
-                case 'm':
-                    value.split('*').forEach((token: string): void => {
+                case "m":
+                    value.split("*").forEach((token: string): void => {
                         // A:47.984967:7.908317:1000:markerA:ff0000
-                        const tokens = token.split(':');
+                        const tokens = token.split(":");
                         if (tokens.length < 3 || tokens.length > 6) {
                             return;
                         }
                         const id = tokens[0];
-                        const lat: number|null = parse_float(tokens[1]);
-                        const lon: number|null = parse_float(tokens[2]);
-                        let radius: number|null = 0;
+                        const lat: number | null = parse_float(tokens[1]);
+                        const lon: number | null = parse_float(tokens[2]);
+                        let radius: number | null = 0;
                         if (tokens.length > 3) {
                             radius = parse_float(tokens[3]);
                         }
@@ -369,7 +374,7 @@ export class MapState {
                         if (tokens.length > 4) {
                             name = self.decode(tokens[4]);
                         }
-                        let color: Color|null = Color.random_from_palette();
+                        let color: Color | null = Color.random_from_palette();
                         if (tokens.length > 5) {
                             color = Color.from_string(tokens[5]);
                         }
@@ -379,7 +384,6 @@ export class MapState {
                             lat !== null &&
                             lon !== null &&
                             radius !== null &&
-                            name !== null &&
                             color !== null
                         ) {
                             marker_hash.set(id, markers.length);
@@ -392,10 +396,10 @@ export class MapState {
                         }
                     });
                     break;
-                case 'd':
-                    value.split('*').forEach((token: string): void => {
-                        // from:to:color
-                        const tokens = token.split(':');
+                case "d":
+                    value.split("*").forEach((token: string): void => {
+                        // From:to:color
+                        const tokens = token.split(":");
                         if (tokens.length < 2 || tokens.length > 3) {
                             return;
                         }
@@ -404,15 +408,15 @@ export class MapState {
                         if (tokens[0].length === 0) {
                             from = -1;
                         } else if (marker_hash.has(tokens[0])) {
-                            from = marker_hash.get(tokens[0]);
+                            from = marker_hash.get(tokens[0])!;
                         }
                         let to = null;
                         if (tokens[1].length === 0) {
                             to = -1;
                         } else if (marker_hash.has(tokens[1])) {
-                            to = marker_hash.get(tokens[1]);
+                            to = marker_hash.get(tokens[1])!;
                         }
-                        let color = Color.from_string('#ff0000');
+                        let color = Color.from_string("#ff0000");
                         if (tokens.length > 2) {
                             color = Color.from_string(tokens[2]);
                         }
@@ -429,12 +433,14 @@ export class MapState {
             }
         });
 
+        // tslint:disable-next-line: strict-type-predicates
         if (center === null && markers.length === 0) {
             return;
         }
 
         this.clear_storage();
 
+        // tslint:disable-next-line: strict-type-predicates
         if (center === null) {
             let lat = 0;
             let lon = 0;
@@ -444,37 +450,35 @@ export class MapState {
             });
             center = new Coordinates(lat / markers.length, lon / markers.length);
         }
-        this.storage.set_coordinates('center', center);
+        this.storage.set_coordinates("center", center);
 
+        // tslint:disable-next-line: strict-type-predicates
         if (zoom !== null) {
-            this.storage.set_int('zoom', zoom);
+            this.storage.set_int("zoom", zoom);
         }
 
+        // tslint:disable-next-line: strict-type-predicates
         if (map_type !== null) {
-            this.storage.set('map_type', map_type);
+            this.storage.set("map_type", map_type);
         }
 
-        const marker_ids = markers.map((_m: MarkerDict, i: number): number => {
-            return i;
-        });
-        this.storage.set('markers', marker_ids.join(';'));
-        markers.forEach((obj: MarkerDict, i: number): void => {
+        const marker_ids = markers.map((_m: IMarkerDict, i: number): number =>
+            i);
+        this.storage.set("markers", marker_ids.join(";"));
+        markers.forEach((obj: IMarkerDict, i: number): void => {
             self.storage.set(`marker[${i}].name`, obj.name);
             self.storage.set_coordinates(
                 `marker[${i}].coordinates`,
                 obj.coordinates,
             );
             self.storage.set_float(`marker[${i}].radius`, obj.radius);
-            if (obj.color !== null) {
-                self.storage.set_color(`marker[${i}].color`, obj.color);
-            }
+            self.storage.set_color(`marker[${i}].color`, obj.color);
         });
 
-        const line_ids = lines.map((_l: LineDict, i: number): number => {
-            return i;
-        });
-        this.storage.set('lines', line_ids.join(';'));
-        lines.forEach((obj: LineDict, i: number): void => {
+        const line_ids = lines.map((_l: ILineDict, i: number): number =>
+            i);
+        this.storage.set("lines", line_ids.join(";"));
+        lines.forEach((obj: ILineDict, i: number): void => {
             self.storage.set_int(`line[${i}].marker1`, obj.from);
             self.storage.set_int(`line[${i}].marker2`, obj.to);
             self.storage.set_color(`line[${i}].color`, obj.color);
@@ -484,23 +488,21 @@ export class MapState {
     public create_link(): string {
         const self = this;
 
-        const base = window.location.href.split('?')[0].split('#')[0];
+        const base = window.location.href.split("?")[0].split("#")[0];
         const markers = this.markers
-            .map((m: Marker): string => {
-                return `${m.get_id()}:${m.coordinates
+            .map((m: Marker): string =>
+                `${m.get_id()}:${m.coordinates
                     .lat()
                     .toFixed(6)}:${m.coordinates
                     .lng()
                     .toFixed(6)}:${m.radius.toFixed(1)}:${self.encode(
                     m.name,
-                )}:${m.color.to_string()}`;
-            })
-            .join('*');
+                )}:${m.color.to_string()}`)
+            .join("*");
         const lines = this.lines
-            .map((obj: Line): string => {
-                return `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`;
-            })
-            .join('*');
+            .map((obj: Line): string =>
+                `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`)
+            .join("*");
 
         return `${base}?c=${this.center!
             .lat()
@@ -515,8 +517,8 @@ export class MapState {
 
     public encode(s: string): string {
         return encodeURIComponent(s)
-            .replace(new RegExp(/\*/, 'g'), '%2A')
-            .replace(new RegExp(/:/, 'g'), '%3A');
+            .replace(new RegExp(/\*/, "g"), "%2A")
+            .replace(new RegExp(/:/, "g"), "%3A");
     }
 
     public register_observer(observer: MapStateObserver): void {
@@ -525,10 +527,10 @@ export class MapState {
 
     public update_observers(changes: number): void {
         if (changes === MapStateChange.NOTHING) {
-            console.error('MapSate.update_observers called with no changes');
+            console.error("MapSate.update_observers called with no changes");
         }
         let updatedChanges = changes;
-        if (changes & (MapStateChange.MARKERS | MapStateChange.LINES)) {
+        if ((changes & (MapStateChange.MARKERS | MapStateChange.LINES)) !== 0) {
             if (this.recompute_lines()) {
                 updatedChanges = changes | MapStateChange.LINES;
             }
@@ -544,7 +546,7 @@ export class MapState {
         this.lines.forEach((line: Line): void => {
             const marker1 = self.get_marker(line.marker1);
             const marker2 = self.get_marker(line.marker2);
-            if (marker1 && marker2) {
+            if (marker1 !== null && marker2 !== null) {
                 const db = marker1.coordinates.distance_bearing(
                     marker2.coordinates,
                 );
@@ -555,7 +557,7 @@ export class MapState {
                     changed = true;
                     line.length.set(db.distance, DistanceFormat.m);
                 }
-                if (db.distance < 1.0) {
+                if (db.distance < 1) {
                     if (line.bearing !== null) {
                         changed = true;
                         line.bearing = null;
@@ -575,11 +577,11 @@ export class MapState {
                 }
             }
 
-            if (!marker1 && line.marker1 >= 0) {
+            if (marker1 === null && line.marker1 >= 0) {
                 changed = true;
                 line.marker1 = -1;
             }
-            if (!marker2 && line.marker2 >= 0) {
+            if (marker2 === null && line.marker2 >= 0) {
                 changed = true;
                 line.marker2 = -1;
             }
@@ -590,69 +592,69 @@ export class MapState {
 
     public set_language(language: string): void {
         this.language = language;
-        this.storage.set('language', this.language);
+        this.storage.set("language", this.language);
         this.update_observers(MapStateChange.LANGUAGE);
     }
 
     public set_google_api_key(key: string): void {
         this.google_api_key = key;
-        this.storage.set('google_api_key', this.google_api_key);
+        this.storage.set("google_api_key", this.google_api_key);
         this.update_observers(MapStateChange.API_KEYS);
     }
 
-    public set_sidebar_open(section: string|null): void {
+    public set_sidebar_open(section: string | null): void {
         this.sidebar_open = section;
-        this.storage.set('sidebar_open', section);
+        this.storage.set("sidebar_open", section);
         this.update_observers(MapStateChange.SIDEBAR);
     }
 
-    public set_map_type(map_type: MapType|null): void {
+    public set_map_type(map_type: MapType | null): void {
         this.map_type = map_type;
-        this.storage.set('map_type', maptype2string(this.map_type));
+        this.storage.set("map_type", maptype2string(this.map_type));
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
     public set_hill_shading(enabled: boolean): void {
         this.hill_shading = enabled;
-        this.storage.set_bool('hillshading', this.hill_shading);
+        this.storage.set_bool("hillshading", this.hill_shading);
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
     public set_german_npa(enabled: boolean): void {
         this.german_npa = enabled;
-        this.storage.set_bool('german_npa', this.german_npa);
+        this.storage.set_bool("german_npa", this.german_npa);
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
     public set_opencaching(enabled: boolean): void {
         this.opencaching = enabled;
-        this.storage.set_bool('opencaching', this.opencaching);
+        this.storage.set_bool("opencaching", this.opencaching);
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
     public set_view(center: Coordinates, zoom: number): void {
         this.center = center;
         this.zoom = zoom;
-        this.storage.set_coordinates('center', this.center);
-        this.storage.set_int('zoom', this.zoom);
+        this.storage.set_coordinates("center", this.center);
+        this.storage.set_int("zoom", this.zoom);
         this.update_observers(MapStateChange.VIEW);
     }
 
     public set_zoom(zoom: number): void {
         this.zoom = zoom;
-        this.storage.set_int('zoom', this.zoom);
+        this.storage.set_int("zoom", this.zoom);
         this.update_observers(MapStateChange.ZOOM);
     }
 
     public set_center(coordinates: Coordinates): void {
         this.center = coordinates;
-        this.storage.set_coordinates('center', this.center);
+        this.storage.set_coordinates("center", this.center);
         this.update_observers(MapStateChange.CENTER);
     }
 
-    public add_marker(coordinates: Coordinates|null): Marker {
+    public add_marker(coordinates: Coordinates | null): Marker {
         let marker = null;
-        if (!coordinates) {
+        if (coordinates === null) {
             marker = new Marker(this.center!);
         } else {
             marker = new Marker(coordinates);
@@ -665,28 +667,28 @@ export class MapState {
         this.markers.push(marker);
         this.markers_hash.set(marker.get_id(), marker);
         this.update_marker_storage(marker);
-        this.storage.set('markers', this.get_marker_ids_string());
+        this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
 
-        this.app.message(this.app.translate('messages.marker_created'));
+        this.app.message(this.app.translate("messages.marker_created"));
 
         return marker;
     }
 
-    public get_marker(id: number): Marker|null {
+    public get_marker(id: number): Marker | null {
         const marker = this.markers_hash.get(id);
         if (marker === undefined) {
             return null;
         }
+
         return marker;
     }
 
     public delete_marker(id: number): void {
-        this.markers = this.markers.filter((marker: Marker, _index: number, _arr: Marker[]): boolean => {
-            return marker.get_id() !== id;
-        });
+        this.markers = this.markers.filter((marker: Marker, _index: number, _arr: Marker[]): boolean =>
+            marker.get_id() !== id);
         this.markers_hash.delete(id);
-        this.storage.set('markers', this.get_marker_ids_string());
+        this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
     }
 
@@ -694,13 +696,14 @@ export class MapState {
         Marker.reset_ids();
         this.markers = [];
         this.markers_hash.clear();
-        this.storage.set('markers', null);
+        this.storage.set("markers", null);
         this.update_observers(MapStateChange.MARKERS);
     }
 
     public set_marker_coordinates(id: number, coordinates: Coordinates): void {
         if (!this.markers_hash.has(id)) {
             console.log("bad marker id", id);
+
             return;
         }
         this.markers_hash.get(id)!.coordinates = coordinates;
@@ -711,6 +714,7 @@ export class MapState {
     public set_marker_name(id: number, name: string): void {
         if (!this.markers_hash.has(id)) {
             console.log("bad marker id", id);
+
             return;
         }
         this.markers_hash.get(id)!.name = name;
@@ -721,6 +725,7 @@ export class MapState {
     public set_marker_color(id: number, color: Color): void {
         if (!this.markers_hash.has(id)) {
             console.log("bad marker id", id);
+
             return;
         }
         this.markers_hash.get(id)!.color = color;
@@ -731,6 +736,7 @@ export class MapState {
     public set_marker_radius(id: number, radius: number): void {
         if (!this.markers_hash.has(id)) {
             console.log("bad marker id", id);
+
             return;
         }
         this.markers_hash.get(id)!.radius = radius;
@@ -750,7 +756,7 @@ export class MapState {
     }
 
     public get_marker_ids_string(): string {
-        return this.markers.map((m: Marker): string => `${m.get_id()}`).join(';');
+        return this.markers.map((m: Marker): string => `${m.get_id()}`).join(";");
     }
 
     public reorder_markers(old_index: number, new_index: number): void {
@@ -759,7 +765,7 @@ export class MapState {
         }
 
         this.markers.splice(new_index, 0, this.markers.splice(old_index, 1)[0]);
-        this.storage.set('markers', this.get_marker_ids_string());
+        this.storage.set("markers", this.get_marker_ids_string());
     }
 
     public add_line(): Line {
@@ -771,28 +777,28 @@ export class MapState {
         this.lines.push(line);
         this.lines_hash.set(line.get_id(), line);
         this.update_line_storage(line);
-        this.storage.set('lines', this.get_line_ids_string());
+        this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES);
 
-        this.app.message(this.app.translate('messages.line_created'));
+        this.app.message(this.app.translate("messages.line_created"));
 
         return line;
     }
 
-    public get_line(id: number): Line|null {
+    public get_line(id: number): Line | null {
         const line = this.lines_hash.get(id);
         if (line === undefined) {
             return null;
         }
+
         return line;
     }
 
     public delete_line(id: number): void {
-        this.lines = this.lines.filter((line: Line, _index: number, _arr: any): boolean => {
-            return line.get_id() !== id;
-        });
+        this.lines = this.lines.filter((line: Line, _index: number, _arr: Line[]): boolean =>
+            line.get_id() !== id);
         this.lines_hash.delete(id);
-        this.storage.set('lines', this.get_line_ids_string());
+        this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES);
     }
 
@@ -800,13 +806,14 @@ export class MapState {
         Line.reset_ids();
         this.lines = [];
         this.lines_hash.clear();
-        this.storage.set('lines', null);
+        this.storage.set("lines", null);
         this.update_observers(MapStateChange.LINES);
     }
 
     public set_line_marker1(id: number, marker_id: number): void {
         if (!this.lines_hash.has(id)) {
             console.log("bad line id", id);
+
             return;
         }
         this.lines_hash.get(id)!.marker1 = marker_id;
@@ -817,6 +824,7 @@ export class MapState {
     public set_line_marker2(id: number, marker_id: number): void {
         if (!this.lines_hash.has(id)) {
             console.log("bad line id", id);
+
             return;
         }
         this.lines_hash.get(id)!.marker2 = marker_id;
@@ -827,6 +835,7 @@ export class MapState {
     public set_line_color(id: number, color: Color): void {
         if (!this.lines_hash.has(id)) {
             console.log("bad line id", id);
+
             return;
         }
         this.lines_hash.get(id)!.color = color;
@@ -842,7 +851,7 @@ export class MapState {
     }
 
     public get_line_ids_string(): string {
-        return this.lines.map((line: Line): string => String(line.get_id())).join(';');
+        return this.lines.map((line: Line): string => String(line.get_id())).join(";");
     }
 
     public reorder_lines(old_index: number, new_index: number): void {
@@ -851,15 +860,15 @@ export class MapState {
         }
 
         this.lines.splice(new_index, 0, this.lines.splice(old_index, 1)[0]);
-        this.storage.set('lines', this.get_line_ids_string());
+        this.storage.set("lines", this.get_line_ids_string());
     }
 
     public show_line(line: Line): void {
         const marker1 = this.get_marker(line.marker1);
         const marker2 = this.get_marker(line.marker2);
 
-        if (marker1) {
-            if (marker2 && marker1 !== marker2) {
+        if (marker1 !== null) {
+            if (marker2 !== null && line.marker1 !== line.marker2) {
                 const distance_bearing = marker1.coordinates.distance_bearing(
                     marker2.coordinates,
                 );
@@ -871,56 +880,56 @@ export class MapState {
             } else {
                 this.set_center(marker1.coordinates);
             }
-        } else if (marker2) {
+        } else if (marker2 !== null) {
             this.set_center(marker2.coordinates);
         } else {
-            // nothing
+            // Nothing
         }
     }
 
-    public set_default_marker_settings(settings: MarkerSettingsDict): void {
+    public set_default_marker_settings(settings: IMarkerSettingsDict): void {
         this.settings_marker_coordinates_format = settings.coordinates_format;
         this.storage.set(
-            'settings.marker.coordinates_format',
+            "settings.marker.coordinates_format",
             this.settings_marker_coordinates_format,
         );
 
         this.settings_marker_random_color = settings.random_color;
         this.storage.set_bool(
-            'settings.marker.random_color',
+            "settings.marker.random_color",
             this.settings_marker_random_color,
         );
 
         this.settings_marker_color = settings.color;
         this.storage.set_color(
-            'settings.marker.color',
+            "settings.marker.color",
             this.settings_marker_color,
         );
 
         this.settings_marker_radius = settings.radius;
         this.storage.set_float(
-            'settings.marker.radius',
+            "settings.marker.radius",
             this.settings_marker_radius,
         );
 
         this.update_observers(MapStateChange.MARKERS);
     }
 
-    public set_default_line_settings(settings: LineSettingsDict): void {
+    public set_default_line_settings(settings: ILineSettingsDict): void {
         this.settings_line_distance_format = settings.distance_format;
         this.storage.set(
-            'settings.line.distance_format',
+            "settings.line.distance_format",
             this.settings_line_distance_format,
         );
 
         this.settings_line_random_color = settings.random_color;
         this.storage.set_bool(
-            'settings.line.random_color',
+            "settings.line.random_color",
             this.settings_line_random_color,
         );
 
         this.settings_line_color = settings.color;
-        this.storage.set_color('settings.line.color', this.settings_line_color);
+        this.storage.set_color("settings.line.color", this.settings_line_color);
 
         this.update_observers(MapStateChange.LINES);
     }
@@ -946,8 +955,8 @@ export class MapState {
                     color: this.settings_line_color.to_hash_string(),
                 },
             },
-            markers: ([] as MarkerJson[]),
-            lines: ([] as LineJson[]),
+            markers: ([] as IMarkerJson[]),
+            lines: ([] as ILineJson[]),
         };
 
         this.markers.forEach((marker: Marker): void => {
@@ -956,91 +965,90 @@ export class MapState {
         this.lines.forEach((line: Line): void => {
             data.lines.push(line.to_json());
         });
+
         return data;
     }
 
     public from_json(data: any): void {
         const self = this;
 
-        if ('maptype' in data) {
+        if ("maptype" in data) {
             const map_type = string2maptype(data.maptype);
-            if (map_type) {
+            if (map_type !== null) {
                 this.map_type = map_type;
             }
         }
-        if ('zoom' in data) {
+        if ("zoom" in data) {
             const zoom = parseInt(data.zoom, 10);
-            if (zoom !== null) {
-                this.zoom = zoom;
-            }
+            this.zoom = zoom;
         }
-        if ('center' in data) {
+        if ("center" in data) {
             const center = Coordinates.from_string(data.center);
             if (center !== null) {
                 this.center = center;
             }
         }
 
-        if ('hill_shading' in data) {
+        if ("hill_shading" in data) {
             this.hill_shading = data.hill_shading;
         }
 
-        if ('german_npa' in data) {
+        if ("german_npa" in data) {
             this.german_npa = data.german_npa;
         }
 
-        if ('opencaching' in data) {
+        if ("opencaching" in data) {
             this.opencaching = data.opencaching;
         }
 
-        if ('settings' in data) {
-            if ('markers' in data.settings) {
-                if ('coordinates_format' in data.settings.markers) {
+        if ("settings" in data) {
+            if ("markers" in data.settings) {
+                if ("coordinates_format" in data.settings.markers) {
                     this.settings_marker_coordinates_format = parseCoordinatesFormat(
                         data.settings.markers.coordinates_format,
-                        this.settings_marker_coordinates_format
+                        this.settings_marker_coordinates_format,
                     );
                 }
-                if ('random_color' in data.settings.markers) {
+                if ("random_color" in data.settings.markers) {
                     this.settings_marker_random_color =
                         data.settings.markers.random_color;
                 }
-                if ('color' in data.settings.markers) {
+                if ("color" in data.settings.markers) {
                     const color = Color.from_string(data.settings.markers.color);
-                    if (color) {
+                    if (color !== null) {
                         this.settings_marker_color = color;
                     }
                 }
-                if ('radius' in data.settings.markers) {
+                if ("radius" in data.settings.markers) {
                     const radius = parse_float(data.settings.markers.radius);
                     if (radius !== null) {
                         this.settings_marker_radius = radius;
                     }
                 }
             }
-            if ('lines' in data.settings) {
-                if ('distance_format' in data.settings.lines) {
+            if ("lines" in data.settings) {
+                if ("distance_format" in data.settings.lines) {
                     this.settings_line_distance_format =
                         parseDistanceFormat(
                             data.settings.lines.random_color,
-                            this.settings_line_distance_format
+                            this.settings_line_distance_format,
                         );
                 }
-                if ('random_color' in data.settings.lines) {
+                if ("random_color" in data.settings.lines) {
                     this.settings_line_random_color =
                         data.settings.lines.random_color;
                 }
-                if ('color' in data.settings.lines) {
+                if ("color" in data.settings.lines) {
                     const color = Color.from_string(data.settings.lines.color);
-                    if (color) {
+                    if (color !== null) {
                         this.settings_line_color = color;
                     }
                 }
             }
         }
 
-        const marker_ids = new Map();
-        if ('markers' in data && Array.isArray(data.markers)) {
+        const marker_ids: Map<number, number> = new Map();
+        if ("markers" in data && Array.isArray(data.markers)) {
             this.markers = [];
             this.markers_hash.clear();
             Marker.reset_ids();
@@ -1050,32 +1058,34 @@ export class MapState {
                 let name = null;
                 let color = null;
                 let radius = null;
-                if ('marker_id' in m) {
+                if ("marker_id" in m) {
                     id = parseInt(m.marker_id, 10);
                 }
-                if ('coordinates' in m) {
+                if ("coordinates" in m) {
                     coordinates = Coordinates.from_string(m.coordinates);
                 }
-                if ('name' in m) {
+                if ("name" in m) {
                     name = String(m.name);
                 }
-                if ('color' in m) {
+                if ("color" in m) {
                     color = Color.from_string(m.color);
                 }
-                if ('radius' in m) {
+                if ("radius" in m) {
                     radius = parseFloat(m.radius);
                 }
 
-                if (coordinates) {
+                if (coordinates !== null) {
                     const marker = new Marker(coordinates);
                     self.markers.push(marker);
                     self.markers_hash.set(marker.get_id(), marker);
-                    marker_ids.set(id, marker.get_id());
+                    if (id !== null) {
+                        marker_ids.set(id, marker.get_id());
+                    }
 
-                    if (name) {
+                    if (name !== null) {
                         marker.name = name;
                     }
-                    if (color) {
+                    if (color !== null) {
                         marker.color = color;
                     }
                     if (radius !== null) {
@@ -1085,7 +1095,7 @@ export class MapState {
             });
         }
 
-        if ('lines' in data && Array.isArray(data.lines)) {
+        if ("lines" in data && Array.isArray(data.lines)) {
             this.lines = [];
             this.lines_hash.clear();
             Line.reset_ids();
@@ -1093,28 +1103,28 @@ export class MapState {
                 let old_marker1 = -1;
                 let old_marker2 = -1;
                 let color = null;
-                if ('marker1' in l) {
+                if ("marker1" in l) {
                     old_marker1 = parseInt(l.marker1, 10);
                 }
-                if ('marker2' in l) {
+                if ("marker2" in l) {
                     old_marker2 = parseInt(l.marker2, 10);
                 }
-                if ('color' in l) {
+                if ("color" in l) {
                     color = Color.from_string(l.color);
                 }
 
                 let marker1 = -1;
                 if (marker_ids.has(old_marker1)) {
-                    marker1 = marker_ids.get(old_marker1);
+                    marker1 = marker_ids.get(old_marker1)!;
                 }
 
                 let marker2 = -1;
                 if (marker_ids.has(old_marker2)) {
-                    marker2 = marker_ids.get(old_marker2);
+                    marker2 = marker_ids.get(old_marker2)!;
                 }
 
                 const line = new Line(marker1, marker2);
-                if (color) {
+                if (color !== null) {
                     line.color = color;
                 }
 

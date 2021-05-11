@@ -1,29 +1,28 @@
-import {Color} from './color';
+import {Color} from "./color";
 import {create_element} from "./utilities";
 
 export class IconFactory {
-    private font: string = '16px sans';
+    private readonly font: string = "16px sans";
     private canvas: HTMLCanvasElement|null = null;
 
-    public create_map_icon(text: string, color: Color) : {url: string, size: number[], anchor: number[]} {
-        const encoder = create_element('span');
+    public create_map_icon(text: string, color: Color): {url: string; size: number[]; anchor: number[]} {
+        const encoder = create_element("span");
         encoder.textContent = text;
         const domString = encoder.innerHTML;
-        // domString is UTF-16
-        // we need to convert it to UTF-8
+        // DomString is UTF-16
+        // We need to convert it to UTF-8
         const encoded_text = encodeURIComponent(domString).replace(
             /%([0-9A-F]{2})/g,
-            (_match: string, p1: string) : string => {
-                return String.fromCharCode(parseInt(p1, 16));
-            },
+            (_match: string, p1: string): string =>
+                String.fromCharCode(parseInt(p1, 16)),
         );
 
         const w = Math.max(
-                33.0,
-                16.0 + this.compute_text_width(text),
+                33,
+                16 + this.compute_text_width(text),
             );
         const w2 = 0.5 * w;
-        const d = 4.0;
+        const d = 4;
         const text_color = color.text_color().to_hash_string();
         const svg = `<svg
                        xmlns:svg="http://www.w3.org/2000/svg"
@@ -58,18 +57,18 @@ export class IconFactory {
         return {
             url,
             size: [w, 37],
-            anchor: [w2, 37 - 4.0],
+            anchor: [w2, 37 - 4],
         };
     }
 
-    private compute_text_width(text: string) : number {
-        // re-use canvas object for better performance
-        if (!this.canvas) {
-            this.canvas = (create_element('canvas') as HTMLCanvasElement);
+    private compute_text_width(text: string): number {
+        // Re-use canvas object for better performance
+        if (this.canvas === null) {
+            this.canvas = (create_element("canvas") as HTMLCanvasElement);
         }
 
-        const context = this.canvas.getContext('2d');
-        if (!context) {
+        const context = this.canvas.getContext("2d");
+        if (context === null) {
            return 8 * text.length;
         }
 

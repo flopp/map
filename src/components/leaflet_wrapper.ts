@@ -1,41 +1,40 @@
-import 'leaflet/dist/leaflet.css';
+import * as L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-import * as L from 'leaflet';
-
-import {App} from './app';
-import {Color} from './color';
-import {Coordinates} from './coordinates';
+import {App} from "./app";
+import {Color} from "./color";
+import {Coordinates} from "./coordinates";
 import {Line} from "./line";
-import {MapType} from './map_type';
-import {MapWrapper} from './map_wrapper';
+import {MapType} from "./map_type";
+import {MapWrapper} from "./map_wrapper";
 import {Marker} from "./marker";
-import {Opencaching, OkapiCache} from "./opencaching";
+import {IOkapiCache, Opencaching} from "./opencaching";
 
 function from_coordinates(c: Coordinates): L.LatLng {
     return L.latLng(c.raw_lat(), c.raw_lng());
-};
+}
 
 function to_coordinates(leaflet_latlng: L.LatLng): Coordinates {
     return new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
-};
+}
 
-interface MarkerObjDict {
+interface IMarkerObjDict {
     marker_obj: L.Marker;
     circle_obj: L.Polygon|null;
     last_name: string;
     last_color: Color;
-};
+}
 
-interface LineObjDict {
+interface ILineObjDict {
     line_obj: L.Polyline;
     arrow_obj: L.Polyline;
     last_color: Color;
-};
+}
 
-interface OpencachingMarker {
+interface IOpencachingMarker {
     marker_obj: L.Marker;
-    data: OkapiCache;
-};
+    data: IOkapiCache;
+}
 
 export class LeafletWrapper extends MapWrapper {
     private automatic_event: boolean = false;
@@ -44,8 +43,8 @@ export class LeafletWrapper extends MapWrapper {
     private german_npa_enabled: boolean = false;
     private german_npa_layer: L.TileLayer|null = null;
     private opencaching: Opencaching|null = null;
-    private opencaching_markers: Map<string, OpencachingMarker>;
-    private opencaching_icons: Map<string, L.Icon>;
+    private opencaching_markers: Map<string, IOpencachingMarker>;
+    private readonly opencaching_icons: Map<string, L.Icon>;
     private map: L.Map;
     private layer_openstreetmap: L.TileLayer;
     private layer_opentopomap: L.TileLayer;
@@ -66,46 +65,46 @@ export class LeafletWrapper extends MapWrapper {
         this.map = L.map(div_id);
 
         this.layer_openstreetmap = L.tileLayer(
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             {
                 attribution:
                     'Map tiles by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://creativecommons.org/licenses/by/3.0" target="_blank">CC BY 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
                 maxZoom: 17,
-                subdomains: 'abc',
+                subdomains: "abc",
             },
         );
         this.layer_opentopomap = L.tileLayer(
-            'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+            "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
             {
                 attribution:
                     'Map tiles by <a href="https://opentopomap.org" target="_blank">OpenTopoMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
                 maxZoom: 17,
-                subdomains: 'abc',
+                subdomains: "abc",
             },
         );
         this.layer_stamen_terrain = L.tileLayer(
-            'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
+            "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
             {
                 attribution:
                     'Map tiles by <a href="https://stamen.com" target="_blank">Stamen Design</a>, under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href=https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
                 maxZoom: 17,
-                subdomains: 'abcd',
+                subdomains: "abcd",
             },
         );
         this.layer_humanitarian = L.tileLayer(
-            'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+            "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
             {
                 attribution:
                     'Map tiles by the <a href="https://www.hotosm.org/updates/2013-09-29_a_new_window_on_openstreetmap_data" target="_blank">Humanitarian OSM Team</a>, under <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.fr" target="_blank">CC0</a>. Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>. Hosted by <a href="https://www.openstreetmap.fr/mentions-legales/" target="_blank">OSM France</a>.',
                 maxZoom: 17,
-                subdomains: 'abc',
+                subdomains: "abc",
             },
         );
         this.layer_arcgis_worldimagery = L.tileLayer(
-            'https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+            "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
             {
                 attribution:
-                    'Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community',
+                    "Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
                 maxZoom: 18,
             },
         );
@@ -117,7 +116,7 @@ export class LeafletWrapper extends MapWrapper {
         this.layers.set(MapType.HUMANITARIAN, this.layer_humanitarian);
         this.layers.set(MapType.ARCGIS_WORLDIMAGERY, this.layer_arcgis_worldimagery);
 
-        ['zoom', 'move'].forEach((event_name: string): void => {
+        ["zoom", "move"].forEach((event_name: string): void => {
             self.map.on(event_name, (): void => {
                 if (self.active && !self.automatic_event) {
                     self.app.map_state.set_view(
@@ -128,7 +127,7 @@ export class LeafletWrapper extends MapWrapper {
             });
         });
 
-        this.map.on('contextmenu', (event: L.LeafletMouseEvent): boolean => {
+        this.map.on("contextmenu", (event: L.LeafletMouseEvent): boolean => {
             self.app.map_menu.showMap(
                 self,
                 event.containerPoint.x,
@@ -137,7 +136,7 @@ export class LeafletWrapper extends MapWrapper {
             );
             return false;
         });
-        ['zoom', 'move', 'mousedown'].forEach((event_name: string): void => {
+        ["zoom", "move", "mousedown"].forEach((event_name: string): void => {
             self.map.on(event_name, (): void => {
                 self.app.map_menu.hide();
             });
@@ -145,14 +144,15 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public set_map_type(map_type: MapType): void {
-        let layer = null;
-        if (this.layers.has(map_type)) {
-            layer = this.layers.get(map_type);
+        if (!this.layers.has(map_type)) {
+            return;
         }
+        const layer = this.layers.get(map_type)!;
 
-        if (layer && !this.map.hasLayer(layer)) {
+        if (!this.map.hasLayer(layer)) {
             const self = this;
             for (const otherLayer of this.layers.values()) {
+                // tslint:disable-next-line: strict-comparisons
                 if (otherLayer !== layer) {
                     self.map.removeLayer(otherLayer);
                 }
@@ -169,14 +169,14 @@ export class LeafletWrapper extends MapWrapper {
 
         this.hill_shading_enabled = enabled;
         if (enabled) {
-            if (!this.hill_shading_layer) {
+            if (this.hill_shading_layer === null) {
                 this.hill_shading_layer = L.tileLayer(
-                    'https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png',
-                    {attribution: 'Hill-shading by wmflabs.org', maxZoom: 15},
+                    "https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png",
+                    {attribution: "Hill-shading by wmflabs.org", maxZoom: 15},
                 );
             }
             this.map.addLayer(this.hill_shading_layer);
-        } else if (this.hill_shading_layer) {
+        } else if (this.hill_shading_layer !== null) {
             this.map.removeLayer(this.hill_shading_layer);
         }
     }
@@ -188,17 +188,17 @@ export class LeafletWrapper extends MapWrapper {
 
         this.german_npa_enabled = enabled;
         if (enabled) {
-            if (!this.german_npa_layer) {
+            if (this.german_npa_layer === null) {
                 this.german_npa_layer = L.tileLayer.wms("https://geodienste.bfn.de/ogc/wms/schutzgebiet?", {
-                    layers: 'Naturschutzgebiete',
-                    format: 'image/png',
+                    layers: "Naturschutzgebiete",
+                    format: "image/png",
                     transparent: true,
                     opacity: 0.5,
-                    attribution: "Bundesamt für Naturschutz (BfN)"
+                    attribution: "Bundesamt für Naturschutz (BfN)",
                 });
             }
             this.map.addLayer(this.german_npa_layer);
-        } else if (this.german_npa_layer) {
+        } else if (this.german_npa_layer !== null) {
             this.map.removeLayer(this.german_npa_layer);
         }
     }
@@ -206,17 +206,17 @@ export class LeafletWrapper extends MapWrapper {
     public set_opencaching(enabled: boolean): void {
         const self = this;
         if (enabled) {
-            if (!this.opencaching) {
+            if (this.opencaching === null) {
                 this.opencaching = new Opencaching(
-                    (caches: Map<string, OkapiCache>): void => {
+                    (caches: Map<string, IOkapiCache>): void => {
                         self.display_opencaching(caches);
-                    }
+                    },
                 );
                 this.map.whenReady((): void => {
-                    self.update_opencaching()
+                    self.update_opencaching();
                 });
             }
-        } else if (this.opencaching) {
+        } else if (this.opencaching !== null) {
             this.opencaching = null;
 
             this.opencaching_markers.forEach((element): void => {
@@ -232,7 +232,7 @@ export class LeafletWrapper extends MapWrapper {
         this.automatic_event = false;
         const self = this;
         this.map.whenReady((): void => {
-            self.update_opencaching()
+            self.update_opencaching();
         });
     }
 
@@ -243,7 +243,7 @@ export class LeafletWrapper extends MapWrapper {
     protected create_marker_object(marker: Marker): void {
         const self = this;
 
-        const obj: MarkerObjDict = {
+        const obj: IMarkerObjDict = {
             marker_obj: L.marker(from_coordinates(marker.coordinates), {
                 draggable: true,
                 autoPan: true,
@@ -256,13 +256,13 @@ export class LeafletWrapper extends MapWrapper {
         obj.marker_obj.addTo(this.map);
 
 
-        obj.marker_obj.on('drag', (): void => {
+        obj.marker_obj.on("drag", (): void => {
             self.app.map_state.set_marker_coordinates(
                 marker.get_id(),
-                to_coordinates(obj.marker_obj.getLatLng())
+                to_coordinates(obj.marker_obj.getLatLng()),
             );
-            const marker_obj = (self.markers.get(marker.get_id()) as MarkerObjDict);
-            if (marker_obj.circle_obj) {
+            const marker_obj = (self.markers.get(marker.get_id()) as IMarkerObjDict);
+            if (marker_obj.circle_obj !== null) {
                 const center = to_coordinates(obj.marker_obj.getLatLng());
                 const points = center
                     .geodesic_circle(marker.radius)
@@ -271,7 +271,7 @@ export class LeafletWrapper extends MapWrapper {
             }
         });
 
-        obj.marker_obj.on('contextmenu', (event: L.LeafletMouseEvent): boolean => {
+        obj.marker_obj.on("contextmenu", (event: L.LeafletMouseEvent): boolean => {
             self.app.map_menu.showMarker(
                 self,
                 event.containerPoint.x,
@@ -286,10 +286,10 @@ export class LeafletWrapper extends MapWrapper {
         this.update_marker_object(obj, marker);
     }
 
-    protected update_marker_object(obj: MarkerObjDict, marker: Marker): void {
+    protected update_marker_object(obj: IMarkerObjDict, marker: Marker): void {
         obj.marker_obj.setLatLng(from_coordinates(marker.coordinates));
         if (marker.radius > 0) {
-            if (!obj.circle_obj) {
+            if (obj.circle_obj === null) {
                 obj.circle_obj = L.polygon([], {
                     color: marker.color.to_hash_string(),
                     weight: 1,
@@ -301,7 +301,7 @@ export class LeafletWrapper extends MapWrapper {
                     .geodesic_circle(marker.radius)
                     .map(from_coordinates),
             );
-        } else if (obj.circle_obj) {
+        } else if (obj.circle_obj !== null) {
             this.map.removeLayer(obj.circle_obj);
             obj.circle_obj = null;
         }
@@ -312,7 +312,7 @@ export class LeafletWrapper extends MapWrapper {
         ) {
             obj.marker_obj.setIcon(this.create_icon(marker));
         }
-        if (obj.circle_obj && !marker.color.equals(obj.last_color)) {
+        if (obj.circle_obj !== null && !marker.color.equals(obj.last_color)) {
             obj.circle_obj.setStyle({color: marker.color.to_hash_string()});
         }
 
@@ -320,8 +320,8 @@ export class LeafletWrapper extends MapWrapper {
         obj.last_name = marker.name;
     }
 
-    public delete_marker_object(obj: MarkerObjDict): void {
-        if (obj.circle_obj) {
+    public delete_marker_object(obj: IMarkerObjDict): void {
+        if (obj.circle_obj !== null) {
             this.map.removeLayer(obj.circle_obj);
         }
         this.map.removeLayer(obj.marker_obj);
@@ -360,7 +360,7 @@ export class LeafletWrapper extends MapWrapper {
     private arrow_head(p1: L.LatLng, p2: L.LatLng): L.LatLng[] {
         const compute_heading = (a: L.Point, b: L.Point): number =>
             ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) %
-            360
+            360;
 
         const headAngle = 60;
         const pixelSize = 10;
@@ -396,7 +396,7 @@ export class LeafletWrapper extends MapWrapper {
         ];
     }
 
-    public update_line_object(obj: LineObjDict, line: Line): void {
+    public update_line_object(obj: ILineObjDict, line: Line): void {
         if (
             !this.has_marker_object(line.marker1) ||
             !this.has_marker_object(line.marker2)
@@ -435,7 +435,7 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    public delete_line_object(obj: LineObjDict): void {
+    public delete_line_object(obj: ILineObjDict): void {
         this.map.removeLayer(obj.arrow_obj);
         this.map.removeLayer(obj.line_obj);
     }
@@ -453,7 +453,7 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public update_opencaching(): void {
-        if (!this.opencaching) {
+        if (this.opencaching === null) {
             return;
         }
 
@@ -462,14 +462,14 @@ export class LeafletWrapper extends MapWrapper {
             bounds.getNorth(),
             bounds.getSouth(),
             bounds.getWest(),
-            bounds.getEast()
+            bounds.getEast(),
         );
     }
 
-    public display_opencaching(caches: Map<string, OkapiCache>): void {
+    public display_opencaching(caches: Map<string, IOkapiCache>): void {
         const self = this;
 
-        this.opencaching_markers.forEach((element: OpencachingMarker): void => {
+        this.opencaching_markers.forEach((element: IOpencachingMarker): void => {
             if (!caches.has(element.data.code)) {
                 self.map.removeLayer(element.marker_obj);
             }
@@ -479,15 +479,15 @@ export class LeafletWrapper extends MapWrapper {
             return;
         }
 
-        const new_markers: Map<string, OpencachingMarker> = new Map();
-        caches.forEach((data: OkapiCache, code: string): void => {
+        const new_markers: Map<string, IOpencachingMarker> = new Map();
+        caches.forEach((data: IOkapiCache, code: string): void => {
             if (!self.opencaching_markers.has(code)) {
-                const m: OpencachingMarker = {
+                const m: IOpencachingMarker = {
                     marker_obj: L.marker(from_coordinates(Opencaching.parseLocation(data.location)), {
                         icon: self.opencaching_icon(data.type),
-                        draggable: false
+                        draggable: false,
                     }),
-                    data
+                    data,
                 };
                 m.marker_obj.addTo(self.map);
                 m.marker_obj.bindPopup(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
@@ -503,7 +503,7 @@ export class LeafletWrapper extends MapWrapper {
         if (!this.opencaching_icons.has(type)) {
             const icon = L.icon({
                 iconUrl: Opencaching.type_icon(type),
-                iconAnchor: [12, 25]
+                iconAnchor: [12, 25],
             });
             this.opencaching_icons.set(type, icon);
         }

@@ -1,7 +1,7 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint:all"
     ],
     "jsRules": {},
     "rules": {
@@ -15,9 +15,40 @@
             "spaces",
             4
         ],
-        "no-bitwise": false,
-        "no-console": false,
 
+        "align": false,
+        "ban-ts-ignore": false,
+        "binary-expression-operand-order": false,
+        "completed-docs": false,
+        "cyclomatic-complexity": false,
+        "file-name-casing": [true, "snake-case"],
+        "invalid-void": false,
+        "max-file-line-count": false,
+        "member-ordering": false,
+        "newline-before-return": false,
+        "newline-per-chained-call": false,
+        "no-any": false,
+        "no-bitwise": false,
+        "no-consecutive-blank-lines": false,
+        "no-console": false,
+        "no-import-side-effect": false,
+        "no-inferrable-types": false,
+        "no-magic-numbers": false,
+        "no-non-null-assertion": false,
+        "no-null-keyword": false,
+        "no-submodule-imports": false,
+        "no-this-assignment": false,
+        "no-unnecessary-type-assertion": false,
+        "no-unsafe-any": false,
+        "object-literal-sort-keys": false,
+        "only-arrow-functions": false,
+        "prefer-conditional-expression": false,
+        "prefer-function-over-method": false,
+        "prefer-switch": false,
+        "promise-function-async": false,
+        "whitespace": false,
+        
+        "new-parens": true,
         "no-conditional-assignment": true,
         "no-invalid-template-strings": true,
         "no-sparse-arrays": true,

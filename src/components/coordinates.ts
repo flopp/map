@@ -1,11 +1,11 @@
 // @ts-ignore
-import {Geodesic} from 'geographiclib';
+import {Geodesic} from "geographiclib";
 
 export enum CoordinatesFormat {
-    D = 'D',
-    DM = 'DM',
-    DMS = 'DMS',
-};
+    D = "D",
+    DM = "DM",
+    DMS = "DMS",
+}
 
 export function parseCoordinatesFormat(value: string, fallback: CoordinatesFormat): CoordinatesFormat {
     switch (value.toUpperCase()) {
@@ -20,17 +20,22 @@ export function parseCoordinatesFormat(value: string, fallback: CoordinatesForma
     }
 }
 
-function pad(num: number|string, width: number) : string {
+function pad(num: number|string, width: number): string {
     let s = String(num);
     while (s.length < width) {
-        s = '0' + s;
+        s = `0${s}`;
     }
     return s;
 }
 
+export interface IDistanceBearing {
+    distance: number;
+    bearing: number;
+}
+
 export class Coordinates {
-    private _raw_lat: number
-    private _raw_lng: number
+    private readonly _raw_lat: number;
+    private readonly _raw_lng: number;
 
     constructor(lat: number, lng: number) {
         this._raw_lat = lat;
@@ -45,11 +50,11 @@ export class Coordinates {
         return this._raw_lng;
     }
 
-    public lat() : number {
+    public lat(): number {
         return this.raw_lat();
     }
 
-    public lng() : number {
+    public lng(): number {
         let lng = this.raw_lng();
         while (lng < -180) {
             lng += 360;
@@ -60,7 +65,7 @@ export class Coordinates {
         return lng;
     }
 
-    public next_lng(other: number) : number {
+    public next_lng(other: number): number {
         let lng = this.raw_lng();
         while (lng < other - 180) {
             lng += 360;
@@ -73,15 +78,14 @@ export class Coordinates {
 
     public static from_components(
         h1: string, d1: number, m1: number, s1: number,
-        h2: string, d2: number, m2: number, s2: number) : Coordinates|null
-    {
+        h2: string, d2: number, m2: number, s2: number): Coordinates|null {
         let lat: number;
         let lng: number;
 
-        if (h1 !== '+' && d1 < 0) {
+        if (h1 !== "+" && d1 < 0) {
             return null;
         }
-        // allow for m/s = 60 for supporting UNESCO style coordinates; see https://github.com/flopp/FloppsMap/issues/77
+        // Allow for m/s = 60 for supporting UNESCO style coordinates; see https://github.com/flopp/FloppsMap/issues/77
         if (m1 < 0 || m1 >= 61) {
             return null;
         }
@@ -89,7 +93,7 @@ export class Coordinates {
             return null;
         }
 
-        if (h2 !== '+' && d2 < 0) {
+        if (h2 !== "+" && d2 < 0) {
             return null;
         }
         if (m2 < 0 || m2 >= 61) {
@@ -99,28 +103,28 @@ export class Coordinates {
             return null;
         }
 
-        const c1 = d1 + m1 / 60.0 + s1 / 3600.0;
-        const c2 = d2 + m2 / 60.0 + s2 / 3600.0;
+        const c1 = d1 + m1 / 60 + s1 / 3600;
+        const c2 = d2 + m2 / 60 + s2 / 3600;
 
-        if (h1 === '+' && h2 === '+') {
+        if (h1 === "+" && h2 === "+") {
             lat = c1;
             lng = c2;
-        } else if ((h1 === 'N' || h1 === 'S') && (h2 === 'E' || h2 === 'W')) {
+        } else if ((h1 === "N" || h1 === "S") && (h2 === "E" || h2 === "W")) {
             lat = c1;
             lng = c2;
-            if (h1 === 'S') {
+            if (h1 === "S") {
                 lat = -lat;
             }
-            if (h2 === 'W') {
+            if (h2 === "W") {
                 lng = -lng;
             }
-        } else if ((h2 === 'N' || h2 === 'S') && (h1 === 'E' || h1 === 'W')) {
+        } else if ((h2 === "N" || h2 === "S") && (h1 === "E" || h1 === "W")) {
             lat = c2;
             lng = c1;
-            if (h2 === 'S') {
+            if (h2 === "S") {
                 lat = -lat;
             }
-            if (h1 === 'W') {
+            if (h1 === "W") {
                 lng = -lng;
             }
         } else {
@@ -135,8 +139,8 @@ export class Coordinates {
         const patterns = [
                 // DM / H D M
                 {
-                    "regexp": /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
-                    "fields": [
+                    regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                    fields: [
                         1,
                         2,
                         3,
@@ -149,8 +153,8 @@ export class Coordinates {
                 },
                 // DM / D H M
                 {
-                    "regexp": /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
-                    "fields": [
+                    regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                    fields: [
                         2,
                         1,
                         3,
@@ -163,8 +167,8 @@ export class Coordinates {
                 },
                 // DM / D M H
                 {
-                    "regexp": /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    "fields": [
+                    regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    fields: [
                         3,
                         1,
                         2,
@@ -177,13 +181,13 @@ export class Coordinates {
                 },
                 // DM / D M
                 {
-                    "regexp": /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    "fields": [
-                        'N',
+                    regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    fields: [
+                        "N",
                         1,
                         2,
                         0,
-                        'E',
+                        "E",
                         3,
                         4,
                         0,
@@ -191,8 +195,8 @@ export class Coordinates {
                 },
                 // DMS / H D M S
                 {
-                    "regexp": /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    "fields": [
+                    regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    fields: [
                         1,
                         2,
                         3,
@@ -205,8 +209,8 @@ export class Coordinates {
                 },
                 // DMS / D H M S
                 {
-                    "regexp": /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
-                    "fields": [
+                    regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                    fields: [
                         2,
                         1,
                         3,
@@ -219,8 +223,8 @@ export class Coordinates {
                 },
                 // DMS / D M S H
                 {
-                    "regexp": /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    "fields": [
+                    regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    fields: [
                         4,
                         1,
                         2,
@@ -233,13 +237,13 @@ export class Coordinates {
                 },
                 // DMS / D M S
                 {
-                    "regexp": /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    "fields": [
-                        'N',
+                    regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                    fields: [
+                        "N",
                         1,
                         2,
                         3,
-                        'E',
+                        "E",
                         4,
                         5,
                         6,
@@ -247,8 +251,8 @@ export class Coordinates {
                 },
                 // D / H D
                 {
-                    "regexp": /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
-                    "fields": [
+                    regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                    fields: [
                         1,
                         2,
                         0,
@@ -261,8 +265,8 @@ export class Coordinates {
                 },
                 // D / D H
                 {
-                    "regexp": /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    "fields": [
+                    regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                    fields: [
                         2,
                         1,
                         0,
@@ -275,13 +279,13 @@ export class Coordinates {
                 },
                 // D / D
                 {
-                    "regexp": /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
-                    "fields": [
-                        '+',
+                    regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                    fields: [
+                        "+",
                         1,
                         0,
                         0,
-                        '+',
+                        "+",
                         2,
                         0,
                         0,
@@ -289,14 +293,14 @@ export class Coordinates {
                 },
             ];
 
-        const extract_hemisphere = (match: RegExpMatchArray, index: string|number) : string => {
-            if (typeof index === 'number') {
+        const extract_hemisphere = (match: RegExpMatchArray, index: string|number): string => {
+            if (typeof index === "number") {
                 return match[index];
             }
             return index;
         };
 
-        const extract_component = (match: RegExpMatchArray, index: number) : number => {
+        const extract_component = (match: RegExpMatchArray, index: number): number => {
             if (index > 0) {
                 return parseFloat(match[index]);
             }
@@ -305,7 +309,7 @@ export class Coordinates {
 
         for (const p of patterns) {
             const m = s.match(p.regexp);
-            if (m) {
+            if (m !== null) {
                 const c = Coordinates.from_components(
                     extract_hemisphere(m, p.fields[0]),
                     extract_component(m, p.fields[1] as number),
@@ -317,7 +321,7 @@ export class Coordinates {
                     extract_component(m, p.fields[7] as number),
                 );
 
-                if (c) {
+                if (c !== null) {
                     return c;
                 }
             }
@@ -326,7 +330,7 @@ export class Coordinates {
         return null;
     }
 
-    public to_string(format: string) : string {
+    public to_string(format: string): string {
         switch (format) {
             case CoordinatesFormat.D:
                 return this.to_string_D();
@@ -338,7 +342,7 @@ export class Coordinates {
         }
     }
 
-    public to_string_DM() : string {
+    public to_string_DM(): string {
         let lat = Math.abs(this.lat());
         let lat_minutes: number;
         let lat_milli_minutes: number;
@@ -367,25 +371,26 @@ export class Coordinates {
         }
 
         return (
+            // tslint:disable-next-line: prefer-template
             this.NS() +
-            ' ' +
+            " " +
             pad(lat_deg, 2) +
-            ' ' +
+            " " +
             pad(lat_minutes, 2) +
-            '.' +
+            "." +
             pad(lat_milli_minutes, 3) +
-            ' ' +
+            " " +
             this.EW() +
-            ' ' +
+            " " +
             pad(lng_deg, 3) +
-            ' ' +
+            " " +
             pad(lng_minutes, 2) +
-            '.' +
+            "." +
             pad(lng_milli_minutes, 3)
         );
     }
 
-    public to_string_DMS() : string {
+    public to_string_DMS(): string {
         let lat = Math.abs(this.lat());
         let lng = Math.abs(this.lng());
 
@@ -393,40 +398,41 @@ export class Coordinates {
         lat -= lat_deg;
         const lat_minutes = Math.floor(lat * 60);
         lat = lat * 60 - lat_minutes;
-        const lat_seconds = lat * 60.0;
+        const lat_seconds = lat * 60;
 
         const lng_deg = Math.floor(lng);
         lng -= lng_deg;
         const lng_minutes = Math.floor(lng * 60);
         lng = lng * 60 - lng_minutes;
-        const lng_seconds = lng * 60.0;
+        const lng_seconds = lng * 60;
 
         return (
+            // tslint:disable-next-line: prefer-template
             this.NS() +
-            ' ' +
+            " " +
             pad(lat_deg, 2) +
-            ' ' +
+            " " +
             pad(lat_minutes, 2) +
-            ' ' +
+            " " +
             pad(lat_seconds.toFixed(2), 5) +
-            ' ' +
+            " " +
             this.EW() +
-            ' ' +
+            " " +
             pad(lng_deg, 3) +
-            ' ' +
+            " " +
             pad(lng_minutes, 2) +
-            ' ' +
+            " " +
             pad(lng_seconds.toFixed(2), 5)
         );
     }
 
-    public to_string_D() : string {
+    public to_string_D(): string {
         return `${this.NS()} ${Math.abs(this.lat()).toFixed(
             6,
         )} ${this.EW()} ${Math.abs(this.lng()).toFixed(6)}`;
     }
 
-    public distance(other: Coordinates) : number {
+    public distance(other: Coordinates): number {
         const geod = Geodesic.WGS84;
         const r = geod.Inverse(
             this.raw_lat(),
@@ -438,7 +444,7 @@ export class Coordinates {
         return r.s12;
     }
 
-    public distance_bearing(other: Coordinates) : {distance: number, bearing: number} {
+    public distance_bearing(other: Coordinates): IDistanceBearing {
         const geod = Geodesic.WGS84;
         const r = geod.Inverse(
             this.raw_lat(),
@@ -450,7 +456,7 @@ export class Coordinates {
         return {distance: r.s12, bearing: r.azi1};
     }
 
-    public project(angle: number, distance: number) : Coordinates {
+    public project(angle: number, distance: number): Coordinates {
         const geod = Geodesic.WGS84;
         const r = geod.Direct(
             this.lat(),
@@ -462,8 +468,8 @@ export class Coordinates {
         return new Coordinates(r.lat2, r.lon2);
     }
 
-    public interpolate_geodesic_line(other: Coordinates, _zoom: number) : Coordinates[] {
-        // const d = 6000000 / Math.pow(2, zoom);
+    public interpolate_geodesic_line(other: Coordinates, _zoom: number): Coordinates[] {
+        // Const d = 6000000 / Math.pow(2, zoom);
         const max_k = 50;
         const geod = Geodesic.WGS84;
         const t = geod.Inverse(
@@ -474,7 +480,7 @@ export class Coordinates {
             Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
 
-        // const k = Math.min(max_k, Math.max(1, Math.ceil(t.s12 / d)));
+        // Const k = Math.min(max_k, Math.max(1, Math.ceil(t.s12 / d)));
         const k = max_k;
         const points = new Array(k + 1);
         points[0] = this;
@@ -504,7 +510,7 @@ export class Coordinates {
         return points;
     }
 
-    public geodesic_circle(radius: number) : Coordinates[] {
+    public geodesic_circle(radius: number): Coordinates[] {
         const delta_angle = 1;
         const points = [];
         for (let angle = 0; angle < 360; angle += delta_angle) {
@@ -513,49 +519,49 @@ export class Coordinates {
         return points;
     }
 
-    public NS() : string {
+    public NS(): string {
         if (this.lat() >= 0) {
-            return 'N';
+            return "N";
         }
-        return 'S';
+        return "S";
     }
 
-    public EW() : string {
+    public EW(): string {
         if (this.lng() >= 0) {
-            return 'E';
+            return "E";
         }
-        return 'W';
+        return "W";
     }
 
-    public static sanitize_string(s: string) : string {
-        let sanitized = '';
+    public static sanitize_string(s: string): string {
+        let sanitized = "";
         let commas = 0;
         let periods = 0;
 
         for (const c of s) {
-            if (c === 'o' || c === 'O') {
-                // map 'O'/'o' to 'E' (German 'Ost' = 'East')
-                sanitized += 'E';
-            } else if (c.match(/[a-z0-9-]/i)) {
+            if (c === "o" || c === "O") {
+                // Map 'O'/'o' to 'E' (German 'Ost' = 'East')
+                sanitized += "E";
+            } else if (c.match(/[a-z0-9-]/i) !== null) {
                 sanitized += c.toUpperCase();
-            } else if (c === '.') {
+            } else if (c === ".") {
                 periods += 1;
                 sanitized += c;
-            } else if (c === ',') {
+            } else if (c === ",") {
                 commas += 1;
                 sanitized += c;
             } else {
-                sanitized += ' ';
+                sanitized += " ";
             }
         }
 
-        // try to map commas to spaces or periods
+        // Try to map commas to spaces or periods
         if (commas === 1 && (periods === 0 || periods >= 2)) {
-            return sanitized.replace(/,/g, ' ');
+            return sanitized.replace(/,/g, " ");
         }
 
         if (commas >= 1 && periods === 0) {
-            return sanitized.replace(/,/g, '.');
+            return sanitized.replace(/,/g, ".");
         }
 
         return sanitized;

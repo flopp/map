@@ -1,23 +1,23 @@
-import {ApiKeysDialog} from './api_keys_dialog';
-import {Coordinates} from './coordinates';
-import {GoogleWrapper} from './google_wrapper';
-import {IconFactory} from './icon_factory';
-import {Language} from './language';
-import {LeafletWrapper} from './leaflet_wrapper';
-import {LinkDialog} from './link_dialog';
-import {MapMenu} from './map_menu';
-import {MapState, MapStateChange} from './map_state';
-import {MapType, isGoogle} from './map_type';
-import {Marker} from './marker';
-import {MultiMarkersDialog} from './multi_markers_dialog';
-import {Notifications} from './notifications';
-import {ProjectionDialog} from './projection_dialog';
-import {Sidebar} from './sidebar';
+import {ApiKeysDialog} from "./api_keys_dialog";
+import {Coordinates} from "./coordinates";
 import {getScript} from "./get_script";
+import {GoogleWrapper} from "./google_wrapper";
+import {IconFactory} from "./icon_factory";
+import {Language} from "./language";
+import {LeafletWrapper} from "./leaflet_wrapper";
+import {LinkDialog} from "./link_dialog";
+import {MapMenu} from "./map_menu";
+import {MapState, MapStateChange} from "./map_state";
+import {isGoogle, MapType} from "./map_type";
+import {Marker} from "./marker";
+import {MultiMarkersDialog} from "./multi_markers_dialog";
+import {Notifications} from "./notifications";
+import {ProjectionDialog} from "./projection_dialog";
+import {Sidebar} from "./sidebar";
 
 export class App {
-    private _lang: Language|null = null;
-    private notifications: Notifications;
+    private readonly _lang: Language|null = null;
+    private readonly notifications: Notifications;
     private google_maps_error: boolean = false;
     public google_loading: boolean = false;
 
@@ -56,7 +56,7 @@ export class App {
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
 
-        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'none';
+        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = "none";
 
         this.sidebar = new Sidebar(this);
 
@@ -67,15 +67,15 @@ export class App {
     }
 
     public message(text: string): void {
-        this.notifications.message(text, 'info');
+        this.notifications.message(text, "info");
     }
 
     public message_error(text: string): void {
-        this.notifications.message(text, 'danger');
+        this.notifications.message(text, "danger");
     }
 
     public reset_maps(): void {
-        if (this.map_state.google_api_key !== '') {
+        if (this.map_state.google_api_key !== "") {
             if (!this.has_google_maps()) {
                 this.google_maps_error = false;
                 this.sidebar.sidebar_layers.enable_google_layers();
@@ -137,12 +137,11 @@ export class App {
                 this.switch_to_google();
                 break;
             default:
-                break;
         }
     }
 
     public switch_to_leaflet(): void {
-        if (this.google) {
+        if (this.google !== null) {
             this.google.deactivate();
         }
         this.show_leaflet_div();
@@ -153,25 +152,22 @@ export class App {
 
     public console_filter(): void {
         const console = window.console;
-        if (!console) {
-            return;
-        }
-
         const self = this;
+
         // tslint:disable-next-line:no-unbound-method
         const original = console.error;
         console.error = (...args: any[]): void => {
-            // show original message
+            // Show original message
             Reflect.apply(original, console, args);
 
-            if (args[0] && typeof args[0] === 'string') {
+            if (args[0] && typeof args[0] === "string") {
                 if (
-                    args[0].indexOf('Google Maps JavaScript API error') >= 0 ||
-                    args[0].indexOf('You are using this API without a key') >= 0 ||
-                    args[0].indexOf('developers.google.com') >= 0
+                    args[0].indexOf("Google Maps JavaScript API error") >= 0 ||
+                    args[0].indexOf("You are using this API without a key") >= 0 ||
+                    args[0].indexOf("developers.google.com") >= 0
                 ) {
                     console.warn(
-                        'Intercepted error message from the Google Maps API. Disabling google maps.',
+                        "Intercepted error message from the Google Maps API. Disabling google maps.",
                     );
                     self.google_maps_error_raised();
                 }
@@ -181,7 +177,7 @@ export class App {
 
     public google_maps_error_raised(): void {
         this.message_error(
-            this.translate('messages.layer_disabled').replace('{1}', 'Google Maps'),
+            this.translate("messages.layer_disabled").replace("{1}", "Google Maps"),
         );
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
@@ -201,7 +197,7 @@ export class App {
 
         this.leaflet.deactivate();
 
-        if (this.google) {
+        if (this.google !== null) {
             this.show_google_div();
             this.google.activate();
             this.map_state.update_observers(MapStateChange.EVERYTHING);
@@ -209,22 +205,23 @@ export class App {
             return;
         }
 
-        console.log('ON DEMAND LOADING OF THE GOOGLE MAPS API');
+        console.log("ON DEMAND LOADING OF THE GOOGLE MAPS API");
         const api_key = this.map_state.google_api_key;
         this.google_loading = true;
         const promise = new Promise<void>((resolve: (value?: void) => void, reject: (reason?: any) => void): void => {
-            const callbackName = '__googleMapsApiOnLoadCallback';
+            const callbackName = "__googleMapsApiOnLoadCallback";
             // Reject the promise after a timeout
             const timeoutId = setTimeout((): void => {
                 // Set the on load callback to a no-op
                 (window as any).__googleMapsApiOnLoadCallback = (): void => {
-                    // empty
+                    // Empty
                 };
                 self.google_maps_error_raised();
-                reject(new Error('Could not load the Google Maps API'));
+                reject(new Error("Could not load the Google Maps API"));
             }, 10000);
 
             (window as any).__googleMapsApiOnLoadCallback = (): void => {
+                // tslint:disable-next-line: strict-type-predicates
                 if (timeoutId !== null) {
                     clearTimeout(timeoutId);
                 }
@@ -241,31 +238,32 @@ export class App {
                 self.initialize_google_map();
             })
             .catch((error: any): void => {
-                console.log('Error in promise');
+                console.log("Error in promise");
                 console.error(error);
                 self.google_maps_error_raised();
             });
     }
 
     public show_leaflet_div(): void {
-        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = 'block';
-        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'none';
+        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = "block";
+        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = "none";
     }
 
     public show_google_div(): void {
-        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = 'none';
-        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = 'block';
+        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = "none";
+        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = "block";
     }
 
     public update_geometry(): void {
         this.leaflet.invalidate_size();
-        if (this.google) {
+        if (this.google !== null) {
             this.google.invalidate_size();
         }
     }
 
     public locate_me(): void {
         const self = this;
+        // tslint:disable-next-line: strict-boolean-expressions
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (location: GeolocationPosition): void => {
@@ -277,37 +275,37 @@ export class App {
                     );
                 },
                 (error: GeolocationPositionError): void => {
-                    self.message_error(self.translate('messages.geolocation_error').replace('{1}', error.message));
+                    self.message_error(self.translate("messages.geolocation_error").replace("{1}", error.message));
                 },
             );
         } else {
-            self.message_error(self.translate('messages.geolocation_not_available'));
+            self.message_error(self.translate("messages.geolocation_not_available"));
         }
     }
 
     public search_location(location_string: string): void {
-        location_string = location_string.trim();
-        if (location_string.length === 0) {
+        const trimmed = location_string.trim();
+        if (trimmed.length === 0) {
             return;
         }
 
-        // try to parse "location_string" as coordinates
-        const coordinates = Coordinates.from_string(location_string);
-        if (coordinates) {
+        // Try to parse "location_string" as coordinates
+        const coordinates = Coordinates.from_string(trimmed);
+        if (coordinates !== null) {
             this.map_state.set_center(coordinates);
             return;
         }
 
-        // try to resolve "location_string" via a nominatim search
+        // Try to resolve "location_string" via a nominatim search
         const self = this;
-        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${location_string}`;
+        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${trimmed}`;
         fetch(url)
             .then((response: Response): Promise<any> => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error("Network response was not ok");
                 }
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
+                const contentType = response.headers.get("content-type");
+                if (contentType === null || !contentType.includes("application/json")) {
                     throw new TypeError("Response is not JSON");
                 }
                 return response.json();
@@ -315,13 +313,13 @@ export class App {
             .then((json_data): void => {
                 if (json_data.length > 0) {
                     self.map_state.set_center(
-                        new Coordinates(json_data[0].lat, json_data[0].lon)
+                        new Coordinates(json_data[0].lat, json_data[0].lon),
                     );
                 } else {
-                    self.message_error(self.translate('search.no-result'));
+                    self.message_error(self.translate("search.no-result"));
                 }
             }).catch((error: any): void => {
-                self.message_error(self.translate('search.server-error').replace("{1}", error));
+                self.message_error(self.translate("search.server-error").replace("{1}", error));
             });
     }
 

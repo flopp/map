@@ -1,47 +1,50 @@
-import {App} from './app';
-import {MapStateChange} from './map_state';
-import {create_element} from "./utilities";
+import {App} from "./app";
+import {MapStateChange} from "./map_state";
 import {SidebarItem} from "./sidebar_item";
+import {create_element} from "./utilities";
 
 export class SidebarTools extends SidebarItem {
-    private language_select: HTMLInputElement;
+    private readonly language_select: HTMLInputElement;
 
     constructor(app: App, id: string) {
         super(app, id);
 
         const self = this;
 
-        this.language_select = this._div.querySelector('[data-language]')!;
+        this.language_select = this._div.querySelector("[data-language]")!;
 
-        interface TitleShort { title: string, short: string};
+        interface ITitleShort {
+            title: string;
+            short: string;
+        }
         [
-            {title: 'English', short: 'en'},
-            {title: 'Deutsch', short: 'de'},
-        ].forEach((language: TitleShort): void => {
+            {title: "English", short: "en"},
+            {title: "Deutsch", short: "de"},
+        ].forEach((language: ITitleShort): void => {
             self.language_select.appendChild(new Option(
                 language.title,
                 language.short,
                 language.short  === "en",
-                language.short === self.app.map_state.language)
+                language.short === self.app.map_state.language),
             );
         });
         this.language_select.onchange = (): void => {
             self.app.map_state.set_language(self.language_select.value);
         };
 
-        document.querySelector('#btn-link')!.addEventListener('click', (): void => {
+        document.querySelector("#btn-link")!.addEventListener("click", (): void => {
             self.app.show_link_dialog();
         });
 
-        document.querySelector('#btn-export-json')!.addEventListener('click', (): void => {
+        document.querySelector("#btn-export-json")!.addEventListener("click", (): void => {
             self.export_json();
         });
 
-        document.querySelector('#btn-import-json')!.addEventListener('click', (event: InputEvent): void => {
-            (document.querySelector('#inp-import-json') as HTMLButtonElement).click();
+        document.querySelector("#btn-import-json")!.addEventListener("click", (event: InputEvent): void => {
+            (document.querySelector("#inp-import-json") as HTMLButtonElement).click();
             event.preventDefault();
         });
-        (document.querySelector('#inp-import-json') as HTMLInputElement).onchange = (event: InputEvent): void => {
+        (document.querySelector("#inp-import-json") as HTMLInputElement).onchange = (event: InputEvent): void => {
             if (event.target === null) {
                 return;
             }
@@ -52,7 +55,7 @@ export class SidebarTools extends SidebarItem {
             self.import_json(files[0]);
         };
 
-        document.querySelector('#btn-multi-markers')!.addEventListener('click', (): void => {
+        document.querySelector("#btn-multi-markers")!.addEventListener("click", (): void => {
             self.app.show_multi_markers_dialog();
         });
     }
@@ -67,27 +70,26 @@ export class SidebarTools extends SidebarItem {
 
     public export_json(): void {
         const data = JSON.stringify(this.app.map_state.to_json());
-        const element = create_element('a', [], {
-            'href': `data:application/json;charset=utf-8,${encodeURIComponent(data)}`,
-            'download': 'map_state.json'
+        const element = create_element("a", [], {
+            href: `data:application/json;charset=utf-8,${encodeURIComponent(data)}`,
+            download: "map_state.json",
         });
-        element.style.display = 'none';
+        element.style.display = "none";
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
     }
 
     public import_json(file: File): void {
-        const self = this;
         const reader = new FileReader();
         reader.onloadend = (): void => {
             const data = JSON.parse((reader.result as string));
-            self.app.map_state.from_json(data);
-            self.app.switch_map(self.app.map_state.map_type);
+            this.app.map_state.from_json(data);
+            this.app.switch_map(this.app.map_state.map_type);
         };
         reader.readAsText(file);
 
-        // reset file input
-        (document.querySelector('#inp-import-json') as HTMLInputElement).value = '';
+        // Reset file input
+        (document.querySelector("#inp-import-json") as HTMLInputElement).value = "";
     }
 }

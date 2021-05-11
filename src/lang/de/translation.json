@@ -3,16 +3,16 @@
         "dialog": {
             "api-keys": {
                 "google": "Google Maps API-Schl\u00fcssel",
-                "google_help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr die Google Maps Javascript API in Googles API Console.",
-                "google_link": "Google API Console",
-                "google_placeholder": "Google Maps API-Schl\u00fcssel",
+                "google-help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr die Google Maps Javascript API in Googles API Console.",
+                "google-link": "Google API Console",
+                "google-placeholder": "Google Maps API-Schl\u00fcssel",
                 "help": "Eigene API-Schl\u00fcssel erlauben den Zugriff auf das Kartenmaterial von Google Maps. Deine eigenen API-Schl\u00fcssel werden nur in deinem Browser gespeichert (local storage). Sie werden nur zu den entsprechenden Google Maps-Servern geschickt.",
                 "title": "Eigene API-Keys Hinzuf\u00fcgen"
             },
             "link": {
-                "copied_message": "Der Link wurde in die Zwischenablage kopiert: {1}",
+                "copied-message": "Der Link wurde in die Zwischenablage kopiert: {1}",
                 "copy": "Kopieren",
-                "failed_message": "Kopieren des Links fehlgeschlagen.",
+                "failed-message": "Kopieren des Links fehlgeschlagen.",
                 "help": "Du kannst diesen Link mit anderen Leute teilen, so dass sie deine aktuelle Karte sehen k\u00f6nnen.",
                 "title": "Link Erzeugen",
                 "too-long": "Der Link ist vermutlich zu lang. Es kann sein, dass Browser damit nicht korrekt umgehen k\u00f6nnen."
@@ -98,25 +98,25 @@
         "sidebar": {
             "info": {
                 "contact": "Kontakt/Mail",
-                "contact_help": "Wenn du Fragen oder Vorschl\u00e4ge hast, kontaktiere mich bitte via E-Mail.",
+                "contact-help": "Wenn du Fragen oder Vorschl\u00e4ge hast, kontaktiere mich bitte via E-Mail.",
                 "sources": "Quellcode/Github",
-                "sources_help": "Der Quellcode dieser Web-App ist Open-Source und unter einer freien Lizenz auf Github verf\u00fcgbar.",
+                "sources-help": "Der Quellcode dieser Web-App ist Open-Source und unter einer freien Lizenz auf Github verf\u00fcgbar.",
                 "support": "Unterst\u00fctzung/Paypal",
-                "support_help": "Diese Web-App wird kostenlos zur Verf\u00fcgung gestellt, allerdings fallen im Hintergrund Kosten an (Hosting, Domains, usw.). Wenn du dich daran beteiligen willst, benutze bitte Paypal.",
+                "support-help": "Diese Web-App wird kostenlos zur Verf\u00fcgung gestellt, allerdings fallen im Hintergrund Kosten an (Hosting, Domains, usw.). Wenn du dich daran beteiligen willst, benutze bitte Paypal.",
                 "title": "Infos"
             },
             "layers": {
                 "additional": "Zus\u00e4tzliche Ebenen",
                 "api-keys": "Eigene API-Schl\u00fcssel",
                 "base": "Hintergrundebene",
-                "base_help": "Google Maps wurde deaktiviert.",
+                "base-help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
                 "german_npa_button": "Offizielle Web-App",
-                "german_npa_help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
+                "german_npa-help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hill-shading": "Schummerung (hill-shading)",
                 "opencaching": "Geocaches (von Opencaching)",
-                "opencaching_help": "Zeige Geocaches von Opencaching-Seiten an.",
+                "opencaching-help": "Zeige Geocaches von Opencaching-Seiten an.",
                 "title": "Ebenen"
             },
             "lines": {
@@ -153,10 +153,10 @@
                 "title": "Marker"
             },
             "search": {
-                "locate_me": "Lokalisiere mich!",
-                "locate_me_help": "Zentriere die Karte auf deiner aktuellen Position.",
-                "search_help": "Suche nach einem Ort (gebe z.B. einen St\u00e4dtename oder Koordinaten in verschiedenen Formaten ein) und zentriere die Karte.",
-                "search_placeholder": "Ort",
+                "locate-me": "Lokalisiere mich!",
+                "locate-me-help": "Zentriere die Karte auf deiner aktuellen Position.",
+                "search-help": "Suche nach einem Ort (gebe z.B. einen St\u00e4dtename oder Koordinaten in verschiedenen Formaten ein) und zentriere die Karte.",
+                "search-placeholder": "Ort",
                 "title": "Suche"
             },
             "tools": {

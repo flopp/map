@@ -1,6 +1,6 @@
-import {App} from './app';
+import {App} from "./app";
 import {MapStateObserver} from "./map_state_observer";
-import { create_element, create_icon } from './utilities';
+import { create_element, create_icon } from "./utilities";
 
 export class SidebarItem extends MapStateObserver {
     protected _div: HTMLElement;
@@ -20,7 +20,7 @@ export class SidebarItem extends MapStateObserver {
         header.append(h2, span);
         this._div.prepend(header);
 
-        span.addEventListener('click', (): void => {
+        span.addEventListener("click", (): void => {
             self.app.map_state.set_sidebar_open(null);
         });
     }
@@ -32,4 +32,4 @@ export class SidebarItem extends MapStateObserver {
     public deactivate(): void {
         this._div.classList.remove("active");
     }
-};
+}

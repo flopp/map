@@ -3,16 +3,16 @@
         "dialog": {
             "api-keys": {
                 "google": "Google Maps API Key",
-                "google_help": "Get your API Key for the Google Maps Javascript API from Google's API console.",
-                "google_link": "Google API Console",
-                "google_placeholder": "Google API Key",
+                "google-help": "Get your API Key for the Google Maps Javascript API from Google's API console.",
+                "google-link": "Google API Console",
+                "google-placeholder": "Google API Key",
                 "help": "Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.",
                 "title": "Add Your Own API Keys"
             },
             "link": {
-                "copied_message": "The link has been copied to the clipboard: {1}",
+                "copied-message": "The link has been copied to the clipboard: {1}",
                 "copy": "Copy",
-                "failed_message": "Copying of the link failed.",
+                "failed-message": "Copying of the link failed.",
                 "help": "You can share this link with others to enable them to view your current map state.",
                 "title": "Create Link",
                 "too-long": "The link is probably too long. Browsers may not be able to handle it correctly."
@@ -98,25 +98,25 @@
         "sidebar": {
             "info": {
                 "contact": "Contact/Mail",
-                "contact_help": "If you have any suggestions please feel free to contact me via e-mail.",
+                "contact-help": "If you have any suggestions please feel free to contact me via e-mail.",
                 "sources": "Sources/Github",
-                "sources_help": "The code for this website is open source, hosted at Github.",
+                "sources-help": "The code for this website is open source, hosted at Github.",
                 "support": "Support/Paypal",
-                "support_help": "This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.",
+                "support-help": "This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.",
                 "title": "Info"
             },
             "layers": {
                 "additional": "Additional Layers",
                 "api-keys": "Own API Keys",
                 "base": "Base Layer",
-                "base_help": "Google Maps layers have been disabled.",
+                "base-help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
                 "german_npa_button": "Official Web App",
-                "german_npa_help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
+                "german_npa-help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hill-shading": "Hill-shading",
                 "opencaching": "Geocaches (from Opencaching)",
-                "opencaching_help": "Display geocaches from Opencaching sites.",
+                "opencaching-help": "Display geocaches from Opencaching sites.",
                 "title": "Layers"
             },
             "lines": {
@@ -153,10 +153,10 @@
                 "title": "Markers"
             },
             "search": {
-                "locate_me": "Locate Me",
-                "locate_me_help": "Determine your current location and center the map.",
-                "search_help": "Search for a location (e.g. enter a city name or coordinates) and center the map.",
-                "search_placeholder": "Location",
+                "locate-me": "Locate Me",
+                "locate-me-help": "Determine your current location and center the map.",
+                "search-help": "Search for a location (e.g. enter a city name or coordinates) and center the map.",
+                "search-placeholder": "Location",
                 "title": "Search"
             },
             "tools": {

@@ -1,9 +1,9 @@
 export enum DistanceFormat {
-    m = 'm',
-    km = 'km',
-    ft = 'ft',
-    mi = 'mi',
-};
+    m = "m",
+    km = "km",
+    ft = "ft",
+    mi = "mi",
+}
 
 export function parseDistanceFormat(value: string, fallback: DistanceFormat): DistanceFormat {
     switch (value.toLowerCase()) {
@@ -32,11 +32,13 @@ export class Distance {
             case DistanceFormat.m:
                 this._raw_m = value;
             case DistanceFormat.km:
-                this._raw_m = value * 1000.0;
+                this._raw_m = value * 1000;
             case DistanceFormat.ft:
                 this._raw_m = value * 0.3048;
             case DistanceFormat.mi:
                 this._raw_m = value * 1609.344;
+            default:
+                this._raw_m = value;
         }
     }
 
@@ -48,7 +50,7 @@ export class Distance {
                 value = this._raw_m;
                 precision = 2;
             case DistanceFormat.km:
-                value = this._raw_m / 1000.0;
+                value = this._raw_m / 1000;
                 precision = 3;
             case DistanceFormat.ft:
                 value = this._raw_m / 0.3048;
@@ -56,6 +58,9 @@ export class Distance {
             case DistanceFormat.mi:
                 value = this._raw_m / 1609.344;
                 precision = 3;
+            default:
+                value = this._raw_m;
+                precision = 2;
         }
 
         return `${value.toFixed(precision)} ${format}`;
@@ -64,4 +69,4 @@ export class Distance {
     public m(): number {
         return this._raw_m;
     }
-};
+}

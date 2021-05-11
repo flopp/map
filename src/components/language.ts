@@ -1,10 +1,12 @@
-import i18next from 'i18next';
+import i18next from "i18next";
+
 import resources from "../lang";
+
+import {App} from "./app";
+import {MapStateChange} from "./map_state";
+import {MapStateObserver} from "./map_state_observer";
 // import {i18nextBrowserLanguageDetector} from 'i18next-browser-languagedetector';
 
-import {App} from './app';
-import {MapStateChange} from './map_state';
-import {MapStateObserver} from "./map_state_observer";
 
 export class Language extends MapStateObserver {
     private initialized: boolean;
@@ -22,18 +24,18 @@ export class Language extends MapStateObserver {
                 {
                     debug: true,
                     detection: {
-                        order: ['querystring', 'localStorage', 'navigator'],
-                        lookupQuerystring: 'lang',
-                        lookupLocalStorage: 'i18nextLng',
-                        caches: ['localStorage'],
+                        order: ["querystring", "localStorage", "navigator"],
+                        lookupQuerystring: "lang",
+                        lookupLocalStorage: "i18nextLng",
+                        caches: ["localStorage"],
                     },
-                    load: 'languageOnly',
-                    whitelist: ['en', 'de'],
+                    load: "languageOnly",
+                    whitelist: ["en", "de"],
                     nonExplicitWhitelist: true,
-                    fallbackLng: ['en', 'de'],
-                    ns: ['main'],
-                    defaultNS:'main',
-                    resources
+                    fallbackLng: ["en", "de"],
+                    ns: ["main"],
+                    defaultNS:"main",
+                    resources,
                 },
                 (err: any): void => {
                     if (!err) {
@@ -60,12 +62,12 @@ export class Language extends MapStateObserver {
 
     public translate(key: string): string {
         if (!this.initialized) {
-            console.log('i18n: not initialized, yet.');
+            console.log("i18n: not initialized, yet.");
             return key;
         }
 
         const translation = i18next.t(key);
-        if (translation === '') {
+        if (translation === "") {
             return key;
         }
 
@@ -74,25 +76,25 @@ export class Language extends MapStateObserver {
 
     public localize(): void {
         if (!this.initialized) {
-            console.log('i18n: not initialized, yet.');
+            console.log("i18n: not initialized, yet.");
             return;
         }
 
-        document.querySelectorAll('[data-i18n]').forEach((element: HTMLElement): void => {
-            const key = element.getAttribute('data-i18n')!;
+        document.querySelectorAll("[data-i18n]").forEach((element: HTMLElement): void => {
+            const key = element.getAttribute("data-i18n")!;
             let translation = i18next.t(key);
-            if (translation === '') {
+            if (translation === "") {
                 translation = key;
             }
 
-            const target = element.getAttribute('data-i18n-target');
-            if (target === null || target ===  '' || target === 'text') {
+            const target = element.getAttribute("data-i18n-target");
+            if (target === null || target === "" || target === "text") {
                 element.textContent = translation;
-            } else if (target === 'placeholder') {
+            } else if (target === "placeholder") {
                 (element as HTMLInputElement).placeholder = translation;
             } else {
                 console.log(
-                    `i18n: bad i18n target attribute '${target}' in '${key}'`
+                    `i18n: bad i18n target attribute '${target}' in '${key}'`,
                 );
             }
         });

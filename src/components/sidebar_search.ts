@@ -7,25 +7,25 @@ export class SidebarSearch extends SidebarItem {
 
         const self = this;
 
-        document.querySelector('#btn-locate')!.addEventListener('click', (): void => {
+        document.querySelector("#btn-locate")!.addEventListener("click", (): void => {
             self.app.locate_me();
         });
-        document.querySelector('#btn-search')!.addEventListener('click', (): void => {
+        document.querySelector("#btn-search")!.addEventListener("click", (): void => {
             self.perform_search();
         });
-        document.querySelector('#input-search')!.addEventListener('keyup', (event: KeyboardEvent): void => {
-            if (event.key === 'Enter') {
+        document.querySelector("#input-search")!.addEventListener("keyup", (event: KeyboardEvent): void => {
+            if (event.key === "Enter") {
                 self.perform_search();
             }
         });
     }
 
     public update_state(_changes: number): void {
-        // nothing
+        // Nothing
     }
 
     public perform_search(): void {
-        const location_string = (document.querySelector('#input-search') as HTMLInputElement).value.trim();
+        const location_string = (document.querySelector("#input-search") as HTMLInputElement).value.trim();
         if (location_string.length > 0) {
             this.app.search_location(location_string);
         }

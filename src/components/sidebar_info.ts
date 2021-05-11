@@ -1,4 +1,4 @@
-import {App} from './app';
+import {App} from "./app";
 import {SidebarItem} from "./sidebar_item";
 
 export class SidebarInfo extends SidebarItem {
@@ -7,6 +7,6 @@ export class SidebarInfo extends SidebarItem {
     }
 
     public update_state(_changes: number): void {
-        // nothing
+        // Nothing
     }
-};
+}

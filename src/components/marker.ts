@@ -1,22 +1,22 @@
-import {Color} from './color';
-import {Coordinates} from './coordinates';
+import {Color} from "./color";
+import {Coordinates} from "./coordinates";
 
 let next_marker_id = 0;
 
-export interface MarkerJson {
+export interface IMarkerJson {
     marker_id: number;
     coordinates: string;
     name: string;
     color: string;
     radius: number;
-};
+}
 
 export class Marker {
-    private marker_id: number
-    public coordinates: Coordinates
-    public name: string
-    public color: Color
-    public radius: number
+    private readonly marker_id: number;
+    public coordinates: Coordinates;
+    public name: string;
+    public color: Color;
+    public radius: number;
 
     constructor(coordinates: Coordinates) {
         this.marker_id = next_marker_id;
@@ -28,15 +28,15 @@ export class Marker {
         next_marker_id += 1;
     }
 
-    public static reset_ids() : void {
+    public static reset_ids(): void {
         next_marker_id = 0;
     }
 
-    public get_id() : number {
+    public get_id(): number {
         return this.marker_id;
     }
 
-    public to_json() : MarkerJson {
+    public to_json(): IMarkerJson {
         return {
             marker_id: this.get_id(),
             coordinates: this.coordinates.to_string_D(),

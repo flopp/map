@@ -1,77 +1,77 @@
-import {App} from './app';
-import {Color} from './color';
-import {Coordinates} from './coordinates';
-import {MapStateChange} from './map_state';
-import {parse_float} from './utilities';
+import {App} from "./app";
+import {Color} from "./color";
+import {Coordinates} from "./coordinates";
+import {MapStateChange} from "./map_state";
+import {parse_float} from "./utilities";
 
 
 export class MultiMarkersDialog {
-    private app: App;
-    private div: HTMLElement;
+    private readonly app: App;
+    private readonly div: HTMLElement;
 
     constructor(app: App) {
         const self = this;
 
-        this.div = document.querySelector('#multi-markers-dialog')!;
+        this.div = document.querySelector("#multi-markers-dialog")!;
         this.app = app;
 
-        (this.div.querySelector('[data-use-common-name]') as HTMLInputElement).onchange = (): void => {
+        (this.div.querySelector("[data-use-common-name]") as HTMLInputElement).onchange = (): void => {
             self.update_description();
         };
-        (this.div.querySelector('[data-use-common-color]') as HTMLInputElement).onchange = (): void => {
+        (this.div.querySelector("[data-use-common-color]") as HTMLInputElement).onchange = (): void => {
             self.update_description();
         };
-        (this.div.querySelector('[data-use-common-radius]') as HTMLInputElement).onchange = (): void => {
+        (this.div.querySelector("[data-use-common-radius]") as HTMLInputElement).onchange = (): void => {
             self.update_description();
         };
 
-        this.div.querySelectorAll('[data-cancel]').forEach((element: HTMLElement): void => {
-            element.addEventListener('click', (): void => {
+        this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
+            element.addEventListener("click", (): void => {
                 self.hide();
             });
         });
-        this.div.querySelectorAll('[data-go]').forEach((element: HTMLElement): void => {
-            element.addEventListener('click', (): void => {
+        this.div.querySelectorAll("[data-go]").forEach((element: HTMLElement): void => {
+            element.addEventListener("click", (): void => {
                 self.go();
             });
         });
     }
 
     public show(): void {
-        this.div.classList.add('is-active');
+        this.div.classList.add("is-active");
         (this.div.querySelector(
-            '[data-common-color]',
+            "[data-common-color]",
         ) as HTMLInputElement).value = Color.random_from_palette().to_hash_string();
         this.update_description();
     }
 
     private hide(): void {
-        this.div.classList.remove('is-active');
+        this.div.classList.remove("is-active");
     }
 
     private go(): void {
         const self = this;
 
-        const use_common_name = (this.div.querySelector('[data-use-common-name]') as HTMLInputElement)
+        const use_common_name = (this.div.querySelector("[data-use-common-name]") as HTMLInputElement)
             .checked;
         const use_common_color = (this.div.querySelector(
-            '[data-use-common-color]',
+            "[data-use-common-color]",
         ) as HTMLInputElement).checked;
         const use_common_radius = (this.div.querySelector(
-            '[data-use-common-radius]',
+            "[data-use-common-radius]",
         ) as HTMLInputElement).checked;
-        const common_name = (this.div.querySelector('[data-common-name]') as HTMLInputElement).value;
+        const common_name = (this.div.querySelector("[data-common-name]") as HTMLInputElement).value;
         const common_color = Color.from_string(
-            (this.div.querySelector('[data-common-color]') as HTMLInputElement).value,
+            (this.div.querySelector("[data-common-color]") as HTMLInputElement).value,
         );
         const common_radius = parse_float(
-            (this.div.querySelector('[data-common-radius]') as HTMLInputElement).value,
+            (this.div.querySelector("[data-common-radius]") as HTMLInputElement).value,
         );
 
         if (use_common_color && common_color === null) {
             this.app.message_error(
                 this.app.translate(
-                    'dialog.multi-markers.bad_common_color_message',
+                    "dialog.multi-markers.bad_common_color_message",
                 ),
             );
             return;
@@ -79,7 +79,7 @@ export class MultiMarkersDialog {
         if (use_common_radius && common_radius === null) {
             this.app.message_error(
                 this.app.translate(
-                    'dialog.multi-markers.bad_common_radius_message',
+                    "dialog.multi-markers.bad_common_radius_message",
                 ),
             );
             return;
@@ -96,7 +96,7 @@ export class MultiMarkersDialog {
             tokens_per_line += 1;
         }
 
-        interface MarkerDict {
+        interface IMarkerDict {
             name: string;
             coordinates: Coordinates;
             radius: number;
@@ -104,26 +104,26 @@ export class MultiMarkersDialog {
         }
 
         const errors: string[] = [];
-        const data: MarkerDict[] = [];
+        const data: IMarkerDict[] = [];
         let line_index = 0;
         let marker_index = 1;
-        (this.div.querySelector('[data-marker-data]') as HTMLInputElement)
-            .value.split('\n')
+        (this.div.querySelector("[data-marker-data]") as HTMLInputElement)
+            .value.split("\n")
             .forEach((line: string): void => {
                 line_index += 1;
 
-                if (line.trim() === '') {
+                if (line.trim() === "") {
                     return;
                 }
 
                 let line_has_errors = false;
-                const tokens = line.split(';');
+                const tokens = line.split(";");
                 if (tokens.length !== tokens_per_line) {
                     errors.push(
                         self.app
-                            .translate('dialog.multi-markers.tokens_message')
-                            .replace('{1}', String(line_index))
-                            .replace('{2}', String(tokens_per_line)),
+                            .translate("dialog.multi-markers.tokens_message")
+                            .replace("{1}", String(line_index))
+                            .replace("{2}", String(tokens_per_line)),
                     );
                     line_has_errors = true;
                 }
@@ -137,10 +137,10 @@ export class MultiMarkersDialog {
                     errors.push(
                         self.app
                             .translate(
-                                'dialog.multi-markers.coordinates_message',
+                                "dialog.multi-markers.coordinates_message",
                             )
-                            .replace('{1}', String(line_index))
-                            .replace('{2}', tokens[token_index].trim()),
+                            .replace("{1}", String(line_index))
+                            .replace("{2}", tokens[token_index].trim()),
                     );
                     line_has_errors = true;
                 }
@@ -149,11 +149,11 @@ export class MultiMarkersDialog {
                 let name = `${common_name}${marker_index}`;
                 if (!use_common_name) {
                     name = tokens[token_index].trim();
-                    if (name === '') {
+                    if (name === "") {
                         errors.push(
                             self.app
-                                .translate('dialog.multi-markers.name_message')
-                                .replace('{1}', String(line_index)),
+                                .translate("dialog.multi-markers.name_message")
+                                .replace("{1}", String(line_index)),
                         );
                         line_has_errors = true;
                     }
@@ -166,9 +166,9 @@ export class MultiMarkersDialog {
                     if (color === null) {
                         errors.push(
                             self.app
-                                .translate('dialog.multi-markers.color_message')
-                                .replace('{1}', String(line_index))
-                                .replace('{2}', tokens[token_index].trim()),
+                                .translate("dialog.multi-markers.color_message")
+                                .replace("{1}", String(line_index))
+                                .replace("{2}", tokens[token_index].trim()),
                         );
                         line_has_errors = true;
                     }
@@ -181,9 +181,9 @@ export class MultiMarkersDialog {
                     if (radius === null) {
                         errors.push(
                             self.app
-                                .translate('dialog.multi-markers.radius_message')
-                                .replace('{1}', String(line_index))
-                                .replace('{2}', tokens[token_index].trim()),
+                                .translate("dialog.multi-markers.radius_message")
+                                .replace("{1}", String(line_index))
+                                .replace("{2}", tokens[token_index].trim()),
                         );
                         line_has_errors = true;
                     }
@@ -197,11 +197,11 @@ export class MultiMarkersDialog {
             });
 
         if (errors.length > 0) {
-            this.app.message_error(errors.join('\n'));
+            this.app.message_error(errors.join("\n"));
             return;
         }
 
-        data.forEach((marker_data: MarkerDict): void => {
+        data.forEach((marker_data: IMarkerDict): void => {
             const marker = self.app.map_state.add_marker(
                 marker_data.coordinates,
             );
@@ -216,35 +216,35 @@ export class MultiMarkersDialog {
     }
 
     private update_description(): void {
-        const use_common_name =  (this.div.querySelector('[data-use-common-name]') as HTMLInputElement)
+        const use_common_name =  (this.div.querySelector("[data-use-common-name]") as HTMLInputElement)
             .checked;
         const use_common_color = (this.div.querySelector(
-            '[data-use-common-color]',
+            "[data-use-common-color]",
         ) as HTMLInputElement).checked;
         const use_common_radius = (this.div.querySelector(
-            '[data-use-common-radius]',
+            "[data-use-common-radius]",
         ) as HTMLInputElement).checked;
 
         const description = [
-            `<${this.app.translate('dialog.multi-markers.coordinates_token')}>`,
+            `<${this.app.translate("dialog.multi-markers.coordinates_token")}>`,
         ];
         if (!use_common_name) {
             description.push(
-                `<${this.app.translate('dialog.multi-markers.name_token')}>`,
+                `<${this.app.translate("dialog.multi-markers.name_token")}>`,
             );
         }
         if (!use_common_color) {
             description.push(
-                `<${this.app.translate('dialog.multi-markers.color_token')}>`,
+                `<${this.app.translate("dialog.multi-markers.color_token")}>`,
             );
         }
         if (!use_common_radius) {
             description.push(
-                `<${this.app.translate('dialog.multi-markers.radius_token')}>`,
+                `<${this.app.translate("dialog.multi-markers.radius_token")}>`,
             );
         }
-        (this.div.querySelector('[data-format]') as HTMLTextAreaElement).innerText = description.join(
-            ';',
+        (this.div.querySelector("[data-format]") as HTMLTextAreaElement).innerText = description.join(
+            ";",
         );
     }
 }

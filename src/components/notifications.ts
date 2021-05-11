@@ -1,23 +1,23 @@
-import {create_element} from "./utilities";
 import {Notification} from "./notification";
+import {create_element} from "./utilities";
 
 export class Notifications {
     private next_id: number = 0;
     private notifications: Map<number, Notification>|null = null;
     private container: HTMLElement|null = null;
-    private max: number = 3;
+    private readonly max: number = 3;
 
     constructor() {
         const self = this;
 
         // We need DOM to be ready
         if (
-            document.readyState === 'interactive' ||
-            document.readyState === 'complete'
+            document.readyState === "interactive" ||
+            document.readyState === "complete"
         ) {
             this.init();
         } else {
-            window.addEventListener('DOMContentLoaded', (): void => {
+            window.addEventListener("DOMContentLoaded", (): void => {
                 self.init();
             });
         }
@@ -25,12 +25,12 @@ export class Notifications {
 
     public init(): void {
         this.notifications = new Map<number, Notification>();
-        this.container = create_element('div', [], {"id": 'notification-container'});
+        this.container = create_element("div", [], {id: "notification-container"});
         document.body.appendChild(this.container);
     }
 
     public message(text: string, type: string): void {
-        if (!this.container) {
+        if (this.container === null) {
             return;
         }
 

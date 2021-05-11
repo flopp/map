@@ -9,6 +9,6 @@ export class MapStateObserver {
     }
 
     public update_state(_changes: number): void {
-        throw new Error('not implemented');
+        throw new Error("not implemented");
     }
 }
