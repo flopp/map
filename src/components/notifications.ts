@@ -47,7 +47,7 @@ export class Notifications {
 
         const notification = new Notification(this, id, text, type);
         this.notifications!.set(id, notification);
-        this.container!.insertBefore(notification.get_div(), this.container!.firstChild);
+        this.container.insertBefore(notification.get_div(), this.container.firstChild);
     }
 
     public removeNotification(notification: Notification): void {

@@ -116,7 +116,7 @@ export class Opencaching {
     private initialize(): void {
         this.state = State.Initializing;
 
-        const keys = new Map();
+        const keys: Map<string, string|null> = new Map();
         keys.set("Opencaching.DE", getConfig("OPENCACHING_DE_KEY"));
         keys.set("Opencaching.PL", getConfig("OPENCACHING_PL_KEY"));
         keys.set("Opencaching.NL", getConfig("OPENCACHING_NL_KEY"));

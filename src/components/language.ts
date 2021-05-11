@@ -1,5 +1,6 @@
 import i18next from "i18next";
 
+// tslint:disable-next-line: no-default-import
 import resources from "../lang";
 
 import {App} from "./app";
