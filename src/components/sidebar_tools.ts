@@ -9,35 +9,34 @@ export class SidebarTools extends SidebarItem {
     constructor(app: App, id: string) {
         super(app, id);
 
-        const self = this;
-
         this.language_select = this._div.querySelector("[data-language]")!;
 
         interface ITitleShort {
             title: string;
             short: string;
         }
+
         [
             {title: "English", short: "en"},
             {title: "Deutsch", short: "de"},
         ].forEach((language: ITitleShort): void => {
-            self.language_select.appendChild(new Option(
+            this.language_select.appendChild(new Option(
                 language.title,
                 language.short,
-                language.short  === "en",
-                language.short === self.app.map_state.language),
+                language.short === "en",
+                language.short === this.app.map_state.language),
             );
         });
         this.language_select.onchange = (): void => {
-            self.app.map_state.set_language(self.language_select.value);
+            this.app.map_state.set_language(this.language_select.value);
         };
 
         document.querySelector("#btn-link")!.addEventListener("click", (): void => {
-            self.app.show_link_dialog();
+            this.app.show_link_dialog();
         });
 
         document.querySelector("#btn-export-json")!.addEventListener("click", (): void => {
-            self.export_json();
+            this.export_json();
         });
 
         document.querySelector("#btn-import-json")!.addEventListener("click", (event: InputEvent): void => {
@@ -52,11 +51,11 @@ export class SidebarTools extends SidebarItem {
             if (files === null) {
                 return;
             }
-            self.import_json(files[0]);
+            this.import_json(files[0]);
         };
 
         document.querySelector("#btn-multi-markers")!.addEventListener("click", (): void => {
-            self.app.show_multi_markers_dialog();
+            this.app.show_multi_markers_dialog();
         });
     }
 

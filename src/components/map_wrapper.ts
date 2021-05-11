@@ -116,8 +116,6 @@ export class MapWrapper extends MapStateObserver {
             return;
         }
 
-        const self = this;
-
         /* update view */
         if ((changes & MapStateChange.MAPTYPE) !== 0) {
             this.set_map_type(this.app.map_state.map_type!);
@@ -135,13 +133,13 @@ export class MapWrapper extends MapStateObserver {
         if ((changes & MapStateChange.MARKERS) !== 0) {
             // Update and add markers
             this.app.map_state.markers.forEach((marker: Marker): void => {
-                if (self.markers.has(marker.get_id())) {
-                    self.update_marker_object(
-                        self.markers.get(marker.get_id()),
+                if (this.markers.has(marker.get_id())) {
+                    this.update_marker_object(
+                        this.markers.get(marker.get_id()),
                         marker,
                     );
                 } else {
-                    self.create_marker_object(marker);
+                    this.create_marker_object(marker);
                 }
             });
 
@@ -160,8 +158,8 @@ export class MapWrapper extends MapStateObserver {
                 });
 
                 deleted_ids.forEach((id: number): void => {
-                    self.delete_marker_object(self.markers.get(id));
-                    self.markers.delete(id);
+                    this.delete_marker_object(this.markers.get(id));
+                    this.markers.delete(id);
                 });
             }
         }
@@ -169,10 +167,10 @@ export class MapWrapper extends MapStateObserver {
         if ((changes & (MapStateChange.LINES | MapStateChange.ZOOM)) !== 0) {
             // Update and add lines; also update lines on zoom to redraw arrow heads!
             this.app.map_state.lines.forEach((line: Line): void => {
-                if (self.lines.has(line.get_id())) {
-                    self.update_line_object(self.lines.get(line.get_id()), line);
+                if (this.lines.has(line.get_id())) {
+                    this.update_line_object(this.lines.get(line.get_id()), line);
                 } else {
-                    self.create_line_object(line);
+                    this.create_line_object(line);
                 }
             });
 
@@ -191,8 +189,8 @@ export class MapWrapper extends MapStateObserver {
                 });
 
                 deleted_ids.forEach((id: number): void => {
-                    self.delete_line_object(self.lines.get(id));
-                    self.lines.delete(id);
+                    this.delete_line_object(this.lines.get(id));
+                    this.lines.delete(id);
                 });
             }
         }

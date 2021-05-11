@@ -15,23 +15,21 @@ export class LinkDialog {
     private readonly clipboard: ClipboardJS;
 
     constructor(app: App) {
-        const self = this;
-
         this.div = document.querySelector("#link-dialog")!;
         this.app = app;
         this.clipboard = new ClipboardJS("#link-dialog-copy-button");
         this.clipboard.on("success", (e: IClipboardJsEvent): void => {
-            self.app.message(self.app.translate("dialog.link.copied-message").replace("{1}", e.text));
+            this.app.message(this.app.translate("dialog.link.copied-message").replace("{1}", e.text));
         });
         this.clipboard.on("error", (_e: IClipboardJsEvent): void => {
-            self.app.message_error(
-                self.app.translate("dialog.link.failed-message"),
+            this.app.message_error(
+                this.app.translate("dialog.link.failed-message"),
             );
         });
 
         this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.hide();
+                this.hide();
             });
         });
     }

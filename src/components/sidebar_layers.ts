@@ -16,8 +16,6 @@ export class SidebarLayers extends SidebarItem {
     constructor(app: App, id: string) {
         super(app, id);
 
-        const self = this;
-
         this.base_layers = [
             {type: MapType.OPENSTREETMAP, option: null},
             {type: MapType.OPENTOPOMAP, option: null},
@@ -36,16 +34,16 @@ export class SidebarLayers extends SidebarItem {
                 maptype2human(base_layer.type),
                 maptype2string(base_layer.type)!,
                 false,
-                base_layer.type === self.app.map_state.map_type,
+                base_layer.type === this.app.map_state.map_type,
             );
-            self.base_layer_select.appendChild(base_layer.option);
+            this.base_layer_select.appendChild(base_layer.option);
         });
         this.base_layer_select.onchange = (): void => {
-            app.switch_map(string2maptype(self.base_layer_select.value));
+            app.switch_map(string2maptype(this.base_layer_select.value));
         };
 
         this._div.querySelector("[data-add-keys-button]")!.addEventListener("click", (): void => {
-            self.app.show_api_keys_dialog();
+            this.app.show_api_keys_dialog();
         });
 
         if (!app.has_google_maps()) {
@@ -57,8 +55,8 @@ export class SidebarLayers extends SidebarItem {
         )!;
         this.hill_shading_checkbox.checked = this.app.map_state.hill_shading;
         this.hill_shading_checkbox.onchange = (): void => {
-            self.app.map_state.set_hill_shading(
-                self.hill_shading_checkbox.checked,
+            this.app.map_state.set_hill_shading(
+                this.hill_shading_checkbox.checked,
             );
         };
 
@@ -67,8 +65,8 @@ export class SidebarLayers extends SidebarItem {
         )!;
         this.german_npa_checkbox.checked = this.app.map_state.german_npa;
         this.german_npa_checkbox.onchange = (): void => {
-            self.app.map_state.set_german_npa(
-                self.german_npa_checkbox.checked,
+            this.app.map_state.set_german_npa(
+                this.german_npa_checkbox.checked,
             );
         };
 
@@ -77,8 +75,8 @@ export class SidebarLayers extends SidebarItem {
         )!;
         this.opencaching_checkbox.checked = this.app.map_state.opencaching;
         this.opencaching_checkbox.onchange = (): void => {
-            self.app.map_state.set_opencaching(
-                self.opencaching_checkbox.checked,
+            this.app.map_state.set_opencaching(
+                this.opencaching_checkbox.checked,
             );
         };
     }
@@ -109,7 +107,6 @@ export class SidebarLayers extends SidebarItem {
     }
 
     public enable_layers(check_function: (layer_type: MapType|null) => boolean): void {
-        const self = this;
         this.base_layers.forEach((base_layer: IBaseLayerDict): void => {
             if (check_function(base_layer.type)) {
                 if (base_layer.option === null) {
@@ -117,9 +114,9 @@ export class SidebarLayers extends SidebarItem {
                         maptype2human(base_layer.type),
                         maptype2string(base_layer.type)!,
                         false,
-                        base_layer.type === self.app.map_state.map_type,
+                        base_layer.type === this.app.map_state.map_type,
                     );
-                    self.base_layer_select.appendChild(base_layer.option);
+                    this.base_layer_select.appendChild(base_layer.option);
                 }
             }
         });

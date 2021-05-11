@@ -5,17 +5,15 @@ export class SidebarSearch extends SidebarItem {
     constructor(app: App, id: string) {
         super(app, id);
 
-        const self = this;
-
         document.querySelector("#btn-locate")!.addEventListener("click", (): void => {
-            self.app.locate_me();
+            this.app.locate_me();
         });
         document.querySelector("#btn-search")!.addEventListener("click", (): void => {
-            self.perform_search();
+            this.perform_search();
         });
         document.querySelector("#input-search")!.addEventListener("keyup", (event: KeyboardEvent): void => {
             if (event.key === "Enter") {
-                self.perform_search();
+                this.perform_search();
             }
         });
     }

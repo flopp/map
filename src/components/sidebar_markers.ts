@@ -34,25 +34,23 @@ export class SidebarMarkers extends SidebarItem {
     constructor(app: App, id: string) {
         super(app, id);
 
-        const self = this;
-
         this.settingsDialog = new MarkerSettingsDialog(app);
 
         document.querySelector("#btn-add-marker")!.addEventListener("click", (): void => {
-            self.app.map_state.add_marker(null);
+            this.app.map_state.add_marker(null);
         });
         document.querySelector("#btn-delete-markers")!.addEventListener("click", (): void => {
-            self.app.map_state.delete_all_markers();
+            this.app.map_state.delete_all_markers();
         });
         document.querySelector("#btn-marker-settings")!.addEventListener("click", (): void => {
-            self.settingsDialog.show();
+            this.settingsDialog.show();
         });
 
         this.sortable = Sortable.create(document.getElementById("markers")!, {
             handle: ".drag-handle",
             onEnd: (event: Sortable.SortableEvent): void => {
                 if ((event.oldIndex !== undefined) && (event.newIndex !== undefined)) {
-                    self.app.map_state.reorder_markers(
+                    this.app.map_state.reorder_markers(
                         event.oldIndex,
                         event.newIndex,
                     );
@@ -65,8 +63,6 @@ export class SidebarMarkers extends SidebarItem {
         if ((changes & (MapStateChange.MARKERS | MapStateChange.LANGUAGE)) === MapStateChange.NOTHING) {
             return;
         }
-
-        const self = this;
 
         if ((changes & MapStateChange.LANGUAGE) !== 0) {
             // The language has changed
@@ -82,22 +78,22 @@ export class SidebarMarkers extends SidebarItem {
         this.app.map_state.markers.forEach((marker: Marker): void => {
             let div = document.querySelector(`#marker-${marker.get_id()}`);
             if (div === null) {
-                div = self.create_div(marker);
+                div = this.create_div(marker);
                 document.querySelector("#markers")!.appendChild(div);
             }
 
             const circle =
                 marker.radius > 0
-                    ? self.app.translate("sidebar.markers.circle").replace("{1}", marker.radius.toFixed(2))
-                    : self.app.translate("sidebar.markers.no_circle");
+                    ? this.app.translate("sidebar.markers.circle").replace("{1}", marker.radius.toFixed(2))
+                    : this.app.translate("sidebar.markers.no_circle");
             (div.querySelector(".marker-color") as HTMLElement).style.backgroundColor = marker.color.to_hash_string();
             div.querySelector(".marker-name")!.textContent = marker.name;
             div.querySelector(".marker-radius")!.textContent = circle;
             div.querySelector(".marker-coordinates")!.textContent = marker.coordinates.to_string(
-                self.app.map_state.settings_marker_coordinates_format,
+                this.app.map_state.settings_marker_coordinates_format,
             );
 
-            self.update_edit_values(marker);
+            this.update_edit_values(marker);
         });
 
         /* remove spurious markers */
@@ -125,7 +121,6 @@ export class SidebarMarkers extends SidebarItem {
     }
 
     private create_div(marker: Marker): HTMLElement {
-        const self = this;
         const m = create_element("div", ["marker"], {id: `marker-${marker.get_id()}`});
 
         const left = create_element("div", ["marker-left", "drag-handle"]);
@@ -145,16 +140,16 @@ export class SidebarMarkers extends SidebarItem {
         const clip = new ClipboardJS(copy_coordinates, {
             text: (_trigger: Element): string =>
                 marker.coordinates.to_string(
-                    self.app.map_state.settings_marker_coordinates_format,
+                    this.app.map_state.settings_marker_coordinates_format,
                 ),
         });
         clip.on("success", (e: IClipboardJsEvent): void => {
-            self.app.message(
-                self.app.translate("sidebar.markers.copy_coordinates_success_message").replace("{1}", e.text),
+            this.app.message(
+                this.app.translate("sidebar.markers.copy_coordinates_success_message").replace("{1}", e.text),
             );
         });
         clip.on("error", (_e: IClipboardJsEvent): void => {
-            self.app.message_error(self.app.translate("sidebar.markers.copy_coordinates_failure_message"));
+            this.app.message_error(this.app.translate("sidebar.markers.copy_coordinates_failure_message"));
         });
 
         center.appendChild(create_element("div", ["marker-radius"]));
@@ -165,15 +160,13 @@ export class SidebarMarkers extends SidebarItem {
         m.appendChild(right);
 
         m.addEventListener("click", (): void => {
-            self.app.map_state.set_center(marker.coordinates);
+            this.app.map_state.set_center(marker.coordinates);
         });
 
         return m;
     }
 
     private create_edit_div(marker: Marker): HTMLElement {
-        const self = this;
-
         const div = create_element("div", ["edit"], {id: `marker-edit-${marker.get_id()}`});
 
         const name = create_text_input(
@@ -196,7 +189,7 @@ export class SidebarMarkers extends SidebarItem {
             this.app.translate("sidebar.markers.edit_color_placeholder"));
 
         const submit_button = create_button(this.app.translate("general.submit"), (): void => {
-            self.submit_edit(marker);
+            this.submit_edit(marker);
         });
         const cancel_button = create_button(this.app.translate("general.cancel"), (): void => {
             div.remove();
@@ -215,29 +208,28 @@ export class SidebarMarkers extends SidebarItem {
     }
 
     private create_marker_dropdown(marker: Marker): HTMLElement {
-        const self = this;
         return create_dropdown([
             {
-                label: self.app.translate("sidebar.markers.edit"),
+                label: this.app.translate("sidebar.markers.edit"),
                 callback: (): void => {
                     if (document.querySelector(`#marker-edit-${marker.get_id()}`) === null) {
                         const div = document.querySelector(`#marker-${marker.get_id()}`)!;
-                        const edit_div = self.create_edit_div(marker);
+                        const edit_div = this.create_edit_div(marker);
                         div.parentNode!.insertBefore(edit_div, div.nextSibling);
-                        self.update_edit_values(marker);
+                        this.update_edit_values(marker);
                     }
                 },
             },
             {
-                label: self.app.translate("sidebar.markers.projection"),
+                label: this.app.translate("sidebar.markers.projection"),
                 callback: (): void => {
-                    self.app.show_projection_dialog(marker);
+                    this.app.show_projection_dialog(marker);
                 },
             },
             {
-                label: self.app.translate("sidebar.markers.delete"),
+                label: this.app.translate("sidebar.markers.delete"),
                 callback: (): void => {
-                    self.app.map_state.delete_marker(marker.get_id());
+                    this.app.map_state.delete_marker(marker.get_id());
                 },
             },
         ]);

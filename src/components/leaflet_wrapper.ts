@@ -60,8 +60,6 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public create_map_object(div_id: string): void {
-        const self = this;
-
         this.map = L.map(div_id);
 
         this.layer_openstreetmap = L.tileLayer(
@@ -117,19 +115,19 @@ export class LeafletWrapper extends MapWrapper {
         this.layers.set(MapType.ARCGIS_WORLDIMAGERY, this.layer_arcgis_worldimagery);
 
         ["zoom", "move"].forEach((event_name: string): void => {
-            self.map.on(event_name, (): void => {
-                if (self.active && !self.automatic_event) {
-                    self.app.map_state.set_view(
-                        to_coordinates(self.map.getCenter()),
-                        self.map.getZoom(),
+            this.map.on(event_name, (): void => {
+                if (this.active && !this.automatic_event) {
+                    this.app.map_state.set_view(
+                        to_coordinates(this.map.getCenter()),
+                        this.map.getZoom(),
                     );
                 }
             });
         });
 
         this.map.on("contextmenu", (event: L.LeafletMouseEvent): boolean => {
-            self.app.map_menu.showMap(
-                self,
+            this.app.map_menu.showMap(
+                this,
                 event.containerPoint.x,
                 event.containerPoint.y,
                 to_coordinates(event.latlng),
@@ -137,8 +135,8 @@ export class LeafletWrapper extends MapWrapper {
             return false;
         });
         ["zoom", "move", "mousedown"].forEach((event_name: string): void => {
-            self.map.on(event_name, (): void => {
-                self.app.map_menu.hide();
+            this.map.on(event_name, (): void => {
+                this.app.map_menu.hide();
             });
         });
     }
@@ -150,11 +148,10 @@ export class LeafletWrapper extends MapWrapper {
         const layer = this.layers.get(map_type)!;
 
         if (!this.map.hasLayer(layer)) {
-            const self = this;
             for (const otherLayer of this.layers.values()) {
                 // tslint:disable-next-line: strict-comparisons
                 if (otherLayer !== layer) {
-                    self.map.removeLayer(otherLayer);
+                    this.map.removeLayer(otherLayer);
                 }
             }
             this.map.addLayer(layer);
@@ -204,23 +201,22 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public set_opencaching(enabled: boolean): void {
-        const self = this;
         if (enabled) {
             if (this.opencaching === null) {
                 this.opencaching = new Opencaching(
                     (caches: Map<string, IOkapiCache>): void => {
-                        self.display_opencaching(caches);
+                        this.display_opencaching(caches);
                     },
                 );
                 this.map.whenReady((): void => {
-                    self.update_opencaching();
+                    this.update_opencaching();
                 });
             }
         } else if (this.opencaching !== null) {
             this.opencaching = null;
 
             this.opencaching_markers.forEach((element): void => {
-                self.map.removeLayer(element.marker_obj);
+                this.map.removeLayer(element.marker_obj);
             });
             this.opencaching_markers.clear();
         }
@@ -230,9 +226,8 @@ export class LeafletWrapper extends MapWrapper {
         this.automatic_event = true;
         this.map.setView(from_coordinates(center), zoom, {animate: false});
         this.automatic_event = false;
-        const self = this;
         this.map.whenReady((): void => {
-            self.update_opencaching();
+            this.update_opencaching();
         });
     }
 
@@ -241,8 +236,6 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     protected create_marker_object(marker: Marker): void {
-        const self = this;
-
         const obj: IMarkerObjDict = {
             marker_obj: L.marker(from_coordinates(marker.coordinates), {
                 draggable: true,
@@ -257,11 +250,11 @@ export class LeafletWrapper extends MapWrapper {
 
 
         obj.marker_obj.on("drag", (): void => {
-            self.app.map_state.set_marker_coordinates(
+            this.app.map_state.set_marker_coordinates(
                 marker.get_id(),
                 to_coordinates(obj.marker_obj.getLatLng()),
             );
-            const marker_obj = (self.markers.get(marker.get_id()) as IMarkerObjDict);
+            const marker_obj = (this.markers.get(marker.get_id()) as IMarkerObjDict);
             if (marker_obj.circle_obj !== null) {
                 const center = to_coordinates(obj.marker_obj.getLatLng());
                 const points = center
@@ -272,8 +265,8 @@ export class LeafletWrapper extends MapWrapper {
         });
 
         obj.marker_obj.on("contextmenu", (event: L.LeafletMouseEvent): boolean => {
-            self.app.map_menu.showMarker(
-                self,
+            this.app.map_menu.showMarker(
+                this,
                 event.containerPoint.x,
                 event.containerPoint.y,
                 marker,
@@ -467,11 +460,9 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public display_opencaching(caches: Map<string, IOkapiCache>): void {
-        const self = this;
-
         this.opencaching_markers.forEach((element: IOpencachingMarker): void => {
             if (!caches.has(element.data.code)) {
-                self.map.removeLayer(element.marker_obj);
+                this.map.removeLayer(element.marker_obj);
             }
         });
 
@@ -481,19 +472,19 @@ export class LeafletWrapper extends MapWrapper {
 
         const new_markers: Map<string, IOpencachingMarker> = new Map();
         caches.forEach((data: IOkapiCache, code: string): void => {
-            if (!self.opencaching_markers.has(code)) {
+            if (!this.opencaching_markers.has(code)) {
                 const m: IOpencachingMarker = {
                     marker_obj: L.marker(from_coordinates(Opencaching.parseLocation(data.location)), {
-                        icon: self.opencaching_icon(data.type),
+                        icon: this.opencaching_icon(data.type),
                         draggable: false,
                     }),
                     data,
                 };
-                m.marker_obj.addTo(self.map);
+                m.marker_obj.addTo(this.map);
                 m.marker_obj.bindPopup(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
                 new_markers.set(code, m);
             } else {
-                new_markers.set(code, self.opencaching_markers.get(code)!);
+                new_markers.set(code, this.opencaching_markers.get(code)!);
             }
         });
         this.opencaching_markers = new_markers;

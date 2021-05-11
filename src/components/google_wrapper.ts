@@ -52,8 +52,6 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public create_map_object(div_id: string): void {
-        const self = this;
-
         this.map = new google.maps.Map(document.getElementById(div_id)!, {
             clickableIcons: false,
             fullscreenControl: false,
@@ -69,10 +67,10 @@ export class GoogleWrapper extends MapWrapper {
         });
         ["center_changed", "zoom_changed"].forEach((event_name: string): void => {
             google.maps.event.addListener(this.map, event_name, (): void => {
-                if (self.active && !self.automatic_event) {
-                    self.app.map_state.set_view(
-                        to_coordinates(self.map.getCenter()),
-                        self.map.getZoom(),
+                if (this.active && !this.automatic_event) {
+                    this.app.map_state.set_view(
+                        to_coordinates(this.map.getCenter()),
+                        this.map.getZoom(),
                     );
                 }
             });
@@ -80,8 +78,8 @@ export class GoogleWrapper extends MapWrapper {
 
         google.maps.event.addListener(this.map, "rightclick", (event: google.maps.MapMouseEvent): boolean => {
             const domEvent = (event.domEvent as MouseEvent);
-            self.app.map_menu.showMap(
-                self,
+            this.app.map_menu.showMap(
+                this,
                 domEvent.clientX,
                 domEvent.clientY,
                 to_coordinates(event.latLng),
@@ -95,8 +93,8 @@ export class GoogleWrapper extends MapWrapper {
             "maptypeid_changed",
             "center_changed",
         ].forEach((event_name: string): void => {
-            google.maps.event.addListener(self.map, event_name, (): void => {
-                self.app.map_menu.hide();
+            google.maps.event.addListener(this.map, event_name, (): void => {
+                this.app.map_menu.hide();
             });
         });
     }
@@ -142,8 +140,6 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public set_german_npa(enabled: boolean): void {
-        const self = this;
-
         if (this.german_npa_enabled === enabled) {
             return;
         }
@@ -153,7 +149,7 @@ export class GoogleWrapper extends MapWrapper {
             if (this.german_npa_layer === null) {
                 this.german_npa_layer = new google.maps.ImageMapType({
                     getTileUrl: (coord: google.maps.Point, zoom: number): string => {
-                        const proj = self.map.getProjection()!;
+                        const proj = this.map.getProjection()!;
                         const z_factor = 256 / Math.pow(2, zoom);
                         const top = proj.fromPointToLatLng(
                             new google.maps.Point(coord.x * z_factor, coord.y * z_factor),
@@ -187,21 +183,20 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public set_opencaching(enabled: boolean): void {
-        const self = this;
         if (enabled) {
             if (this.opencaching === null) {
                 this.opencaching = new Opencaching(
                     (caches: Map<string, IOkapiCache>): void => {
-                        self.display_opencaching(caches);
+                        this.display_opencaching(caches);
                     },
                 );
                 this.opencaching_popup = new google.maps.InfoWindow();
                 const bounds = this.map.getBounds();
                 if (bounds !== null && bounds !== undefined) {
-                    self.update_opencaching();
+                    this.update_opencaching();
                 } else {
                     google.maps.event.addListenerOnce(this.map, "idle", (): void => {
-                        self.update_opencaching();
+                        this.update_opencaching();
                     });
                 }
             }
@@ -237,19 +232,16 @@ export class GoogleWrapper extends MapWrapper {
         this.map.setCenter(from_coordinates(center));
         this.map.setZoom(zoom);
         this.automatic_event = false;
-        const self = this;
         google.maps.event.addListenerOnce(this.map, "idle", (): void => {
-            self.update_opencaching();
+            this.update_opencaching();
         });
     }
 
     protected create_marker_object(marker: Marker): void {
-        const self = this;
-
         const obj: IMarkerObjDict = {
             marker_obj: new google.maps.Marker({
                 position: from_coordinates(marker.coordinates),
-                map: self.map,
+                map: this.map,
                 draggable: true,
             }),
             circle_obj: null,
@@ -263,7 +255,7 @@ export class GoogleWrapper extends MapWrapper {
                 return;
             }
             const pos = the_obj.marker_obj.getPosition();
-            self.app.map_state.set_marker_coordinates(
+            this.app.map_state.set_marker_coordinates(
                 marker.get_id(),
                 to_coordinates(pos),
             );
@@ -274,8 +266,8 @@ export class GoogleWrapper extends MapWrapper {
 
         google.maps.event.addListener(obj.marker_obj, "rightclick", (event: google.maps.MapMouseEvent): boolean => {
             const domEvent = (event.domEvent as MouseEvent);
-            self.app.map_menu.showMarker(
-                self,
+            this.app.map_menu.showMarker(
+                this,
                 domEvent.clientX,
                 domEvent.clientY,
                 marker,
@@ -435,8 +427,6 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public display_opencaching(caches: Map<string, IOkapiCache>): void {
-        const self = this;
-
         this.opencaching_markers.forEach((element: IOpencachingMarker): void => {
             if (!caches.has(element.data.code)) {
                 element.marker_obj.setMap(null);
@@ -449,27 +439,27 @@ export class GoogleWrapper extends MapWrapper {
 
         const new_markers: Map<string, IOpencachingMarker> = new Map();
         caches.forEach((data: IOkapiCache, code: string): void => {
-            if (!self.opencaching_markers.has(code)) {
+            if (!this.opencaching_markers.has(code)) {
                 const m: IOpencachingMarker = {
                     marker_obj: new google.maps.Marker({
                         position: from_coordinates(Opencaching.parseLocation(data.location)),
-                        icon: self.opencaching_icon(data.type),
-                        map: self.map,
+                        icon: this.opencaching_icon(data.type),
+                        map: this.map,
                         draggable: false,
                     }),
                     data,
                 };
-                m.marker_obj.setMap(self.map);
+                m.marker_obj.setMap(this.map);
                 google.maps.event.addListener(m.marker_obj, "click", (): void => {
-                    if (self.opencaching_popup === null) {
+                    if (this.opencaching_popup === null) {
                         return;
                     }
-                    self.opencaching_popup.setContent(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
-                    self.opencaching_popup.open(self.map, m.marker_obj);
+                    this.opencaching_popup.setContent(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
+                    this.opencaching_popup.open(this.map, m.marker_obj);
                 });
                 new_markers.set(code, m);
             } else {
-                new_markers.set(code, self.opencaching_markers.get(code)!);
+                new_markers.set(code, this.opencaching_markers.get(code)!);
             }
         });
         this.opencaching_markers = new_markers;

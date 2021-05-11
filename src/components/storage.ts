@@ -43,8 +43,6 @@ export class Storage {
     }
 
     public migrate_from_v1(): void {
-        const self = this;
-
         // Clat + clon
         let center = null;
         if (this.exists("clat") && this.exists("clon")) {
@@ -113,7 +111,7 @@ export class Storage {
                     return;
                 }
                 const key = `marker${id_int}`;
-                const raw_data = self.get(key, null);
+                const raw_data = this.get(key, null);
                 if (raw_data === null) {
                     return;
                 }
@@ -164,8 +162,8 @@ export class Storage {
                 if (split_ids.length !== 2) {
                     return;
                 }
-                let from = self.alpha2id_v1(split_ids[0]);
-                let to = self.alpha2id_v1(split_ids[1]);
+                let from = this.alpha2id_v1(split_ids[0]);
+                let to = this.alpha2id_v1(split_ids[1]);
                 if (from < 0 || !marker_hash.has(from)) {
                     from = -1;
                 }
@@ -190,18 +188,18 @@ export class Storage {
         const marker_ids = markers.map((_m: IMarkerDict, i: number): number => i);
         this.set("markers", marker_ids.join(";"));
         markers.forEach((obj: IMarkerDict, i: number): void => {
-            self.set(`marker[${i}].name`, obj.name);
-            self.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
-            self.set_float(`marker[${i}].radius`, obj.radius);
-            self.set_color(`marker[${i}].color`, obj.color);
+            this.set(`marker[${i}].name`, obj.name);
+            this.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
+            this.set_float(`marker[${i}].radius`, obj.radius);
+            this.set_color(`marker[${i}].color`, obj.color);
         });
 
         const line_ids = lines.map((_l, i: number): number => i);
         this.set("lines", line_ids.join(";"));
         lines.forEach((obj: ILineDict, i: number): void => {
-            self.set_int(`line[${i}].marker1`, obj.from);
-            self.set_int(`line[${i}].marker2`, obj.to);
-            self.set_color(`line[${i}].color`, obj.color);
+            this.set_int(`line[${i}].marker1`, obj.from);
+            this.set_int(`line[${i}].marker2`, obj.to);
+            this.set_color(`line[${i}].color`, obj.color);
         });
     }
 

@@ -5,19 +5,17 @@ export class ApiKeysDialog {
     private readonly app: App;
 
     constructor(app: App) {
-        const self = this;
-
         this.div = document.querySelector("#api-keys-dialog")!;
         this.app = app;
 
         this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.hide();
+                this.hide();
             });
         });
         this.div.querySelectorAll("[data-ok]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.ok();
+                this.ok();
             });
         });
     }

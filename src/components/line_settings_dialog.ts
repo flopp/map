@@ -12,8 +12,6 @@ export class LineSettingsDialog {
     private readonly div: HTMLElement;
 
     constructor(app: App) {
-        const self = this;
-
         this.div = document.querySelector("#line-settings-dialog")!;
         this.app = app;
 
@@ -36,12 +34,12 @@ export class LineSettingsDialog {
 
         this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.hide();
+                this.hide();
             });
         });
         this.div.querySelectorAll("[data-go]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.go();
+                this.go();
             });
         });
     }

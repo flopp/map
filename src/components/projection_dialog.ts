@@ -10,19 +10,17 @@ export class ProjectionDialog {
     private marker: Marker|null = null;
 
     constructor(app: App) {
-        const self = this;
-
         this.div = document.querySelector("#projection-dialog")!;
         this.app = app;
 
         this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.hide();
+                this.hide();
             });
         });
         this.div.querySelectorAll("[data-project]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.go();
+                this.go();
             });
         });
     }

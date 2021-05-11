@@ -18,8 +18,6 @@ export class Sidebar extends MapStateObserver {
     constructor(app: App) {
         super(app);
 
-        const self = this;
-
         this._sidebar_controls = document.getElementById(
             "sidebar-controls",
         )! as HTMLDivElement;
@@ -36,7 +34,7 @@ export class Sidebar extends MapStateObserver {
             [
                 "layers",
                 "layers",
-                (_id: string): SidebarItem => self.sidebar_layers,
+                (_id: string): SidebarItem => this.sidebar_layers,
             ],
             [
                 "markers",
@@ -123,8 +121,6 @@ export class Sidebar extends MapStateObserver {
         name: string,
         icon: string,
     ): HTMLDivElement {
-        const self = this;
-
         const div = create_element("div", [
             "sidebar-control",
         ]) as HTMLDivElement;
@@ -135,7 +131,7 @@ export class Sidebar extends MapStateObserver {
         this._sidebar_controls.appendChild(div);
 
         a.addEventListener("click", (): void => {
-            self.toggle(name);
+            this.toggle(name);
         });
 
         return div;

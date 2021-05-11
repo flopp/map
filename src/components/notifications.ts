@@ -8,8 +8,6 @@ export class Notifications {
     private readonly max: number = 3;
 
     constructor() {
-        const self = this;
-
         // We need DOM to be ready
         if (
             document.readyState === "interactive" ||
@@ -18,7 +16,7 @@ export class Notifications {
             this.init();
         } else {
             window.addEventListener("DOMContentLoaded", (): void => {
-                self.init();
+                this.init();
             });
         }
     }

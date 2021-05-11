@@ -116,7 +116,6 @@ export class Opencaching {
     private initialize(): void {
         this.state = State.Initializing;
 
-        const self = this;
         const keys = new Map();
         keys.set("Opencaching.DE", getConfig("OPENCACHING_DE_KEY"));
         keys.set("Opencaching.PL", getConfig("OPENCACHING_PL_KEY"));
@@ -128,7 +127,7 @@ export class Opencaching {
         fetch("https://www.opencaching.de/okapi/services/apisrv/installations")
             .then((response: Response): Promise<any> => response.json())
             .then((data: IOkapiInstallation[]): void => {
-                self.sites = data.filter((site: IOkapiInstallation): boolean => {
+                this.sites = data.filter((site: IOkapiInstallation): boolean => {
                     if (!site.okapi_base_url.startsWith("https://")) {
                         return false;
                     }
@@ -147,24 +146,23 @@ export class Opencaching {
                         key: keys.get(site.site_name)!,
                     }));
 
-                self.state = State.Ready;
-                self.scheduleLoad();
+                this.state = State.Ready;
+                this.scheduleLoad();
             })
             .catch((error: any): void => {
                 console.log(error);
-                self.state = State.Error;
+                this.state = State.Error;
             });
     }
 
     private scheduleLoad(): void {
-        const self = this;
         if (this.bounds.length === 0) {
             return;
         }
 
         this.unscheduleLoad();
         this.timer = window.setTimeout((): void => {
-            self.load();
+            this.load();
         }, 1000);
     }
 
@@ -176,8 +174,6 @@ export class Opencaching {
     }
 
     private load(): void {
-        const self = this;
-
         if ((this.bounds.length === 0) || (this.sites === null) || (this.sites.length === 0)) {
             return;
         }
@@ -189,7 +185,7 @@ export class Opencaching {
 
         const promises: Array<Promise<Map<string, IOkapiCache>>> = [];
         this.sites.forEach((site: ISite): void => {
-            if (self.disabled_sites.has(site.name)) {
+            if (this.disabled_sites.has(site.name)) {
                 return;
             }
             const url = `${site.url}services/caches/shortcuts/search_and_retrieve`;
@@ -210,31 +206,34 @@ export class Opencaching {
                         if (("error" in data) && data.hasOwnProperty("error")) {
                             throw (data as IOkapiErrorMessage).error;
                         }
-                        for (const key in data) {
-                            if (data.hasOwnProperty(key)) {
-                                caches.set(key, (data as Record<string, IOkapiCache>)[key]);
-                            }
-                        }
+                        Object.entries(data).forEach((entry: [string, any]): void => {
+                            caches.set(entry[0], entry[1] as IOkapiCache);
+                        });
                         return caches;
                     }).catch((error: any): Map<string, IOkapiCache> => {
                         console.log(site.name, error);
                         console.log("Disabling site for future requests:", site.name);
-                        self.disabled_sites.add(site.name);
+                        this.disabled_sites.add(site.name);
                         return new Map();
                     }),
             );
         });
 
-        Promise.all(promises).then((cache_maps: Array<Map<string, IOkapiCache>>): void => {
-            self.state = State.Ready;
-            const caches: Map<string, IOkapiCache> = new Map();
-            cache_maps.forEach((caches_map: Map<string, IOkapiCache>): void => {
-                caches_map.forEach((value: any, key: string): void => {
-                    caches.set(key, value);
+        Promise
+            .all(promises)
+            .then((cache_maps: Array<Map<string, IOkapiCache>>): void => {
+                this.state = State.Ready;
+                const caches: Map<string, IOkapiCache> = new Map();
+                cache_maps.forEach((caches_map: Map<string, IOkapiCache>): void => {
+                    caches_map.forEach((value: any, key: string): void => {
+                        caches.set(key, value);
+                    });
                 });
+                this.callback(caches);
+                this.scheduleLoad();
+            })
+            .catch((reason: any): void => {
+                console.log("fetching geocaches failed", reason);
             });
-            self.callback(caches);
-            self.scheduleLoad();
-        });
     }
 }

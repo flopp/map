@@ -8,20 +8,19 @@ export class Notification {
     private readonly div: HTMLElement;
 
     constructor(parent: Notifications, id: number, text: string, type: string) {
-        const self = this;
         this.parent = parent;
         this.id = id;
         this.hiding = false;
         this.div = create_element("div", ["notification", `is-${type}`]);
         this.div.innerHTML = text;
         this.div.addEventListener("click", (): void => {
-            self.hide();
+            this.hide();
         });
         this.div.addEventListener("touchend", (): void => {
-            self.hide();
+            this.hide();
         });
         setTimeout((): void => {
-            self.hide();
+            this.hide();
         }, 5000);
     }
 
@@ -34,7 +33,6 @@ export class Notification {
     }
 
     public hide(): void {
-        const self = this;
         if (this.hiding) {
             return;
         }
@@ -43,7 +41,7 @@ export class Notification {
         this.div.addEventListener(
             "animationend",
             (): void => {
-                self.parent.removeNotification(self);
+                this.parent.removeNotification(this);
             },
             false,
         );

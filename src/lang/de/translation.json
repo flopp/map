@@ -162,7 +162,7 @@
             "tools": {
                 "create-link": "Erzeuge Link",
                 "create-link-help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
-                "create-markers": "Ereuge mehrere Marker",
+                "create-markers": "Erzeuge mehrere Marker",
                 "create-markers-help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
                 "export-json": "Exportiere Karten-Zustand",
                 "export-json-help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",

@@ -5,7 +5,7 @@ import resources from "../lang";
 import {App} from "./app";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
-// import {i18nextBrowserLanguageDetector} from 'i18next-browser-languagedetector';
+// .import {i18nextBrowserLanguageDetector} from 'i18next-browser-languagedetector';
 
 
 export class Language extends MapStateObserver {
@@ -14,36 +14,33 @@ export class Language extends MapStateObserver {
     constructor(app: App) {
         super(app);
 
-        const self = this;
-
         this.initialized = false;
 
         // .use(i18nextBrowserLanguageDetector)
         i18next
-            .init(
-                {
-                    debug: true,
-                    detection: {
-                        order: ["querystring", "localStorage", "navigator"],
-                        lookupQuerystring: "lang",
-                        lookupLocalStorage: "i18nextLng",
-                        caches: ["localStorage"],
-                    },
-                    load: "languageOnly",
-                    whitelist: ["en", "de"],
-                    nonExplicitWhitelist: true,
-                    fallbackLng: ["en", "de"],
-                    ns: ["main"],
-                    defaultNS:"main",
-                    resources,
+            .init({
+                debug: true,
+                detection: {
+                    order: ["querystring", "localStorage", "navigator"],
+                    lookupQuerystring: "lang",
+                    lookupLocalStorage: "i18nextLng",
+                    caches: ["localStorage"],
                 },
-                (err: any): void => {
-                    if (!err) {
-                        self.initialized = true;
-                        self.localize();
-                    }
-                },
-            );
+                load: "languageOnly",
+                whitelist: ["en", "de"],
+                nonExplicitWhitelist: true,
+                fallbackLng: ["en", "de"],
+                ns: ["main"],
+                defaultNS:"main",
+                resources,
+            })
+            .then((): void => {
+                this.initialized = true;
+                this.localize();
+            })
+            .catch((err: any): void => {
+                console.log("i18n initialization failed", err);
+            });
     }
 
     public update_state(changes: number): void {
@@ -51,13 +48,14 @@ export class Language extends MapStateObserver {
             return;
         }
 
-        const self = this;
-
-        i18next.changeLanguage(this.app.map_state.language, (err: any): void => {
-            if (!err) {
-                self.localize();
-            }
-        });
+        i18next
+           .changeLanguage(this.app.map_state.language)
+           .then((): void => {
+               this.localize();
+           })
+           .catch((err: any): void => {
+               console.log("i18n: failed to set language", this.app.map_state.language, err);
+           });
     }
 
     public translate(key: string): string {
@@ -88,14 +86,19 @@ export class Language extends MapStateObserver {
             }
 
             const target = element.getAttribute("data-i18n-target");
-            if (target === null || target === "" || target === "text") {
-                element.textContent = translation;
-            } else if (target === "placeholder") {
-                (element as HTMLInputElement).placeholder = translation;
-            } else {
-                console.log(
-                    `i18n: bad i18n target attribute '${target}' in '${key}'`,
-                );
+            switch (target) {
+                case null:
+                case "":
+                case "text":
+                    element.textContent = translation;
+                    break;
+                case "placeholder":
+                    (element as HTMLInputElement).placeholder = translation;
+                    break;
+                default:
+                    console.log(
+                        `i18n: bad i18n target attribute '${target}' in '${key}'`,
+                    );
             }
         });
     }

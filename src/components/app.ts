@@ -152,7 +152,6 @@ export class App {
 
     public console_filter(): void {
         const console = window.console;
-        const self = this;
 
         // tslint:disable-next-line:no-unbound-method
         const original = console.error;
@@ -169,7 +168,7 @@ export class App {
                     console.warn(
                         "Intercepted error message from the Google Maps API. Disabling google maps.",
                     );
-                    self.google_maps_error_raised();
+                    this.google_maps_error_raised();
                 }
             }
         };
@@ -187,7 +186,6 @@ export class App {
     }
 
     public switch_to_google(): void {
-        const self = this;
         if (this.google_maps_error) {
             return;
         }
@@ -216,7 +214,7 @@ export class App {
                 (window as any).__googleMapsApiOnLoadCallback = (): void => {
                     // Empty
                 };
-                self.google_maps_error_raised();
+                this.google_maps_error_raised();
                 reject(new Error("Could not load the Google Maps API"));
             }, 10000);
 
@@ -235,12 +233,12 @@ export class App {
 
         promise
             .then((): void => {
-                self.initialize_google_map();
+                this.initialize_google_map();
             })
             .catch((error: any): void => {
                 console.log("Error in promise");
                 console.error(error);
-                self.google_maps_error_raised();
+                this.google_maps_error_raised();
             });
     }
 
@@ -262,12 +260,11 @@ export class App {
     }
 
     public locate_me(): void {
-        const self = this;
         // tslint:disable-next-line: strict-boolean-expressions
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (location: GeolocationPosition): void => {
-                    self.map_state.set_center(
+                    this.map_state.set_center(
                         new Coordinates(
                             location.coords.latitude,
                             location.coords.longitude,
@@ -275,11 +272,11 @@ export class App {
                     );
                 },
                 (error: GeolocationPositionError): void => {
-                    self.message_error(self.translate("messages.geolocation_error").replace("{1}", error.message));
+                    this.message_error(this.translate("messages.geolocation_error").replace("{1}", error.message));
                 },
             );
         } else {
-            self.message_error(self.translate("messages.geolocation_not_available"));
+            this.message_error(this.translate("messages.geolocation_not_available"));
         }
     }
 
@@ -297,7 +294,6 @@ export class App {
         }
 
         // Try to resolve "location_string" via a nominatim search
-        const self = this;
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${trimmed}`;
         fetch(url)
             .then((response: Response): Promise<any> => {
@@ -312,14 +308,14 @@ export class App {
             })
             .then((json_data): void => {
                 if (json_data.length > 0) {
-                    self.map_state.set_center(
+                    this.map_state.set_center(
                         new Coordinates(json_data[0].lat, json_data[0].lon),
                     );
                 } else {
-                    self.message_error(self.translate("search.no-result"));
+                    this.message_error(this.translate("search.no-result"));
                 }
             }).catch((error: any): void => {
-                self.message_error(self.translate("search.server-error").replace("{1}", error));
+                this.message_error(this.translate("search.server-error").replace("{1}", error));
             });
     }
 

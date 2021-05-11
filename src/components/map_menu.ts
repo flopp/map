@@ -14,7 +14,6 @@ export class MapMenu {
     public coordinates: Coordinates|null = null;
 
     constructor(app: App) {
-        const self = this;
         this.app = app;
 
         this.menu = create_element("div", ["dropdown-menu"], {role: "menu"});
@@ -25,18 +24,18 @@ export class MapMenu {
         this.addMarker = create_element("a", ["dropdown-item"], {"data-i18n": "menu.add-marker"});
         content.appendChild(this.addMarker);
         this.addMarker.addEventListener("click", (): boolean => {
-            self.hide();
-            self.app.map_state.add_marker(self.coordinates);
+            this.hide();
+            this.app.map_state.add_marker(this.coordinates);
             return false;
         });
 
         this.deleteMarker = create_element("a", ["dropdown-item"], {"data-i18n": "menu.delete-marker"});
         content.appendChild(this.deleteMarker);
         this.deleteMarker.addEventListener("click", (): boolean => {
-            self.hide();
-            if (self.marker !== null) {
-                self.app.map_state.delete_marker(self.marker.get_id());
-                self.marker = null;
+            this.hide();
+            if (this.marker !== null) {
+                this.app.map_state.delete_marker(this.marker.get_id());
+                this.marker = null;
             }
             return false;
         });
@@ -44,9 +43,9 @@ export class MapMenu {
         this.projection = create_element("a", ["dropdown-item"], {"data-i18n": "menu.waypoint-projection"});
         content.appendChild(this.projection);
         this.projection.addEventListener("click", (): boolean => {
-            self.hide();
-            if (self.marker !== null) {
-                self.app.show_projection_dialog(self.marker);
+            this.hide();
+            if (this.marker !== null) {
+                this.app.show_projection_dialog(this.marker);
             }
             return false;
         });
@@ -54,11 +53,11 @@ export class MapMenu {
         const centerMap = create_element("a", ["dropdown-item"], {"data-i18n": "menu.center-map"});
         content.appendChild(centerMap);
         centerMap.addEventListener("click", (): boolean => {
-            self.hide();
-            if (self.coordinates !== null) {
-                self.app.map_state.set_center(self.coordinates);
-            } else if (self.marker !== null) {
-                self.app.map_state.set_center(self.marker.coordinates);
+            this.hide();
+            if (this.coordinates !== null) {
+                this.app.map_state.set_center(this.coordinates);
+            } else if (this.marker !== null) {
+                this.app.map_state.set_center(this.marker.coordinates);
             }
             return false;
         });

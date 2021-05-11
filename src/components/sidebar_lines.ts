@@ -24,33 +24,30 @@ export class SidebarLines extends SidebarItem {
     constructor(app: App, id: string) {
         super(app, id);
 
-        const self = this;
-
         document.querySelector("#btn-add-line")!.addEventListener("click", (): void => {
-            self.app.map_state.add_line();
+            this.app.map_state.add_line();
         });
         document.querySelector("#btn-delete-lines")!.addEventListener("click", (): void => {
-            self.app.map_state.delete_all_lines();
+            this.app.map_state.delete_all_lines();
         });
 
         this.settingsDialog = new LineSettingsDialog(app);
 
         document.querySelector("#btn-line-settings")!.addEventListener("click", (): void => {
-            self.settingsDialog.show();
+            this.settingsDialog.show();
         });
 
         this.sortable = Sortable.create(document.getElementById("lines")!, {
             handle: ".drag-handle",
             onEnd: (event: Sortable.SortableEvent): void => {
                 if ((event.oldIndex !== undefined) && (event.newIndex !== undefined)) {
-                    self.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
+                    this.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
                 }
             },
         });
     }
 
     public update_state(changes: number): void {
-        const self = this;
         if ((changes & (MapStateChange.LINES | MapStateChange.LANGUAGE)) !== 0) {
             if ((changes & MapStateChange.LANGUAGE) !== 0) {
                 // The language has changed
@@ -66,7 +63,7 @@ export class SidebarLines extends SidebarItem {
             this.app.map_state.lines.forEach((line: Line): void => {
                 let div = document.querySelector(`#line-${line.get_id()}`);
                 if (div === null) {
-                    div = self.create_div(line);
+                    div = this.create_div(line);
                     document.querySelector("#lines")!.appendChild(div);
                 }
 
@@ -78,8 +75,8 @@ export class SidebarLines extends SidebarItem {
                         : "n/a";
 
                 (div.querySelector(".line-color")! as HTMLElement).style.backgroundColor = line.color.to_hash_string();
-                div.querySelector(".line-from")!.textContent = self.marker_name(line.marker1);
-                div.querySelector(".line-to")!.textContent = self.marker_name(line.marker2);
+                div.querySelector(".line-from")!.textContent = this.marker_name(line.marker1);
+                div.querySelector(".line-to")!.textContent = this.marker_name(line.marker2);
                 div.querySelector(".line-distance")!.textContent = length;
                 div.querySelector(".line-bearing")!.textContent = bearing;
             });
@@ -109,7 +106,7 @@ export class SidebarLines extends SidebarItem {
 
         if ((changes & (MapStateChange.MARKERS | MapStateChange.LINES)) !== 0) {
             this.app.map_state.lines.forEach((line: Line): void => {
-                self.update_edit_values(line);
+                this.update_edit_values(line);
             });
         }
     }
@@ -125,10 +122,7 @@ export class SidebarLines extends SidebarItem {
     }
 
     private create_div(line: Line): HTMLElement {
-        const self = this;
-
         const div = create_element("div", ["line"], {id: `line-${line.get_id()}`});
-
         const left = create_element("div", ["line-left", "drag-handle"]);
         const color = create_element("div", ["line-color"]);
         left.appendChild(color);
@@ -136,10 +130,10 @@ export class SidebarLines extends SidebarItem {
 
         const center = create_element("div", ["line-center"]);
         const table = create_element("table");
-        this.create_row(table, self.app.translate("sidebar.lines.from"), "line-from");
-        this.create_row(table, self.app.translate("sidebar.lines.to"), "line-to");
-        this.create_row(table, self.app.translate("sidebar.lines.length"), "line-distance");
-        this.create_row(table, self.app.translate("sidebar.lines.bearing"), "line-bearing");
+        this.create_row(table, this.app.translate("sidebar.lines.from"), "line-from");
+        this.create_row(table, this.app.translate("sidebar.lines.to"), "line-to");
+        this.create_row(table, this.app.translate("sidebar.lines.length"), "line-distance");
+        this.create_row(table, this.app.translate("sidebar.lines.bearing"), "line-bearing");
         center.appendChild(table);
         div.appendChild(center);
 
@@ -148,7 +142,7 @@ export class SidebarLines extends SidebarItem {
         div.appendChild(right);
 
         div.addEventListener("click", (): void => {
-            self.app.map_state.show_line(line);
+            this.app.map_state.show_line(line);
         });
 
         return div;
@@ -168,10 +162,7 @@ export class SidebarLines extends SidebarItem {
     }
 
     private create_edit_div(line: Line): HTMLElement {
-        const self = this;
-
         const div = create_element("div", ["edit"], {id: `line-edit-${line.get_id()}`});
-
         const from = create_select_input(this.app.translate("sidebar.lines.edit_from"), "data-from");
         const to = create_select_input(this.app.translate("sidebar.lines.edit_to"), "data-to");
         const color = create_color_input(
@@ -180,7 +171,7 @@ export class SidebarLines extends SidebarItem {
             this.app.translate("sidebar.lines.edit_color_placeholder"));
 
         const submit_button = create_button(this.app.translate("general.submit"), (): void => {
-            self.submit_edit(line);
+            this.submit_edit(line);
         });
         const cancel_button = create_button(this.app.translate("general.cancel"), (): void => {
             div.remove();
@@ -198,23 +189,22 @@ export class SidebarLines extends SidebarItem {
     }
 
     private create_line_dropdown(line: Line): HTMLElement {
-        const self = this;
         return create_dropdown([
             {
                 label: this.app.translate("sidebar.lines.edit"),
                 callback: (): void => {
                     if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
                         const div = document.querySelector(`#line-${line.get_id()}`)!;
-                        const edit_div = self.create_edit_div(line);
+                        const edit_div = this.create_edit_div(line);
                         div.parentNode!.insertBefore(edit_div, div.nextSibling);
-                        self.update_edit_values(line);
+                        this.update_edit_values(line);
                     }
                 },
             },
             {
                 label: this.app.translate("sidebar.lines.delete"),
                 callback: (): void => {
-                    self.app.map_state.delete_line(line.get_id());
+                    this.app.map_state.delete_line(line.get_id());
                 },
             },
         ]);

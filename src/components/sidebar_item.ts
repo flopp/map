@@ -8,8 +8,6 @@ export class SidebarItem extends MapStateObserver {
     constructor(app: App, id: string) {
         super(app);
 
-        const self = this;
-
         this._div = document.getElementById(`sidebar-${id}`)!;
 
         const header = create_element("div", ["header"]);
@@ -21,7 +19,7 @@ export class SidebarItem extends MapStateObserver {
         this._div.prepend(header);
 
         span.addEventListener("click", (): void => {
-            self.app.map_state.set_sidebar_open(null);
+            this.app.map_state.set_sidebar_open(null);
         });
     }
 

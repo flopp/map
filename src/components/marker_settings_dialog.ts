@@ -10,8 +10,6 @@ export class MarkerSettingsDialog {
     private readonly div: HTMLElement;
 
     constructor(app: App) {
-        const self = this;
-
         this.div = document.querySelector("#marker-settings-dialog")!;
         this.app = app;
 
@@ -33,12 +31,12 @@ export class MarkerSettingsDialog {
 
         this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.hide();
+                this.hide();
             });
         });
         this.div.querySelectorAll("[data-go]").forEach((element: HTMLElement): void => {
             element.addEventListener("click", (): void => {
-                self.go();
+                this.go();
             });
         });
     }
