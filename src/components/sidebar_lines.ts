@@ -74,7 +74,7 @@ export class SidebarLines extends SidebarItem {
                         ? `${line.bearing.toFixed(2)}°`
                         : "n/a";
 
-                (div.querySelector(".line-color")! as HTMLElement).style.backgroundColor = line.color.to_hash_string();
+                (div.querySelector(".line-color") as HTMLElement).style.backgroundColor = line.color.to_hash_string();
                 div.querySelector(".line-from")!.textContent = this.marker_name(line.marker1);
                 div.querySelector(".line-to")!.textContent = this.marker_name(line.marker2);
                 div.querySelector(".line-distance")!.textContent = length;
