@@ -176,7 +176,8 @@ export class App {
 
     public google_maps_error_raised(): void {
         this.message_error(
-            this.translate("messages.layer_disabled").replace("{1}", "Google Maps"),
+            this.translate("messages.layer_disabled")
+                .replace("{1}", "Google Maps"),
         );
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
@@ -272,7 +273,10 @@ export class App {
                     );
                 },
                 (error: GeolocationPositionError): void => {
-                    this.message_error(this.translate("messages.geolocation_error").replace("{1}", error.message));
+                    this.message_error(
+                        this.translate("messages.geolocation_error")
+                            .replace("{1}", error.message),
+                    );
                 },
             );
         } else {
@@ -314,7 +318,8 @@ export class App {
                 } else {
                     this.message_error(this.translate("search.no-result"));
                 }
-            }).catch((error: any): void => {
+            })
+            .catch((error: any): void => {
                 this.message_error(this.translate("search.server-error").replace("{1}", error));
             });
     }
@@ -327,7 +332,7 @@ export class App {
     }
 
     public show_projection_dialog(marker: Marker): void {
-        this.projection_dialog.show(marker);
+        this.projection_dialog.showMarker(marker);
     }
 
     public show_multi_markers_dialog(): void {

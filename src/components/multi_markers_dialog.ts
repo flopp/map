@@ -1,13 +1,11 @@
 import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
+import {Dialog} from "./dialog";
 import {MapStateChange} from "./map_state";
 import {parse_float} from "./utilities";
 
-
-export class MultiMarkersDialog {
-    private readonly _app: App;
-    private readonly _div: HTMLElement;
+export class MultiMarkersDialog extends Dialog {
     private readonly _useCommonName: HTMLInputElement;
     private readonly _useCommonColor: HTMLInputElement;
     private readonly _useCommonRadius: HTMLInputElement;
@@ -18,9 +16,8 @@ export class MultiMarkersDialog {
     private readonly _dataFormat: HTMLTextAreaElement;
 
     public constructor(app: App) {
-        this._app = app;
+        super("multi-markers-dialog", app);
 
-        this._div = document.querySelector("#multi-markers-dialog")!;
         this._useCommonName = this._div.querySelector("[data-use-common-name]")!;
         this._useCommonColor = this._div.querySelector("[data-use-common-color]")!;
         this._useCommonRadius = this._div.querySelector("[data-use-common-radius]")!;
@@ -39,32 +36,17 @@ export class MultiMarkersDialog {
         this._useCommonRadius.onchange = (): void => {
             this.update_description();
         };
-
-        this._div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
-                this.hide();
-            });
-        });
-        this._div.querySelectorAll("[data-go]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
-                this.go();
-            });
-        });
     }
 
     public show(): void {
-        this._div.classList.add("is-active");
         (this._div.querySelector(
             "[data-common-color]",
-        ) as HTMLInputElement).value = Color.random_from_palette().to_hash_string();
-        this.update_description();
+            ) as HTMLInputElement).value = Color.random_from_palette().to_hash_string();
+            this.update_description();
+        super.show();
     }
 
-    private hide(): void {
-        this._div.classList.remove("is-active");
-    }
-
-    private go(): void {
+    public ok(): void {
         const use_common_name = this._useCommonName.checked;
         const use_common_color = this._useCommonColor.checked;
         const use_common_radius = this._useCommonRadius.checked;

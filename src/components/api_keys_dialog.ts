@@ -8,16 +8,18 @@ export class ApiKeysDialog {
         this.div = document.querySelector("#api-keys-dialog")!;
         this.app = app;
 
-        this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
-                this.hide();
+        this.div.querySelectorAll("[data-cancel]")
+            .forEach((element: HTMLElement): void => {
+                element.addEventListener("click", (): void => {
+                    this.hide();
+                });
             });
-        });
-        this.div.querySelectorAll("[data-ok]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
-                this.ok();
+        this.div.querySelectorAll("[data-ok]")
+            .forEach((element: HTMLElement): void => {
+                element.addEventListener("click", (): void => {
+                    this.ok();
+                });
             });
-        });
     }
 
     public show(): void {
