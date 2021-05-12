@@ -2,7 +2,7 @@ import {App} from "./app";
 import {SidebarItem} from "./sidebar_item";
 
 export class SidebarSearch extends SidebarItem {
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app, id);
 
         document.querySelector("#btn-locate")!.addEventListener("click", (): void => {

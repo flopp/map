@@ -4,7 +4,7 @@ export class ApiKeysDialog {
     private readonly div: HTMLElement;
     private readonly app: App;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.div = document.querySelector("#api-keys-dialog")!;
         this.app = app;
 

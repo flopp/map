@@ -18,6 +18,7 @@ lint:
 	./node_modules/.bin/tslint  \
 		--project tsconfig.json \
 		--config tslint.json \
+		src/*.ts \
 		src/**/*.ts
 
 .PHONY: update-translation

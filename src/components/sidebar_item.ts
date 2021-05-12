@@ -5,7 +5,7 @@ import { create_element, create_icon } from "./utilities";
 export class SidebarItem extends MapStateObserver {
     protected _div: HTMLElement;
 
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app);
 
         this._div = document.getElementById(`sidebar-${id}`)!;

@@ -64,7 +64,7 @@ export class Opencaching {
     private sites: ISite[]|null = null;
     private readonly disabled_sites: Set<string>;
 
-    constructor(callback: CachesCallback) {
+    public constructor(callback: CachesCallback) {
         this.callback = callback;
         this.bounds = [];
         this.disabled_sites = new Set();

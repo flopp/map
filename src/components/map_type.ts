@@ -10,11 +10,9 @@ export enum MapType {
     GOOGLE_TERRAIN = "GOOGLE_TERRAIN",
 }
 
-export function maptype2string(type: MapType|null): string|null {
-    return String(type);
-}
+export const maptype2string = String;
 
-export function string2maptype(s: string): MapType|null {
+export const string2maptype = (s: string): MapType|null => {
     switch (s.toUpperCase()) {
         case MapType.OPENSTREETMAP:
             return MapType.OPENSTREETMAP;
@@ -37,9 +35,9 @@ export function string2maptype(s: string): MapType|null {
         default:
             return null;
     }
-}
+};
 
-export function maptype2human(t: MapType|null): string {
+export const maptype2human = (t: MapType|null): string => {
     switch (t) {
         case MapType.OPENSTREETMAP:
             return "OpenStreetMap";
@@ -62,9 +60,9 @@ export function maptype2human(t: MapType|null): string {
         default:
             return "Unknown";
     }
-}
+};
 
-export function isGoogle(t: MapType|null): boolean {
+export const isGoogle = (t: MapType|null): boolean => {
     switch (t) {
         case MapType.GOOGLE_ROADMAP:
         case MapType.GOOGLE_SATELLITE:
@@ -74,4 +72,4 @@ export function isGoogle(t: MapType|null): boolean {
         default:
             return false;
     }
-}
+};

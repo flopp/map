@@ -4,7 +4,7 @@ export class Color {
     // tslint:disable-next-line: prefer-readonly
     private hex: string = "";
 
-    constructor(hex: string) {
+    public constructor(hex: string) {
         if (!RegExp("^[0-9A-Fa-f]{6}$").test(hex)) {
             throw new Error(`bad hex-color: ${hex}`);
         }

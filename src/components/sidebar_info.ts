@@ -2,7 +2,7 @@ import {App} from "./app";
 import {SidebarItem} from "./sidebar_item";
 
 export class SidebarInfo extends SidebarItem {
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app, id);
     }
 

@@ -17,7 +17,7 @@ export class Line {
     public length: Distance|null;
     public bearing: number|null;
 
-    constructor(marker_id1: number, marker_id2: number) {
+    public constructor(marker_id1: number, marker_id2: number) {
         this.line_id = next_line_id;
         this.marker1 = marker_id1;
         this.marker2 = marker_id2;

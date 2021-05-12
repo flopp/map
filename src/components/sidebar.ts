@@ -15,7 +15,7 @@ export class Sidebar extends MapStateObserver {
     private readonly _sidebars: Map<string, [HTMLDivElement, SidebarItem]>;
     public sidebar_layers: SidebarLayers;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         super(app);
 
         this._sidebar_controls = document.getElementById(

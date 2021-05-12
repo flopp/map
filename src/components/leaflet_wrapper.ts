@@ -10,13 +10,11 @@ import {MapWrapper} from "./map_wrapper";
 import {Marker} from "./marker";
 import {IOkapiCache, Opencaching} from "./opencaching";
 
-function from_coordinates(c: Coordinates): L.LatLng {
-    return L.latLng(c.raw_lat(), c.raw_lng());
-}
+const from_coordinates = (c: Coordinates): L.LatLng =>
+    L.latLng(c.raw_lat(), c.raw_lng());
 
-function to_coordinates(leaflet_latlng: L.LatLng): Coordinates {
-    return new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
-}
+const to_coordinates = (leaflet_latlng: L.LatLng): Coordinates =>
+    new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
 
 interface IMarkerObjDict {
     marker_obj: L.Marker;
@@ -53,7 +51,7 @@ export class LeafletWrapper extends MapWrapper {
     private layer_arcgis_worldimagery: L.TileLayer;
     private layers: Map<string, L.TileLayer>;
 
-    constructor(div_id: string, app: App) {
+    public constructor(div_id: string, app: App) {
         super(div_id, app);
         this.opencaching_markers = new Map();
         this.opencaching_icons = new Map();

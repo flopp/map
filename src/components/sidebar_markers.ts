@@ -31,7 +31,7 @@ export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;
     private readonly settingsDialog: MarkerSettingsDialog;
 
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app, id);
 
         this.settingsDialog = new MarkerSettingsDialog(app);

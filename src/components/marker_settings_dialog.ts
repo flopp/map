@@ -9,7 +9,7 @@ export class MarkerSettingsDialog {
     private readonly app: App;
     private readonly div: HTMLElement;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.div = document.querySelector("#marker-settings-dialog")!;
         this.app = app;
 

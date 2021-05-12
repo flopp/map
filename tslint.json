@@ -38,16 +38,12 @@
         "no-submodule-imports": false,
         "no-unsafe-any": false,
         "object-literal-sort-keys": false,
-        "only-arrow-functions": false,
         "prefer-conditional-expression": false,
         "prefer-function-over-method": false,
         "promise-function-async": false,
         
         "file-name-casing": [true, "snake-case"],
-        "member-access": [
-            true,
-            "check-accessor"
-        ],
+        "member-access": true,
         "new-parens": true,
         "no-conditional-assignment": true,
         "no-invalid-template-strings": true,
@@ -55,17 +51,10 @@
         "no-sparse-arrays": true,
         "no-this-assignment": true,
         "no-unbound-method": true,
+        "only-arrow-functions": true,
         "prefer-switch": true,
         "restrict-plus-operands": true,
-        "typedef": [
-            true,
-            "call-signature",
-            "parameter",
-            "arrow-call-signature",
-            "member-variable-declaration",
-            "object-destructuring",
-            "array-destructuring"
-        ],
+        "typedef": true,
         "variable-name": {
             "options": [
                 "ban-keywords",

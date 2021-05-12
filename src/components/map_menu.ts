@@ -13,7 +13,7 @@ export class MapMenu {
     public marker: Marker|null = null;
     public coordinates: Coordinates|null = null;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.app = app;
 
         this.menu = create_element("div", ["dropdown-menu"], {role: "menu"});

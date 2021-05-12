@@ -14,7 +14,7 @@ export class LinkDialog {
     private readonly app: App;
     private readonly clipboard: ClipboardJS;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.div = document.querySelector("#link-dialog")!;
         this.app = app;
         this.clipboard = new ClipboardJS("#link-dialog-copy-button");

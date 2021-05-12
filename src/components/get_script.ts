@@ -1,4 +1,4 @@
-export function getScript(url: string): void {
+export const  getScript = (url: string): void => {
     const prior = document.getElementsByTagName("script")[0];
     let script: HTMLScriptElement|undefined = document.createElement("script");
     script.async = true;
@@ -10,4 +10,4 @@ export function getScript(url: string): void {
 
     script.src = url;
     prior.parentNode!.insertBefore(script, prior);
-}
+};

@@ -5,7 +5,7 @@ export enum DistanceFormat {
     mi = "mi",
 }
 
-export function parseDistanceFormat(value: string, fallback: DistanceFormat): DistanceFormat {
+export const parseDistanceFormat = (value: string, fallback: DistanceFormat): DistanceFormat => {
     switch (value.toLowerCase()) {
         case "m":
             return DistanceFormat.m;
@@ -18,12 +18,12 @@ export function parseDistanceFormat(value: string, fallback: DistanceFormat): Di
         default:
             return fallback;
     }
-}
+};
 
 export class Distance {
     private _raw_m: number;
 
-    constructor(value: number, format: DistanceFormat) {
+    public constructor(value: number, format: DistanceFormat) {
         this.set(value, format);
     }
 

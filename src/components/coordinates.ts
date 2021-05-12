@@ -7,7 +7,7 @@ export enum CoordinatesFormat {
     DMS = "DMS",
 }
 
-export function parseCoordinatesFormat(value: string, fallback: CoordinatesFormat): CoordinatesFormat {
+export const parseCoordinatesFormat = (value: string, fallback: CoordinatesFormat): CoordinatesFormat => {
     switch (value.toUpperCase()) {
         case "D":
             return CoordinatesFormat.D;
@@ -18,15 +18,15 @@ export function parseCoordinatesFormat(value: string, fallback: CoordinatesForma
         default:
             return fallback;
     }
-}
+};
 
-function pad(num: number|string, width: number): string {
+const pad = (num: number|string, width: number): string => {
     let s = String(num);
     while (s.length < width) {
         s = `0${s}`;
     }
     return s;
-}
+};
 
 export interface IDistanceBearing {
     distance: number;
@@ -37,7 +37,7 @@ export class Coordinates {
     private readonly _raw_lat: number;
     private readonly _raw_lng: number;
 
-    constructor(lat: number, lng: number) {
+    public constructor(lat: number, lng: number) {
         this._raw_lat = lat;
         this._raw_lng = lng;
     }

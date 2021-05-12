@@ -1,4 +1,4 @@
-function parse_float(str: string): number|null {
+const parse_float = (str: string): number|null => {
     if (!/[0-9]/.test(str)) {
         return null;
     }
@@ -6,9 +6,9 @@ function parse_float(str: string): number|null {
         return null;
     }
     return parseFloat(str);
-}
+};
 
-function parse_int(str: string): number|null {
+const parse_int = (str: string): number|null => {
     if (!/[0-9]/.test(str)) {
         return null;
     }
@@ -16,13 +16,13 @@ function parse_int(str: string): number|null {
         return null;
     }
     return parseFloat(str);
-}
+};
 
-function create_element(
+const create_element = (
     type: string,
     classes: string[] = [],
     attributes: Record<string, string | null> = {},
-): HTMLElement {
+): HTMLElement => {
     const element = document.createElement(type);
     classes.forEach((cls: string): void => {
         element.classList.add(cls);
@@ -32,9 +32,9 @@ function create_element(
         element.setAttribute(key, value !== null ? value : "");
     }
     return element;
-}
+};
 
-function remove_element(node: HTMLElement|null): void {
+const remove_element = (node: HTMLElement|null): void => {
     if (node === null) {
         return;
     }
@@ -42,9 +42,9 @@ function remove_element(node: HTMLElement|null): void {
         return;
     }
     node.parentNode.removeChild(node);
-}
+};
 
-function create_text_input(label_text: string, data_tag: string, placeholder: string): HTMLElement {
+const create_text_input = (label_text: string, data_tag: string, placeholder: string): HTMLElement => {
     const field = create_element("div", ["field"]);
     const label = create_element("label", ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -60,9 +60,9 @@ function create_text_input(label_text: string, data_tag: string, placeholder: st
     control.appendChild(input);
     field.appendChild(control);
     return field;
-}
+};
 
-function create_color_input(label_text: string, data_tag: string, placeholder: string): HTMLElement {
+const create_color_input = (label_text: string, data_tag: string, placeholder: string): HTMLElement => {
     const field = create_element("div", ["field"]);
     const label = create_element("label", ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -78,9 +78,9 @@ function create_color_input(label_text: string, data_tag: string, placeholder: s
     control.appendChild(input);
     field.appendChild(control);
     return field;
-}
+};
 
-function create_select_input(label_text: string, data_tag: string): HTMLElement {
+const create_select_input = (label_text: string, data_tag: string): HTMLElement => {
     const field = create_element("div", ["field"]);
     const label = create_element("label", ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -92,18 +92,18 @@ function create_select_input(label_text: string, data_tag: string): HTMLElement 
     control.appendChild(div);
     field.appendChild(control);
     return field;
-}
+};
 
-function create_button(label_text: string, callback: () => void): HTMLElement {
+const create_button = (label_text: string, callback: () => void): HTMLElement => {
     const control = create_element("div", ["control"]);
     const button = create_element("button", ["button"]);
     button.textContent = label_text;
     button.addEventListener("click", callback);
     control.appendChild(button);
     return control;
-}
+};
 
-function create_icon(icon: string, classes: string[] = []): SVGSVGElement {
+const create_icon = (icon: string, classes: string[] = []): SVGSVGElement => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     classes.forEach((c: string): void => {
         svg.classList.add(c);
@@ -112,13 +112,13 @@ function create_icon(icon: string, classes: string[] = []): SVGSVGElement {
     use.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `assets/feather-sprite.svg#${icon}`);
     svg.appendChild(use);
     return svg;
-}
+};
 
 interface ILabelCallback {
     label: string;
     callback(): void;
 }
-function create_dropdown(items: ILabelCallback[]): HTMLElement {
+const create_dropdown = (items: ILabelCallback[]): HTMLElement => {
     const dropdown = create_element("div", ["dropdown", "is-right"]);
     dropdown.addEventListener("click", (event: MouseEvent): void => {
         event.stopPropagation();
@@ -146,17 +146,16 @@ function create_dropdown(items: ILabelCallback[]): HTMLElement {
     });
 
     return dropdown;
-}
+};
 
-function encode_parameters(parameters: Record<string, string|number|boolean>): string {
-    return Object.keys(parameters).reduce(
+const encode_parameters = (parameters: Record<string, string|number|boolean>): string =>
+    Object.keys(parameters).reduce(
         (a: string[], k: string): string[] => {
             a.push(`${k}=${encodeURIComponent(parameters[k])}`);
             return a;
         },
         [],
     ).join("&");
-}
 
 export {
     parse_float,

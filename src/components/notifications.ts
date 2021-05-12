@@ -7,7 +7,7 @@ export class Notifications {
     private container: HTMLElement|null = null;
     private readonly max: number = 3;
 
-    constructor() {
+    public constructor() {
         // We need DOM to be ready
         if (
             document.readyState === "interactive" ||

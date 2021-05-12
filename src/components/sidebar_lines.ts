@@ -21,7 +21,7 @@ export class SidebarLines extends SidebarItem {
     private readonly sortable: Sortable;
     private readonly settingsDialog: LineSettingsDialog;
 
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app, id);
 
         document.querySelector("#btn-add-line")!.addEventListener("click", (): void => {

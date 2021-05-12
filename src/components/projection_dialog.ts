@@ -9,7 +9,7 @@ export class ProjectionDialog {
     private readonly app: App;
     private marker: Marker|null = null;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.div = document.querySelector("#projection-dialog")!;
         this.app = app;
 

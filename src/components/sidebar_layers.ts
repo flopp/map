@@ -13,7 +13,7 @@ export class SidebarLayers extends SidebarItem {
     private readonly german_npa_checkbox: HTMLInputElement;
     private readonly opencaching_checkbox: HTMLInputElement;
 
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app, id);
 
         this.base_layers = [
@@ -32,7 +32,7 @@ export class SidebarLayers extends SidebarItem {
         this.base_layers.forEach((base_layer: IBaseLayerDict): void => {
             base_layer.option = new Option(
                 maptype2human(base_layer.type),
-                maptype2string(base_layer.type)!,
+                maptype2string(base_layer.type),
                 false,
                 base_layer.type === this.app.map_state.map_type,
             );
@@ -90,7 +90,7 @@ export class SidebarLayers extends SidebarItem {
         }
 
         /* base_layer */
-        this.base_layer_select.value = maptype2string(this.app.map_state.map_type)!;
+        this.base_layer_select.value = maptype2string(this.app.map_state.map_type);
         this.update_base_layer_help();
     }
 
@@ -112,7 +112,7 @@ export class SidebarLayers extends SidebarItem {
                 if (base_layer.option === null) {
                     base_layer.option = new Option(
                         maptype2human(base_layer.type),
-                        maptype2string(base_layer.type)!,
+                        maptype2string(base_layer.type),
                         false,
                         base_layer.type === this.app.map_state.map_type,
                     );

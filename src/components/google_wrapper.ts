@@ -45,7 +45,7 @@ export class GoogleWrapper extends MapWrapper {
     private opencaching_popup: google.maps.InfoWindow|null = null;
     private map: google.maps.Map;
 
-    constructor(div_id: string, app: App) {
+    public constructor(div_id: string, app: App) {
         super(div_id, app);
         this.opencaching_markers = new Map();
         this.opencaching_icons = new Map();

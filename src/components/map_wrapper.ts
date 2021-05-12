@@ -13,7 +13,7 @@ export class MapWrapper extends MapStateObserver {
     protected markers: Map<number, any>;
     protected lines: Map<number, any>;
 
-    constructor(div_id: string, app: App) {
+    public constructor(div_id: string, app: App) {
         super(app);
 
         this.active = false;

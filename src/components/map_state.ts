@@ -52,7 +52,7 @@ export class MapState {
     public observers: MapStateObserver[] = [];
     public storage: Storage;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.app = app;
         this.markers_hash = new Map();
         this.lines_hash = new Map();
@@ -127,7 +127,7 @@ export class MapState {
             string2maptype(
                 this.storage.get(
                     "map_type",
-                    maptype2string(MapType.STAMEN_TERRAIN)!,
+                    maptype2string(MapType.STAMEN_TERRAIN),
                 )!,
             )!,
         );

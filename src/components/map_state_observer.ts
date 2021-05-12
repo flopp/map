@@ -3,7 +3,7 @@ import {App} from "./app.js";
 export class MapStateObserver {
     public app: App;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this.app = app;
         app.map_state.register_observer(this);
     }

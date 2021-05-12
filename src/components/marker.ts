@@ -18,7 +18,7 @@ export class Marker {
     public color: Color;
     public radius: number;
 
-    constructor(coordinates: Coordinates) {
+    public constructor(coordinates: Coordinates) {
         this.marker_id = next_marker_id;
         this.coordinates = coordinates;
         this.name = `Marker ${this.get_id()}`;

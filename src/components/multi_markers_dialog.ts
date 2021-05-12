@@ -17,7 +17,7 @@ export class MultiMarkersDialog {
     private readonly _markerData: HTMLInputElement;
     private readonly _dataFormat: HTMLTextAreaElement;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this._app = app;
 
         this._div = document.querySelector("#multi-markers-dialog")!;

@@ -7,7 +7,7 @@ import {parse_float, parse_int} from "./utilities";
 export class Storage {
     private readonly ok: boolean;
 
-    constructor() {
+    public constructor() {
         this.ok = true;
         try {
             const x = "__storage_test__";

@@ -6,7 +6,7 @@ import {create_element} from "./utilities";
 export class SidebarTools extends SidebarItem {
     private readonly language_select: HTMLInputElement;
 
-    constructor(app: App, id: string) {
+    public constructor(app: App, id: string) {
         super(app, id);
 
         this.language_select = this._div.querySelector("[data-language]")!;

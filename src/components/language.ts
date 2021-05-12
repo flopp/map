@@ -12,7 +12,7 @@ import {MapStateObserver} from "./map_state_observer";
 export class Language extends MapStateObserver {
     private initialized: boolean;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         super(app);
 
         this.initialized = false;

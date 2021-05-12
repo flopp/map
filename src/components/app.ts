@@ -34,7 +34,7 @@ export class App {
     public leaflet: LeafletWrapper;
     public google: GoogleWrapper|null = null;
 
-    constructor(id_leaflet: string, id_google: string) {
+    public constructor(id_leaflet: string, id_google: string) {
         this.notifications = new Notifications();
 
         this.console_filter();

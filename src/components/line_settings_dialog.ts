@@ -14,7 +14,7 @@ export class LineSettingsDialog {
     private readonly _randomColorInput: HTMLInputElement;
     private readonly _colorInput: HTMLInputElement;
 
-    constructor(app: App) {
+    public constructor(app: App) {
         this._app = app;
 
         this._div = document.querySelector("#line-settings-dialog")!;

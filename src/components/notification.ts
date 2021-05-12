@@ -7,7 +7,7 @@ export class Notification {
     private hiding: boolean;
     private readonly div: HTMLElement;
 
-    constructor(parent: Notifications, id: number, text: string, type: string) {
+    public constructor(parent: Notifications, id: number, text: string, type: string) {
         this.parent = parent;
         this.id = id;
         this.hiding = false;
