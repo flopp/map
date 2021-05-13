@@ -260,6 +260,7 @@ export class SidebarMarkers extends SidebarItem {
 
         if (name.length === 0 || coordinates === null || radius === null || color === null) {
             this.app.message_error(this.app.translate("sidebar.markers.bad_values_message"));
+
             return;
         }
 

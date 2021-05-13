@@ -18,6 +18,7 @@ export class Color {
         if (RegExp("^#[0-9A-Fa-f]{6}$").test(str)) {
             return new Color(str.substring(1));
         }
+
         return null;
     }
 
@@ -53,6 +54,7 @@ export class Color {
         const r = (rgb >> 16) & 0xFF;
         const g = (rgb >> 8) & 0xFF;
         const b = (rgb >> 0) & 0xFF;
+
         // Luma, per ITU-R BT.709
         return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
     }
@@ -61,6 +63,7 @@ export class Color {
         if (this.luma() >= 128) {
             return new Color("000000");
         }
+
         return new Color("FFFFFF");
     }
 
@@ -68,6 +71,7 @@ export class Color {
         if (other === null) {
             return false;
         }
+
         return this.hex.toLowerCase() === other.hex.toLowerCase();
     }
 

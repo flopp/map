@@ -130,6 +130,7 @@ export class LeafletWrapper extends MapWrapper {
                 event.containerPoint.y,
                 to_coordinates(event.latlng),
             );
+
             return false;
         });
         ["zoom", "move", "mousedown"].forEach((event_name: string): void => {
@@ -246,7 +247,6 @@ export class LeafletWrapper extends MapWrapper {
         };
         obj.marker_obj.addTo(this.map);
 
-
         obj.marker_obj.on("drag", (): void => {
             this.app.map_state.set_marker_coordinates(
                 marker.get_id(),
@@ -269,6 +269,7 @@ export class LeafletWrapper extends MapWrapper {
                 event.containerPoint.y,
                 marker,
             );
+
             return false;
         });
 
@@ -394,6 +395,7 @@ export class LeafletWrapper extends MapWrapper {
         ) {
             this.delete_line_object(obj);
             this.lines.delete(line.get_id());
+
             return;
         }
 
@@ -436,6 +438,7 @@ export class LeafletWrapper extends MapWrapper {
             marker.name,
             marker.color,
         );
+
         return L.icon({
             iconUrl: icon.url,
             iconSize: L.point(icon.size[0], icon.size[1]),
@@ -496,6 +499,7 @@ export class LeafletWrapper extends MapWrapper {
             });
             this.opencaching_icons.set(type, icon);
         }
+
         return this.opencaching_icons.get(type)!;
     }
 }

@@ -26,6 +26,7 @@ export class MapMenu {
         this.addMarker.addEventListener("click", (): boolean => {
             this.hide();
             this.app.map_state.add_marker(this.coordinates);
+
             return false;
         });
 
@@ -37,6 +38,7 @@ export class MapMenu {
                 this.app.map_state.delete_marker(this.marker.get_id());
                 this.marker = null;
             }
+
             return false;
         });
 
@@ -47,6 +49,7 @@ export class MapMenu {
             if (this.marker !== null) {
                 this.app.show_projection_dialog(this.marker);
             }
+
             return false;
         });
 
@@ -59,6 +62,7 @@ export class MapMenu {
             } else if (this.marker !== null) {
                 this.app.map_state.set_center(this.marker.coordinates);
             }
+
             return false;
         });
 

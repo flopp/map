@@ -73,6 +73,7 @@ export class IconFactory {
         }
 
         context.font = this.font;
+
         return context.measureText(text).width;
     }
 }

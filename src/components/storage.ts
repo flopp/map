@@ -239,6 +239,7 @@ export class Storage {
         if (!this.ok) {
             return false;
         }
+
         return window.localStorage.getItem(key) !== null;
     }
 
@@ -251,6 +252,7 @@ export class Storage {
         if (s !== null) {
             return s;
         }
+
         return default_value;
     }
 
@@ -264,6 +266,7 @@ export class Storage {
     public set_int(key: string, value: number|null): void {
         if (value === null) {
             this.set(key, null);
+
             return;
         }
 
@@ -273,6 +276,7 @@ export class Storage {
     public set_bool(key: string, value: boolean|null): void {
         if (value === null) {
             this.set(key, null);
+
             return;
         }
 
@@ -286,6 +290,7 @@ export class Storage {
     public set_float(key: string, value: number|null): void {
         if (value === null) {
             this.set(key, null);
+
             return;
         }
 
@@ -295,6 +300,7 @@ export class Storage {
     public set_color(key: string, value: Color|null): void {
         if (value === null) {
             this.set(key, null);
+
             return;
         }
 
@@ -304,6 +310,7 @@ export class Storage {
     public set_coordinates(key: string, value: Coordinates|null): void {
         if (value === null) {
             this.set(key, null);
+
             return;
         }
 
@@ -315,6 +322,7 @@ export class Storage {
         if (s !== null) {
             return parseInt(s, 10);
         }
+
         return default_value;
     }
 
@@ -322,6 +330,7 @@ export class Storage {
         if (default_value) {
             return this.get_int(key, 1) !== 0;
         }
+
         return this.get_int(key, 0) !== 0;
     }
 
@@ -330,6 +339,7 @@ export class Storage {
         if (s !== null) {
             return parseFloat(s);
         }
+
         return default_value;
     }
 

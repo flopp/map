@@ -25,6 +25,7 @@ const pad = (num: number|string, width: number): string => {
     while (s.length < width) {
         s = `0${s}`;
     }
+
     return s;
 };
 
@@ -62,6 +63,7 @@ export class Coordinates {
         while (lng > 180) {
             lng -= 360;
         }
+
         return lng;
     }
 
@@ -73,6 +75,7 @@ export class Coordinates {
         while (lng > other + 180) {
             lng -= 360;
         }
+
         return lng;
     }
 
@@ -297,6 +300,7 @@ export class Coordinates {
             if (typeof index === "number") {
                 return match[index];
             }
+
             return index;
         };
 
@@ -304,6 +308,7 @@ export class Coordinates {
             if (index > 0) {
                 return parseFloat(match[index]);
             }
+
             return 0;
         };
 
@@ -441,6 +446,7 @@ export class Coordinates {
             other.next_lng(this.raw_lng()),
             Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
+
         return r.s12;
     }
 
@@ -453,6 +459,7 @@ export class Coordinates {
             other.next_lng(this.raw_lng()),
             Geodesic.DISTANCE | Geodesic.AZIMUTH | Geodesic.LONG_UNROLL,
         );
+
         return {distance: r.s12, bearing: r.azi1};
     }
 
@@ -465,6 +472,7 @@ export class Coordinates {
             distance,
             Geodesic.LONGITUDE | Geodesic.LATITUDE | Geodesic.LONG_UNROLL,
         );
+
         return new Coordinates(r.lat2, r.lon2);
     }
 
@@ -516,6 +524,7 @@ export class Coordinates {
         for (let angle = 0; angle < 360; angle += delta_angle) {
             points.push(this.project(angle, radius));
         }
+
         return points;
     }
 
@@ -523,6 +532,7 @@ export class Coordinates {
         if (this.lat() >= 0) {
             return "N";
         }
+
         return "S";
     }
 
@@ -530,6 +540,7 @@ export class Coordinates {
         if (this.lng() >= 0) {
             return "E";
         }
+
         return "W";
     }
 

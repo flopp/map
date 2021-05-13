@@ -103,6 +103,7 @@ export class Opencaching {
 
     public static parseLocation(loc: string): Coordinates {
         const lat_lng = loc.split("|");
+
         return new Coordinates(parseFloat(lat_lng[0]), parseFloat(lat_lng[1]));
     }
 
@@ -110,6 +111,7 @@ export class Opencaching {
         if (Icons.has(type)) {
             return Icons.get(type)!;
         }
+
         return "assets/cachetype-1.png";
     }
 
@@ -135,10 +137,8 @@ export class Opencaching {
                         return false;
                     }
                     const key = keys.get(site.site_name);
-                    if (key === null || key === "") {
-                        return false;
-                    }
-                    return true;
+
+                    return (key !== null && key !== "");
                 }).map((site: IOkapiInstallation): ISite =>
                     ({
                         name: site.site_name,
@@ -209,11 +209,13 @@ export class Opencaching {
                         Object.entries(data).forEach((entry: [string, any]): void => {
                             caches.set(entry[0], entry[1] as IOkapiCache);
                         });
+
                         return caches;
                     }).catch((error: any): Map<string, IOkapiCache> => {
                         console.log(site.name, error);
                         console.log("Disabling site for future requests:", site.name);
                         this.disabled_sites.add(site.name);
+
                         return new Map();
                     }),
             );

@@ -229,6 +229,7 @@ export class SidebarLines extends SidebarItem {
             if (b.id < 0) {
                 return +1;
             }
+
             return a.name.localeCompare(b.name);
         });
 
@@ -265,6 +266,7 @@ export class SidebarLines extends SidebarItem {
 
         if (color === null) {
             this.app.message_error(this.app.translate("sidebar.lines.bad_values_message"));
+
             return;
         }
 

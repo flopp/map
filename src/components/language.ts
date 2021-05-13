@@ -8,7 +8,6 @@ import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 // .import {i18nextBrowserLanguageDetector} from 'i18next-browser-languagedetector';
 
-
 export class Language extends MapStateObserver {
     private initialized: boolean;
 
@@ -62,6 +61,7 @@ export class Language extends MapStateObserver {
     public translate(key: string): string {
         if (!this.initialized) {
             console.log("i18n: not initialized, yet.");
+
             return key;
         }
 
@@ -76,6 +76,7 @@ export class Language extends MapStateObserver {
     public localize(): void {
         if (!this.initialized) {
             console.log("i18n: not initialized, yet.");
+
             return;
         }
 

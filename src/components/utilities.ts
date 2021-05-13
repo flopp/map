@@ -5,6 +5,7 @@ const parse_float = (str: string): number|null => {
     if (!/^(\+|-)?[0-9]*\.?[0-9]*$/.test(str)) {
         return null;
     }
+
     return parseFloat(str);
 };
 
@@ -15,6 +16,7 @@ const parse_int = (str: string): number|null => {
     if (!/^(\+|-)?[0-9]+$/.test(str)) {
         return null;
     }
+
     return parseFloat(str);
 };
 
@@ -31,6 +33,7 @@ const create_element = (
         const value = attributes[key];
         element.setAttribute(key, value !== null ? value : "");
     }
+
     return element;
 };
 
@@ -59,6 +62,7 @@ const create_text_input = (label_text: string, data_tag: string, placeholder: st
     });
     control.appendChild(input);
     field.appendChild(control);
+
     return field;
 };
 
@@ -77,6 +81,7 @@ const create_color_input = (label_text: string, data_tag: string, placeholder: s
     });
     control.appendChild(input);
     field.appendChild(control);
+
     return field;
 };
 
@@ -91,6 +96,7 @@ const create_select_input = (label_text: string, data_tag: string): HTMLElement 
     div.appendChild(select);
     control.appendChild(div);
     field.appendChild(control);
+
     return field;
 };
 
@@ -100,6 +106,7 @@ const create_button = (label_text: string, callback: () => void): HTMLElement =>
     button.textContent = label_text;
     button.addEventListener("click", callback);
     control.appendChild(button);
+
     return control;
 };
 
@@ -111,6 +118,7 @@ const create_icon = (icon: string, classes: string[] = []): SVGSVGElement => {
     const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
     use.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `assets/feather-sprite.svg#${icon}`);
     svg.appendChild(use);
+
     return svg;
 };
 
@@ -152,6 +160,7 @@ const encode_parameters = (parameters: Record<string, string|number|boolean>): s
     Object.keys(parameters).reduce(
         (a: string[], k: string): string[] => {
             a.push(`${k}=${encodeURIComponent(parameters[k])}`);
+
             return a;
         },
         [],

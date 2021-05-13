@@ -135,6 +135,7 @@ export class SidebarLayers extends SidebarItem {
         const help_div = (this._div.querySelector("[data-base-layer-help]") as HTMLElement);
         if (this.app.has_google_maps()) {
             help_div.classList.add("is-hidden");
+
             return;
         }
         help_div.innerText = this.app.translate("sidebar.layers.google_disabled");

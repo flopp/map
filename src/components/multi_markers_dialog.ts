@@ -60,6 +60,7 @@ export class MultiMarkersDialog extends Dialog {
                     "dialog.multi-markers.bad_common_color_message",
                 ),
             );
+
             return;
         }
         if (use_common_radius && common_radius === null) {
@@ -68,6 +69,7 @@ export class MultiMarkersDialog extends Dialog {
                     "dialog.multi-markers.bad_common_radius_message",
                 ),
             );
+
             return;
         }
 
@@ -184,6 +186,7 @@ export class MultiMarkersDialog extends Dialog {
 
         if (errors.length > 0) {
             this._app.message_error(errors.join("\n"));
+
             return;
         }
 

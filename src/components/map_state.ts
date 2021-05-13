@@ -642,12 +642,7 @@ export class MapState {
     }
 
     public add_marker(coordinates: Coordinates | null): Marker {
-        let marker = null;
-        if (coordinates === null) {
-            marker = new Marker(this.center!);
-        } else {
-            marker = new Marker(coordinates);
-        }
+        const marker = new Marker(coordinates === null ? this.center! : coordinates);
         if (!this.settings_marker_random_color) {
             marker.color = this.settings_marker_color;
         }

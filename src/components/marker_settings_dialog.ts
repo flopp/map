@@ -53,6 +53,7 @@ export class MarkerSettingsDialog extends Dialog {
         const radius = parse_float(radius_input.value);
         if (color === null || radius === null) {
             this._app.message_error(this._app.translate("dialog.marker-settings.bad_values_message"));
+
             return;
         }
 

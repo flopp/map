@@ -51,6 +51,7 @@ export class LineSettingsDialog extends Dialog {
         const color = Color.from_string(this._colorInput.value);
         if (color === null) {
             this._app.message_error(this._app.translate("dialog.line-settings.bad_values_message"));
+
             return;
         }
 

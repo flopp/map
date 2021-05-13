@@ -92,6 +92,7 @@ export class App {
     public initialize_google_map(): void {
         if (this.google_maps_error) {
             this.switch_map(MapType.OPENSTREETMAP);
+
             return;
         }
 
@@ -111,10 +112,12 @@ export class App {
                 case MapType.GOOGLE_TERRAIN:
                     this.map_state.set_map_type(MapType.OPENSTREETMAP);
                     this.switch_to_leaflet();
+
                     return;
                 case MapType.GOOGLE_SATELLITE:
                     this.map_state.set_map_type(MapType.ARCGIS_WORLDIMAGERY);
                     this.switch_to_leaflet();
+
                     return;
                 default:
             }
@@ -201,13 +204,14 @@ export class App {
             this.google.activate();
             this.map_state.update_observers(MapStateChange.EVERYTHING);
             this.google.invalidate_size();
+
             return;
         }
 
         console.log("ON DEMAND LOADING OF THE GOOGLE MAPS API");
         const api_key = this.map_state.google_api_key;
         this.google_loading = true;
-        const promise = new Promise<void>((resolve: (value?: void) => void, reject: (reason?: any) => void): void => {
+        const promise = new Promise<void>((resolve: () => void, reject: (reason: any) => void): void => {
             const callbackName = "__googleMapsApiOnLoadCallback";
             // Reject the promise after a timeout
             const timeoutId = setTimeout((): void => {
@@ -294,6 +298,7 @@ export class App {
         const coordinates = Coordinates.from_string(trimmed);
         if (coordinates !== null) {
             this.map_state.set_center(coordinates);
+
             return;
         }
 
@@ -308,6 +313,7 @@ export class App {
                 if (contentType === null || !contentType.includes("application/json")) {
                     throw new TypeError("Response is not JSON");
                 }
+
                 return response.json();
             })
             .then((json_data): void => {
@@ -320,7 +326,8 @@ export class App {
                 }
             })
             .catch((error: any): void => {
-                this.message_error(this.translate("search.server-error").replace("{1}", error));
+                const message = this.translate("search.server-error").replace("{1}", error);
+                this.message_error(message);
             });
     }
 
@@ -347,6 +354,7 @@ export class App {
         if (this._lang === null) {
             return key;
         }
+
         return this._lang.translate(key);
     }
 }

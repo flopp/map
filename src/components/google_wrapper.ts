@@ -84,6 +84,7 @@ export class GoogleWrapper extends MapWrapper {
                 domEvent.clientY,
                 to_coordinates(event.latLng),
             );
+
             return false;
         });
         [
@@ -168,6 +169,7 @@ export class GoogleWrapper extends MapWrapper {
                             size: "256,256",
                             f: "image",
                         };
+
                         return `https://geodienste.bfn.de/arcgis/rest/services/bfn_sch/Schutzgebiet/MapServer/export?${encode_parameters(data)}`;
                     },
                     tileSize: new google.maps.Size(256, 256),
@@ -272,6 +274,7 @@ export class GoogleWrapper extends MapWrapper {
                 domEvent.clientY,
                 marker,
             );
+
             return false;
         });
 
@@ -374,6 +377,7 @@ export class GoogleWrapper extends MapWrapper {
         ) {
             this.delete_line_object(obj);
             this.lines.delete(line.get_id());
+
             return;
         }
 
@@ -399,6 +403,7 @@ export class GoogleWrapper extends MapWrapper {
             marker.name,
             marker.color,
         );
+
         return {
             url: icon.url,
             size: new google.maps.Size(icon.size[0], icon.size[1]),
@@ -473,6 +478,7 @@ export class GoogleWrapper extends MapWrapper {
             };
             this.opencaching_icons.set(type, icon);
         }
+
         return this.opencaching_icons.get(type)!;
     }
 }

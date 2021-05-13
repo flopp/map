@@ -52,10 +52,12 @@ export class ProjectionDialog extends Dialog {
 
         if (distance === null || distance <= 0) {
             this._app.message_error(this._app.translate("dialog.projection.bad_distance_message"));
+
             return;
         }
         if (bearing === null) {
             this._app.message_error(this._app.translate("dialog.projection.bad_bearing_message"));
+
             return;
         }
 
