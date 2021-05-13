@@ -179,8 +179,7 @@ export class App {
 
     public google_maps_error_raised(): void {
         this.message_error(
-            this.translate("messages.layer_disabled")
-                .replace("{1}", "Google Maps"),
+            this.translate("messages.layer_disabled", "Google Maps"),
         );
         this.google_maps_error = true;
         this.sidebar.sidebar_layers.disable_google_layers();
@@ -278,8 +277,7 @@ export class App {
                 },
                 (error: GeolocationPositionError): void => {
                     this.message_error(
-                        this.translate("messages.geolocation_error")
-                            .replace("{1}", error.message),
+                        this.translate("messages.geolocation_error", error.message),
                     );
                 },
             );
@@ -326,8 +324,7 @@ export class App {
                 }
             })
             .catch((error: any): void => {
-                const message = this.translate("search.server-error").replace("{1}", error);
-                this.message_error(message);
+                this.message_error(this.translate("search.server-error", error));
             });
     }
 
@@ -350,11 +347,22 @@ export class App {
         this.link_dialog.show();
     }
 
-    public translate(key: string): string {
+    public translate(key: string, ...args: string[]): string {
         if (this._lang === null) {
             return key;
         }
 
-        return this._lang.translate(key);
+        const translated = this._lang.translate(key);
+        let s = translated;
+        for (let i: number = 1; i <= args.length; i += 1) {
+            const pattern: string = `{${i}}`;
+            if (s.indexOf(pattern) >= 0) {
+                s = s.replace(pattern, args[i - 1]);
+            } else {
+                console.log(`App.translate(${key}): cannot find pattern '${pattern}' in '${translated}'`);
+            }
+        }
+
+        return s;
     }
 }

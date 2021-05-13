@@ -16,7 +16,7 @@ export class ProjectionDialog extends Dialog {
         this.marker = marker;
         (this._div.querySelector("[data-distance]") as HTMLInputElement).value = "";
         (this._div.querySelector("[data-bearing]") as HTMLInputElement).value = "";
-        const name = this._app.translate("dialog.projection.new_marker_name").replace("{1}", marker.name);
+        const name = this._app.translate("dialog.projection.new_marker_name", marker.name);
         (this._div.querySelector(
             "[data-target-name]",
         ) as HTMLInputElement).value = name;

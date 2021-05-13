@@ -108,10 +108,11 @@ export class MultiMarkersDialog extends Dialog {
                 const tokens = line.split(";");
                 if (tokens.length !== tokens_per_line) {
                     errors.push(
-                        this._app
-                            .translate("dialog.multi-markers.tokens_message")
-                            .replace("{1}", String(line_index))
-                            .replace("{2}", String(tokens_per_line)),
+                        this._app.translate(
+                            "dialog.multi-markers.tokens_message",
+                            String(line_index),
+                            String(tokens_per_line),
+                        ),
                     );
                     line_has_errors = true;
                 }
@@ -123,12 +124,11 @@ export class MultiMarkersDialog extends Dialog {
 
                 if (coordinates === null) {
                     errors.push(
-                        this._app
-                            .translate(
-                                "dialog.multi-markers.coordinates_message",
-                            )
-                            .replace("{1}", String(line_index))
-                            .replace("{2}", tokens[token_index].trim()),
+                        this._app.translate(
+                            "dialog.multi-markers.coordinates_message",
+                            String(line_index),
+                            tokens[token_index].trim(),
+                        ),
                     );
                     line_has_errors = true;
                 }
@@ -139,9 +139,7 @@ export class MultiMarkersDialog extends Dialog {
                     name = tokens[token_index].trim();
                     if (name === "") {
                         errors.push(
-                            this._app
-                                .translate("dialog.multi-markers.name_message")
-                                .replace("{1}", String(line_index)),
+                            this._app.translate("dialog.multi-markers.name_message", String(line_index)),
                         );
                         line_has_errors = true;
                     }
@@ -153,10 +151,11 @@ export class MultiMarkersDialog extends Dialog {
                     color = Color.from_string(tokens[token_index].trim());
                     if (color === null) {
                         errors.push(
-                            this._app
-                                .translate("dialog.multi-markers.color_message")
-                                .replace("{1}", String(line_index))
-                                .replace("{2}", tokens[token_index].trim()),
+                            this._app.translate(
+                                "dialog.multi-markers.color_message",
+                                String(line_index),
+                                tokens[token_index].trim(),
+                            ),
                         );
                         line_has_errors = true;
                     }
@@ -168,10 +167,11 @@ export class MultiMarkersDialog extends Dialog {
                     radius = parse_float(tokens[token_index].trim());
                     if (radius === null) {
                         errors.push(
-                            this._app
-                                .translate("dialog.multi-markers.radius_message")
-                                .replace("{1}", String(line_index))
-                                .replace("{2}", tokens[token_index].trim()),
+                            this._app.translate(
+                                "dialog.multi-markers.radius_message",
+                                String(line_index),
+                                tokens[token_index].trim(),
+                            ),
                         );
                         line_has_errors = true;
                     }

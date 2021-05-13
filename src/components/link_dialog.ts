@@ -18,7 +18,7 @@ export class LinkDialog extends Dialog {
 
         this.clipboard = new ClipboardJS("#link-dialog-copy-button");
         this.clipboard.on("success", (e: IClipboardJsEvent): void => {
-            this._app.message(this._app.translate("dialog.link.copied-message").replace("{1}", e.text));
+            this._app.message(this._app.translate("dialog.link.copied-message", e.text));
         });
         this.clipboard.on("error", (_e: IClipboardJsEvent): void => {
             this._app.message_error(

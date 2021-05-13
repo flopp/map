@@ -84,7 +84,7 @@ export class SidebarMarkers extends SidebarItem {
 
             const circle =
                 marker.radius > 0
-                    ? this.app.translate("sidebar.markers.circle").replace("{1}", marker.radius.toFixed(2))
+                    ? this.app.translate("sidebar.markers.circle", marker.radius.toFixed(2))
                     : this.app.translate("sidebar.markers.no_circle");
             (div.querySelector(".marker-color") as HTMLElement).style.backgroundColor = marker.color.to_hash_string();
             div.querySelector(".marker-name")!.textContent = marker.name;
@@ -145,7 +145,7 @@ export class SidebarMarkers extends SidebarItem {
         });
         clip.on("success", (e: IClipboardJsEvent): void => {
             this.app.message(
-                this.app.translate("sidebar.markers.copy_coordinates_success_message").replace("{1}", e.text),
+                this.app.translate("sidebar.markers.copy_coordinates_success_message", e.text),
             );
         });
         clip.on("error", (_e: IClipboardJsEvent): void => {
