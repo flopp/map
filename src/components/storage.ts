@@ -248,12 +248,7 @@ export class Storage {
             return default_value;
         }
 
-        const s = window.localStorage.getItem(key);
-        if (s !== null) {
-            return s;
-        }
-
-        return default_value;
+        return window.localStorage.getItem(key) ?? default_value;
     }
 
     public remove(key: string): void {
@@ -349,12 +344,7 @@ export class Storage {
             return default_value;
         }
 
-        const c = Color.from_string(s);
-        if (c === null) {
-            return default_value;
-        }
-
-        return c;
+        return Color.from_string(s) ?? default_value;
     }
 
     public get_coordinates(key: string, default_value: Coordinates|null): Coordinates|null {
@@ -363,11 +353,6 @@ export class Storage {
             return default_value;
         }
 
-        const c = Coordinates.from_string(s);
-        if (c === null) {
-            return default_value;
-        }
-
-        return c;
+        return Coordinates.from_string(s) ?? default_value;
     }
 }
