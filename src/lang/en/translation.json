@@ -11,7 +11,7 @@
             },
             "line-settings": {
                 "apply": "Apply",
-                "bad_values_message": "",
+                "bad_values_message": "Invalid values.",
                 "default-color": "Default Color",
                 "distance-format": "Distance Units",
                 "random-colors": "Use Random Colors",
@@ -27,7 +27,7 @@
             },
             "marker-settings": {
                 "apply": "Apply",
-                "bad_values_message": "",
+                "bad_values_message": "Invalid values.",
                 "coordinates-format": "Coordinates Format",
                 "default-color": "Default Color",
                 "default-radius": "Default Radius (m)",
