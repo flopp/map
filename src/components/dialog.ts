@@ -8,18 +8,16 @@ export class Dialog {
         this._app = app;
         this._div = document.getElementById(id) as HTMLDivElement;
 
-        this._div.querySelectorAll("[data-cancel]")
-            .forEach((element: HTMLElement): void => {
-                element.addEventListener("click", (): void => {
-                    this.hide();
-                });
+        this._div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
+            element.addEventListener("click", (): void => {
+                this.hide();
             });
-        this._div.querySelectorAll("[data-ok]")
-            .forEach((element: HTMLElement): void => {
-                element.addEventListener("click", (): void => {
-                    this.ok();
-                });
+        });
+        this._div.querySelectorAll("[data-ok]").forEach((element: HTMLElement): void => {
+            element.addEventListener("click", (): void => {
+                this.ok();
             });
+        });
     }
 
     public show() {

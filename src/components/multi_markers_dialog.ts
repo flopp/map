@@ -41,8 +41,8 @@ export class MultiMarkersDialog extends Dialog {
     public show(): void {
         (this._div.querySelector(
             "[data-common-color]",
-            ) as HTMLInputElement).value = Color.random_from_palette().to_hash_string();
-            this.update_description();
+        ) as HTMLInputElement).value = Color.random_from_palette().to_hash_string();
+        this.update_description();
         super.show();
     }
 
@@ -56,18 +56,14 @@ export class MultiMarkersDialog extends Dialog {
 
         if (use_common_color && common_color === null) {
             this._app.message_error(
-                this._app.translate(
-                    "dialog.multi-markers.bad_common_color_message",
-                ),
+                this._app.translate("dialog.multi-markers.bad_common_color_message"),
             );
 
             return;
         }
         if (use_common_radius && common_radius === null) {
             this._app.message_error(
-                this._app.translate(
-                    "dialog.multi-markers.bad_common_radius_message",
-                ),
+                this._app.translate("dialog.multi-markers.bad_common_radius_message"),
             );
 
             return;
@@ -95,37 +91,63 @@ export class MultiMarkersDialog extends Dialog {
         const data: IMarkerDict[] = [];
         let line_index = 0;
         let marker_index = 1;
-        this._markerData
-            .value.split("\n")
-            .forEach((line: string): void => {
-                line_index += 1;
+        this._markerData.value.split("\n").forEach((line: string): void => {
+            line_index += 1;
 
-                if (line.trim() === "") {
-                    return;
-                }
+            if (line.trim() === "") {
+                return;
+            }
 
-                let line_has_errors = false;
-                const tokens = line.split(";");
-                if (tokens.length !== tokens_per_line) {
+            let line_has_errors = false;
+            const tokens = line.split(";");
+            if (tokens.length !== tokens_per_line) {
+                errors.push(
+                    this._app.translate(
+                        "dialog.multi-markers.tokens_message",
+                        String(line_index),
+                        String(tokens_per_line),
+                    ),
+                );
+                line_has_errors = true;
+            }
+            let token_index = 0;
+
+            const coordinates = Coordinates.from_string(tokens[token_index].trim());
+
+            if (coordinates === null) {
+                errors.push(
+                    this._app.translate(
+                        "dialog.multi-markers.coordinates_message",
+                        String(line_index),
+                        tokens[token_index].trim(),
+                    ),
+                );
+                line_has_errors = true;
+            }
+            token_index += 1;
+
+            let name = `${common_name}${marker_index}`;
+            if (!use_common_name) {
+                name = tokens[token_index].trim();
+                if (name === "") {
                     errors.push(
                         this._app.translate(
-                            "dialog.multi-markers.tokens_message",
+                            "dialog.multi-markers.name_message",
                             String(line_index),
-                            String(tokens_per_line),
                         ),
                     );
                     line_has_errors = true;
                 }
-                let token_index = 0;
+                token_index += 1;
+            }
 
-                const coordinates = Coordinates.from_string(
-                    tokens[token_index].trim(),
-                );
-
-                if (coordinates === null) {
+            let color = common_color;
+            if (!use_common_color) {
+                color = Color.from_string(tokens[token_index].trim());
+                if (color === null) {
                     errors.push(
                         this._app.translate(
-                            "dialog.multi-markers.coordinates_message",
+                            "dialog.multi-markers.color_message",
                             String(line_index),
                             tokens[token_index].trim(),
                         ),
@@ -133,56 +155,34 @@ export class MultiMarkersDialog extends Dialog {
                     line_has_errors = true;
                 }
                 token_index += 1;
+            }
 
-                let name = `${common_name}${marker_index}`;
-                if (!use_common_name) {
-                    name = tokens[token_index].trim();
-                    if (name === "") {
-                        errors.push(
-                            this._app.translate("dialog.multi-markers.name_message", String(line_index)),
-                        );
-                        line_has_errors = true;
-                    }
-                    token_index += 1;
+            let radius = common_radius;
+            if (!use_common_radius) {
+                radius = parse_float(tokens[token_index].trim());
+                if (radius === null) {
+                    errors.push(
+                        this._app.translate(
+                            "dialog.multi-markers.radius_message",
+                            String(line_index),
+                            tokens[token_index].trim(),
+                        ),
+                    );
+                    line_has_errors = true;
                 }
+                token_index += 1;
+            }
 
-                let color = common_color;
-                if (!use_common_color) {
-                    color = Color.from_string(tokens[token_index].trim());
-                    if (color === null) {
-                        errors.push(
-                            this._app.translate(
-                                "dialog.multi-markers.color_message",
-                                String(line_index),
-                                tokens[token_index].trim(),
-                            ),
-                        );
-                        line_has_errors = true;
-                    }
-                    token_index += 1;
-                }
-
-                let radius = common_radius;
-                if (!use_common_radius) {
-                    radius = parse_float(tokens[token_index].trim());
-                    if (radius === null) {
-                        errors.push(
-                            this._app.translate(
-                                "dialog.multi-markers.radius_message",
-                                String(line_index),
-                                tokens[token_index].trim(),
-                            ),
-                        );
-                        line_has_errors = true;
-                    }
-                    token_index += 1;
-                }
-
-                if (!line_has_errors) {
-                    data.push({name, coordinates: coordinates!, color: color!, radius:  radius!});
-                    marker_index += 1;
-                }
-            });
+            if (!line_has_errors) {
+                data.push({
+                    name,
+                    coordinates: coordinates!,
+                    color: color!,
+                    radius: radius!,
+                });
+                marker_index += 1;
+            }
+        });
 
         if (errors.length > 0) {
             this._app.message_error(errors.join("\n"));
@@ -191,9 +191,7 @@ export class MultiMarkersDialog extends Dialog {
         }
 
         data.forEach((marker_data: IMarkerDict): void => {
-            const marker = this._app.map_state.add_marker(
-                marker_data.coordinates,
-            );
+            const marker = this._app.map_state.add_marker(marker_data.coordinates);
             marker.name = marker_data.name;
             marker.color = marker_data.color;
             marker.radius = marker_data.radius;
@@ -209,23 +207,15 @@ export class MultiMarkersDialog extends Dialog {
         const use_common_color = this._useCommonColor.checked;
         const use_common_radius = this._useCommonRadius.checked;
 
-        const description = [
-            `<${this._app.translate("dialog.multi-markers.coordinates_token")}>`,
-        ];
+        const description = [`<${this._app.translate("dialog.multi-markers.coordinates_token")}>`];
         if (!use_common_name) {
-            description.push(
-                `<${this._app.translate("dialog.multi-markers.name_token")}>`,
-            );
+            description.push(`<${this._app.translate("dialog.multi-markers.name_token")}>`);
         }
         if (!use_common_color) {
-            description.push(
-                `<${this._app.translate("dialog.multi-markers.color_token")}>`,
-            );
+            description.push(`<${this._app.translate("dialog.multi-markers.color_token")}>`);
         }
         if (!use_common_radius) {
-            description.push(
-                `<${this._app.translate("dialog.multi-markers.radius_token")}>`,
-            );
+            description.push(`<${this._app.translate("dialog.multi-markers.radius_token")}>`);
         }
         this._dataFormat.innerText = description.join(";");
     }

@@ -6,7 +6,7 @@ import {Marker} from "./marker";
 import {parse_float} from "./utilities";
 
 export class ProjectionDialog extends Dialog {
-    private marker: Marker|null = null;
+    private marker: Marker | null = null;
 
     public constructor(app: App) {
         super("projection-dialog", app);
@@ -17,9 +17,7 @@ export class ProjectionDialog extends Dialog {
         (this._div.querySelector("[data-distance]") as HTMLInputElement).value = "";
         (this._div.querySelector("[data-bearing]") as HTMLInputElement).value = "";
         const name = this._app.translate("dialog.projection.new_marker_name", marker.name);
-        (this._div.querySelector(
-            "[data-target-name]",
-        ) as HTMLInputElement).value = name;
+        (this._div.querySelector("[data-target-name]") as HTMLInputElement).value = name;
         (this._div.querySelector(
             "[data-target-color]",
         ) as HTMLInputElement).value = marker.color.to_hash_string();
@@ -38,7 +36,8 @@ export class ProjectionDialog extends Dialog {
         const bearing = parse_float(
             (this._div.querySelector("[data-bearing]") as HTMLInputElement).value,
         );
-        const target_name = (this._div.querySelector("[data-target-name]") as HTMLInputElement).value;
+        const target_name = (this._div.querySelector("[data-target-name]") as HTMLInputElement)
+            .value;
         const target_color = Color.from_string(
             (this._div.querySelector("[data-target-color]") as HTMLInputElement).value,
         );
@@ -65,8 +64,7 @@ export class ProjectionDialog extends Dialog {
         const target_marker = this._app.map_state.add_marker(coordinates);
         target_marker.name = target_name;
         target_marker.radius = target_radius !== null ? target_radius : -1;
-        target_marker.color =
-            target_color !== null ? target_color : this.marker!.color;
+        target_marker.color = target_color !== null ? target_color : this.marker!.color;
         this._app.map_state.update_marker_storage(target_marker);
 
         if (create_line) {
@@ -75,9 +73,7 @@ export class ProjectionDialog extends Dialog {
             line.marker2 = target_marker.get_id();
             line.color = line_color !== null ? line_color : this.marker!.color;
             this._app.map_state.update_line_storage(line);
-            this._app.map_state.update_observers(
-                MapStateChange.MARKERS | MapStateChange.LINES,
-            );
+            this._app.map_state.update_observers(MapStateChange.MARKERS | MapStateChange.LINES);
         } else {
             this._app.map_state.update_observers(MapStateChange.MARKERS);
         }

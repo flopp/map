@@ -40,7 +40,7 @@ export class SidebarLines extends SidebarItem {
         this.sortable = Sortable.create(document.getElementById("lines")!, {
             handle: ".drag-handle",
             onEnd: (event: Sortable.SortableEvent): void => {
-                if ((event.oldIndex !== undefined) && (event.newIndex !== undefined)) {
+                if (event.oldIndex !== undefined && event.newIndex !== undefined) {
                     this.app.map_state.reorder_lines(event.oldIndex, event.newIndex);
                 }
             },
@@ -64,17 +64,18 @@ export class SidebarLines extends SidebarItem {
                 let div = document.querySelector(`#line-${line.get_id()}`);
                 if (div === null) {
                     div = this.create_div(line);
-                    document.querySelector("#lines")!.appendChild(div);
+                    document.querySelector("#lines")!.append(div);
                 }
 
                 const length =
-                    line.length !== null ? line.length.to_string(this.app.map_state.settings_line_distance_format) : "n/a";
-                const bearing =
-                    line.bearing !== null
-                        ? `${line.bearing.toFixed(2)}°`
+                    line.length !== null
+                        ? line.length.to_string(this.app.map_state.settings_line_distance_format)
                         : "n/a";
+                const bearing = line.bearing !== null ? `${line.bearing.toFixed(2)}°` : "n/a";
 
-                (div.querySelector(".line-color") as HTMLElement).style.backgroundColor = line.color.to_hash_string();
+                (div.querySelector(
+                    ".line-color",
+                ) as HTMLElement).style.backgroundColor = line.color.to_hash_string();
                 div.querySelector(".line-from")!.textContent = this.marker_name(line.marker1);
                 div.querySelector(".line-to")!.textContent = this.marker_name(line.marker2);
                 div.querySelector(".line-distance")!.textContent = length;
@@ -115,18 +116,20 @@ export class SidebarLines extends SidebarItem {
         const tr = create_element("tr");
         const td1 = create_element("td", ["has-text-weight-semibold"]);
         td1.textContent = label;
-        tr.appendChild(td1);
+        tr.append(td1);
         const td2 = create_element("td", [cls]);
-        tr.appendChild(td2);
-        table.appendChild(tr);
+        tr.append(td2);
+        table.append(tr);
     }
 
     private create_div(line: Line): HTMLElement {
-        const div = create_element("div", ["line"], {id: `line-${line.get_id()}`});
+        const div = create_element("div", ["line"], {
+            id: `line-${line.get_id()}`,
+        });
         const left = create_element("div", ["line-left", "drag-handle"]);
         const color = create_element("div", ["line-color"]);
-        left.appendChild(color);
-        div.appendChild(left);
+        left.append(color);
+        div.append(left);
 
         const center = create_element("div", ["line-center"]);
         const table = create_element("table");
@@ -134,12 +137,12 @@ export class SidebarLines extends SidebarItem {
         this.create_row(table, this.app.translate("sidebar.lines.to"), "line-to");
         this.create_row(table, this.app.translate("sidebar.lines.length"), "line-distance");
         this.create_row(table, this.app.translate("sidebar.lines.bearing"), "line-bearing");
-        center.appendChild(table);
-        div.appendChild(center);
+        center.append(table);
+        div.append(center);
 
         const right = create_element("div", ["line-right"]);
-        right.appendChild(this.create_line_dropdown(line));
-        div.appendChild(right);
+        right.append(this.create_line_dropdown(line));
+        div.append(right);
 
         div.addEventListener("click", (): void => {
             this.app.map_state.show_line(line);
@@ -162,13 +165,19 @@ export class SidebarLines extends SidebarItem {
     }
 
     private create_edit_div(line: Line): HTMLElement {
-        const div = create_element("div", ["edit"], {id: `line-edit-${line.get_id()}`});
-        const from = create_select_input(this.app.translate("sidebar.lines.edit_from"), "data-from");
+        const div = create_element("div", ["edit"], {
+            id: `line-edit-${line.get_id()}`,
+        });
+        const from = create_select_input(
+            this.app.translate("sidebar.lines.edit_from"),
+            "data-from",
+        );
         const to = create_select_input(this.app.translate("sidebar.lines.edit_to"), "data-to");
         const color = create_color_input(
             this.app.translate("sidebar.lines.edit_color"),
             "data-color",
-            this.app.translate("sidebar.lines.edit_color_placeholder"));
+            this.app.translate("sidebar.lines.edit_color_placeholder"),
+        );
 
         const submit_button = create_button(this.app.translate("general.submit"), (): void => {
             this.submit_edit(line);
@@ -177,13 +186,13 @@ export class SidebarLines extends SidebarItem {
             div.remove();
         });
         const buttons = create_element("div", ["field", "is-grouped"]);
-        buttons.appendChild(submit_button);
-        buttons.appendChild(cancel_button);
+        buttons.append(submit_button);
+        buttons.append(cancel_button);
 
-        div.appendChild(from);
-        div.appendChild(to);
-        div.appendChild(color);
-        div.appendChild(buttons);
+        div.append(from);
+        div.append(to);
+        div.append(color);
+        div.append(buttons);
 
         return div;
     }
@@ -216,7 +225,10 @@ export class SidebarLines extends SidebarItem {
             return;
         }
 
-        interface INameId {name: string; id: number;}
+        interface INameId {
+            name: string;
+            id: number;
+        }
 
         const markers = [{name: this.app.translate("general.no_marker_tag"), id: -1}];
         this.app.map_state.markers.forEach((marker: Marker): void => {
@@ -236,22 +248,16 @@ export class SidebarLines extends SidebarItem {
         const from_select = div.querySelector("[data-from]")!;
         from_select.innerHTML = "";
         markers.forEach((name_id: INameId): void => {
-            from_select.appendChild(new Option(
-                name_id.name,
-                String(name_id.id),
-                false,
-                name_id.id === line.marker1),
+            from_select.append(
+                new Option(name_id.name, String(name_id.id), false, name_id.id === line.marker1),
             );
         });
 
         const to_select = div.querySelector("[data-to]")!;
         to_select.innerHTML = "";
         markers.forEach((name_id: INameId): void => {
-            to_select.appendChild(new Option(
-                name_id.name,
-                String(name_id.id),
-                false,
-                name_id.id === line.marker2),
+            to_select.append(
+                new Option(name_id.name, String(name_id.id), false, name_id.id === line.marker2),
             );
         });
 
@@ -259,10 +265,12 @@ export class SidebarLines extends SidebarItem {
     }
 
     private submit_edit(line: Line): void {
-        const div = (document.querySelector(`#line-edit-${line.get_id()}`) as HTMLElement);
+        const div = document.querySelector(`#line-edit-${line.get_id()}`) as HTMLElement;
         const marker1 = parse_int((div.querySelector("[data-from]") as HTMLInputElement).value);
         const marker2 = parse_int((div.querySelector("[data-to]") as HTMLInputElement).value);
-        const color = Color.from_string((div.querySelector("[data-color]") as HTMLInputElement).value);
+        const color = Color.from_string(
+            (div.querySelector("[data-color]") as HTMLInputElement).value,
+        );
 
         if (color === null) {
             this.app.message_error(this.app.translate("sidebar.lines.bad_values_message"));
@@ -272,8 +280,8 @@ export class SidebarLines extends SidebarItem {
 
         remove_element(div);
 
-        line.marker1 = (marker1 !== null) ? marker1 : -1;
-        line.marker2 = (marker2 !== null) ? marker2 : -1;
+        line.marker1 = marker1 !== null ? marker1 : -1;
+        line.marker2 = marker2 !== null ? marker2 : -1;
         line.color = color;
 
         this.app.map_state.update_line_storage(line);

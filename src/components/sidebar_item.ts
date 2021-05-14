@@ -1,6 +1,6 @@
 import {App} from "./app";
 import {MapStateObserver} from "./map_state_observer";
-import { create_element, create_icon } from "./utilities";
+import {create_element, create_icon} from "./utilities";
 
 export class SidebarItem extends MapStateObserver {
     protected _div: HTMLElement;
@@ -11,7 +11,9 @@ export class SidebarItem extends MapStateObserver {
         this._div = document.getElementById(`sidebar-${id}`)!;
 
         const header = create_element("div", ["header"]);
-        const h2 = create_element("h2", [], {"data-i18n": `sidebar.${id}.title`});
+        const h2 = create_element("h2", [], {
+            "data-i18n": `sidebar.${id}.title`,
+        });
         const span = create_element("span", ["close"]);
         const svg = create_icon("x", ["icon24"]);
         span.append(svg);

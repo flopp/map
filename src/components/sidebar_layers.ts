@@ -4,7 +4,10 @@ import {isGoogle, MapType, maptype2human, maptype2string, string2maptype} from "
 import {SidebarItem} from "./sidebar_item";
 import {remove_element} from "./utilities";
 
-interface IBaseLayerDict {type: MapType; option: HTMLOptionElement|null;}
+interface IBaseLayerDict {
+    type: MapType;
+    option: HTMLOptionElement | null;
+}
 
 export class SidebarLayers extends SidebarItem {
     private readonly base_layers: IBaseLayerDict[];
@@ -36,7 +39,7 @@ export class SidebarLayers extends SidebarItem {
                 false,
                 base_layer.type === this.app.map_state.map_type,
             );
-            this.base_layer_select.appendChild(base_layer.option);
+            this.base_layer_select.append(base_layer.option);
         });
         this.base_layer_select.onchange = (): void => {
             app.switch_map(string2maptype(this.base_layer_select.value));
@@ -50,34 +53,22 @@ export class SidebarLayers extends SidebarItem {
             this.disable_google_layers();
         }
 
-        this.hill_shading_checkbox = this._div.querySelector(
-            "[data-hill-shading-layer]",
-        )!;
+        this.hill_shading_checkbox = this._div.querySelector("[data-hill-shading-layer]")!;
         this.hill_shading_checkbox.checked = this.app.map_state.hill_shading;
         this.hill_shading_checkbox.onchange = (): void => {
-            this.app.map_state.set_hill_shading(
-                this.hill_shading_checkbox.checked,
-            );
+            this.app.map_state.set_hill_shading(this.hill_shading_checkbox.checked);
         };
 
-        this.german_npa_checkbox = this._div.querySelector(
-            "[data-german-npa-layer]",
-        )!;
+        this.german_npa_checkbox = this._div.querySelector("[data-german-npa-layer]")!;
         this.german_npa_checkbox.checked = this.app.map_state.german_npa;
         this.german_npa_checkbox.onchange = (): void => {
-            this.app.map_state.set_german_npa(
-                this.german_npa_checkbox.checked,
-            );
+            this.app.map_state.set_german_npa(this.german_npa_checkbox.checked);
         };
 
-        this.opencaching_checkbox = this._div.querySelector(
-            "[data-opencaching-layer]",
-        )!;
+        this.opencaching_checkbox = this._div.querySelector("[data-opencaching-layer]")!;
         this.opencaching_checkbox.checked = this.app.map_state.opencaching;
         this.opencaching_checkbox.onchange = (): void => {
-            this.app.map_state.set_opencaching(
-                this.opencaching_checkbox.checked,
-            );
+            this.app.map_state.set_opencaching(this.opencaching_checkbox.checked);
         };
     }
 
@@ -94,7 +85,7 @@ export class SidebarLayers extends SidebarItem {
         this.update_base_layer_help();
     }
 
-    public disable_layers(check_function: (layer_type: MapType|null) => boolean): void {
+    public disable_layers(check_function: (layer_type: MapType | null) => boolean): void {
         this.base_layers.forEach((base_layer: IBaseLayerDict): void => {
             if (check_function(base_layer.type)) {
                 if (base_layer.option !== null) {
@@ -106,7 +97,7 @@ export class SidebarLayers extends SidebarItem {
         this.update_base_layer_help();
     }
 
-    public enable_layers(check_function: (layer_type: MapType|null) => boolean): void {
+    public enable_layers(check_function: (layer_type: MapType | null) => boolean): void {
         this.base_layers.forEach((base_layer: IBaseLayerDict): void => {
             if (check_function(base_layer.type)) {
                 if (base_layer.option === null) {
@@ -116,7 +107,7 @@ export class SidebarLayers extends SidebarItem {
                         false,
                         base_layer.type === this.app.map_state.map_type,
                     );
-                    this.base_layer_select.appendChild(base_layer.option);
+                    this.base_layer_select.append(base_layer.option);
                 }
             }
         });
@@ -132,7 +123,7 @@ export class SidebarLayers extends SidebarItem {
     }
 
     public update_base_layer_help(): void {
-        const help_div = (this._div.querySelector("[data-base-layer-help]") as HTMLElement);
+        const help_div = this._div.querySelector("[data-base-layer-help]") as HTMLElement;
         if (this.app.has_google_maps()) {
             help_div.classList.add("is-hidden");
 

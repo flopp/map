@@ -1,13 +1,13 @@
-import { App } from "./app";
-import { Color } from "./color";
-import { Coordinates, CoordinatesFormat, parseCoordinatesFormat } from "./coordinates";
-import { Distance, DistanceFormat, parseDistanceFormat } from "./distance";
-import { ILineJson, Line } from "./line";
-import { MapStateObserver } from "./map_state_observer";
-import { MapType, maptype2string, string2maptype } from "./map_type";
-import { IMarkerJson, Marker } from "./marker";
-import { Storage } from "./storage";
-import { parse_float, parse_int } from "./utilities";
+import {App} from "./app";
+import {Color} from "./color";
+import {Coordinates, CoordinatesFormat, parseCoordinatesFormat} from "./coordinates";
+import {Distance, DistanceFormat, parseDistanceFormat} from "./distance";
+import {ILineJson, Line} from "./line";
+import {MapStateObserver} from "./map_state_observer";
+import {MapType, maptype2string, string2maptype} from "./map_type";
+import {IMarkerJson, Marker} from "./marker";
+import {Storage} from "./storage";
+import {parse_float, parse_int} from "./utilities";
 
 export enum MapStateChange {
     NOTHING = 0,
@@ -24,9 +24,16 @@ export enum MapStateChange {
 }
 
 interface IMarkerSettingsDict {
-    coordinates_format: CoordinatesFormat; random_color: boolean; color: Color; radius: number;
+    coordinates_format: CoordinatesFormat;
+    random_color: boolean;
+    color: Color;
+    radius: number;
 }
-interface ILineSettingsDict {distance_format: DistanceFormat; random_color: boolean; color: Color;}
+interface ILineSettingsDict {
+    distance_format: DistanceFormat;
+    random_color: boolean;
+    color: Color;
+}
 export class MapState {
     public app: App;
     public language: string = "";
@@ -84,27 +91,12 @@ export class MapState {
             "settings.marker.coordinates_format",
             this.settings_marker_coordinates_format,
         );
-        this.storage.set_bool(
-            "settings.marker.random_color",
-            this.settings_marker_random_color,
-        );
-        this.storage.set_color(
-            "settings.marker.color",
-            this.settings_marker_color,
-        );
-        this.storage.set_float(
-            "settings.marker.radius",
-            this.settings_marker_radius,
-        );
+        this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
+        this.storage.set_color("settings.marker.color", this.settings_marker_color);
+        this.storage.set_float("settings.marker.radius", this.settings_marker_radius);
 
-        this.storage.set(
-            "settings.line.distance_format",
-            this.settings_line_distance_format,
-        );
-        this.storage.set_bool(
-            "settings.line.random_color",
-            this.settings_line_random_color,
-        );
+        this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
+        this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
         this.storage.set_color("settings.line.color", this.settings_line_color);
     }
 
@@ -124,12 +116,7 @@ export class MapState {
             this.storage.get_int("zoom", 13),
         );
         this.set_map_type(
-            string2maptype(
-                this.storage.get(
-                    "map_type",
-                    maptype2string(MapType.STAMEN_TERRAIN),
-                )!,
-            )!,
+            string2maptype(this.storage.get("map_type", maptype2string(MapType.STAMEN_TERRAIN))!)!,
         );
         this.set_hill_shading(this.storage.get_bool("hillshading", false));
         this.set_german_npa(this.storage.get_bool("german_npa", false));
@@ -144,15 +131,9 @@ export class MapState {
                 if (id === "") {
                     return;
                 }
-                const coordinates = this.storage.get_coordinates(
-                    `marker[${id}].coordinates`,
-                    null,
-                );
+                const coordinates = this.storage.get_coordinates(`marker[${id}].coordinates`, null);
                 const name = this.storage.get(`marker[${id}].name`, id)!;
-                const color = this.storage.get_color(
-                    `marker[${id}].color`,
-                    new Color("FF0000"),
-                );
+                const color = this.storage.get_color(`marker[${id}].color`, new Color("FF0000"));
                 const radius = this.storage.get_float(`marker[${id}].radius`, 0)!;
                 if (coordinates !== null) {
                     const marker = new Marker(coordinates);
@@ -173,18 +154,9 @@ export class MapState {
                 if (id === "") {
                     return;
                 }
-                const old_marker1 = this.storage.get_int(
-                    `line[${id}].marker1`,
-                    -1,
-                );
-                const old_marker2 = this.storage.get_int(
-                    `line[${id}].marker2`,
-                    -1,
-                );
-                const color = this.storage.get_color(
-                    `line[${id}].color`,
-                    new Color("FF0000"),
-                );
+                const old_marker1 = this.storage.get_int(`line[${id}].marker1`, -1);
+                const old_marker2 = this.storage.get_int(`line[${id}].marker2`, -1);
+                const color = this.storage.get_color(`line[${id}].color`, new Color("FF0000"));
 
                 let marker1 = -1;
                 if (marker_ids.has(old_marker1)) {
@@ -205,38 +177,26 @@ export class MapState {
         this.recompute_lines();
 
         // Settings
-        const coordinates_format = parseCoordinatesFormat(this.storage.get(
-            "settings.marker.coordinates_format",
-            "",
-        )!, this.settings_marker_coordinates_format);
+        const coordinates_format = parseCoordinatesFormat(
+            this.storage.get("settings.marker.coordinates_format", "")!,
+            this.settings_marker_coordinates_format,
+        );
         this.set_default_marker_settings({
             coordinates_format,
-            random_color: this.storage.get_bool(
-                "settings.marker.random_color",
-                true,
-            ),
-            color: this.storage.get_color(
-                "settings.marker.color",
-                new Color("FF0000"),
-            ),
+            random_color: this.storage.get_bool("settings.marker.random_color", true),
+            color: this.storage.get_color("settings.marker.color", new Color("FF0000")),
             radius: this.storage.get_float("settings.marker.radius", 0)!,
         });
 
         // Settings
-        const distance_format = parseDistanceFormat(this.storage.get(
-            "settings.marker.distance_format",
-            "",
-        )!, this.settings_line_distance_format);
+        const distance_format = parseDistanceFormat(
+            this.storage.get("settings.marker.distance_format", "")!,
+            this.settings_line_distance_format,
+        );
         this.set_default_line_settings({
             distance_format,
-            random_color: this.storage.get_bool(
-                "settings.line.random_color",
-                true,
-            ),
-            color: this.storage.get_color(
-                "settings.line.color",
-                new Color("FF0000"),
-            ),
+            random_color: this.storage.get_bool("settings.line.random_color", true),
+            color: this.storage.get_color("settings.line.color", new Color("FF0000")),
         });
     }
 
@@ -275,8 +235,9 @@ export class MapState {
         ok_keys.add("settings.line.random_color");
         ok_keys.add("settings.line.color");
 
-        const bad_keys = this.storage.all_keys().filter((key: string): boolean =>
-            !ok_keys.has(key));
+        const bad_keys = this.storage
+            .all_keys()
+            .filter((key: string): boolean => !ok_keys.has(key));
         bad_keys.forEach((key: string): void => {
             console.log("bad key: ", key);
             this.storage.remove(key);
@@ -299,9 +260,9 @@ export class MapState {
                 }
             });
 
-        let center: Coordinates|null = null;
-        let zoom: number|null = null;
-        let map_type: MapType|null = null;
+        let center: Coordinates | null = null;
+        let zoom: number | null = null;
+        let map_type: MapType | null = null;
         interface IMarkerDict {
             name: string;
             coordinates: Coordinates;
@@ -310,7 +271,11 @@ export class MapState {
         }
         const markers: IMarkerDict[] = [];
         const marker_hash: Map<string, number> = new Map();
-        interface ILineDict {from: number; to: number; color: Color;}
+        interface ILineDict {
+            from: number;
+            to: number;
+            color: Color;
+        }
         const lines: ILineDict[] = [];
 
         params.forEach((value: string, key: string): void => {
@@ -419,9 +384,7 @@ export class MapState {
                     });
                     break;
                 default:
-                    console.log(
-                        `ignoring unsupported url parameter: ${key}=${value}`,
-                    );
+                    console.log(`ignoring unsupported url parameter: ${key}=${value}`);
             }
         });
 
@@ -454,21 +417,16 @@ export class MapState {
             this.storage.set("map_type", map_type);
         }
 
-        const marker_ids = markers.map((_m: IMarkerDict, i: number): number =>
-            i);
+        const marker_ids = markers.map((_m: IMarkerDict, i: number): number => i);
         this.storage.set("markers", marker_ids.join(";"));
         markers.forEach((obj: IMarkerDict, i: number): void => {
             this.storage.set(`marker[${i}].name`, obj.name);
-            this.storage.set_coordinates(
-                `marker[${i}].coordinates`,
-                obj.coordinates,
-            );
+            this.storage.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
             this.storage.set_float(`marker[${i}].radius`, obj.radius);
             this.storage.set_color(`marker[${i}].color`, obj.color);
         });
 
-        const line_ids = lines.map((_l: ILineDict, i: number): number =>
-            i);
+        const line_ids = lines.map((_l: ILineDict, i: number): number => i);
         this.storage.set("lines", line_ids.join(";"));
         lines.forEach((obj: ILineDict, i: number): void => {
             this.storage.set_int(`line[${i}].marker1`, obj.from);
@@ -480,25 +438,22 @@ export class MapState {
     public create_link(): string {
         const base = window.location.href.split("?")[0].split("#")[0];
         const markers = this.markers
-            .map((m: Marker): string =>
-                `${m.get_id()}:${m.coordinates
-                    .lat()
-                    .toFixed(6)}:${m.coordinates
-                    .lng()
-                    .toFixed(6)}:${m.radius.toFixed(1)}:${this.encode(
-                    m.name,
-                )}:${m.color.to_string()}`)
+            .map(
+                (m: Marker): string =>
+                    `${m.get_id()}:${m.coordinates.lat().toFixed(6)}:${m.coordinates
+                        .lng()
+                        .toFixed(6)}:${m.radius.toFixed(1)}:${this.encode(
+                        m.name,
+                    )}:${m.color.to_string()}`,
+            )
             .join("*");
         const lines = this.lines
-            .map((obj: Line): string =>
-                `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`)
+            .map((obj: Line): string => `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`)
             .join("*");
 
-        return `${base}?c=${this.center!
-            .lat()
-            .toFixed(6)}:${this.center!.lng().toFixed(6)}&z=${this.zoom}&t=${
-            this.map_type
-        }&m=${markers}&d=${lines}`;
+        return `${base}?c=${this.center!.lat().toFixed(6)}:${this.center!.lng().toFixed(6)}&z=${
+            this.zoom
+        }&t=${this.map_type}&m=${markers}&d=${lines}`;
     }
 
     public decode(s: string): string {
@@ -536,9 +491,7 @@ export class MapState {
             const marker1 = this.get_marker(line.marker1);
             const marker2 = this.get_marker(line.marker2);
             if (marker1 !== null && marker2 !== null) {
-                const db = marker1.coordinates.distance_bearing(
-                    marker2.coordinates,
-                );
+                const db = marker1.coordinates.distance_bearing(marker2.coordinates);
                 if (line.length === null) {
                     changed = true;
                     line.length = new Distance(db.distance, DistanceFormat.m);
@@ -669,8 +622,9 @@ export class MapState {
     }
 
     public delete_marker(id: number): void {
-        this.markers = this.markers.filter((marker: Marker, _index: number, _arr: Marker[]): boolean =>
-            marker.get_id() !== id);
+        this.markers = this.markers.filter(
+            (marker: Marker, _index: number, _arr: Marker[]): boolean => marker.get_id() !== id,
+        );
         this.markers_hash.delete(id);
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
@@ -730,10 +684,7 @@ export class MapState {
 
     public update_marker_storage(marker: Marker): void {
         const id = marker.get_id();
-        this.storage.set_coordinates(
-            `marker[${id}].coordinates`,
-            marker.coordinates,
-        );
+        this.storage.set_coordinates(`marker[${id}].coordinates`, marker.coordinates);
         this.storage.set(`marker[${id}].name`, marker.name);
         this.storage.set_color(`marker[${id}].color`, marker.color);
         this.storage.set_float(`marker[${id}].radius`, marker.radius);
@@ -779,8 +730,9 @@ export class MapState {
     }
 
     public delete_line(id: number): void {
-        this.lines = this.lines.filter((line: Line, _index: number, _arr: Line[]): boolean =>
-            line.get_id() !== id);
+        this.lines = this.lines.filter(
+            (line: Line, _index: number, _arr: Line[]): boolean => line.get_id() !== id,
+        );
         this.lines_hash.delete(id);
         this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES);
@@ -853,9 +805,7 @@ export class MapState {
 
         if (marker1 !== null) {
             if (marker2 !== null && line.marker1 !== line.marker2) {
-                const distance_bearing = marker1.coordinates.distance_bearing(
-                    marker2.coordinates,
-                );
+                const distance_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
                 const center = marker1.coordinates.project(
                     distance_bearing.bearing,
                     distance_bearing.distance * 0.5,
@@ -879,38 +829,23 @@ export class MapState {
         );
 
         this.settings_marker_random_color = settings.random_color;
-        this.storage.set_bool(
-            "settings.marker.random_color",
-            this.settings_marker_random_color,
-        );
+        this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
 
         this.settings_marker_color = settings.color;
-        this.storage.set_color(
-            "settings.marker.color",
-            this.settings_marker_color,
-        );
+        this.storage.set_color("settings.marker.color", this.settings_marker_color);
 
         this.settings_marker_radius = settings.radius;
-        this.storage.set_float(
-            "settings.marker.radius",
-            this.settings_marker_radius,
-        );
+        this.storage.set_float("settings.marker.radius", this.settings_marker_radius);
 
         this.update_observers(MapStateChange.MARKERS);
     }
 
     public set_default_line_settings(settings: ILineSettingsDict): void {
         this.settings_line_distance_format = settings.distance_format;
-        this.storage.set(
-            "settings.line.distance_format",
-            this.settings_line_distance_format,
-        );
+        this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
 
         this.settings_line_random_color = settings.random_color;
-        this.storage.set_bool(
-            "settings.line.random_color",
-            this.settings_line_random_color,
-        );
+        this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
 
         this.settings_line_color = settings.color;
         this.storage.set_color("settings.line.color", this.settings_line_color);
@@ -939,8 +874,8 @@ export class MapState {
                     color: this.settings_line_color.to_hash_string(),
                 },
             },
-            markers: ([] as IMarkerJson[]),
-            lines: ([] as ILineJson[]),
+            markers: [] as IMarkerJson[],
+            lines: [] as ILineJson[],
         };
 
         this.markers.forEach((marker: Marker): void => {
@@ -992,8 +927,7 @@ export class MapState {
                     );
                 }
                 if ("random_color" in data.settings.markers) {
-                    this.settings_marker_random_color =
-                        data.settings.markers.random_color;
+                    this.settings_marker_random_color = data.settings.markers.random_color;
                 }
                 if ("color" in data.settings.markers) {
                     const color = Color.from_string(data.settings.markers.color);
@@ -1010,15 +944,13 @@ export class MapState {
             }
             if ("lines" in data.settings) {
                 if ("distance_format" in data.settings.lines) {
-                    this.settings_line_distance_format =
-                        parseDistanceFormat(
-                            data.settings.lines.random_color,
-                            this.settings_line_distance_format,
-                        );
+                    this.settings_line_distance_format = parseDistanceFormat(
+                        data.settings.lines.random_color,
+                        this.settings_line_distance_format,
+                    );
                 }
                 if ("random_color" in data.settings.lines) {
-                    this.settings_line_random_color =
-                        data.settings.lines.random_color;
+                    this.settings_line_random_color = data.settings.lines.random_color;
                 }
                 if ("color" in data.settings.lines) {
                     const color = Color.from_string(data.settings.lines.color);

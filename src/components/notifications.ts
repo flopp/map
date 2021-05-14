@@ -3,16 +3,13 @@ import {create_element} from "./utilities";
 
 export class Notifications {
     private next_id: number = 0;
-    private notifications: Map<number, Notification>|null = null;
-    private container: HTMLElement|null = null;
+    private notifications: Map<number, Notification> | null = null;
+    private container: HTMLElement | null = null;
     private readonly max: number = 3;
 
     public constructor() {
         // We need DOM to be ready
-        if (
-            document.readyState === "interactive" ||
-            document.readyState === "complete"
-        ) {
+        if (document.readyState === "interactive" || document.readyState === "complete") {
             this.init();
         } else {
             window.addEventListener("DOMContentLoaded", (): void => {
@@ -23,8 +20,10 @@ export class Notifications {
 
     public init(): void {
         this.notifications = new Map<number, Notification>();
-        this.container = create_element("div", [], {id: "notification-container"});
-        document.body.appendChild(this.container);
+        this.container = create_element("div", [], {
+            id: "notification-container",
+        });
+        document.body.append(this.container);
     }
 
     public message(text: string, type: string): void {

@@ -10,15 +10,14 @@ import {MapWrapper} from "./map_wrapper";
 import {Marker} from "./marker";
 import {IOkapiCache, Opencaching} from "./opencaching";
 
-const from_coordinates = (c: Coordinates): L.LatLng =>
-    L.latLng(c.raw_lat(), c.raw_lng());
+const from_coordinates = (c: Coordinates): L.LatLng => L.latLng(c.raw_lat(), c.raw_lng());
 
 const to_coordinates = (leaflet_latlng: L.LatLng): Coordinates =>
     new Coordinates(leaflet_latlng.lat, leaflet_latlng.lng);
 
 interface IMarkerObjDict {
     marker_obj: L.Marker;
-    circle_obj: L.Polygon|null;
+    circle_obj: L.Polygon | null;
     last_name: string;
     last_color: Color;
 }
@@ -37,10 +36,10 @@ interface IOpencachingMarker {
 export class LeafletWrapper extends MapWrapper {
     private automatic_event: boolean = false;
     private hill_shading_enabled: boolean = false;
-    private hill_shading_layer: L.TileLayer|null = null;
+    private hill_shading_layer: L.TileLayer | null = null;
     private german_npa_enabled: boolean = false;
-    private german_npa_layer: L.TileLayer|null = null;
-    private opencaching: Opencaching|null = null;
+    private german_npa_layer: L.TileLayer | null = null;
+    private opencaching: Opencaching | null = null;
     private opencaching_markers: Map<string, IOpencachingMarker>;
     private readonly opencaching_icons: Map<string, L.Icon>;
     private map: L.Map;
@@ -69,15 +68,12 @@ export class LeafletWrapper extends MapWrapper {
                 subdomains: "abc",
             },
         );
-        this.layer_opentopomap = L.tileLayer(
-            "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-            {
-                attribution:
-                    'Map tiles by <a href="https://opentopomap.org" target="_blank">OpenTopoMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
-                maxZoom: 17,
-                subdomains: "abc",
-            },
-        );
+        this.layer_opentopomap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+            attribution:
+                'Map tiles by <a href="https://opentopomap.org" target="_blank">OpenTopoMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
+            maxZoom: 17,
+            subdomains: "abc",
+        });
         this.layer_stamen_terrain = L.tileLayer(
             "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
             {
@@ -185,13 +181,16 @@ export class LeafletWrapper extends MapWrapper {
         this.german_npa_enabled = enabled;
         if (enabled) {
             if (this.german_npa_layer === null) {
-                this.german_npa_layer = L.tileLayer.wms("https://geodienste.bfn.de/ogc/wms/schutzgebiet?", {
-                    layers: "Naturschutzgebiete",
-                    format: "image/png",
-                    transparent: true,
-                    opacity: 0.5,
-                    attribution: "Bundesamt für Naturschutz (BfN)",
-                });
+                this.german_npa_layer = L.tileLayer.wms(
+                    "https://geodienste.bfn.de/ogc/wms/schutzgebiet?",
+                    {
+                        layers: "Naturschutzgebiete",
+                        format: "image/png",
+                        transparent: true,
+                        opacity: 0.5,
+                        attribution: "Bundesamt für Naturschutz (BfN)",
+                    },
+                );
             }
             this.map.addLayer(this.german_npa_layer);
         } else if (this.german_npa_layer !== null) {
@@ -202,11 +201,9 @@ export class LeafletWrapper extends MapWrapper {
     public set_opencaching(enabled: boolean): void {
         if (enabled) {
             if (this.opencaching === null) {
-                this.opencaching = new Opencaching(
-                    (caches: Map<string, IOkapiCache>): void => {
-                        this.display_opencaching(caches);
-                    },
-                );
+                this.opencaching = new Opencaching((caches: Map<string, IOkapiCache>): void => {
+                    this.display_opencaching(caches);
+                });
                 this.map.whenReady((): void => {
                     this.update_opencaching();
                 });
@@ -252,13 +249,11 @@ export class LeafletWrapper extends MapWrapper {
                 marker.get_id(),
                 to_coordinates(obj.marker_obj.getLatLng()),
             );
-            const marker_obj = (this.markers.get(marker.get_id()) as IMarkerObjDict);
+            const marker_obj = this.markers.get(marker.get_id()) as IMarkerObjDict;
             if (marker_obj.circle_obj !== null) {
                 const center = to_coordinates(obj.marker_obj.getLatLng());
-                const points = center
-                    .geodesic_circle(marker.radius)
-                    .map(from_coordinates);
-                    marker_obj.circle_obj.setLatLngs(points);
+                const points = center.geodesic_circle(marker.radius).map(from_coordinates);
+                marker_obj.circle_obj.setLatLngs(points);
             }
         });
 
@@ -289,19 +284,14 @@ export class LeafletWrapper extends MapWrapper {
                 }).addTo(this.map);
             }
             obj.circle_obj.setLatLngs(
-                marker.coordinates
-                    .geodesic_circle(marker.radius)
-                    .map(from_coordinates),
+                marker.coordinates.geodesic_circle(marker.radius).map(from_coordinates),
             );
         } else if (obj.circle_obj !== null) {
             this.map.removeLayer(obj.circle_obj);
             obj.circle_obj = null;
         }
 
-        if (
-            !marker.color.equals(obj.last_color) ||
-            marker.name !== obj.last_name
-        ) {
+        if (!marker.color.equals(obj.last_color) || marker.name !== obj.last_name) {
             obj.marker_obj.setIcon(this.create_icon(marker));
         }
         if (obj.circle_obj !== null && !marker.color.equals(obj.last_color)) {
@@ -320,10 +310,7 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public create_line_object(line: Line): void {
-        if (
-            !this.has_marker_object(line.marker1) ||
-            !this.has_marker_object(line.marker2)
-        ) {
+        if (!this.has_marker_object(line.marker1) || !this.has_marker_object(line.marker2)) {
             return;
         }
 
@@ -351,8 +338,7 @@ export class LeafletWrapper extends MapWrapper {
 
     private arrow_head(p1: L.LatLng, p2: L.LatLng): L.LatLng[] {
         const compute_heading = (a: L.Point, b: L.Point): number =>
-            ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) %
-            360;
+            ((Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI + 90 + 360) % 360;
 
         const headAngle = 60;
         const pixelSize = 10;
@@ -360,10 +346,7 @@ export class LeafletWrapper extends MapWrapper {
         const zoom = this.map.getZoom();
         const prevPoint = this.map.project(p1, zoom);
         const tipPoint = this.map.project(p2, zoom);
-        if (
-            Math.abs(prevPoint.x - tipPoint.x) <= 1 &&
-            Math.abs(prevPoint.y - tipPoint.y) <= 1
-        ) {
+        if (Math.abs(prevPoint.x - tipPoint.x) <= 1 && Math.abs(prevPoint.y - tipPoint.y) <= 1) {
             return [];
         }
         const heading = compute_heading(prevPoint, tipPoint);
@@ -381,18 +364,11 @@ export class LeafletWrapper extends MapWrapper {
             tipPoint.y + pixelSize * Math.sin(headAngle2),
         );
 
-        return [
-            this.map.unproject(arrowHead1, zoom),
-            p2,
-            this.map.unproject(arrowHead2, zoom),
-        ];
+        return [this.map.unproject(arrowHead1, zoom), p2, this.map.unproject(arrowHead2, zoom)];
     }
 
     public update_line_object(obj: ILineObjDict, line: Line): void {
-        if (
-            !this.has_marker_object(line.marker1) ||
-            !this.has_marker_object(line.marker2)
-        ) {
+        if (!this.has_marker_object(line.marker1) || !this.has_marker_object(line.marker2)) {
             this.delete_line_object(obj);
             this.lines.delete(line.get_id());
 
@@ -434,10 +410,7 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public create_icon(marker: Marker): L.Icon {
-        const icon = this.app.icon_factory.create_map_icon(
-            marker.name,
-            marker.color,
-        );
+        const icon = this.app.icon_factory.create_map_icon(marker.name, marker.color);
 
         return L.icon({
             iconUrl: icon.url,
@@ -475,14 +448,19 @@ export class LeafletWrapper extends MapWrapper {
         caches.forEach((data: IOkapiCache, code: string): void => {
             if (!this.opencaching_markers.has(code)) {
                 const m: IOpencachingMarker = {
-                    marker_obj: L.marker(from_coordinates(Opencaching.parseLocation(data.location)), {
-                        icon: this.opencaching_icon(data.type),
-                        draggable: false,
-                    }),
+                    marker_obj: L.marker(
+                        from_coordinates(Opencaching.parseLocation(data.location)),
+                        {
+                            icon: this.opencaching_icon(data.type),
+                            draggable: false,
+                        },
+                    ),
                     data,
                 };
                 m.marker_obj.addTo(this.map);
-                m.marker_obj.bindPopup(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
+                m.marker_obj.bindPopup(
+                    `<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`,
+                );
                 new_markers.set(code, m);
             } else {
                 new_markers.set(code, this.opencaching_markers.get(code)!);

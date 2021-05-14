@@ -7,7 +7,7 @@
     "rules": {
         "max-line-length": {
             "options": [
-                120
+                100
             ]
         },
         "indent": [
@@ -50,6 +50,8 @@
         "no-sparse-arrays": true,
         "no-this-assignment": true,
         "no-unbound-method": true,
+        "number-literal-format": true,
+        "object-literal-key-quotes": [true, "as-needed"],
         "only-arrow-functions": true,
         "prefer-conditional-expression": true,
         "prefer-switch": true,

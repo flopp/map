@@ -11,11 +11,13 @@ export class SidebarSearch extends SidebarItem {
         document.querySelector("#btn-search")!.addEventListener("click", (): void => {
             this.perform_search();
         });
-        document.querySelector("#input-search")!.addEventListener("keyup", (event: KeyboardEvent): void => {
-            if (event.key === "Enter") {
-                this.perform_search();
-            }
-        });
+        document
+            .querySelector("#input-search")!
+            .addEventListener("keyup", (event: KeyboardEvent): void => {
+                if (event.key === "Enter") {
+                    this.perform_search();
+                }
+            });
     }
 
     public update_state(_changes: number): void {
@@ -23,7 +25,9 @@ export class SidebarSearch extends SidebarItem {
     }
 
     public perform_search(): void {
-        const location_string = (document.querySelector("#input-search") as HTMLInputElement).value.trim();
+        const location_string = (document.querySelector(
+            "#input-search",
+        ) as HTMLInputElement).value.trim();
         if (location_string.length > 0) {
             this.app.search_location(location_string);
         }

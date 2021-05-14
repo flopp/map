@@ -10,20 +10,22 @@ export class MapMenu {
     public addMarker: HTMLElement;
     public deleteMarker: HTMLElement;
     public projection: HTMLElement;
-    public marker: Marker|null = null;
-    public coordinates: Coordinates|null = null;
+    public marker: Marker | null = null;
+    public coordinates: Coordinates | null = null;
 
     public constructor(app: App) {
         this.app = app;
 
         this.menu = create_element("div", ["dropdown-menu"], {role: "menu"});
-        document.getElementsByTagName("body")[0].appendChild(this.menu);
+        document.getElementsByTagName("body")[0].append(this.menu);
         const content = create_element("div", ["dropdown-content"]);
-        this.menu.appendChild(content);
+        this.menu.append(content);
 
         // .translate("menu.add-marker")
-        this.addMarker = create_element("a", ["dropdown-item"], {"data-i18n": "menu.add-marker"});
-        content.appendChild(this.addMarker);
+        this.addMarker = create_element("a", ["dropdown-item"], {
+            "data-i18n": "menu.add-marker",
+        });
+        content.append(this.addMarker);
         this.addMarker.addEventListener("click", (): boolean => {
             this.hide();
             this.app.map_state.add_marker(this.coordinates);
@@ -32,8 +34,10 @@ export class MapMenu {
         });
 
         // .translate("menu.delete-marker")
-        this.deleteMarker = create_element("a", ["dropdown-item"], {"data-i18n": "menu.delete-marker"});
-        content.appendChild(this.deleteMarker);
+        this.deleteMarker = create_element("a", ["dropdown-item"], {
+            "data-i18n": "menu.delete-marker",
+        });
+        content.append(this.deleteMarker);
         this.deleteMarker.addEventListener("click", (): boolean => {
             this.hide();
             if (this.marker !== null) {
@@ -45,8 +49,10 @@ export class MapMenu {
         });
 
         // .translate("menu.waypoint-projection")
-        this.projection = create_element("a", ["dropdown-item"], {"data-i18n": "menu.waypoint-projection"});
-        content.appendChild(this.projection);
+        this.projection = create_element("a", ["dropdown-item"], {
+            "data-i18n": "menu.waypoint-projection",
+        });
+        content.append(this.projection);
         this.projection.addEventListener("click", (): boolean => {
             this.hide();
             if (this.marker !== null) {
@@ -57,8 +63,10 @@ export class MapMenu {
         });
 
         // .translate("menu.center-map")
-        const centerMap = create_element("a", ["dropdown-item"], {"data-i18n": "menu.center-map"});
-        content.appendChild(centerMap);
+        const centerMap = create_element("a", ["dropdown-item"], {
+            "data-i18n": "menu.center-map",
+        });
+        content.append(centerMap);
         centerMap.addEventListener("click", (): boolean => {
             this.hide();
             if (this.coordinates !== null) {

@@ -1,7 +1,7 @@
 import {Color} from "./color";
 import {Coordinates, CoordinatesFormat} from "./coordinates";
 import {MapType} from "./map_type";
-import { Marker } from "./marker";
+import {Marker} from "./marker";
 import {parse_float, parse_int} from "./utilities";
 
 export class Storage {
@@ -97,7 +97,10 @@ export class Storage {
         }
 
         interface IMarkerDict {
-            name: string; coordinates: Coordinates; radius: number; color: Color;
+            name: string;
+            coordinates: Coordinates;
+            radius: number;
+            color: Color;
         }
 
         // Markers (ID1:ID2:...); markerID1; markerID2; ...
@@ -144,13 +147,15 @@ export class Storage {
                 markers.push({
                     name,
                     coordinates,
-                    color: ((color !== null) ? color : Color.random_from_palette()),
+                    color: color !== null ? color : Color.random_from_palette(),
                     radius,
                 });
             });
 
         interface ILineDict {
-            from: number; to: number; color: Color;
+            from: number;
+            to: number;
+            color: Color;
         }
 
         // Lines (FROM1:TO1*FROM2:TO2*...)
@@ -213,17 +218,13 @@ export class Storage {
         }
 
         if (/^[A-Z][0-9]$/.test(upper_s)) {
-            return (
-                upper_s.charCodeAt(0) -
-                index_A +
-                26 * (upper_s.charCodeAt(1) - index_0)
-            );
+            return upper_s.charCodeAt(0) - index_A + 26 * (upper_s.charCodeAt(1) - index_0);
         }
 
         return -1;
     }
 
-    public set(key: string, value: string|null): void {
+    public set(key: string, value: string | null): void {
         if (!this.ok) {
             return;
         }
@@ -243,7 +244,7 @@ export class Storage {
         return window.localStorage.getItem(key) !== null;
     }
 
-    public get(key: string, default_value: string|null): string|null {
+    public get(key: string, default_value: string | null): string | null {
         if (!this.ok) {
             return default_value;
         }
@@ -258,7 +259,7 @@ export class Storage {
         window.localStorage.removeItem(key);
     }
 
-    public set_int(key: string, value: number|null): void {
+    public set_int(key: string, value: number | null): void {
         if (value === null) {
             this.set(key, null);
 
@@ -268,7 +269,7 @@ export class Storage {
         this.set(key, String(value));
     }
 
-    public set_bool(key: string, value: boolean|null): void {
+    public set_bool(key: string, value: boolean | null): void {
         if (value === null) {
             this.set(key, null);
 
@@ -282,7 +283,7 @@ export class Storage {
         }
     }
 
-    public set_float(key: string, value: number|null): void {
+    public set_float(key: string, value: number | null): void {
         if (value === null) {
             this.set(key, null);
 
@@ -292,7 +293,7 @@ export class Storage {
         this.set(key, String(value));
     }
 
-    public set_color(key: string, value: Color|null): void {
+    public set_color(key: string, value: Color | null): void {
         if (value === null) {
             this.set(key, null);
 
@@ -302,7 +303,7 @@ export class Storage {
         this.set(key, value.to_string());
     }
 
-    public set_coordinates(key: string, value: Coordinates|null): void {
+    public set_coordinates(key: string, value: Coordinates | null): void {
         if (value === null) {
             this.set(key, null);
 
@@ -329,7 +330,7 @@ export class Storage {
         return this.get_int(key, 0) !== 0;
     }
 
-    public get_float(key: string, default_value: number|null): number|null {
+    public get_float(key: string, default_value: number | null): number | null {
         const s = this.get(key, null);
         if (s !== null) {
             return parseFloat(s);
@@ -347,7 +348,7 @@ export class Storage {
         return Color.from_string(s) ?? default_value;
     }
 
-    public get_coordinates(key: string, default_value: Coordinates|null): Coordinates|null {
+    public get_coordinates(key: string, default_value: Coordinates | null): Coordinates | null {
         const s = this.get(key, null);
         if (s === null) {
             return default_value;

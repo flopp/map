@@ -31,7 +31,7 @@ export class Language extends MapStateObserver {
                 nonExplicitWhitelist: true,
                 fallbackLng: ["en", "de"],
                 ns: ["main"],
-                defaultNS:"main",
+                defaultNS: "main",
                 resources,
             })
             .then((): void => {
@@ -49,13 +49,13 @@ export class Language extends MapStateObserver {
         }
 
         i18next
-           .changeLanguage(this.app.map_state.language)
-           .then((): void => {
-               this.localize();
-           })
-           .catch((err: any): void => {
-               console.log("i18n: failed to set language", this.app.map_state.language, err);
-           });
+            .changeLanguage(this.app.map_state.language)
+            .then((): void => {
+                this.localize();
+            })
+            .catch((err: any): void => {
+                console.log("i18n: failed to set language", this.app.map_state.language, err);
+            });
     }
 
     public translate(key: string): string {
@@ -98,9 +98,7 @@ export class Language extends MapStateObserver {
                     (element as HTMLInputElement).placeholder = translation;
                     break;
                 default:
-                    console.log(
-                        `i18n: bad i18n target attribute '${target}' in '${key}'`,
-                    );
+                    console.log(`i18n: bad i18n target attribute '${target}' in '${key}'`);
             }
         });
     }

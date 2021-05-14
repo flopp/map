@@ -20,6 +20,18 @@ lint:
 		--config tslint.json \
 		src/*.ts \
 		src/**/*.ts
+	./node_modules/.bin/prettier  \
+		--list-different \
+		src/*.ts \
+		src/**/*.ts
+
+.PHONY: format
+format:
+	./node_modules/.bin/prettier  \
+		--write \
+		src/*.ts \
+		src/**/*.ts
+
 
 .PHONY: update-translation
 update-translation:

@@ -18,9 +18,9 @@ const to_coordinates = (google_latlng: google.maps.LatLng): Coordinates =>
 
 interface IMarkerObjDict {
     marker_obj: google.maps.Marker;
-    circle_obj: google.maps.Circle|null;
-    last_name: string|null;
-    last_color: Color|null;
+    circle_obj: google.maps.Circle | null;
+    last_name: string | null;
+    last_color: Color | null;
 }
 
 interface ILineObjDict {
@@ -36,13 +36,13 @@ interface IOpencachingMarker {
 export class GoogleWrapper extends MapWrapper {
     private automatic_event: boolean = false;
     private hill_shading_enabled: boolean = false;
-    private hill_shading_layer: google.maps.MapType|null = null;
+    private hill_shading_layer: google.maps.MapType | null = null;
     private german_npa_enabled: boolean = false;
-    private german_npa_layer: google.maps.MapType|null = null;
-    private opencaching: Opencaching|null = null;
+    private german_npa_layer: google.maps.MapType | null = null;
+    private opencaching: Opencaching | null = null;
     private opencaching_markers: Map<string, IOpencachingMarker>;
     private readonly opencaching_icons: Map<string, google.maps.Icon>;
-    private opencaching_popup: google.maps.InfoWindow|null = null;
+    private opencaching_popup: google.maps.InfoWindow | null = null;
     private map: google.maps.Map;
 
     public constructor(div_id: string, app: App) {
@@ -76,28 +76,28 @@ export class GoogleWrapper extends MapWrapper {
             });
         });
 
-        google.maps.event.addListener(this.map, "rightclick", (event: google.maps.MapMouseEvent): boolean => {
-            const domEvent = (event.domEvent as MouseEvent);
-            this.app.map_menu.showMap(
-                this,
-                domEvent.clientX,
-                domEvent.clientY,
-                to_coordinates(event.latLng),
-            );
+        google.maps.event.addListener(
+            this.map,
+            "rightclick",
+            (event: google.maps.MapMouseEvent): boolean => {
+                const domEvent = event.domEvent as MouseEvent;
+                this.app.map_menu.showMap(
+                    this,
+                    domEvent.clientX,
+                    domEvent.clientY,
+                    to_coordinates(event.latLng),
+                );
 
-            return false;
-        });
-        [
-            "click",
-            "dragstart",
-            "zoom_changed",
-            "maptypeid_changed",
-            "center_changed",
-        ].forEach((event_name: string): void => {
-            google.maps.event.addListener(this.map, event_name, (): void => {
-                this.app.map_menu.hide();
-            });
-        });
+                return false;
+            },
+        );
+        ["click", "dragstart", "zoom_changed", "maptypeid_changed", "center_changed"].forEach(
+            (event_name: string): void => {
+                google.maps.event.addListener(this.map, event_name, (): void => {
+                    this.app.map_menu.hide();
+                });
+            },
+        );
     }
 
     public set_map_type(map_type: MapType): void {
@@ -156,9 +156,12 @@ export class GoogleWrapper extends MapWrapper {
                             new google.maps.Point(coord.x * z_factor, coord.y * z_factor),
                         );
                         const bottom = proj.fromPointToLatLng(
-                            new google.maps.Point((coord.x + 1) * z_factor, (coord.y + 1) * z_factor),
+                            new google.maps.Point(
+                                (coord.x + 1) * z_factor,
+                                (coord.y + 1) * z_factor,
+                            ),
                         );
-                        const data: Record<string, string|number|boolean> = {
+                        const data: Record<string, string | number | boolean> = {
                             dpi: 96,
                             transparent: true,
                             format: "png32",
@@ -170,7 +173,9 @@ export class GoogleWrapper extends MapWrapper {
                             f: "image",
                         };
 
-                        return `https://geodienste.bfn.de/arcgis/rest/services/bfn_sch/Schutzgebiet/MapServer/export?${encode_parameters(data)}`;
+                        return `https://geodienste.bfn.de/arcgis/rest/services/bfn_sch/Schutzgebiet/MapServer/export?${encode_parameters(
+                            data,
+                        )}`;
                     },
                     tileSize: new google.maps.Size(256, 256),
                     name: "German NPA",
@@ -187,11 +192,9 @@ export class GoogleWrapper extends MapWrapper {
     public set_opencaching(enabled: boolean): void {
         if (enabled) {
             if (this.opencaching === null) {
-                this.opencaching = new Opencaching(
-                    (caches: Map<string, IOkapiCache>): void => {
-                        this.display_opencaching(caches);
-                    },
-                );
+                this.opencaching = new Opencaching((caches: Map<string, IOkapiCache>): void => {
+                    this.display_opencaching(caches);
+                });
                 this.opencaching_popup = new google.maps.InfoWindow();
                 const bounds = this.map.getBounds();
                 if (bounds !== null && bounds !== undefined) {
@@ -205,7 +208,7 @@ export class GoogleWrapper extends MapWrapper {
         } else if (this.opencaching !== null) {
             this.opencaching = null;
 
-            if  (this.opencaching_popup !== null) {
+            if (this.opencaching_popup !== null) {
                 this.opencaching_popup.close();
                 this.opencaching_popup = null;
             }
@@ -257,26 +260,22 @@ export class GoogleWrapper extends MapWrapper {
                 return;
             }
             const pos = the_obj.marker_obj.getPosition();
-            this.app.map_state.set_marker_coordinates(
-                marker.get_id(),
-                to_coordinates(pos),
-            );
+            this.app.map_state.set_marker_coordinates(marker.get_id(), to_coordinates(pos));
             if (the_obj.circle_obj) {
                 the_obj.circle_obj.setCenter(pos);
             }
         });
 
-        google.maps.event.addListener(obj.marker_obj, "rightclick", (event: google.maps.MapMouseEvent): boolean => {
-            const domEvent = (event.domEvent as MouseEvent);
-            this.app.map_menu.showMarker(
-                this,
-                domEvent.clientX,
-                domEvent.clientY,
-                marker,
-            );
+        google.maps.event.addListener(
+            obj.marker_obj,
+            "rightclick",
+            (event: google.maps.MapMouseEvent): boolean => {
+                const domEvent = event.domEvent as MouseEvent;
+                this.app.map_menu.showMarker(this, domEvent.clientX, domEvent.clientY, marker);
 
-            return false;
-        });
+                return false;
+            },
+        );
 
         this.markers.set(marker.get_id(), obj);
 
@@ -309,10 +308,7 @@ export class GoogleWrapper extends MapWrapper {
             obj.circle_obj = null;
         }
 
-        if (
-            !marker.color.equals(obj.last_color) ||
-            marker.name !== obj.last_name
-        ) {
+        if (!marker.color.equals(obj.last_color) || marker.name !== obj.last_name) {
             obj.marker_obj.setIcon(this.create_icon(marker));
         }
         if (obj.circle_obj !== null && !marker.color.equals(obj.last_color)) {
@@ -338,10 +334,7 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public create_line_object(line: Line): void {
-        if (
-            !this.has_marker_object(line.marker1) ||
-            !this.has_marker_object(line.marker2)
-        ) {
+        if (!this.has_marker_object(line.marker1) || !this.has_marker_object(line.marker2)) {
             return;
         }
 
@@ -371,10 +364,7 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public update_line_object(obj: ILineObjDict, line: Line): void {
-        if (
-            !this.has_marker_object(line.marker1) ||
-            !this.has_marker_object(line.marker2)
-        ) {
+        if (!this.has_marker_object(line.marker1) || !this.has_marker_object(line.marker2)) {
             this.delete_line_object(obj);
             this.lines.delete(line.get_id());
 
@@ -399,10 +389,7 @@ export class GoogleWrapper extends MapWrapper {
     }
 
     public create_icon(marker: Marker): google.maps.Icon {
-        const icon = this.app.icon_factory.create_map_icon(
-            marker.name,
-            marker.color,
-        );
+        const icon = this.app.icon_factory.create_map_icon(marker.name, marker.color);
 
         return {
             url: icon.url,
@@ -459,7 +446,9 @@ export class GoogleWrapper extends MapWrapper {
                     if (this.opencaching_popup === null) {
                         return;
                     }
-                    this.opencaching_popup.setContent(`<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`);
+                    this.opencaching_popup.setContent(
+                        `<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`,
+                    );
                     this.opencaching_popup.open(this.map, m.marker_obj);
                 });
                 new_markers.set(code, m);

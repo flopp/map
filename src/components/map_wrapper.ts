@@ -33,21 +33,15 @@ export class MapWrapper extends MapStateObserver {
     }
 
     public set_hill_shading(_enabled: boolean): void {
-        console.log(
-            "The 'hill_shading' feature is not implemented for this map wrapper.",
-        );
+        console.log("The 'hill_shading' feature is not implemented for this map wrapper.");
     }
 
     public set_german_npa(_enabled: boolean): void {
-        console.log(
-            "The 'german_npa' feature is not implemented for this map wrapper.",
-        );
+        console.log("The 'german_npa' feature is not implemented for this map wrapper.");
     }
 
     public set_opencaching(_enabled: boolean): void {
-        console.log(
-            "The 'opencaching' feature is not implemented for this map wrapper.",
-        );
+        console.log("The 'opencaching' feature is not implemented for this map wrapper.");
     }
 
     public set_map_view(_center: Coordinates, _zoom: number): void {
@@ -124,20 +118,14 @@ export class MapWrapper extends MapStateObserver {
             this.set_opencaching(this.app.map_state.opencaching);
         }
         if ((changes & MapStateChange.VIEW) !== 0) {
-            this.set_map_view(
-                this.app.map_state.center!,
-                this.app.map_state.zoom!,
-            );
+            this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);
         }
 
         if ((changes & MapStateChange.MARKERS) !== 0) {
             // Update and add markers
             this.app.map_state.markers.forEach((marker: Marker): void => {
                 if (this.markers.has(marker.get_id())) {
-                    this.update_marker_object(
-                        this.markers.get(marker.get_id()),
-                        marker,
-                    );
+                    this.update_marker_object(this.markers.get(marker.get_id()), marker);
                 } else {
                     this.create_marker_object(marker);
                 }

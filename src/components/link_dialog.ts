@@ -21,9 +21,7 @@ export class LinkDialog extends Dialog {
             this._app.message(this._app.translate("dialog.link.copied-message", e.text));
         });
         this.clipboard.on("error", (_e: IClipboardJsEvent): void => {
-            this._app.message_error(
-                this._app.translate("dialog.link.failed-message"),
-            );
+            this._app.message_error(this._app.translate("dialog.link.failed-message"));
         });
     }
 

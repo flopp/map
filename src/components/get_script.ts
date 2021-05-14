@@ -1,6 +1,6 @@
-export const  getScript = (url: string): void => {
+export const getScript = (url: string): void => {
     const prior = document.getElementsByTagName("script")[0];
-    let script: HTMLScriptElement|undefined = document.createElement("script");
+    let script: HTMLScriptElement | undefined = document.createElement("script");
     script.async = true;
 
     script.addEventListener("load", (): void => {

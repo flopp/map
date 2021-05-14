@@ -12,7 +12,7 @@ export enum MapType {
 
 export const maptype2string = String;
 
-export const string2maptype = (s: string): MapType|null => {
+export const string2maptype = (s: string): MapType | null => {
     switch (s.toUpperCase()) {
         case MapType.OPENSTREETMAP:
             return MapType.OPENSTREETMAP;
@@ -37,7 +37,7 @@ export const string2maptype = (s: string): MapType|null => {
     }
 };
 
-export const maptype2human = (t: MapType|null): string => {
+export const maptype2human = (t: MapType | null): string => {
     switch (t) {
         case MapType.OPENSTREETMAP:
             return "OpenStreetMap";
@@ -62,7 +62,7 @@ export const maptype2human = (t: MapType|null): string => {
     }
 };
 
-export const isGoogle = (t: MapType|null): boolean => {
+export const isGoogle = (t: MapType | null): boolean => {
     switch (t) {
         case MapType.GOOGLE_ROADMAP:
         case MapType.GOOGLE_SATELLITE:

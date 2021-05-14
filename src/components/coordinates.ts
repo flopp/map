@@ -7,7 +7,10 @@ export enum CoordinatesFormat {
     DMS = "DMS",
 }
 
-export const parseCoordinatesFormat = (value: string, fallback: CoordinatesFormat): CoordinatesFormat => {
+export const parseCoordinatesFormat = (
+    value: string,
+    fallback: CoordinatesFormat,
+): CoordinatesFormat => {
     switch (value.toUpperCase()) {
         case "D":
             return CoordinatesFormat.D;
@@ -20,7 +23,7 @@ export const parseCoordinatesFormat = (value: string, fallback: CoordinatesForma
     }
 };
 
-const pad = (num: number|string, width: number): string => {
+const pad = (num: number | string, width: number): string => {
     let s = String(num);
     while (s.length < width) {
         s = `0${s}`;
@@ -80,15 +83,23 @@ export class Coordinates {
     }
 
     public static from_components(
-        h1: string, d1: number, m1: number, s1: number,
-        h2: string, d2: number, m2: number, s2: number): Coordinates|null {
+        h1: string,
+        d1: number,
+        m1: number,
+        s1: number,
+        h2: string,
+        d2: number,
+        m2: number,
+        s2: number,
+    ): Coordinates | null {
         let lat: number;
         let lng: number;
 
         if (h1 !== "+" && d1 < 0) {
             return null;
         }
-        // Allow for m/s = 60 for supporting UNESCO style coordinates; see https://github.com/flopp/FloppsMap/issues/77
+        // Allow for m/s = 60 for supporting UNESCO style coordinates.
+        // See https://github.com/flopp/FloppsMap/issues/77
         if (m1 < 0 || m1 >= 61) {
             return null;
         }
@@ -137,166 +148,67 @@ export class Coordinates {
         return new Coordinates(lat, lng);
     }
 
-    public static from_string(str: string): Coordinates|null {
+    public static from_string(str: string): Coordinates | null {
         const s = Coordinates.sanitize_string(str);
         const patterns = [
-                // DM / H D M
-                {
-                    regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
-                    fields: [
-                        1,
-                        2,
-                        3,
-                        0,
-                        4,
-                        5,
-                        6,
-                        0,
-                    ],
-                },
-                // DM / D H M
-                {
-                    regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
-                    fields: [
-                        2,
-                        1,
-                        3,
-                        0,
-                        5,
-                        4,
-                        6,
-                        0,
-                    ],
-                },
-                // DM / D M H
-                {
-                    regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    fields: [
-                        3,
-                        1,
-                        2,
-                        0,
-                        6,
-                        4,
-                        5,
-                        0,
-                    ],
-                },
-                // DM / D M
-                {
-                    regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    fields: [
-                        "N",
-                        1,
-                        2,
-                        0,
-                        "E",
-                        3,
-                        4,
-                        0,
-                    ],
-                },
-                // DMS / H D M S
-                {
-                    regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    fields: [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5,
-                        6,
-                        7,
-                        8,
-                    ],
-                },
-                // DMS / D H M S
-                {
-                    regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
-                    fields: [
-                        2,
-                        1,
-                        3,
-                        4,
-                        6,
-                        5,
-                        7,
-                        8,
-                    ],
-                },
-                // DMS / D M S H
-                {
-                    regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    fields: [
-                        4,
-                        1,
-                        2,
-                        3,
-                        6,
-                        5,
-                        6,
-                        7,
-                    ],
-                },
-                // DMS / D M S
-                {
-                    regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
-                    fields: [
-                        "N",
-                        1,
-                        2,
-                        3,
-                        "E",
-                        4,
-                        5,
-                        6,
-                    ],
-                },
-                // D / H D
-                {
-                    regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
-                    fields: [
-                        1,
-                        2,
-                        0,
-                        0,
-                        3,
-                        4,
-                        0,
-                        0,
-                    ],
-                },
-                // D / D H
-                {
-                    regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
-                    fields: [
-                        2,
-                        1,
-                        0,
-                        0,
-                        4,
-                        3,
-                        0,
-                        0,
-                    ],
-                },
-                // D / D
-                {
-                    regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
-                    fields: [
-                        "+",
-                        1,
-                        0,
-                        0,
-                        "+",
-                        2,
-                        0,
-                        0,
-                    ],
-                },
-            ];
+            // DM / H D M
+            {
+                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                fields: [1, 2, 3, 0, 4, 5, 6, 0],
+            },
+            // DM / D H M
+            {
+                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                fields: [2, 1, 3, 0, 5, 4, 6, 0],
+            },
+            // DM / D M H
+            {
+                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                fields: [3, 1, 2, 0, 6, 4, 5, 0],
+            },
+            // DM / D M
+            {
+                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                fields: ["N", 1, 2, 0, "E", 3, 4, 0],
+            },
+            // DMS / H D M S
+            {
+                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                fields: [1, 2, 3, 4, 5, 6, 7, 8],
+            },
+            // DMS / D H M S
+            {
+                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                fields: [2, 1, 3, 4, 6, 5, 7, 8],
+            },
+            // DMS / D M S H
+            {
+                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                fields: [4, 1, 2, 3, 6, 5, 6, 7],
+            },
+            // DMS / D M S
+            {
+                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                fields: ["N", 1, 2, 3, "E", 4, 5, 6],
+            },
+            // D / H D
+            {
+                regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                fields: [1, 2, 0, 0, 3, 4, 0, 0],
+            },
+            // D / D H
+            {
+                regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                fields: [2, 1, 0, 0, 4, 3, 0, 0],
+            },
+            // D / D
+            {
+                regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                fields: ["+", 1, 0, 0, "+", 2, 0, 0],
+            },
+        ];
 
-        const extract_hemisphere = (match: RegExpMatchArray, index: string|number): string => {
+        const extract_hemisphere = (match: RegExpMatchArray, index: string | number): string => {
             if (typeof index === "number") {
                 return match[index];
             }
@@ -432,9 +344,9 @@ export class Coordinates {
     }
 
     public to_string_D(): string {
-        return `${this.NS()} ${Math.abs(this.lat()).toFixed(
-            6,
-        )} ${this.EW()} ${Math.abs(this.lng()).toFixed(6)}`;
+        return `${this.NS()} ${Math.abs(this.lat()).toFixed(6)} ${this.EW()} ${Math.abs(
+            this.lng(),
+        ).toFixed(6)}`;
     }
 
     public distance(other: Coordinates): number {
@@ -507,9 +419,7 @@ export class Coordinates {
                 const point = line.GenPosition(
                     true,
                     i * da12,
-                    Geodesic.LATITUDE |
-                        Geodesic.LONGITUDE |
-                        Geodesic.LONG_UNROLL,
+                    Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL,
                 );
                 points[i] = new Coordinates(point.lat2, point.lon2);
             }

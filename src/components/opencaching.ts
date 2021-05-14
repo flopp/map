@@ -58,10 +58,10 @@ const Icons = new Map([
 
 export class Opencaching {
     private state: State = State.Uninitialized;
-    private timer: number|null = null;
+    private timer: number | null = null;
     private readonly callback: CachesCallback;
     private bounds: Array<[number, number, number, number]> = [];
-    private sites: ISite[]|null = null;
+    private sites: ISite[] | null = null;
     private readonly disabled_sites: Set<string>;
 
     public constructor(callback: CachesCallback) {
@@ -118,33 +118,36 @@ export class Opencaching {
     private initialize(): void {
         this.state = State.Initializing;
 
-        const keys: Map<string, string|null> = new Map();
+        const keys: Map<string, string | null> = new Map();
         keys.set("Opencaching.DE", getConfig("OPENCACHING_DE_KEY"));
         keys.set("Opencaching.PL", getConfig("OPENCACHING_PL_KEY"));
         keys.set("Opencaching.NL", getConfig("OPENCACHING_NL_KEY"));
         keys.set("Opencaching.US", getConfig("OPENCACHING_US_KEY"));
-        keys.set("Opencache.UK",   getConfig("OPENCACHING_UK_KEY"));
+        keys.set("Opencache.UK", getConfig("OPENCACHING_UK_KEY"));
         keys.set("Opencaching.RO", getConfig("OPENCACHING_RO_KEY"));
 
         fetch("https://www.opencaching.de/okapi/services/apisrv/installations")
             .then((response: Response): Promise<any> => response.json())
             .then((data: IOkapiInstallation[]): void => {
-                this.sites = data.filter((site: IOkapiInstallation): boolean => {
-                    if (!site.okapi_base_url.startsWith("https://")) {
-                        return false;
-                    }
-                    if (!keys.has(site.site_name)) {
-                        return false;
-                    }
-                    const key = keys.get(site.site_name);
+                this.sites = data
+                    .filter((site: IOkapiInstallation): boolean => {
+                        if (!site.okapi_base_url.startsWith("https://")) {
+                            return false;
+                        }
+                        if (!keys.has(site.site_name)) {
+                            return false;
+                        }
+                        const key = keys.get(site.site_name);
 
-                    return (key !== null && key !== "");
-                }).map((site: IOkapiInstallation): ISite =>
-                    ({
-                        name: site.site_name,
-                        url: site.okapi_base_url,
-                        key: keys.get(site.site_name)!,
-                    }));
+                        return key !== null && key !== "";
+                    })
+                    .map(
+                        (site: IOkapiInstallation): ISite => ({
+                            name: site.site_name,
+                            url: site.okapi_base_url,
+                            key: keys.get(site.site_name)!,
+                        }),
+                    );
 
                 this.state = State.Ready;
                 this.scheduleLoad();
@@ -174,13 +177,15 @@ export class Opencaching {
     }
 
     private load(): void {
-        if ((this.bounds.length === 0) || (this.sites === null) || (this.sites.length === 0)) {
+        if (this.bounds.length === 0 || this.sites === null || this.sites.length === 0) {
             return;
         }
 
         this.state = State.Querying;
 
-        const [north, south, west, east]: [number, number, number, number] = this.bounds[this.bounds.length-1];
+        const [north, south, west, east]: [number, number, number, number] = this.bounds[
+            this.bounds.length - 1
+        ];
         this.bounds = [];
 
         const promises: Array<Promise<Map<string, IOkapiCache>>> = [];
@@ -195,34 +200,40 @@ export class Opencaching {
                 `search_method=${encodeURIComponent("services/caches/search/bbox")}`,
                 `search_params=${encodeURIComponent(`{"bbox": "${bbox}", "limit": "500"}`)}`,
                 `retr_method=${encodeURIComponent("services/caches/geocaches")}`,
-                `retr_params=${encodeURIComponent('{"fields": "code|name|location|type|status|url"}')}`,
+                `retr_params=${encodeURIComponent(
+                    '{"fields": "code|name|location|type|status|url"}',
+                )}`,
                 `wrap=${encodeURIComponent("false")}`,
             ];
             promises.push(
                 fetch(`${url}?${parameters.join("&")}`)
                     .then((response: Response): Promise<any> => response.json())
-                    .then((data: object): Map<string, IOkapiCache> => {
-                        const caches: Map<string, IOkapiCache> = new Map();
-                        if (("error" in data) && data.hasOwnProperty("error")) {
-                            throw (data as IOkapiErrorMessage).error;
-                        }
-                        Object.entries(data).forEach((entry: [string, any]): void => {
-                            caches.set(entry[0], entry[1] as IOkapiCache);
-                        });
+                    .then(
+                        (data: object): Map<string, IOkapiCache> => {
+                            const caches: Map<string, IOkapiCache> = new Map();
+                            if ("error" in data && data.hasOwnProperty("error")) {
+                                throw (data as IOkapiErrorMessage).error;
+                            }
+                            Object.entries(data).forEach((entry: [string, any]): void => {
+                                caches.set(entry[0], entry[1] as IOkapiCache);
+                            });
 
-                        return caches;
-                    }).catch((error: any): Map<string, IOkapiCache> => {
-                        console.log(site.name, error);
-                        console.log("Disabling site for future requests:", site.name);
-                        this.disabled_sites.add(site.name);
+                            return caches;
+                        },
+                    )
+                    .catch(
+                        (error: any): Map<string, IOkapiCache> => {
+                            console.log(site.name, error);
+                            console.log("Disabling site for future requests:", site.name);
+                            this.disabled_sites.add(site.name);
 
-                        return new Map();
-                    }),
+                            return new Map();
+                        },
+                    ),
             );
         });
 
-        Promise
-            .all(promises)
+        Promise.all(promises)
             .then((cache_maps: Array<Map<string, IOkapiCache>>): void => {
                 this.state = State.Ready;
                 const caches: Map<string, IOkapiCache> = new Map();

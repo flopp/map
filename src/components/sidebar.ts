@@ -18,9 +18,7 @@ export class Sidebar extends MapStateObserver {
     public constructor(app: App) {
         super(app);
 
-        this._sidebar_controls = document.getElementById(
-            "sidebar-controls",
-        )! as HTMLDivElement;
+        this._sidebar_controls = document.getElementById("sidebar-controls")! as HTMLDivElement;
 
         this.sidebar_layers = new SidebarLayers(app, "layers");
 
@@ -32,44 +30,18 @@ export class Sidebar extends MapStateObserver {
         // .translate("sidebar.info.title")
         this._sidebars = new Map();
         [
-            [
-                "search",
-                "search",
-                (i: string): SidebarItem => new SidebarSearch(app, i),
-            ],
-            [
-                "layers",
-                "layers",
-                (_id: string): SidebarItem => this.sidebar_layers,
-            ],
-            [
-                "markers",
-                "map-pin",
-                (id: string): SidebarItem => new SidebarMarkers(app, id),
-            ],
-            [
-                "lines",
-                "maximize-2",
-                (id: string): SidebarItem => new SidebarLines(app, id),
-            ],
-            [
-                "tools",
-                "tool",
-                (id: string): SidebarItem => new SidebarTools(app, id),
-            ],
-            [
-                "info",
-                "help-circle",
-                (id: string): SidebarItem => new SidebarInfo(app, id),
-            ],
-        ].forEach(
-            (value: [string, string, (id: string) => SidebarItem]): void => {
-                this._sidebars.set(
-                    value[0],
-                    [this._create_sidebar_control(value[0], value[1]), value[2](value[0])],
-                );
-            },
-        );
+            ["search", "search", (i: string): SidebarItem => new SidebarSearch(app, i)],
+            ["layers", "layers", (_id: string): SidebarItem => this.sidebar_layers],
+            ["markers", "map-pin", (id: string): SidebarItem => new SidebarMarkers(app, id)],
+            ["lines", "maximize-2", (id: string): SidebarItem => new SidebarLines(app, id)],
+            ["tools", "tool", (id: string): SidebarItem => new SidebarTools(app, id)],
+            ["info", "help-circle", (id: string): SidebarItem => new SidebarInfo(app, id)],
+        ].forEach((value: [string, string, (id: string) => SidebarItem]): void => {
+            this._sidebars.set(value[0], [
+                this._create_sidebar_control(value[0], value[1]),
+                value[2](value[0]),
+            ]);
+        });
     }
 
     public toggle(name: string | null): void {
@@ -88,28 +60,24 @@ export class Sidebar extends MapStateObserver {
         const section = this.app.map_state.sidebar_open;
 
         if (section === null) {
-            this._sidebars.forEach(
-                (value: [HTMLDivElement, SidebarItem]): void => {
-                    value[0].classList.remove("active");
-                    value[1].deactivate();
-                },
-            );
+            this._sidebars.forEach((value: [HTMLDivElement, SidebarItem]): void => {
+                value[0].classList.remove("active");
+                value[1].deactivate();
+            });
 
             document.getElementsByTagName("body")[0].classList.remove("sidebar-open");
         } else {
             let found = false;
-            this._sidebars.forEach(
-                (value: [HTMLDivElement, SidebarItem], key: string): void => {
-                    if (key === section) {
-                        found = true;
-                        value[0].classList.add("active");
-                        value[1].activate();
-                    } else {
-                        value[0].classList.remove("active");
-                        value[1].deactivate();
-                    }
-                },
-            );
+            this._sidebars.forEach((value: [HTMLDivElement, SidebarItem], key: string): void => {
+                if (key === section) {
+                    found = true;
+                    value[0].classList.add("active");
+                    value[1].activate();
+                } else {
+                    value[0].classList.remove("active");
+                    value[1].deactivate();
+                }
+            });
 
             if (!found) {
                 const value = this._sidebars.get("search")!;
@@ -123,18 +91,13 @@ export class Sidebar extends MapStateObserver {
         this.app.update_geometry();
     }
 
-    private _create_sidebar_control(
-        name: string,
-        icon: string,
-    ): HTMLDivElement {
-        const div = create_element("div", [
-            "sidebar-control",
-        ]) as HTMLDivElement;
+    private _create_sidebar_control(name: string, icon: string): HTMLDivElement {
+        const div = create_element("div", ["sidebar-control"]) as HTMLDivElement;
         const a = create_element("a", ["sidebar-control-button"], {href: "#"});
         const svg = create_icon(icon, ["icon24"]);
-        a.appendChild(svg);
-        div.appendChild(a);
-        this._sidebar_controls.appendChild(div);
+        a.append(svg);
+        div.append(a);
+        this._sidebar_controls.append(div);
 
         a.addEventListener("click", (): void => {
             this.toggle(name);

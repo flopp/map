@@ -20,11 +20,13 @@ export class SidebarTools extends SidebarItem {
             {title: "English", short: "en"},
             {title: "Deutsch", short: "de"},
         ].forEach((language: ITitleShort): void => {
-            this.language_select.appendChild(new Option(
-                language.title,
-                language.short,
-                language.short === "en",
-                language.short === this.app.map_state.language),
+            this.language_select.append(
+                new Option(
+                    language.title,
+                    language.short,
+                    language.short === "en",
+                    language.short === this.app.map_state.language,
+                ),
             );
         });
         this.language_select.onchange = (): void => {
@@ -39,11 +41,15 @@ export class SidebarTools extends SidebarItem {
             this.export_json();
         });
 
-        document.querySelector("#btn-import-json")!.addEventListener("click", (event: InputEvent): void => {
-            (document.querySelector("#inp-import-json") as HTMLButtonElement).click();
-            event.preventDefault();
-        });
-        (document.querySelector("#inp-import-json") as HTMLInputElement).onchange = (event: InputEvent): void => {
+        document
+            .querySelector("#btn-import-json")!
+            .addEventListener("click", (event: InputEvent): void => {
+                (document.querySelector("#inp-import-json") as HTMLButtonElement).click();
+                event.preventDefault();
+            });
+        (document.querySelector("#inp-import-json") as HTMLInputElement).onchange = (
+            event: InputEvent,
+        ): void => {
             if (event.target === null) {
                 return;
             }
@@ -74,7 +80,7 @@ export class SidebarTools extends SidebarItem {
             download: "map_state.json",
         });
         element.style.display = "none";
-        document.body.appendChild(element);
+        document.body.append(element);
         element.click();
         document.body.removeChild(element);
     }
@@ -82,7 +88,7 @@ export class SidebarTools extends SidebarItem {
     public import_json(file: File): void {
         const reader = new FileReader();
         reader.onloadend = (): void => {
-            const data = JSON.parse((reader.result as string));
+            const data = JSON.parse(reader.result as string);
             this.app.map_state.from_json(data);
             this.app.switch_map(this.app.map_state.map_type);
         };

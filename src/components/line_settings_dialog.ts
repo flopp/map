@@ -26,7 +26,7 @@ export class LineSettingsDialog extends Dialog {
             {id: DistanceFormat.ft, name: "ft"},
             {id: DistanceFormat.mi, name: "mi"},
         ].forEach((item: IDistanceFormatDict): void => {
-            this._distanceFormatInput.appendChild(
+            this._distanceFormatInput.append(
                 new Option(
                     item.name,
                     item.id,
@@ -46,7 +46,10 @@ export class LineSettingsDialog extends Dialog {
     }
 
     public ok(): void {
-        const distance_format = parseDistanceFormat(this._distanceFormatInput.value, DistanceFormat.m);
+        const distance_format = parseDistanceFormat(
+            this._distanceFormatInput.value,
+            DistanceFormat.m,
+        );
         const random_color = this._randomColorInput.checked;
         const color = Color.from_string(this._colorInput.value);
         if (color === null) {
@@ -55,7 +58,11 @@ export class LineSettingsDialog extends Dialog {
             return;
         }
 
-        this._app.map_state.set_default_line_settings({distance_format, random_color, color});
+        this._app.map_state.set_default_line_settings({
+            distance_format,
+            random_color,
+            color,
+        });
 
         this.hide();
     }

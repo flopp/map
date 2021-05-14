@@ -1,4 +1,4 @@
-let last_random_color: string|null = null;
+let last_random_color: string | null = null;
 
 export class Color {
     // tslint:disable-next-line: prefer-readonly
@@ -11,7 +11,7 @@ export class Color {
         this.hex = hex;
     }
 
-    public static from_string(str: string): Color|null {
+    public static from_string(str: string): Color | null {
         if (RegExp("^[0-9A-Fa-f]{6}$").test(str)) {
             return new Color(str);
         }
@@ -51,12 +51,12 @@ export class Color {
 
     public luma(): number {
         const rgb = parseInt(this.hex, 16);
-        const r = (rgb >> 16) & 0xFF;
-        const g = (rgb >> 8) & 0xFF;
-        const b = (rgb >> 0) & 0xFF;
+        const r = (rgb >> 16) & 255;
+        const g = (rgb >> 8) & 255;
+        const b = (rgb >> 0) & 255;
 
         // Luma, per ITU-R BT.709
-        return (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
     public text_color(): Color {
@@ -67,7 +67,7 @@ export class Color {
         return new Color("FFFFFF");
     }
 
-    public equals(other: Color|null): boolean {
+    public equals(other: Color | null): boolean {
         if (other === null) {
             return false;
         }
