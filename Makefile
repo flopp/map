@@ -27,6 +27,7 @@ update-translation:
 		-t src/lang/en/translation.json \
 		-t src/lang/de/translation.json \
 		src/*.html \
+		src/*.ts \
 		src/components/*.ts
 
 .PHONY: run-dev

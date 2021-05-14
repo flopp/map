@@ -4,7 +4,6 @@ import argparse
 import json
 import os
 import re
-import sys
 
 
 def record(key, hash):
@@ -24,10 +23,13 @@ def scan_html(file_name, hash):
             record(m[1], hash)
 
 def scan_js(file_name, hash):
-    r = re.compile(r'\.translate\(\s*\'([^\']+)')
+    r1 = re.compile(r'\.translate\(\s*\'([^\']+)\'')
+    r2 = re.compile(r'\.translate\(\s*\"([^\"]+)\"')
     with open(file_name) as f:
         content = f.read()
-        for m in r.finditer(content):
+        for m in r1.finditer(content):
+            record(m[1], hash)
+        for m in r2.finditer(content):
             record(m[1], hash)
 
 def merge(into, keys, path=[]):
@@ -46,7 +48,7 @@ def merge(into, keys, path=[]):
             into[key] = keys[key]
     for key in into:
         if key not in keys:
-            raise ValueError(f'key {path} is in target, but not in source extraction')
+            raise ValueError(f'key {path}/{key} is in target, but not in source extraction')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('files', metavar='SOURCE_FILE', type=str, nargs='+', help='source file to scan for i18n statements')
@@ -63,6 +65,7 @@ for file_name in args.files:
     else:
         print(f'{file_name}: unsupported file type')
 hash = {'main': hash}
+
 if args.translation is not None:
     for file_name in args.translation:
         if os.path.exists(file_name):

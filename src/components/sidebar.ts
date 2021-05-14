@@ -24,6 +24,12 @@ export class Sidebar extends MapStateObserver {
 
         this.sidebar_layers = new SidebarLayers(app, "layers");
 
+        // .translate("sidebar.search.title")
+        // .translate("sidebar.layers.title")
+        // .translate("sidebar.markers.title")
+        // .translate("sidebar.lines.title")
+        // .translate("sidebar.tools.title")
+        // .translate("sidebar.info.title")
         this._sidebars = new Map();
         [
             [

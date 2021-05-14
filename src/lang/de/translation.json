@@ -9,6 +9,14 @@
                 "help": "Eigene API-Schl\u00fcssel erlauben den Zugriff auf das Kartenmaterial von Google Maps. Deine eigenen API-Schl\u00fcssel werden nur in deinem Browser gespeichert (local storage). Sie werden nur zu den entsprechenden Google Maps-Servern geschickt.",
                 "title": "Eigene API-Keys Hinzuf\u00fcgen"
             },
+            "line-settings": {
+                "apply": "Anwenden",
+                "bad_values_message": "Ung\u00fcltige Werte.",
+                "default-color": "Standardfarbe",
+                "distance-format": "Distanzeinheiten",
+                "random-colors": "Zuf\u00e4llige Farbe",
+                "title": "Linieneinstellungen"
+            },
             "link": {
                 "copied-message": "Der Link wurde in die Zwischenablage kopiert: {1}",
                 "copy": "Kopieren",
@@ -16,6 +24,16 @@
                 "help": "Du kannst diesen Link mit anderen Leute teilen, so dass sie deine aktuelle Karte sehen k\u00f6nnen.",
                 "title": "Link Erzeugen",
                 "too-long": "Der Link ist vermutlich zu lang. Es kann sein, dass Browser damit nicht korrekt umgehen k\u00f6nnen."
+            },
+            "marker-settings": {
+                "apply": "Anwenden",
+                "bad_values_message": "Ung\u00fcltige Werte.",
+                "coordinates-format": "Koordinatenformat",
+                "default-color": "Standardfarbe",
+                "default-radius": "Standardradius (m)",
+                "default-radius-placeholder": "Radius",
+                "random-colors": "Zuf\u00e4llige Farbe",
+                "title": "Markereinstellungen"
             },
             "multi-markers": {
                 "bad_common_color_message": "Fehlerhafte gemeinsame Farbe.",
@@ -54,22 +72,6 @@
                 "new_marker_name": "Projektion von {1}",
                 "project": "Projiziere",
                 "title": "Wegpunkt-Projektion"
-            },
-            "marker-settings": {
-                "title": "Markereinstellungen",
-                "coordinates-format": "Koordinatenformat",
-                "default-color": "Standardfarbe",
-                "random-colors": "Zuf\u00e4llige Farbe",
-                "default-radius": "Standardradius (m)",
-                "default-radius-placeholder": "Radius",
-                "apply": "Anwenden"
-            },
-            "line-settings": {
-                "title": "Linieneinstellungen",
-                "distance-format": "Distanzeinheiten",
-                "default-color": "Standardfarbe",
-                "random-colors": "Zuf\u00e4llige Farbe",
-                "apply": "Anwenden"
             }
         },
         "general": {
@@ -111,8 +113,8 @@
                 "base": "Hintergrundebene",
                 "base-help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
-                "german_npa_button": "Offizielle Web-App",
                 "german_npa-help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
+                "german_npa_button": "Offizielle Web-App",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hill-shading": "Schummerung (hill-shading)",
                 "opencaching": "Geocaches (von Opencaching)",

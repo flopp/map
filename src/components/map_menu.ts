@@ -21,6 +21,7 @@ export class MapMenu {
         const content = create_element("div", ["dropdown-content"]);
         this.menu.appendChild(content);
 
+        // .translate("menu.add-marker")
         this.addMarker = create_element("a", ["dropdown-item"], {"data-i18n": "menu.add-marker"});
         content.appendChild(this.addMarker);
         this.addMarker.addEventListener("click", (): boolean => {
@@ -30,6 +31,7 @@ export class MapMenu {
             return false;
         });
 
+        // .translate("menu.delete-marker")
         this.deleteMarker = create_element("a", ["dropdown-item"], {"data-i18n": "menu.delete-marker"});
         content.appendChild(this.deleteMarker);
         this.deleteMarker.addEventListener("click", (): boolean => {
@@ -42,6 +44,7 @@ export class MapMenu {
             return false;
         });
 
+        // .translate("menu.waypoint-projection")
         this.projection = create_element("a", ["dropdown-item"], {"data-i18n": "menu.waypoint-projection"});
         content.appendChild(this.projection);
         this.projection.addEventListener("click", (): boolean => {
@@ -53,6 +56,7 @@ export class MapMenu {
             return false;
         });
 
+        // .translate("menu.center-map")
         const centerMap = create_element("a", ["dropdown-item"], {"data-i18n": "menu.center-map"});
         content.appendChild(centerMap);
         centerMap.addEventListener("click", (): boolean => {

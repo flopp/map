@@ -9,6 +9,14 @@
                 "help": "Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.",
                 "title": "Add Your Own API Keys"
             },
+            "line-settings": {
+                "apply": "Apply",
+                "bad_values_message": "",
+                "default-color": "Default Color",
+                "distance-format": "Distance Units",
+                "random-colors": "Use Random Colors",
+                "title": "Line Settings"
+            },
             "link": {
                 "copied-message": "The link has been copied to the clipboard: {1}",
                 "copy": "Copy",
@@ -16,6 +24,16 @@
                 "help": "You can share this link with others to enable them to view your current map state.",
                 "title": "Create Link",
                 "too-long": "The link is probably too long. Browsers may not be able to handle it correctly."
+            },
+            "marker-settings": {
+                "apply": "Apply",
+                "bad_values_message": "",
+                "coordinates-format": "Coordinates Format",
+                "default-color": "Default Color",
+                "default-radius": "Default Radius (m)",
+                "default-radius-placeholder": "radius",
+                "random-colors": "Use Random Colors",
+                "title": "Marker Settings"
             },
             "multi-markers": {
                 "bad_common_color_message": "Bad common color.",
@@ -54,22 +72,6 @@
                 "new_marker_name": "Projection from {1}",
                 "project": "Project",
                 "title": "Waypoint Projection"
-            },
-            "marker-settings": {
-                "title": "Marker Settings",
-                "coordinates-format": "Coordinates Format",
-                "default-color": "Default Color",
-                "random-colors": "Use Random Colors",
-                "default-radius": "Default Radius (m)",
-                "default-radius-placeholder": "radius",
-                "apply": "Apply"
-            },
-            "line-settings": {
-                "title": "Line Settings",
-                "distance-format": "Distance Units",
-                "default-color": "Default Color",
-                "random-colors": "Use Random Colors",
-                "apply": "Apply"
             }
         },
         "general": {
@@ -111,8 +113,8 @@
                 "base": "Base Layer",
                 "base-help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
-                "german_npa_button": "Official Web App",
                 "german_npa-help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
+                "german_npa_button": "Official Web App",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hill-shading": "Hill-shading",
                 "opencaching": "Geocaches (from Opencaching)",
