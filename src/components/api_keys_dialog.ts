@@ -1,41 +1,27 @@
 import {App} from "./app";
+import {Dialog} from "./dialog";
 
-export class ApiKeysDialog {
-    private readonly div: HTMLElement;
-    private readonly app: App;
+export class ApiKeysDialog extends Dialog {
+    private readonly _keyInput: HTMLInputElement;
 
     public constructor(app: App) {
-        this.div = document.querySelector("#api-keys-dialog")!;
-        this.app = app;
+        super("api-keys-dialog", app);
 
-        this.div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
-                this.hide();
-            });
-        });
-        this.div.querySelectorAll("[data-ok]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
-                this.ok();
-            });
-        });
+        this._keyInput = this._div.querySelector(
+            "[data-google-api-key]",
+        ) as HTMLInputElement;
     }
 
     public show(): void {
-        this.div.classList.add("is-active");
-        (this.div.querySelector(
-            "[data-google-api-key]",
-        ) as HTMLInputElement).value = this.app.map_state.google_api_key;
-    }
-
-    public hide(): void {
-        this.div.classList.remove("is-active");
+        this._keyInput.value = this._app.map_state.google_api_key;
+        super.show();
     }
 
     public ok(): void {
-        this.app.map_state.set_google_api_key(
-            (this.div.querySelector("[data-google-api-key]") as HTMLInputElement).value,
+        this._app.map_state.set_google_api_key(
+            this._keyInput.value,
         );
-        this.app.reset_maps();
+        this._app.reset_maps();
         this.hide();
     }
 }

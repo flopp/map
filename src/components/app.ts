@@ -56,7 +56,7 @@ export class App {
         this.id_leaflet = id_leaflet;
         this.id_google = id_google;
 
-        (document.querySelector(`#${this.id_google}`) as HTMLElement).style.display = "none";
+        (document.getElementById(this.id_google) as HTMLElement).style.display = "none";
 
         this.sidebar = new Sidebar(this);
 
@@ -169,8 +169,9 @@ export class App {
                     args[0].indexOf("developers.google.com") >= 0
                 ) {
                     console.warn(
-                        "Intercepted error message from the Google Maps API.\
-                        Disabling google maps.",
+                        "Intercepted error message from the Google Maps API:",
+                        args[0],
+                        "=> disabling google maps",
                     );
                     this.google_maps_error_raised();
                 }
