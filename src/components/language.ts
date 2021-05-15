@@ -1,4 +1,5 @@
 import i18next from "i18next";
+import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
 
 // tslint:disable-next-line: no-default-import
 import resources from "../lang";
@@ -6,7 +7,6 @@ import resources from "../lang";
 import {App} from "./app";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
-// .import {i18nextBrowserLanguageDetector} from 'i18next-browser-languagedetector';
 
 export class Language extends MapStateObserver {
     private initialized: boolean;
@@ -16,8 +16,8 @@ export class Language extends MapStateObserver {
 
         this.initialized = false;
 
-        // .use(i18nextBrowserLanguageDetector)
         i18next
+            .use(I18nextBrowserLanguageDetector)
             .init({
                 debug: true,
                 detection: {

@@ -7,9 +7,7 @@ export class ApiKeysDialog extends Dialog {
     public constructor(app: App) {
         super("api-keys-dialog", app);
 
-        this._keyInput = this._div.querySelector(
-            "[data-google-api-key]",
-        ) as HTMLInputElement;
+        this._keyInput = this._div.querySelector("[data-google-api-key]") as HTMLInputElement;
     }
 
     public show(): void {
@@ -18,9 +16,7 @@ export class ApiKeysDialog extends Dialog {
     }
 
     public ok(): void {
-        this._app.map_state.set_google_api_key(
-            this._keyInput.value,
-        );
+        this._app.map_state.set_google_api_key(this._keyInput.value);
         this._app.reset_maps();
         this.hide();
     }

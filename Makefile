@@ -21,7 +21,7 @@ lint:
 		src/*.ts \
 		src/**/*.ts
 	./node_modules/.bin/prettier  \
-		--list-different \
+		--check \
 		src/*.ts \
 		src/**/*.ts
 
