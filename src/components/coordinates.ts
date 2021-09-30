@@ -372,7 +372,15 @@ export class Coordinates {
             Geodesic.DISTANCE | Geodesic.AZIMUTH | Geodesic.LONG_UNROLL,
         );
 
-        return {distance: r.s12, bearing: r.azi1};
+        let bearing: number = r.azi1;
+        while (bearing < 0) {
+            bearing += 360;
+        }
+        while (bearing >= 360) {
+            bearing -= 360;
+        }
+
+        return {distance: r.s12, bearing};
     }
 
     public project(angle: number, distance: number): Coordinates {

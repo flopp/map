@@ -112,10 +112,10 @@ export class SidebarLines extends SidebarItem {
         }
     }
 
-    private create_row(table: HTMLElement, label: string, cls: string): void {
+    private create_row(table: HTMLElement, label_i18n: string, cls: string): void {
         const tr = create_element("tr");
-        const td1 = create_element("td", ["has-text-weight-semibold"]);
-        td1.textContent = label;
+        const td1 = create_element("td", ["has-text-weight-semibold"], {"data-i18n": label_i18n});
+        td1.textContent = this.app.translate(label_i18n);
         tr.append(td1);
         const td2 = create_element("td", [cls]);
         tr.append(td2);
@@ -133,10 +133,10 @@ export class SidebarLines extends SidebarItem {
 
         const center = create_element("div", ["line-center"]);
         const table = create_element("table");
-        this.create_row(table, this.app.translate("sidebar.lines.from"), "line-from");
-        this.create_row(table, this.app.translate("sidebar.lines.to"), "line-to");
-        this.create_row(table, this.app.translate("sidebar.lines.length"), "line-distance");
-        this.create_row(table, this.app.translate("sidebar.lines.bearing"), "line-bearing");
+        this.create_row(table, "sidebar.lines.from", "line-from");
+        this.create_row(table, "sidebar.lines.to", "line-to");
+        this.create_row(table, "sidebar.lines.length", "line-distance");
+        this.create_row(table, "sidebar.lines.bearing", "line-bearing");
         center.append(table);
         div.append(center);
 

@@ -1,4 +1,3 @@
-import ClipboardJS from "clipboard";
 import Sortable from "sortablejs";
 
 import {App} from "./app";
@@ -19,13 +18,6 @@ import {
     parse_int,
     remove_element,
 } from "./utilities";
-
-interface IClipboardJsEvent {
-    action: string;
-    text: string;
-    trigger: Element;
-    clearSelection(): void;
-}
 
 export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;
@@ -141,19 +133,16 @@ export class SidebarMarkers extends SidebarItem {
         copy_coordinates.append(create_icon("copy", ["icon", "icon24"]));
         coordinates_div.append(copy_coordinates);
         center.append(coordinates_div);
-        const clip = new ClipboardJS(copy_coordinates, {
-            text: (_trigger: Element): string =>
-                marker.coordinates.to_string(this.app.map_state.settings_marker_coordinates_format),
-        });
-        clip.on("success", (e: IClipboardJsEvent): void => {
-            this.app.message(
-                this.app.translate("sidebar.markers.copy_coordinates_success_message", e.text),
+        copy_coordinates.addEventListener("click", (event: Event): void => {
+            const text = marker.coordinates.to_string(
+                this.app.map_state.settings_marker_coordinates_format,
             );
-        });
-        clip.on("error", (_e: IClipboardJsEvent): void => {
-            this.app.message_error(
+            this.app.copyClipboard(
+                text,
+                this.app.translate("sidebar.markers.copy_coordinates_success_message", text),
                 this.app.translate("sidebar.markers.copy_coordinates_failure_message"),
             );
+            event.stopPropagation();
         });
 
         center.append(create_element("div", ["marker-radius"]));

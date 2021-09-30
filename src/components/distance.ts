@@ -49,15 +49,19 @@ export class Distance {
             case DistanceFormat.m:
                 value = this._raw_m;
                 precision = 2;
+                break;
             case DistanceFormat.km:
                 value = this._raw_m / 1000;
                 precision = 3;
+                break;
             case DistanceFormat.ft:
                 value = this._raw_m / 0.3048;
                 precision = 1;
+                break;
             case DistanceFormat.mi:
                 value = this._raw_m / 1609.344;
                 precision = 3;
+                break;
             default:
                 value = this._raw_m;
                 precision = 2;

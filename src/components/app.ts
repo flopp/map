@@ -364,4 +364,15 @@ export class App {
 
         return s;
     }
+
+    public copyClipboard(text: string, success_message: string, error_message: string): void {
+        navigator.clipboard.writeText(text).then(
+            () => {
+                this.message(success_message);
+            },
+            () => {
+                this.message_error(error_message);
+            },
+        );
+    }
 }

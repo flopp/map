@@ -101,9 +101,6 @@ export class MapState {
     }
 
     public restore(): void {
-        // Language
-        this.set_language(this.storage.get("language", "")!);
-
         // Api keys
         this.set_google_api_key(this.storage.get("google_api_key", "")!);
 
@@ -198,6 +195,9 @@ export class MapState {
             random_color: this.storage.get_bool("settings.line.random_color", true),
             color: this.storage.get_color("settings.line.color", new Color("FF0000")),
         });
+
+        // Language
+        this.set_language(this.storage.get("language", "")!);
     }
 
     public clear_storage(): void {

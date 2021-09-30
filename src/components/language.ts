@@ -48,6 +48,11 @@ export class Language extends MapStateObserver {
             return;
         }
 
+        if (this.app.map_state.language === i18next.language) {
+            return;
+        }
+        this.app.message(`${i18next.language} => ${this.app.map_state.language}`);
+
         i18next
             .changeLanguage(this.app.map_state.language)
             .then((): void => {
@@ -73,33 +78,40 @@ export class Language extends MapStateObserver {
         return translation;
     }
 
-    public localize(): void {
+    public localize(tree: HTMLElement | null = null): void {
         if (!this.initialized) {
             console.log("i18n: not initialized, yet.");
 
             return;
         }
 
-        document.querySelectorAll("[data-i18n]").forEach((element: HTMLElement): void => {
-            const key = element.getAttribute("data-i18n")!;
-            let translation = i18next.t(key);
-            if (translation === "") {
-                translation = key;
-            }
+        (tree !== null ? tree : document)
+            .querySelectorAll("[data-i18n]")
+            .forEach((element: HTMLElement): void => {
+                this.localizeElement(element);
+            });
+        this.app.map_state.update_observers(MapStateChange.LANGUAGE);
+    }
 
-            const target = element.getAttribute("data-i18n-target");
-            switch (target) {
-                case null:
-                case "":
-                case "text":
-                    element.textContent = translation;
-                    break;
-                case "placeholder":
-                    (element as HTMLInputElement).placeholder = translation;
-                    break;
-                default:
-                    console.log(`i18n: bad i18n target attribute '${target}' in '${key}'`);
-            }
-        });
+    public localizeElement(element: HTMLElement): void {
+        const key = element.getAttribute("data-i18n")!;
+        let translation = i18next.t(key);
+        if (translation === "") {
+            translation = key;
+        }
+
+        const target = element.getAttribute("data-i18n-target");
+        switch (target) {
+            case null:
+            case "":
+            case "text":
+                element.textContent = translation;
+                break;
+            case "placeholder":
+                (element as HTMLInputElement).placeholder = translation;
+                break;
+            default:
+                console.log(`i18n: bad i18n target attribute '${target}' in '${key}'`);
+        }
     }
 }
