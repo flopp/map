@@ -57,7 +57,9 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public create_map_object(div_id: string): void {
-        this.map = L.map(div_id);
+        this.map = L.map(div_id, {
+            worldCopyJump: true,
+        });
 
         this.layer_openstreetmap = L.tileLayer(
             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",

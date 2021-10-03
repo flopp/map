@@ -114,11 +114,12 @@
                 "base-help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
                 "german_npa-help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
-                "german_npa_button": "Official Web App",
+                "german_npa_button": "Official NPA Web Map",
                 "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
                 "hill-shading": "Hill-shading",
                 "opencaching": "Geocaches (from Opencaching)",
                 "opencaching-help": "Display geocaches from Opencaching sites.",
+                "opencaching-button": "Opencaching Overview Site",
                 "title": "Layers"
             },
             "lines": {

@@ -114,11 +114,12 @@
                 "base-help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
                 "german_npa-help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
-                "german_npa_button": "Offizielle Web-App",
+                "german_npa_button": "Offizielle Naturschutzgebiet-Karte",
                 "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
                 "hill-shading": "Schummerung (hill-shading)",
                 "opencaching": "Geocaches (von Opencaching)",
                 "opencaching-help": "Zeige Geocaches von Opencaching-Seiten an.",
+                "opencaching-button": "Opencaching Übersichtsseite",
                 "title": "Ebenen"
             },
             "lines": {
