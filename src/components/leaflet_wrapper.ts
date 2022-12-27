@@ -8,7 +8,6 @@ import {Line} from "./line";
 import {MapType} from "./map_type";
 import {MapWrapper} from "./map_wrapper";
 import {Marker} from "./marker";
-import {IOkapiCache, Opencaching} from "./opencaching";
 
 const from_coordinates = (c: Coordinates): L.LatLng => L.latLng(c.raw_lat(), c.raw_lng());
 
@@ -28,20 +27,10 @@ interface ILineObjDict {
     last_color: Color;
 }
 
-interface IOpencachingMarker {
-    marker_obj: L.Marker;
-    data: IOkapiCache;
-}
-
 export class LeafletWrapper extends MapWrapper {
     private automatic_event: boolean = false;
-    private hill_shading_enabled: boolean = false;
-    private hill_shading_layer: L.TileLayer | null = null;
     private german_npa_enabled: boolean = false;
     private german_npa_layer: L.TileLayer | null = null;
-    private opencaching: Opencaching | null = null;
-    private opencaching_markers: Map<string, IOpencachingMarker>;
-    private readonly opencaching_icons: Map<string, L.Icon>;
     private map: L.Map;
     private layer_openstreetmap: L.TileLayer;
     private layer_opentopomap: L.TileLayer;
@@ -52,8 +41,6 @@ export class LeafletWrapper extends MapWrapper {
 
     public constructor(div_id: string, app: App) {
         super(div_id, app);
-        this.opencaching_markers = new Map();
-        this.opencaching_icons = new Map();
     }
 
     public create_map_object(div_id: string): void {
@@ -156,25 +143,6 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    public set_hill_shading(enabled: boolean): void {
-        if (this.hill_shading_enabled === enabled) {
-            return;
-        }
-
-        this.hill_shading_enabled = enabled;
-        if (enabled) {
-            if (this.hill_shading_layer === null) {
-                this.hill_shading_layer = L.tileLayer(
-                    "https://tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png",
-                    {attribution: "Hill-shading by wmflabs.org", maxZoom: 15},
-                );
-            }
-            this.map.addLayer(this.hill_shading_layer);
-        } else if (this.hill_shading_layer !== null) {
-            this.map.removeLayer(this.hill_shading_layer);
-        }
-    }
-
     public set_german_npa(enabled: boolean): void {
         if (this.german_npa_enabled === enabled) {
             return;
@@ -200,33 +168,10 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
-    public set_opencaching(enabled: boolean): void {
-        if (enabled) {
-            if (this.opencaching === null) {
-                this.opencaching = new Opencaching((caches: Map<string, IOkapiCache>): void => {
-                    this.display_opencaching(caches);
-                });
-                this.map.whenReady((): void => {
-                    this.update_opencaching();
-                });
-            }
-        } else if (this.opencaching !== null) {
-            this.opencaching = null;
-
-            this.opencaching_markers.forEach((element): void => {
-                this.map.removeLayer(element.marker_obj);
-            });
-            this.opencaching_markers.clear();
-        }
-    }
-
     public set_map_view(center: Coordinates, zoom: number): void {
         this.automatic_event = true;
         this.map.setView(from_coordinates(center), zoom, {animate: false});
         this.automatic_event = false;
-        this.map.whenReady((): void => {
-            this.update_opencaching();
-        });
     }
 
     public invalidate_size(): void {
@@ -419,67 +364,5 @@ export class LeafletWrapper extends MapWrapper {
             iconSize: L.point(icon.size[0], icon.size[1]),
             iconAnchor: L.point(icon.anchor[0], icon.anchor[1]),
         });
-    }
-
-    public update_opencaching(): void {
-        if (this.opencaching === null) {
-            return;
-        }
-
-        const bounds = this.map.getBounds();
-        this.opencaching.loadBbox(
-            bounds.getNorth(),
-            bounds.getSouth(),
-            bounds.getWest(),
-            bounds.getEast(),
-        );
-    }
-
-    public display_opencaching(caches: Map<string, IOkapiCache>): void {
-        this.opencaching_markers.forEach((element: IOpencachingMarker): void => {
-            if (!caches.has(element.data.code)) {
-                this.map.removeLayer(element.marker_obj);
-            }
-        });
-
-        if (this.opencaching === null) {
-            return;
-        }
-
-        const new_markers: Map<string, IOpencachingMarker> = new Map();
-        caches.forEach((data: IOkapiCache, code: string): void => {
-            if (!this.opencaching_markers.has(code)) {
-                const m: IOpencachingMarker = {
-                    marker_obj: L.marker(
-                        from_coordinates(Opencaching.parseLocation(data.location)),
-                        {
-                            icon: this.opencaching_icon(data.type),
-                            draggable: false,
-                        },
-                    ),
-                    data,
-                };
-                m.marker_obj.addTo(this.map);
-                m.marker_obj.bindPopup(
-                    `<span>${data.type}</span><br /><b>${code}: ${data.name}</b><br /><a href="${data.url}" target="_blank">Link</a>`,
-                );
-                new_markers.set(code, m);
-            } else {
-                new_markers.set(code, this.opencaching_markers.get(code)!);
-            }
-        });
-        this.opencaching_markers = new_markers;
-    }
-
-    public opencaching_icon(type: string): L.Icon {
-        if (!this.opencaching_icons.has(type)) {
-            const icon = L.icon({
-                iconUrl: Opencaching.type_icon(type),
-                iconAnchor: [12, 25],
-            });
-            this.opencaching_icons.set(type, icon);
-        }
-
-        return this.opencaching_icons.get(type)!;
     }
 }

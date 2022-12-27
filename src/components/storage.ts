@@ -66,18 +66,6 @@ export class Storage {
             case "TOPO":
                 map_type = MapType.OPENTOPOMAP;
                 break;
-            case "roadmap":
-                map_type = MapType.GOOGLE_ROADMAP;
-                break;
-            case "terrain":
-                map_type = MapType.GOOGLE_TERRAIN;
-                break;
-            case "satellite":
-                map_type = MapType.GOOGLE_SATELLITE;
-                break;
-            case "hybrid":
-                map_type = MapType.GOOGLE_HYBRID;
-                break;
             default:
         }
 

@@ -13,7 +13,7 @@ export class Language extends MapStateObserver {
 
     public constructor(app: App) {
         super(app);
-
+        console.log("init i18n")
         this.initialized = false;
 
         i18next
@@ -27,12 +27,11 @@ export class Language extends MapStateObserver {
                     caches: ["localStorage"],
                 },
                 load: "languageOnly",
-                whitelist: ["en", "de"],
-                nonExplicitWhitelist: true,
                 fallbackLng: ["en", "de"],
                 ns: ["main"],
                 defaultNS: "main",
                 resources,
+                supportedLngs: ["en", "de"],
             })
             .then((): void => {
                 this.initialized = true;
@@ -48,7 +47,7 @@ export class Language extends MapStateObserver {
             return;
         }
 
-        if (this.app.map_state.language === i18next.language) {
+        if (this.app.map_state.language === i18next.language || i18next.language.startsWith(this.app.map_state.language)) {
             return;
         }
         this.app.message(`${i18next.language} => ${this.app.map_state.language}`);

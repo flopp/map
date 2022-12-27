@@ -4,10 +4,6 @@ export enum MapType {
     STAMEN_TERRAIN = "STAMEN_TERRAIN",
     HUMANITARIAN = "HUMANITARIAN",
     ARCGIS_WORLDIMAGERY = "ARCGIS_WORLDIMAGERY",
-    GOOGLE_ROADMAP = "GOOGLE_ROADMAP",
-    GOOGLE_SATELLITE = "GOOGLE_SATELLITE",
-    GOOGLE_HYBRID = "GOOGLE_HYBRID",
-    GOOGLE_TERRAIN = "GOOGLE_TERRAIN",
 }
 
 export const maptype2string = String;
@@ -24,14 +20,6 @@ export const string2maptype = (s: string): MapType | null => {
             return MapType.HUMANITARIAN;
         case MapType.ARCGIS_WORLDIMAGERY:
             return MapType.ARCGIS_WORLDIMAGERY;
-        case MapType.GOOGLE_ROADMAP:
-            return MapType.GOOGLE_ROADMAP;
-        case MapType.GOOGLE_SATELLITE:
-            return MapType.GOOGLE_SATELLITE;
-        case MapType.GOOGLE_HYBRID:
-            return MapType.GOOGLE_HYBRID;
-        case MapType.GOOGLE_TERRAIN:
-            return MapType.GOOGLE_TERRAIN;
         default:
             return null;
     }
@@ -49,27 +37,7 @@ export const maptype2human = (t: MapType | null): string => {
             return "Humanitarian";
         case MapType.ARCGIS_WORLDIMAGERY:
             return "Arcgis World Imagery";
-        case MapType.GOOGLE_ROADMAP:
-            return "Google Roadmap";
-        case MapType.GOOGLE_SATELLITE:
-            return "Google Satellite";
-        case MapType.GOOGLE_HYBRID:
-            return "Google Hybrid";
-        case MapType.GOOGLE_TERRAIN:
-            return "Google Terrain";
         default:
             return "Unknown";
-    }
-};
-
-export const isGoogle = (t: MapType | null): boolean => {
-    switch (t) {
-        case MapType.GOOGLE_ROADMAP:
-        case MapType.GOOGLE_SATELLITE:
-        case MapType.GOOGLE_HYBRID:
-        case MapType.GOOGLE_TERRAIN:
-            return true;
-        default:
-            return false;
     }
 };

@@ -6,11 +6,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
-const envPath = fs.existsSync(path.join(__dirname, '.env'))
-    ? path.join(__dirname, '.env')
-    : path.join(__dirname, '.env.sample');
-const dotenv = require('dotenv').config({
-    path: envPath,
+
+let htmlPageNames = ['imprint', 'privacy'];
+let multipleHtmlPlugins = htmlPageNames.map(name => {
+    return new HtmlWebpackPlugin({
+        template: `./src/${name}.html`,
+        filename: `${name}.html`,
+        chunks: [`${name}`]
+    })
 });
 
 module.exports = {
@@ -90,9 +93,6 @@ module.exports = {
         extensions: ['.ts', '.js'],
     },
     plugins: [
-        new webpack.DefinePlugin({
-            _config: JSON.stringify(dotenv.parsed),
-        }),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
@@ -108,12 +108,11 @@ module.exports = {
                 {
                     from: 'src/assets',
                     to: 'assets',
-                },
-                {
+                }, {
                     from: 'node_modules/feather-icons/dist/feather-sprite.svg',
                     to: 'assets',
                 },
             ],
         }),
-    ],
+    ].concat(multipleHtmlPlugins),
 };

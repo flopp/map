@@ -1,14 +1,6 @@
 {
     "main": {
         "dialog": {
-            "api-keys": {
-                "google": "Google Maps API-Schl\u00fcssel",
-                "google-help": "Erstelle deinen eigenen API-Schl\u00fcssel f\u00fcr die Google Maps Javascript API in Googles API Console.",
-                "google-link": "Google API Console",
-                "google-placeholder": "Google Maps API-Schl\u00fcssel",
-                "help": "Eigene API-Schl\u00fcssel erlauben den Zugriff auf das Kartenmaterial von Google Maps. Deine eigenen API-Schl\u00fcssel werden nur in deinem Browser gespeichert (local storage). Sie werden nur zu den entsprechenden Google Maps-Servern geschickt.",
-                "title": "Eigene API-Keys Hinzuf\u00fcgen"
-            },
             "line-settings": {
                 "apply": "Anwenden",
                 "bad_values_message": "Ung\u00fcltige Werte.",
@@ -99,6 +91,9 @@
         },
         "sidebar": {
             "info": {
+                "legal": "Datenschutz/Impressum",
+                "privacy": "Datenschutzerklärung",
+                "imprint": "Impressum",
                 "contact": "Kontakt/Mail",
                 "contact-help": "Wenn du Fragen oder Vorschl\u00e4ge hast, kontaktiere mich bitte via E-Mail.",
                 "sources": "Quellcode/Github",
@@ -109,17 +104,10 @@
             },
             "layers": {
                 "additional": "Zus\u00e4tzliche Ebenen",
-                "api-keys": "Eigene API-Schl\u00fcssel",
                 "base": "Hintergrundebene",
-                "base-help": "Google Maps wurde deaktiviert.",
                 "german_npa": "Naturschutzgebiete (Deutschland)",
-                "german_npa-help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (gr\u00fcne Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
+                "german_npa-help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (rote Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
                 "german_npa_button": "Offizielle Naturschutzgebiet-Karte",
-                "google_disabled": "Google Maps Ebenen wurden deaktiviert wegen fehlenden/fehlerhaften API-Schl\u00fcsseln oder sonstigen API-Problemen.",
-                "hill-shading": "Schummerung (hill-shading)",
-                "opencaching": "Geocaches (von Opencaching)",
-                "opencaching-help": "Zeige Geocaches von Opencaching-Seiten an.",
-                "opencaching-button": "Opencaching Übersichtsseite",
                 "title": "Ebenen"
             },
             "lines": {

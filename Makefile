@@ -1,4 +1,5 @@
-UPLOAD_TARGET=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/2oc.de/
+UPLOAD_TARGET=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/flopp.net/
+UPLOAD_TARGET2=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/2oc.de/
 
 .PHONY: setup
 setup:
@@ -52,8 +53,12 @@ build:
 
 .PHONY: upload
 upload: build
-	@echo "DRY RUN"
-	@(cd dist && rsync -v -r --delete --dry-run . ${UPLOAD_TARGET})
-	@echo "PRESS ENTER TO CONTINUE"
-	@read WAIT
+	#@echo "DRY RUN"
+	#@(cd dist && rsync -v -r --delete --dry-run . ${UPLOAD_TARGET})
+	#@echo "PRESS ENTER TO CONTINUE"
+	#@read WAIT
 	(cd dist && rsync -v -r --delete . ${UPLOAD_TARGET})
+
+.PHONY: upload2
+upload2: build
+	(cd dist && rsync -v -r --delete . ${UPLOAD_TARGET2})

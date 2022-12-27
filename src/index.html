@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Map</title>
+        <title>Flopp's Map</title>
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="assets/favicon.png" type="image/png" />
+        <link rel="shortcut icon" href="assets/favicon.png" type="image/png" />
     </head>
 
     <body>
@@ -48,25 +50,9 @@
                                 <select data-base-layer></select>
                             </div>
                         </div>
-                        <p class="help is-hidden" data-base-layer-help data-i18n="sidebar.layers.base-help">Google Maps layers have been disabled</p>
                     </div>
-
-                    <hr />
-
-                    <div class="buttons">
-                        <a id="btn-api-keys" class="button is-fullwidth is-success" data-add-keys-button data-i18n="sidebar.layers.api-keys">Add Your Own API Keys</a>
-                    </div>
-
                     <div class="field">
                         <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
-                        <div class="control">
-                            <label class="checkbox">
-                                <input data-hill-shading-layer type="checkbox" />
-                                <span data-i18n="sidebar.layers.hill-shading">Hill-shading</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="field">
                         <div class="control">
                             <label class="checkbox">
                                 <input data-german-npa-layer type="checkbox" />
@@ -77,23 +63,6 @@
                         <div class="control">
                             <a class="button is-text is-small" href="https://geodienste.bfn.de/schutzgebiete" target="_blank">
                                 <span data-i18n="sidebar.layers.german_npa_button">Official NPA Web Map</span>
-                                <svg class="icon icon-small">
-                                    <use xlink:href="assets/feather-sprite.svg#external-link"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <label class="checkbox">
-                                <input data-opencaching-layer type="checkbox" />
-                                <span data-i18n="sidebar.layers.opencaching">Opencaching</span>
-                            </label>
-                        </div>
-                        <p class="help" data-i18n="sidebar.layers.opencaching-help"></p>
-                        <div class="control">
-                            <a class="button is-text is-small" href="https://opencaching.eu" target="_blank">
-                                <span data-i18n="sidebar.layers.opencaching-button">Opencaching Overview Site</span>
                                 <svg class="icon icon-small">
                                     <use xlink:href="assets/feather-sprite.svg#external-link"/>
                                 </svg>
@@ -216,6 +185,16 @@
             <div class="sidebar-container" id="sidebar-info">
                 <div class="scrollable-content content">
                     <div class="field">
+                        <label class="label" data-i18n="sidebar.info.legal">Privacy Policy/Imprint</label>
+                        <p class="help">
+                            <a href="privacy.html" target="_blank"><span data-i18n="sidebar.info.privacy">Privacy Policy</span></a>,
+                            <a href="imprint.html" target="_blank"><span data-i18n="sidebar.info.imprint">Imprint</span></a>     
+                        </p>
+                    </div>
+
+                    <hr />
+                    
+                    <div class="field">
                         <label class="label" data-i18n="sidebar.info.contact">Contact/Mail</label>
                         <p class="help" data-i18n="sidebar.info.contact-help">If you have any suggestions please feel free to contact me via e-mail.</p>
                         <div class="control">
@@ -244,7 +223,7 @@
                     </div>
 
                     <hr />
-
+<!--
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.support">Support/Paypal</label>
                         <p class="help" data-i18n="sidebar.info.support-help">This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.</p>
@@ -257,50 +236,12 @@
                             </a>
                         </div>
                     </div>
+-->
                 </div>
             </div>
         </div>
 
         <div id="map-container-leaflet" class="map-container"></div>
-        <div id="map-container-google" class="map-container"></div>
-
-        <div id="api-keys-dialog" class="modal">
-            <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <h2 class="modal-card-title" data-i18n="dialog.api-keys.title">Add Your Own API Keys</h2>
-                        <button class="delete" data-cancel aria-label="close"></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <p data-i18n="dialog.api-keys.help">Adding your own API keys enables access to map layers from Google Maps. Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.</p>
-
-                        <h3 class="is-size-4" data-i18n="dialog.api-keys.google">Google Maps API Key</h3>
-                        <p data-i18n="dialog.api-keys.google-help">
-                            Get your API Key for the Google Maps Javascript API from Google's API console.
-                        </p>
-                        <div class="field">
-                            <div class="control">
-                                <a class="button is-warning" href="https://console.developers.google.com" target="_blank">
-                                    <span data-i18n="dialog.api-keys.google-link">Google API Console</span>
-                                    <svg class="icon icon-small">
-                                        <use xlink:href="assets/feather-sprite.svg#external-link"/>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <input data-google-api-key class="input" type="text" placeholder="Google API Key" data-i18n="dialog.api-keys.google-placeholder" data-i18n-target="placeholder">
-                            </div>
-                        </div>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button is-success" data-ok data-i18n="general.apply">Apply</button>
-                        <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                    </footer>
-                </div>
-            </div>
-        </div>
 
         <div id="projection-dialog" class="modal">
             <div class="modal-background"></div>
@@ -528,7 +469,5 @@
                 </footer>
             </div>
         </div>
-
-        <!--TRACKING-->
     </body>
 </html>

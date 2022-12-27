@@ -18,8 +18,7 @@ export enum MapStateChange {
     VIEW = 12,
     MARKERS = 16,
     LINES = 32,
-    API_KEYS = 64,
-    LANGUAGE = 128,
+    LANGUAGE = 64,
     EVERYTHING = 255,
 }
 
@@ -38,13 +37,10 @@ export class MapState {
     public app: App;
     public language: string = "";
     public sidebar_open: string | null = null;
-    public google_api_key: string = "";
     public map_type: MapType | null = null;
     public zoom: number | null = null;
     public center: Coordinates | null = null;
-    public hill_shading: boolean = false;
     public german_npa: boolean = false;
-    public opencaching: boolean = false;
     public markers: Marker[] = [];
     public markers_hash: Map<number, Marker>;
     public lines: Line[] = [];
@@ -69,15 +65,11 @@ export class MapState {
     public store(): void {
         this.storage.set("language", this.language);
 
-        this.storage.set("google_api_key", this.google_api_key);
-
         this.storage.set("sidebar_open", this.sidebar_open);
         this.storage.set_coordinates("center", this.center);
         this.storage.set_int("zoom", this.zoom);
         this.storage.set("map_type", maptype2string(this.map_type));
-        this.storage.set_bool("hillshading", this.hill_shading);
         this.storage.set_bool("german_npa", this.german_npa);
-        this.storage.set_bool("opencaching", this.opencaching);
         this.storage.set("markers", this.get_marker_ids_string());
         this.markers.forEach((marker: Marker): void => {
             this.update_marker_storage(marker);
@@ -101,9 +93,6 @@ export class MapState {
     }
 
     public restore(): void {
-        // Api keys
-        this.set_google_api_key(this.storage.get("google_api_key", "")!);
-
         // Sidebar
         this.set_sidebar_open(this.storage.get("sidebar_open", null));
 
@@ -115,9 +104,7 @@ export class MapState {
         this.set_map_type(
             string2maptype(this.storage.get("map_type", maptype2string(MapType.STAMEN_TERRAIN))!)!,
         );
-        this.set_hill_shading(this.storage.get_bool("hillshading", false));
         this.set_german_npa(this.storage.get_bool("german_npa", false));
-        this.set_opencaching(this.storage.get_bool("opencaching", false));
 
         // Markers
         const marker_ids: Map<number, number> = new Map();
@@ -204,13 +191,10 @@ export class MapState {
         const ok_keys = new Set();
         ok_keys.add("version");
         ok_keys.add("language");
-        ok_keys.add("google_api_key");
         ok_keys.add("center");
         ok_keys.add("zoom");
         ok_keys.add("map_type");
-        ok_keys.add("hillshading");
         ok_keys.add("german_npa");
-        ok_keys.add("opencaching");
         ok_keys.add("sidebar_open");
         ok_keys.add("markers");
         this.markers.forEach((obj: Marker): void => {
@@ -297,17 +281,6 @@ export class MapState {
                             case "TOPO":
                                 map_type = MapType.OPENTOPOMAP;
                                 break;
-                            case "roadmap":
-                                map_type = MapType.GOOGLE_ROADMAP;
-                                break;
-                            case "terrain":
-                                map_type = MapType.GOOGLE_TERRAIN;
-                                break;
-                            case "satellite":
-                                map_type = MapType.GOOGLE_SATELLITE;
-                                break;
-                            case "hybrid":
-                                map_type = MapType.GOOGLE_HYBRID;
                             default:
                                 map_type = null;
                         }
@@ -533,15 +506,16 @@ export class MapState {
     }
 
     public set_language(language: string): void {
-        this.language = language;
+        if (language.toLowerCase().startsWith("de")) {
+            this.language = "de";
+        } else {
+            this.language = "en";
+        }
+        if (language !== this.language) {
+            console.log(`Normalizing language settings: "${language}" => "${this.language}"`);
+        }
         this.storage.set("language", this.language);
         this.update_observers(MapStateChange.LANGUAGE);
-    }
-
-    public set_google_api_key(key: string): void {
-        this.google_api_key = key;
-        this.storage.set("google_api_key", this.google_api_key);
-        this.update_observers(MapStateChange.API_KEYS);
     }
 
     public set_sidebar_open(section: string | null): void {
@@ -556,21 +530,9 @@ export class MapState {
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
-    public set_hill_shading(enabled: boolean): void {
-        this.hill_shading = enabled;
-        this.storage.set_bool("hillshading", this.hill_shading);
-        this.update_observers(MapStateChange.MAPTYPE);
-    }
-
     public set_german_npa(enabled: boolean): void {
         this.german_npa = enabled;
         this.storage.set_bool("german_npa", this.german_npa);
-        this.update_observers(MapStateChange.MAPTYPE);
-    }
-
-    public set_opencaching(enabled: boolean): void {
-        this.opencaching = enabled;
-        this.storage.set_bool("opencaching", this.opencaching);
         this.update_observers(MapStateChange.MAPTYPE);
     }
 
@@ -858,9 +820,7 @@ export class MapState {
             maptype: this.map_type,
             center: this.center!.to_string_D(),
             zoom: this.zoom,
-            hill_shading: this.hill_shading,
             german_npa: this.german_npa,
-            opencaching: this.opencaching,
             settings: {
                 markers: {
                     coordinates_format: this.settings_marker_coordinates_format,
@@ -906,16 +866,8 @@ export class MapState {
             }
         }
 
-        if ("hill_shading" in data) {
-            this.hill_shading = data.hill_shading;
-        }
-
         if ("german_npa" in data) {
             this.german_npa = data.german_npa;
-        }
-
-        if ("opencaching" in data) {
-            this.opencaching = data.opencaching;
         }
 
         if ("settings" in data) {

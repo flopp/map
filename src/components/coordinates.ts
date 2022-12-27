@@ -1,5 +1,5 @@
 // @ts-ignore
-import {Geodesic} from "geographiclib";
+import {Geodesic} from "geographiclib-geodesic";
 
 export enum CoordinatesFormat {
     D = "D",
@@ -359,7 +359,7 @@ export class Coordinates {
             Geodesic.DISTANCE | Geodesic.LONG_UNROLL,
         );
 
-        return r.s12;
+        return r.s12!;
     }
 
     public distance_bearing(other: Coordinates): IDistanceBearing {
@@ -372,7 +372,7 @@ export class Coordinates {
             Geodesic.DISTANCE | Geodesic.AZIMUTH | Geodesic.LONG_UNROLL,
         );
 
-        let bearing: number = r.azi1;
+        let bearing: number = r.azi1!;
         while (bearing < 0) {
             bearing += 360;
         }
@@ -380,7 +380,7 @@ export class Coordinates {
             bearing -= 360;
         }
 
-        return {distance: r.s12, bearing};
+        return {distance: r.s12!, bearing};
     }
 
     public project(angle: number, distance: number): Coordinates {
@@ -393,7 +393,7 @@ export class Coordinates {
             Geodesic.LONGITUDE | Geodesic.LATITUDE | Geodesic.LONG_UNROLL,
         );
 
-        return new Coordinates(r.lat2, r.lon2);
+        return new Coordinates(r.lat2!, r.lon2!);
     }
 
     public interpolate_geodesic_line(other: Coordinates, _zoom: number): Coordinates[] {

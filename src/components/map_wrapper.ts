@@ -32,16 +32,8 @@ export class MapWrapper extends MapStateObserver {
         throw new Error("not implemented");
     }
 
-    public set_hill_shading(_enabled: boolean): void {
-        console.log("The 'hill_shading' feature is not implemented for this map wrapper.");
-    }
-
     public set_german_npa(_enabled: boolean): void {
         console.log("The 'german_npa' feature is not implemented for this map wrapper.");
-    }
-
-    public set_opencaching(_enabled: boolean): void {
-        console.log("The 'opencaching' feature is not implemented for this map wrapper.");
     }
 
     public set_map_view(_center: Coordinates, _zoom: number): void {
@@ -113,9 +105,7 @@ export class MapWrapper extends MapStateObserver {
         /* update view */
         if ((changes & MapStateChange.MAPTYPE) !== 0) {
             this.set_map_type(this.app.map_state.map_type!);
-            this.set_hill_shading(this.app.map_state.hill_shading);
             this.set_german_npa(this.app.map_state.german_npa);
-            this.set_opencaching(this.app.map_state.opencaching);
         }
         if ((changes & MapStateChange.VIEW) !== 0) {
             this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);

@@ -1,14 +1,6 @@
 {
     "main": {
         "dialog": {
-            "api-keys": {
-                "google": "Google Maps API Key",
-                "google-help": "Get your API Key for the Google Maps Javascript API from Google's API console.",
-                "google-link": "Google API Console",
-                "google-placeholder": "Google API Key",
-                "help": "Your own API keys are only stored in your browser's local storage space. They are never transmitted to any servers except the corresponding Google Maps servers, and they are never part of any data export.",
-                "title": "Add Your Own API Keys"
-            },
             "line-settings": {
                 "apply": "Apply",
                 "bad_values_message": "Invalid values.",
@@ -99,6 +91,9 @@
         },
         "sidebar": {
             "info": {
+                "legal": "Privacy Policy/Imprint",
+                "privacy": "Privacy Policy",
+                "imprint": "Imprint",
                 "contact": "Contact/Mail",
                 "contact-help": "If you have any suggestions please feel free to contact me via e-mail.",
                 "sources": "Sources/Github",
@@ -109,17 +104,10 @@
             },
             "layers": {
                 "additional": "Additional Layers",
-                "api-keys": "Own API Keys",
                 "base": "Base Layer",
-                "base-help": "Google Maps layers have been disabled.",
                 "german_npa": "Nature Protection Areas (Germany)",
-                "german_npa-help": "Overlay the map with German Nature Protection Areas (in green). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
+                "german_npa-help": "Overlay the map with German Nature Protection Areas (in red). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
                 "german_npa_button": "Official NPA Web Map",
-                "google_disabled": "Google Maps layers have been disabled due to missing/invalid API keys or other API problems.",
-                "hill-shading": "Hill-shading",
-                "opencaching": "Geocaches (from Opencaching)",
-                "opencaching-help": "Display geocaches from Opencaching sites.",
-                "opencaching-button": "Opencaching Overview Site",
                 "title": "Layers"
             },
             "lines": {
