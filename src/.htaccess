@@ -1,0 +1,9 @@
+RewriteEngine on
+
+RewriteBase /
+
+Redirect /safari https://safari.flopp.net
+
+RewriteRule ^index.php$ /
+RewriteRule ^beta.php$ /
+RewriteRule ^map.php$ /

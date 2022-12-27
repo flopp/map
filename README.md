@@ -2,7 +2,7 @@
 
 Reimplementation of https://github.com/flopp/FloppsMap using Leaflet only.
 
-Demo site at https://2oc.de/
+Installed at https://flopp.net/
 
 
 ```

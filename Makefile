@@ -50,6 +50,7 @@ run-dev:
 .PHONY: build
 build:
 	./node_modules/.bin/webpack --config webpack.prod.js
+	cp src/.htaccess dist/
 
 .PHONY: upload
 upload: build
