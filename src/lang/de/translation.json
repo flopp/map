@@ -146,7 +146,7 @@
             "search": {
                 "locate-me": "Lokalisiere mich!",
                 "locate-me-help": "Zentriere die Karte auf deiner aktuellen Position.",
-                "search-help": "Suche nach einem Ort (gebe z.B. einen St\u00e4dtename oder Koordinaten in verschiedenen Formaten ein) und zentriere die Karte.",
+                "search-help": "Suche nach einem Ortsnamen oder gib Koordinaten ein.",
                 "search-placeholder": "Ort",
                 "title": "Suche"
             },

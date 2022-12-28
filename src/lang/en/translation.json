@@ -146,7 +146,7 @@
             "search": {
                 "locate-me": "Locate Me",
                 "locate-me-help": "Determine your current location and center the map.",
-                "search-help": "Search for a location (e.g. enter a city name or coordinates) and center the map.",
+                "search-help": "Search for a place or enter coordinates.",
                 "search-placeholder": "Location",
                 "title": "Search"
             },
