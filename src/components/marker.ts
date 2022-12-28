@@ -39,7 +39,7 @@ export class Marker {
 
     public to_gpx(): string {
         const symbol = "flag";
-        let data: string[] = [];
+        const data: string[] = [];
         data.push(`<wpt lat="${this.coordinates.lat().toFixed(8)}" lon="${this.coordinates.lng().toFixed(8)}">`);
         data.push(`    <name>${xml_escape(this.name)}</name>`);
         data.push(`    <sym>${symbol}</sym>`);

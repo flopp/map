@@ -7,7 +7,7 @@ class NewsArticle {
     public text_en: string;
     public text_de: string;
 
-    public constructor(date: string, text_en: string, text_de:string) {
+    public constructor(date: string, text_en: string, text_de: string) {
         this.date = date;
         this.text_en = text_en;
         this.text_de = text_de;
@@ -17,24 +17,21 @@ class NewsArticle {
         if (language.toLowerCase().startsWith("en")) {
             if (this.text_en.length > 0) {
                 return this.text_en;
-            } else {
-                return this.text_de;
             }
+            return this.text_de;
         }
 
         if (language.toLowerCase().startsWith("de")) {
             if (this.text_de.length > 0) {
                 return this.text_de;
-            } else {
-                return this.text_en;
             }
+            return this.text_en;
         }
 
         if (this.text_en.length > 0) {
             return this.text_en;
-        } else {
-            return this.text_de;
         }
+        return this.text_de;
     }
 };
 
@@ -82,7 +79,7 @@ export class NewsDialog extends Dialog {
     }
 
     public show(): void {
-        this.shown = news_articles.length - 1
+        this.shown = news_articles.length - 1;
         this._app.map_state.storage.set_int("news.shown", this.shown);
 
         this.updateContent();
@@ -99,7 +96,7 @@ export class NewsDialog extends Dialog {
     }
 
     public older(): void {
-        this.shown -= 1
+        this.shown -= 1;
         if (this.shown < 0) {
             this.shown = 0;
         }
@@ -108,7 +105,7 @@ export class NewsDialog extends Dialog {
     }
 
     public newer(): void {
-        this.shown += 1
+        this.shown += 1;
         if (this.shown >= news_articles.length) {
             this.shown = news_articles.length-1;
         }

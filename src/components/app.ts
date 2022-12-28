@@ -17,7 +17,7 @@ import {Sidebar} from "./sidebar";
 export class App {
     private readonly _lang: Language | null = null;
     private readonly notifications: Notifications;
-    
+
     public map_state: MapState;
     public icon_factory: IconFactory;
     public projection_dialog: ProjectionDialog;
@@ -28,7 +28,7 @@ export class App {
     public sidebar: Sidebar;
     public leaflet: LeafletWrapper;
     public news_dialog: NewsDialog;
-    
+
     public constructor(id_leaflet: string) {
         this.notifications = new Notifications();
 
@@ -53,7 +53,6 @@ export class App {
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
 
-        this.reset_maps();
         this.switch_map(this.map_state.map_type);
 
         this.news_dialog.maybeShow();
@@ -66,10 +65,6 @@ export class App {
     public message_error(text: string): void {
         this.notifications.message(text, "danger");
     }
-
-    public reset_maps(): void {
-    }
-
 
     public switch_map(type: MapType | null): void {
         this.map_state.set_map_type(type);

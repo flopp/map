@@ -175,7 +175,7 @@ export class LeafletWrapper extends MapWrapper {
     }
 
     public fit_objects(): void {
-        let bounds: any | L.LatLngBounds = null; 
+        let bounds: any | L.LatLngBounds = null;
         this.app.map_state.markers.forEach((marker: Marker): void => {
             const c = from_coordinates(marker.coordinates);
             if (bounds === null) {
@@ -184,7 +184,7 @@ export class LeafletWrapper extends MapWrapper {
                 bounds.extend(c);
             }
         });
-        
+
         if (bounds !== null) {
             this.map.fitBounds(bounds);
         }

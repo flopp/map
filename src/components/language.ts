@@ -13,7 +13,6 @@ export class Language extends MapStateObserver {
 
     public constructor(app: App) {
         super(app);
-        console.log("init i18n")
         this.initialized = false;
 
         i18next

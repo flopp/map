@@ -817,7 +817,7 @@ export class MapState {
     }
 
     public to_gpx(): string {
-        let data: string[] = [];
+        const data: string[] = [];
         data.push('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>');
         data.push('<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns="http://www.topografix.com/GPX/1/1" creator="Flopp\'s Map - http://flopp.net/" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd  http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www.garmin.com/xmlschemas/WaypointExtensionv1.xsd" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">');
         data.push('    <metadata>');
@@ -834,9 +834,11 @@ export class MapState {
     }
 
     public from_gpx(data: string): void {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data, "text/xml");
-        if (!xml) {
+        let xml: null|Document = null;
+        try {
+            const parser = new DOMParser();
+            xml = parser.parseFromString(data, "text/xml");
+        } catch(e) {
             this.app.message_error(this.app.translate("sidebar.tools.import-gpx-bad-file"));
             return;
         }
@@ -849,7 +851,7 @@ export class MapState {
             let radius = 0;
 
             const nameEl = waypoint.getElementsByTagName('name');
-            if (nameEl.length > 0 && nameEl[0].textContent != null) {
+            if (nameEl.length > 0 && nameEl[0].textContent !== null) {
                 name = nameEl[0].textContent;
             }
             name = name.trim();
@@ -858,7 +860,7 @@ export class MapState {
             }
 
             const radiusEl = waypoint.getElementsByTagName('wptx1:Proximity');
-            if (radiusEl.length > 0 && radiusEl[0].textContent != null) {
+            if (radiusEl.length > 0 && radiusEl[0].textContent !== null) {
                 const r = parse_float(radiusEl[0].textContent);
                 if (r !== null && r >= 0) {
                     radius = r;
