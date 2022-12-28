@@ -218,7 +218,9 @@ export class MapState {
         ok_keys.add("settings.line.distance_format");
         ok_keys.add("settings.line.random_color");
         ok_keys.add("settings.line.color");
+
         ok_keys.add("news.shown");
+        ok_keys.add("i18nextLng");
 
         const bad_keys = this.storage
             .all_keys()
