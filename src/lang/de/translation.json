@@ -1,6 +1,11 @@
 {
     "main": {
         "dialog": {
+            "news": {
+                "title": "Neuigkeiten",
+                "older": "Ältere",
+                "newer": "Neuere"
+            },
             "line-settings": {
                 "apply": "Anwenden",
                 "bad_values_message": "Ung\u00fcltige Werte.",
@@ -91,6 +96,8 @@
         },
         "sidebar": {
             "info": {
+                "news": "Neuigkeiten",
+                "news-help": "Zeige die letzten Neuigkeiten.",
                 "legal": "Datenschutz/Impressum",
                 "privacy": "Datenschutzerklärung",
                 "imprint": "Impressum",

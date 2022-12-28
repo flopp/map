@@ -1,6 +1,11 @@
 {
     "main": {
         "dialog": {
+            "news": {
+                "title": "News",
+                "older": "Older",
+                "newer": "Newer"
+            },
             "line-settings": {
                 "apply": "Apply",
                 "bad_values_message": "Invalid values.",
@@ -91,6 +96,8 @@
         },
         "sidebar": {
             "info": {
+                "news": "News",
+                "news-help": "Show the latest news.",
                 "legal": "Privacy Policy/Imprint",
                 "privacy": "Privacy Policy",
                 "imprint": "Imprint",

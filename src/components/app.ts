@@ -9,6 +9,7 @@ import {MapState, MapStateChange} from "./map_state";
 import {MapType} from "./map_type";
 import {Marker} from "./marker";
 import {MultiMarkersDialog} from "./multi_markers_dialog";
+import {NewsDialog} from "./news_dialog";
 import {Notifications} from "./notifications";
 import {ProjectionDialog} from "./projection_dialog";
 import {Sidebar} from "./sidebar";
@@ -16,7 +17,7 @@ import {Sidebar} from "./sidebar";
 export class App {
     private readonly _lang: Language | null = null;
     private readonly notifications: Notifications;
-
+    
     public map_state: MapState;
     public icon_factory: IconFactory;
     public projection_dialog: ProjectionDialog;
@@ -26,6 +27,7 @@ export class App {
     public id_leaflet: string;
     public sidebar: Sidebar;
     public leaflet: LeafletWrapper;
+    public news_dialog: NewsDialog;
     
     public constructor(id_leaflet: string) {
         this.notifications = new Notifications();
@@ -43,6 +45,7 @@ export class App {
         this.multi_markers_dialog = new MultiMarkersDialog(this);
         this.link_dialog = new LinkDialog(this);
         this.map_menu = new MapMenu(this);
+        this.news_dialog = new NewsDialog(this);
 
         this.id_leaflet = id_leaflet;
 
@@ -52,6 +55,8 @@ export class App {
 
         this.reset_maps();
         this.switch_map(this.map_state.map_type);
+
+        this.news_dialog.maybeShow();
     }
 
     public message(text: string): void {

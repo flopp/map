@@ -218,6 +218,7 @@ export class MapState {
         ok_keys.add("settings.line.distance_format");
         ok_keys.add("settings.line.random_color");
         ok_keys.add("settings.line.color");
+        ok_keys.add("news.shown");
 
         const bad_keys = this.storage
             .all_keys()
@@ -813,6 +814,26 @@ export class MapState {
         this.storage.set_color("settings.line.color", this.settings_line_color);
 
         this.update_observers(MapStateChange.LINES);
+    }
+
+    public to_gpx(): string {
+        let data: string[] = [];
+        data.push('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>');
+        data.push('<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns="http://www.topografix.com/GPX/1/1" creator="Flopp\'s Map - http://flopp.net/" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd  http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www.garmin.com/xmlschemas/WaypointExtensionv1.xsd" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">');
+        data.push('    <metadata>');
+        data.push('        <name>Export from Flopp\'s Map (flopp.net)</name>');
+        data.push('    </metadata>');
+
+        this.markers.forEach((marker: Marker): void => {
+            data.push(marker.to_gpx());
+        });
+
+        data.push('</gpx>');
+
+        return data.join("\n");
+    }
+
+    public from_gpx(data: any): void {
     }
 
     public to_json(): object {

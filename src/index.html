@@ -153,7 +153,24 @@
                         </div>
                         <p class="help" data-i18n="sidebar.tools.create-link-help">Create a link to this map, e.g. for sharing it with others.</p>
                     </div>
+<!--
+                    <hr />
 
+                    <div class="field">
+                        <div class="field"></span>
+                            <div class="control">
+                                <a id="btn-export-gpx" class="button is-success is-fullwidth" data-i18n="sidebar.tools.export-gpx">Export Markers (GPX)</a>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <input id="inp-import-gpx" style="display: none;" type="file" name="files" />
+                                <a id="btn-import-gpx" class="button is-success is-fullwidth" data-i18n="sidebar.tools.import-gpx">Import Markers (GPX)</a>
+                            </div>
+                        </div>
+                        <p class="help" data-i18n="sidebar.tools.export-gpx-help">Export/import a GPX file containing map markers.</p>
+                    </div>
+-->
                     <hr />
 
                     <div class="field">
@@ -184,6 +201,15 @@
 
             <div class="sidebar-container" id="sidebar-info">
                 <div class="scrollable-content content">
+                    <div class="field">
+                        <div class="control">
+                            <a id="btn-news" class="button is-fullwidth is-success" data-i18n="sidebar.info.news">Latest News</a>
+                        </div>
+                        <p class="help" data-i18n="sidebar.info.news-help">Show the latest news.</p>
+                    </div>
+
+                    <hr />
+
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.legal">Privacy Policy/Imprint</label>
                         <p class="help">
@@ -242,6 +268,26 @@
         </div>
 
         <div id="map-container-leaflet" class="map-container"></div>
+
+        <div id="news-dialog" class="modal">
+            <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <h2 class="modal-card-title" data-i18n="dialog.news.title">News</h2>
+                        <button class="delete" data-cancel aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <p id="news-dialog-date"></p>
+                        <p id="news-dialog-text"></p>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button" data-cancel data-i18n="general.cancel">Close</button>
+                        <button class="button" id="news-dialog-older" data-i18n="dialog.news.older">Older</button>
+                        <button class="button" id="news-dialog-newer" data-i18n="dialog.news.newer">Newer</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
 
         <div id="projection-dialog" class="modal">
             <div class="modal-background"></div>

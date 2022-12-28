@@ -1,5 +1,6 @@
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
+import {xml_escape} from "./utilities";
 
 let next_marker_id = 0;
 
@@ -34,6 +35,23 @@ export class Marker {
 
     public get_id(): number {
         return this.marker_id;
+    }
+
+    public to_gpx(): string {
+        const symbol = "flag";
+        let data: string[] = [];
+        data.push(`<wpt lat="${this.coordinates.lat().toFixed(8)}" lon="${this.coordinates.lng().toFixed(8)}">`);
+        data.push(`    <name>${xml_escape(this.name)}</name>`);
+        data.push(`    <sym>${symbol}</sym>`);
+        if (this.radius > 0) {
+            data.push(`    <extensions>`);
+            data.push(`      <wptx1:WaypointExtension>`);
+            data.push(`        <wptx1:Proximity>${this.radius}</wptx1:Proximity>`);
+            data.push(`      </wptx1:WaypointExtension>`);
+            data.push(`    </extensions>`);
+        }
+        data.push(`</wpt>`);
+        return data.join("\n");
     }
 
     public to_json(): IMarkerJson {

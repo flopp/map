@@ -182,6 +182,20 @@ const encode_parameters = (parameters: Record<string, string | number | boolean>
         }, [])
         .join("&");
 
+
+const xml_escape = (s: string): string => {
+    const escapes: Map<string, string> = new Map;
+    escapes.set('>', '&gt;');
+    escapes.set('<', '&lt;');
+    escapes.set("'", '&apos;');
+    escapes.set('"', '&quot;');
+    escapes.set('&', '&amp;');
+    const re = new RegExp('([&"<>\'])', 'g');
+    return s.replace(re, (_: string, group: string): string => {
+        return escapes.get(group)!;
+    });
+}
+
 export {
     parse_float,
     parse_int,
@@ -194,4 +208,5 @@ export {
     create_icon,
     encode_parameters,
     remove_element,
+    xml_escape,
 };

@@ -37,6 +37,30 @@ export class SidebarTools extends SidebarItem {
             this.app.show_link_dialog();
         });
 
+        document.querySelector("#btn-export-gpx")!.addEventListener("click", (): void => {
+            this.export_gpx();
+        });
+
+        document
+            .querySelector("#btn-import-gpx")!
+            .addEventListener("click", (event: InputEvent): void => {
+                //(document.querySelector("#inp-import-gpx") as HTMLButtonElement).click();
+                this.app.message("NOT IMPLEMENTED, YET");
+                event.preventDefault();
+            });
+        (document.querySelector("#inp-import-gpx") as HTMLInputElement).onchange = (
+            event: InputEvent,
+        ): void => {
+            if (event.target === null) {
+                return;
+            }
+            const files = (event.target as HTMLInputElement).files;
+            if (files === null) {
+                return;
+            }
+            this.import_gpx(files[0]);
+        };
+
         document.querySelector("#btn-export-json")!.addEventListener("click", (): void => {
             this.export_json();
         });
@@ -71,6 +95,30 @@ export class SidebarTools extends SidebarItem {
         }
 
         this.language_select.value = this.app.map_state.language;
+    }
+
+    public export_gpx(): void {
+        const data = this.app.map_state.to_gpx();
+        const element = create_element("a", [], {
+            href: `data:application/gpx+xml;charset=utf-8,${encodeURIComponent(data)}`,
+            download: "map.gpx",
+        });
+        element.style.display = "none";
+        document.body.append(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+
+    public import_gpx(file: File): void {
+        const reader = new FileReader();
+        reader.onloadend = (): void => {
+            //const data = JSON.parse(reader.result as string);
+            //this.app.map_state.from_json(data);
+        };
+        reader.readAsText(file);
+
+        // Reset file input
+        (document.querySelector("#inp-import-gpx") as HTMLInputElement).value = "";
     }
 
     public export_json(): void {
