@@ -918,7 +918,7 @@ export class MapState {
             if ("lines" in data.settings) {
                 if ("distance_format" in data.settings.lines) {
                     this.settings_line_distance_format = parseDistanceFormat(
-                        data.settings.lines.random_color,
+                        data.settings.lines.distance_format,
                         this.settings_line_distance_format,
                     );
                 }

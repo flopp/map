@@ -58,6 +58,12 @@ const news_articles: NewsArticle[] = [
         Florian aka. Flopp`),
 ];
 
+/*
+- Fix JSON import
+- Add GPX export/import
+*/
+
+
 export class NewsDialog extends Dialog {
     public shown: number;
 
