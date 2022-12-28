@@ -833,7 +833,86 @@ export class MapState {
         return data.join("\n");
     }
 
-    public from_gpx(data: any): void {
+    public from_gpx(data: string): void {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data, "text/xml");
+        if (!xml) {
+            this.app.message_error(this.app.translate("sidebar.tools.import-gpx-bad-file"));
+            return;
+        }
+
+        const markers: Marker[] = [];
+        let badWaypoints = 0;
+        const waypoints: Element[] = Array.from(xml.getElementsByTagName('wpt'));
+        waypoints.forEach((waypoint: Element, index: number): void => {
+            let name = "";
+            let radius = 0;
+
+            const nameEl = waypoint.getElementsByTagName('name');
+            if (nameEl.length > 0 && nameEl[0].textContent != null) {
+                name = nameEl[0].textContent;
+            }
+            name = name.trim();
+            if (name.length == 0) {
+                name = `GPX WAYPOINT ${index}`;
+            }
+
+            const radiusEl = waypoint.getElementsByTagName('wptx1:Proximity');
+            if (radiusEl.length > 0 && radiusEl[0].textContent != null) {
+                const r = parse_float(radiusEl[0].textContent);
+                if (r !== null && r >= 0) {
+                    radius = r;
+                }
+            }
+
+            const latS = waypoint.getAttribute('lat');
+            if (latS === null) {
+                badWaypoints += 1;
+                return;
+            }
+            const lat = parse_float(latS);
+            if (lat === null || lat < -90 || lat > 90) {
+                badWaypoints += 1;
+                return;
+            }   
+            const lonS = waypoint.getAttribute('lon');
+            if (lonS === null) {
+                badWaypoints += 1;
+                return;
+            }
+            const lon = parse_float(lonS);
+            if (lon === null) {
+                badWaypoints += 1;
+                return;
+            }
+
+            const marker = new Marker(new Coordinates(lat, lon));
+            if (!this.settings_marker_random_color) {
+                marker.color = this.settings_marker_color;
+            }
+            marker.name = name;
+            marker.radius = radius;
+            markers.push(marker);
+        });
+
+        if (markers.length == 0) {
+            this.app.message_error(this.app.translate("sidebar.tools.import-gpx-no-markers", `${badWaypoints}`));
+            return;
+        }
+        this.app.message(this.app.translate("sidebar.tools.import-gpx-markers", `${markers.length}`, `${badWaypoints}`));
+
+        this.delete_all_lines();
+        this.delete_all_markers();
+
+        markers.forEach((marker: Marker): void => {
+            this.markers.push(marker);
+            this.markers_hash.set(marker.get_id(), marker);
+            this.update_marker_storage(marker);
+        });
+        this.storage.set("markers", this.get_marker_ids_string());
+        this.update_observers(MapStateChange.MARKERS);
+
+        this.app.leaflet.fit_objects();
     }
 
     public to_json(): object {

@@ -40,6 +40,10 @@ export class MapWrapper extends MapStateObserver {
         throw new Error("not implemented");
     }
 
+    public fit_objects(): void {
+        throw new Error("not implemented");    
+    }
+
     public width(): number {
         return this.div.offsetWidth;
     }

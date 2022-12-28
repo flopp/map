@@ -174,6 +174,22 @@ export class LeafletWrapper extends MapWrapper {
         this.automatic_event = false;
     }
 
+    public fit_objects(): void {
+        let bounds: any | L.LatLngBounds = null; 
+        this.app.map_state.markers.forEach((marker: Marker): void => {
+            const c = from_coordinates(marker.coordinates);
+            if (bounds === null) {
+                bounds = new L.LatLngBounds(c, c);
+            } else {
+                bounds.extend(c);
+            }
+        });
+        
+        if (bounds !== null) {
+            this.map.fitBounds(bounds);
+        }
+    }
+
     public invalidate_size(): void {
         this.map.invalidateSize();
     }

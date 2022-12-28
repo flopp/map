@@ -44,8 +44,7 @@ export class SidebarTools extends SidebarItem {
         document
             .querySelector("#btn-import-gpx")!
             .addEventListener("click", (event: InputEvent): void => {
-                //(document.querySelector("#inp-import-gpx") as HTMLButtonElement).click();
-                this.app.message("NOT IMPLEMENTED, YET");
+                (document.querySelector("#inp-import-gpx") as HTMLButtonElement).click();
                 event.preventDefault();
             });
         (document.querySelector("#inp-import-gpx") as HTMLInputElement).onchange = (
@@ -112,8 +111,8 @@ export class SidebarTools extends SidebarItem {
     public import_gpx(file: File): void {
         const reader = new FileReader();
         reader.onloadend = (): void => {
-            //const data = JSON.parse(reader.result as string);
-            //this.app.map_state.from_json(data);
+            const data = (reader.result as string);
+            this.app.map_state.from_gpx(data);
         };
         reader.readAsText(file);
 
