@@ -1,3 +1,4 @@
+import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {xml_escape} from "./utilities";
@@ -19,10 +20,10 @@ export class Marker {
     public color: Color;
     public radius: number;
 
-    public constructor(coordinates: Coordinates) {
+    public constructor(coordinates: Coordinates, app: App) {
         this.marker_id = next_marker_id;
         this.coordinates = coordinates;
-        this.name = `Marker ${this.get_id()}`;
+        this.name = `${app.translate("general.marker")} ${this.get_id()}`;
         this.color = Color.random_from_palette();
         this.radius = 0;
 

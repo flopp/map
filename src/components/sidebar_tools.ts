@@ -19,6 +19,7 @@ export class SidebarTools extends SidebarItem {
         [
             {title: "English", short: "en"},
             {title: "Deutsch", short: "de"},
+            {title: "Français", short: "fr"},
         ].forEach((language: ITitleShort): void => {
             this.language_select.append(
                 new Option(

@@ -122,7 +122,7 @@ export class MapState {
                 const color = this.storage.get_color(`marker[${id}].color`, new Color("FF0000"));
                 const radius = this.storage.get_float(`marker[${id}].radius`, 0)!;
                 if (coordinates !== null) {
-                    const marker = new Marker(coordinates);
+                    const marker = new Marker(coordinates, this.app);
                     marker.name = name;
                     marker.color = color;
                     marker.radius = radius;
@@ -516,6 +516,8 @@ export class MapState {
     public set_language(language: string): void {
         if (language.toLowerCase().startsWith("de")) {
             this.language = "de";
+        } else if (language.toLowerCase().startsWith("fr")) {
+            this.language = "fr";
         } else {
             this.language = "en";
         }
@@ -565,7 +567,7 @@ export class MapState {
     }
 
     public add_marker(coordinates: Coordinates | null): Marker {
-        const marker = new Marker(coordinates === null ? this.center! : coordinates);
+        const marker = new Marker(coordinates === null ? this.center! : coordinates, this.app);
         if (!this.settings_marker_random_color) {
             marker.color = this.settings_marker_color;
         }
@@ -902,7 +904,7 @@ export class MapState {
                 return;
             }
 
-            const marker = new Marker(new Coordinates(lat, lon));
+            const marker = new Marker(new Coordinates(lat, lon), this.app);
             if (!this.settings_marker_random_color) {
                 marker.color = this.settings_marker_color;
             }
@@ -1061,7 +1063,7 @@ export class MapState {
                 }
 
                 if (coordinates !== null) {
-                    const marker = new Marker(coordinates);
+                    const marker = new Marker(coordinates, this.app);
                     this.markers.push(marker);
                     this.markers_hash.set(marker.get_id(), marker);
                     if (id !== null) {

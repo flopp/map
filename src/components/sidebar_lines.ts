@@ -133,10 +133,10 @@ export class SidebarLines extends SidebarItem {
 
         const center = create_element("div", ["line-center"]);
         const table = create_element("table");
-        this.create_row(table, "sidebar.lines.from", "line-from");
-        this.create_row(table, "sidebar.lines.to", "line-to");
-        this.create_row(table, "sidebar.lines.length", "line-distance");
-        this.create_row(table, "sidebar.lines.bearing", "line-bearing");
+        this.create_row(table, "sidebar.lines.from", "line-from"); // .translate("sidebar.lines.from")
+        this.create_row(table, "sidebar.lines.to", "line-to"); // .translate("sidebar.lines.to")
+        this.create_row(table, "sidebar.lines.length", "line-distance"); // .translate("sidebar.lines.length")
+        this.create_row(table, "sidebar.lines.bearing", "line-bearing"); // .translate("sidebar.lines.bearing")
         center.append(table);
         div.append(center);
 

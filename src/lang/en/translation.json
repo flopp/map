@@ -1,19 +1,14 @@
 {
     "main": {
         "dialog": {
-            "news": {
-                "title": "News",
-                "older": "Older",
-                "newer": "Newer"
-            },
             "line-settings": {
                 "apply": "Apply",
                 "bad_values_message": "Invalid values.",
                 "default-color": "Default Color",
-                "distance-format": "Distance Units",
-                "random-colors": "Use Random Colors",
                 "display-distance": "Display Distance",
                 "display-distance-text": "Display the length of each line directly on the map",
+                "distance-format": "Distance Units",
+                "random-colors": "Use Random Colors",
                 "title": "Line Settings"
             },
             "link": {
@@ -55,6 +50,11 @@
                 "title": "Create Multiple Markers",
                 "tokens_message": "Line {1}: {2} semicolon-separated tokens expected"
             },
+            "news": {
+                "newer": "Newer",
+                "older": "Older",
+                "title": "News"
+            },
             "projection": {
                 "bad_bearing_message": "Bad bearing value.",
                 "bad_distance_message": "Bad distance value.",
@@ -74,8 +74,8 @@
             }
         },
         "general": {
-            "apply": "Apply",
             "cancel": "Cancel",
+            "marker": "Marker",
             "no_marker_tag": "<NONE>",
             "submit": "Submit"
         },
@@ -88,7 +88,6 @@
         "messages": {
             "geolocation_error": "Geolocation error: {1}",
             "geolocation_not_available": "Geolocation services are not available.",
-            "layer_disabled": "{1} disabled due to an invalid API key or some API error.",
             "line_created": "A new line has been created.",
             "marker_created": "A new marker has been created."
         },
@@ -98,13 +97,13 @@
         },
         "sidebar": {
             "info": {
-                "news": "News",
-                "news-help": "Show the latest news.",
-                "legal": "Privacy Policy/Imprint",
-                "privacy": "Privacy Policy",
-                "imprint": "Imprint",
                 "contact": "Contact/Mail",
                 "contact-help": "If you have any suggestions please feel free to contact me via e-mail.",
+                "imprint": "Imprint",
+                "legal": "Privacy Policy/Imprint",
+                "news": "News",
+                "news-help": "Show the latest news.",
+                "privacy": "Privacy Policy",
                 "sources": "Sources/Github",
                 "sources-help": "The code for this website is open source, hosted at Github.",
                 "support": "Support/Paypal",
@@ -166,12 +165,12 @@
                 "create-markers-help": "Create multiple markers at once, i.e. by providing a list of coordinates.",
                 "export-gpx": "Export Markers (GPX)",
                 "export-gpx-help": "Export/Import markers (including name & radius) in GPX format. Importing deletes all current markers and lines.",
-                "import-gpx": "Import Markers (GPX)",
-                "import-gpx-bad-file": "Bad GPX file",
-                "import-gpx-no-markers": "No markers found ({1} bad waypoints)",
-                "import-gpx-markers": "{1} markers found ({2} bad waypoints)",
                 "export-json": "Export Map State",
                 "export-json-help": "Export/import a JSON file containing the full map state.",
+                "import-gpx": "Import Markers (GPX)",
+                "import-gpx-bad-file": "Bad GPX file",
+                "import-gpx-markers": "{1} markers found ({2} bad waypoints)",
+                "import-gpx-no-markers": "No markers found ({1} bad waypoints)",
                 "import-json": "Import Map State",
                 "language": "Language",
                 "title": "Tools"

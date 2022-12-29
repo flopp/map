@@ -376,8 +376,7 @@ export class LeafletWrapper extends MapWrapper {
         }
 
         if (midpoint !== null && this.app.map_state.settings_line_display_distance) {
-            obj.midpoint_icon.options.html = midpoint_text;
-            obj.midpoint_icon.options.className = this.create_midpoint_icon_css_class(line.color);
+            obj.midpoint_icon.options.html = `<span class="${this.create_midpoint_icon_css_class(line.color)}">${midpoint_text}</span>`;
             if (obj.midpoint_obj !== null) {
                 obj.midpoint_obj.setLatLng(from_coordinates(midpoint));
                 obj.midpoint_obj.setIcon(obj.midpoint_icon);
@@ -431,17 +430,17 @@ export class LeafletWrapper extends MapWrapper {
         this.midpoint_icon_css_classes.set(colorS, className);
         
         const value = `
-            font-size: 9px;
+            background: #${colorS};
+            color: #${color.text_color().to_string()};
             border: 1px solid #${colorS};
+            font-size: 9px;
             border-radius: 4px;
             text-align: center;
-            color: #${color.text_color().to_string()};
-            background: #${colorS};
             white-space: nowrap;
             padding-left: 0.5em;
             padding-right: 0.5em;
-            margin-left: -25px;
-            margin-top: -7px;
+            transform: translate(-50%, -50%);
+            display: inline-block;
         `;
 
         this.styles.innerHTML += `.${className} \{${value}\}\n`;

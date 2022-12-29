@@ -26,11 +26,11 @@ export class Language extends MapStateObserver {
                     caches: ["localStorage"],
                 },
                 load: "languageOnly",
-                fallbackLng: ["en", "de"],
+                fallbackLng: ["en", "de", "fr"],
                 ns: ["main"],
                 defaultNS: "main",
                 resources,
-                supportedLngs: ["en", "de"],
+                supportedLngs: ["en", "de", "fr"],
             })
             .then((): void => {
                 this.initialized = true;

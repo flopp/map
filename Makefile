@@ -39,6 +39,7 @@ update-translation:
 	./tools/find-i18n.py \
 		-t src/lang/en/translation.json \
 		-t src/lang/de/translation.json \
+		-t src/lang/fr/translation.json \
 		src/*.html \
 		src/*.ts \
 		src/components/*.ts

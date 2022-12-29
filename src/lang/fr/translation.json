@@ -1,0 +1,180 @@
+{
+    "main": {
+        "dialog": {
+            "line-settings": {
+                "apply": "Appliquer",
+                "bad_values_message": "Valeurs invalides.",
+                "default-color": "Couleur standard",
+                "display-distance": "Indicateur de distance",
+                "display-distance-text": "Affiche la longueur de chaque ligne directement sur la carte",
+                "distance-format": "Unit\u00e9s de distance",
+                "random-colors": "Couleur al\u00e9atoire",
+                "title": "R\u00e9glages de la ligne"
+            },
+            "link": {
+                "copied-message": "Le lien a \u00e9t\u00e9 copi\u00e9 dans le presse-papiers : {1}",
+                "copy": "Copier",
+                "failed-message": "\u00c9chec de la copie du lien.",
+                "help": "Tu peux partager ce lien avec d'autres personnes afin qu'elles puissent voir ta carte actuelle.",
+                "title": "G\u00e9n\u00e9rer un lien",
+                "too-long": "Le lien est probablement trop long. Il se peut que les navigateurs ne puissent pas le g\u00e9rer correctement."
+            },
+            "marker-settings": {
+                "apply": "Appliquer",
+                "bad_values_message": "Valeurs non conformes.",
+                "coordinates-format": "Format des coordonn\u00e9es",
+                "default-color": "Couleur standard",
+                "default-radius": "Rayon standard (m)",
+                "default-radius-placeholder": "Rayon",
+                "random-colors": "Couleur al\u00e9atoire",
+                "title": "R\u00e9glages des marqueurs"
+            },
+            "multi-markers": {
+                "bad_common_color_message": "Couleur commune d\u00e9fectueuse.",
+                "bad_common_radius_message": "Rayon commun erron\u00e9.",
+                "color": "Couleur",
+                "color_message": "Ligne {1} : La couleur ne peut pas \u00eatre analys\u00e9e : {2}",
+                "color_token": "COULEUR",
+                "common-attributes": "Attributs de marqueurs communs",
+                "coordinates_message": "Ligne {1} : Les coordonn\u00e9es ne peuvent pas \u00eatre analys\u00e9es : {2}",
+                "coordinates_token": "COORDONN\u00c9ES",
+                "create": "G\u00e9n\u00e9rer",
+                "data": "Donn\u00e9es des marqueurs",
+                "format": "Sch\u00e9ma de format par ligne",
+                "name": "Pr\u00e9fixe du nom",
+                "name_message": "Ligne {1} : nom vide",
+                "name_token": "NOM",
+                "radius": "Rayon du cercle (m)",
+                "radius_message": "Ligne {1} : Le rayon ne peut pas \u00eatre analys\u00e9 : {2}",
+                "radius_token": "RAYON",
+                "title": "Ajouter plusieurs marqueurs",
+                "tokens_message": "Ligne {1} : {2} \u00e9l\u00e9ments s\u00e9par\u00e9s par des points-virgules attendus."
+            },
+            "news": {
+                "newer": "Plus r\u00e9cent",
+                "older": "Plus anciens",
+                "title": "Nouvelles"
+            },
+            "projection": {
+                "bad_bearing_message": "Valeur directionnelle erron\u00e9e",
+                "bad_distance_message": "Valeur de distance erron\u00e9e",
+                "bearing": "Direction (\u00b0)",
+                "create-line": "Cr\u00e9er une ligne ?",
+                "data": "Donn\u00e9es de projection",
+                "distance": "Distance (m)",
+                "line": "Ligne g\u00e9n\u00e9r\u00e9",
+                "line_color": "Couleur",
+                "marker": "Marqueur g\u00e9n\u00e9r\u00e9",
+                "marker_color": "Couleur",
+                "marker_name": "Nom",
+                "marker_radius": "Rayon (m)",
+                "new_marker_name": "Projection de {1}",
+                "project": "Projeter",
+                "title": "Projection"
+            }
+        },
+        "general": {
+            "cancel": "Annuler",
+            "marker": "Marqueur",
+            "no_marker_tag": "<ABSENT>",
+            "submit": "Appliquer"
+        },
+        "menu": {
+            "add-marker": "Ajouter un marqueur",
+            "center-map": "Centrer la carte ici",
+            "delete-marker": "Effacer le marqueur",
+            "waypoint-projection": "Projection"
+        },
+        "messages": {
+            "geolocation_error": "Erreur de g\u00e9olocalisation : {1}",
+            "geolocation_not_available": "La g\u00e9olocalisation n'est pas disponible.",
+            "line_created": "Une nouvelle ligne a \u00e9t\u00e9 ajout\u00e9e.",
+            "marker_created": "Un nouveau marqueur a \u00e9t\u00e9 ajout\u00e9."
+        },
+        "search": {
+            "no-result": "Aucun lieu appropri\u00e9 n'a \u00e9t\u00e9 trouv\u00e9.",
+            "server-error": "Erreur lors du contact avec le serveur 'Nominatim' : {1}"
+        },
+        "sidebar": {
+            "info": {
+                "contact": "Contact / E-Mail",
+                "contact-help": "Si tu as des questions ou des suggestions, n'h\u00e9site pas \u00e0 me contacter par e-mail.",
+                "imprint": "Mentions l\u00e9gales",
+                "legal": "Protection des donn\u00e9es / Mentions l\u00e9gales",
+                "news": "Nouvelles",
+                "news-help": "Affiche les derni\u00e8res nouvelles.",
+                "privacy": "Protection des donn\u00e9es",
+                "sources": "Code source / Github",
+                "sources-help": "Le code source de cette application web est open-source et disponible sous une licence libre sur Github.",
+                "support": "Support / Paypal",
+                "support-help": "Cette application web est mise \u00e0 disposition gratuitement, mais il y a des co\u00fbts en arri\u00e8re-plan (h\u00e9bergement, domaines, etc.). Si tu veux y participer, merci d'utiliser Paypal.",
+                "title": "Infos"
+            },
+            "layers": {
+                "additional": "Niveaux suppl\u00e9mentaires",
+                "base": "Niveau de fond",
+                "german_npa": "R\u00e9serves naturelles (Allemagne)",
+                "german_npa-help": "Affiche les r\u00e9serves naturelles allemandes sous forme de carte superpos\u00e9e (fl\u00e8ches rouges). Les donn\u00e9es sont mises \u00e0 disposition par l'Office f\u00e9d\u00e9ral allemand de la protection de la nature (Bundesamt f\u00fcr Naturschutz).",
+                "german_npa_button": "Carte officielle de la r\u00e9serve naturelle",
+                "title": "Niveaux"
+            },
+            "lines": {
+                "bad_values_message": "Valeurs erron\u00e9es.",
+                "bearing": "Direction :",
+                "delete": "Supprimer",
+                "edit": "Modifier",
+                "edit_color": "Couleur",
+                "edit_color_placeholder": "Couleur",
+                "edit_from": "De",
+                "edit_to": "\u00c0",
+                "from": "De:",
+                "length": "Longueur :",
+                "title": "Lignes",
+                "to": "\u00c0 :"
+            },
+            "markers": {
+                "bad_values_message": "Valeurs erron\u00e9es.",
+                "circle": "Cercle : {1} m",
+                "copy_coordinates_failure_message": "Les coordonn\u00e9es n'ont pas pu \u00eatre copi\u00e9es dans le presse-papiers.",
+                "copy_coordinates_success_message": "Les coordonn\u00e9es ont \u00e9t\u00e9 copi\u00e9es dans le presse-papiers : {1}",
+                "delete": "Supprimer",
+                "edit": "Modifier",
+                "edit_color": "Couleur",
+                "edit_color_placeholder": "Couleur",
+                "edit_coordinates": "Coordonn\u00e9es",
+                "edit_coordinates_placeholder": "Coordonn\u00e9es",
+                "edit_name": "Nom",
+                "edit_name_placeholder": "Nom",
+                "edit_radius": "Rayon du cercle (m)",
+                "edit_radius_placeholder": "Rayon",
+                "no_circle": "Pas de cercle",
+                "projection": "Projection",
+                "title": "Marqueurs"
+            },
+            "search": {
+                "locate-me": "Localise-moi !",
+                "locate-me-help": "Centre la carte sur ta position actuelle.",
+                "search-help": "Cherche un nom de lieu ou saisis des coordonn\u00e9es.",
+                "search-placeholder": "Lieu",
+                "title": "Chercher"
+            },
+            "tools": {
+                "create-link": "Cr\u00e9er un lien",
+                "create-link-help": "Cr\u00e9e un lien vers la repr\u00e9sentation cartographique actuelle, par exemple pour la partager avec d'autres.",
+                "create-markers": "Cr\u00e9er plusieurs marqueurs",
+                "create-markers-help": "Cr\u00e9e plusieurs marqueurs \u00e0 la fois, c'est-\u00e0-dire en indiquant une liste de coordonn\u00e9es.",
+                "export-gpx": "Exportateur de marqueurs (GPX)",
+                "export-gpx-help": "Exportez/importez les marqueurs (y compris le nom et le rayon) au format GPX. Lors de l'importation, tous les marqueurs et lignes existants sont supprim\u00e9s.",
+                "export-json": "Exporter l'\u00e9tat des cartes",
+                "export-json-help": "Exporte/importe l'\u00e9tat complet de la carte (marqueurs, lignes, etc.) au format JSON.",
+                "import-gpx": "Importer des marqueurs (GPX)",
+                "import-gpx-bad-file": "Fichier GPX erron\u00e9",
+                "import-gpx-markers": "{1} marqueurs trouv\u00e9s ({2} waypoints erron\u00e9s)",
+                "import-gpx-no-markers": "Aucun marqueur trouv\u00e9 ({1} waypoints erron\u00e9s)",
+                "import-json": "Importer l'\u00e9tat de la carte",
+                "language": "Langue",
+                "title": "Outils"
+            }
+        }
+    }
+}
