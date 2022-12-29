@@ -41,9 +41,14 @@ export class LeafletWrapper extends MapWrapper {
     private layer_humanitarian: L.TileLayer;
     private layer_arcgis_worldimagery: L.TileLayer;
     private layers: Map<string, L.TileLayer>;
+    private midpoint_icon_css_classes: Map<string, string>;
+    private styles: HTMLStyleElement;
 
     public constructor(div_id: string, app: App) {
         super(div_id, app);
+        this.midpoint_icon_css_classes = new Map();
+        this.styles = document.createElement('style');
+        document.getElementsByTagName('head')[0].appendChild(this.styles);
     }
 
     public create_map_object(div_id: string): void {
@@ -372,6 +377,7 @@ export class LeafletWrapper extends MapWrapper {
 
         if (midpoint !== null && this.app.map_state.settings_line_display_distance) {
             obj.midpoint_icon.options.html = midpoint_text;
+            obj.midpoint_icon.options.className = this.create_midpoint_icon_css_class(line.color);
             if (obj.midpoint_obj !== null) {
                 obj.midpoint_obj.setLatLng(from_coordinates(midpoint));
                 obj.midpoint_obj.setIcon(obj.midpoint_icon);
@@ -413,5 +419,33 @@ export class LeafletWrapper extends MapWrapper {
             iconSize: L.point(icon.size[0], icon.size[1]),
             iconAnchor: L.point(icon.anchor[0], icon.anchor[1]),
         });
+    }
+
+    public create_midpoint_icon_css_class(color: Color): string {
+        const colorS = color.to_string();
+        if (this.midpoint_icon_css_classes.has(colorS)) {
+            return this.midpoint_icon_css_classes.get(colorS)!;
+        }
+
+        const className = `midpoint-icon-${colorS}`;
+        this.midpoint_icon_css_classes.set(colorS, className);
+        
+        const value = `
+            font-size: 9px;
+            border: 1px solid #${colorS};
+            border-radius: 4px;
+            text-align: center;
+            color: #${color.text_color().to_string()};
+            background: #${colorS};
+            white-space: nowrap;
+            padding-left: 0.5em;
+            padding-right: 0.5em;
+            margin-left: -25px;
+            margin-top: -7px;
+        `;
+
+        this.styles.innerHTML += `.${className} \{${value}\}\n`;
+
+        return className;
     }
 }
