@@ -52,6 +52,7 @@ export class MapState {
     public settings_line_distance_format: DistanceFormat = DistanceFormat.m;
     public settings_line_random_color: boolean = true;
     public settings_line_color: Color = Color.default_color();
+    public settings_line_display_distance: boolean = true;
     public observers: MapStateObserver[] = [];
     public storage: Storage;
 
@@ -90,6 +91,7 @@ export class MapState {
         this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
         this.storage.set_color("settings.line.color", this.settings_line_color);
+        this.storage.set_bool("settings.line.display_distance", this.settings_line_display_distance);
     }
 
     public restore(): void {
@@ -183,6 +185,8 @@ export class MapState {
             color: this.storage.get_color("settings.line.color", new Color("FF0000")),
         });
 
+        this.set_display_distance(this.storage.get_bool("settings.line.display_distance", true));
+
         // Language
         this.set_language(this.storage.get("language", "")!);
     }
@@ -218,6 +222,7 @@ export class MapState {
         ok_keys.add("settings.line.distance_format");
         ok_keys.add("settings.line.random_color");
         ok_keys.add("settings.line.color");
+        ok_keys.add("settings.line.display_distance");
 
         ok_keys.add("news.shown");
         ok_keys.add("i18nextLng");
@@ -818,6 +823,13 @@ export class MapState {
         this.update_observers(MapStateChange.LINES);
     }
 
+    public set_display_distance(d: boolean): void {
+        this.settings_line_display_distance = d;
+        this.storage.set_bool("settings.line.display_distance", this.settings_line_display_distance);
+
+        this.update_observers(MapStateChange.LINES);
+    }
+
     public to_gpx(): string {
         const data: string[] = [];
         data.push('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>');
@@ -936,6 +948,7 @@ export class MapState {
                     distance_format: this.settings_line_distance_format,
                     random_color: this.settings_line_random_color,
                     color: this.settings_line_color.to_hash_string(),
+                    display_distance: this.settings_line_display_distance,
                 },
             },
             markers: [] as IMarkerJson[],
@@ -1013,6 +1026,9 @@ export class MapState {
                     if (color !== null) {
                         this.settings_line_color = color;
                     }
+                }
+                if ("display_distance" in data.settings.lines) {
+                    this.settings_line_display_distance = data.settings.lines.display_distance;
                 }
             }
         }

@@ -165,7 +165,8 @@
                         <div class="field">
                             <div class="control">
                                 <input id="inp-import-gpx" style="display: none;" type="file" name="files" />
-                                <a id="btn-import-gpx" class="button is-success is-fullwidth" data-i18n="sidebar.tools.import-gpx">Import Markers (GPX)</a>
+                                <a 
+                                id="btn-import-gpx" class="button is-success is-fullwidth" data-i18n="sidebar.tools.import-gpx">Import Markers (GPX)</a>
                             </div>
                         </div>
                         <p class="help" data-i18n="sidebar.tools.export-gpx-help">Export/import a GPX file containing map markers.</p>
@@ -506,6 +507,15 @@
                         </div>
                         <div class="control">
                             <input class="input" data-color type="color" placeholder="Color">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label" data-i18n="dialog.line-settings.display-distance">Display Distance</label>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input data-display-distance type="checkbox" />
+                                <span data-i18n="dialog.line-settings.display-distance-text">Display line distance on map</span>
+                            </label>
                         </div>
                     </div>
                 </section>

@@ -58,6 +58,7 @@ const news_articles: NewsArticle[] = [
 /*
 - Fix JSON import
 - Add GPX export/import
+- Display line length in map
 */
 
 

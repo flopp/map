@@ -12,6 +12,8 @@
                 "default-color": "Default Color",
                 "distance-format": "Distance Units",
                 "random-colors": "Use Random Colors",
+                "display-distance": "Display Distance",
+                "display-distance-text": "Display the length of each line directly on the map",
                 "title": "Line Settings"
             },
             "link": {

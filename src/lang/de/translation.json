@@ -12,6 +12,8 @@
                 "default-color": "Standardfarbe",
                 "distance-format": "Distanzeinheiten",
                 "random-colors": "Zuf\u00e4llige Farbe",
+                "display-distance": "Distanz-Anzeige",
+                "display-distance-text": "Zeige die Länge jeder Linie direkt in der Karte an",
                 "title": "Linieneinstellungen"
             },
             "link": {

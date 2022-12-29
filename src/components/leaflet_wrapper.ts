@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
+import {Distance, DistanceFormat} from "./distance";
 import {Line} from "./line";
 import {MapType} from "./map_type";
 import {MapWrapper} from "./map_wrapper";
@@ -24,6 +25,8 @@ interface IMarkerObjDict {
 interface ILineObjDict {
     line_obj: L.Polyline;
     arrow_obj: L.Polyline;
+    midpoint_obj: L.Marker | null;
+    midpoint_icon: L.DivIcon;
     last_color: Color;
 }
 
@@ -288,6 +291,8 @@ export class LeafletWrapper extends MapWrapper {
                 weight: 2,
                 interactive: false,
             }),
+            midpoint_obj: null,
+            midpoint_icon: new L.DivIcon({className: "midpoint-icon", html: "n/a", iconSize: null!}),
             last_color: line.color,
         };
 
@@ -338,6 +343,8 @@ export class LeafletWrapper extends MapWrapper {
             return;
         }
 
+        let midpoint_text = "";
+        let midpoint: Coordinates|null = null;
         const marker1 = this.app.map_state.get_marker(line.marker1);
         const marker2 = this.app.map_state.get_marker(line.marker2);
         if (marker1 !== null && marker2 !== null) {
@@ -354,6 +361,29 @@ export class LeafletWrapper extends MapWrapper {
                 const last1 = leaflet_path[leaflet_path.length - 2];
                 obj.arrow_obj.setLatLngs(this.arrow_head(last1, last));
             }
+
+            // compute midpoint
+            const dist_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
+            if (dist_bearing.distance > 0) {
+                midpoint_text = (new Distance(dist_bearing.distance, DistanceFormat.m)).to_string(this.app.map_state.settings_line_distance_format); 
+                midpoint = marker1.coordinates.project(dist_bearing.bearing, dist_bearing.distance / 2.0);
+            }
+        }
+
+        if (midpoint !== null && this.app.map_state.settings_line_display_distance) {
+            obj.midpoint_icon.options.html = midpoint_text;
+            if (obj.midpoint_obj !== null) {
+                obj.midpoint_obj.setLatLng(from_coordinates(midpoint));
+                obj.midpoint_obj.setIcon(obj.midpoint_icon);
+            } else {
+                obj.midpoint_obj = new L.Marker(from_coordinates(midpoint), {interactive: false, icon: obj.midpoint_icon});
+                this.map.addLayer(obj.midpoint_obj);
+            }
+        } else {
+            if (obj.midpoint_obj !== null) {
+                this.map.removeLayer(obj.midpoint_obj);
+                obj.midpoint_obj = null;
+            }  
         }
 
         if (!line.color.equals(obj.last_color)) {
@@ -370,6 +400,9 @@ export class LeafletWrapper extends MapWrapper {
     public delete_line_object(obj: ILineObjDict): void {
         this.map.removeLayer(obj.arrow_obj);
         this.map.removeLayer(obj.line_obj);
+        if (obj.midpoint_obj !== null) {
+            this.map.removeLayer(obj.midpoint_obj);
+        }
     }
 
     public create_icon(marker: Marker): L.Icon {
