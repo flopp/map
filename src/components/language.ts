@@ -105,6 +105,9 @@ export class Language extends MapStateObserver {
             case "text":
                 element.textContent = translation;
                 break;
+            case "html":
+                element.innerHTML = translation;
+                break;
             case "placeholder":
                 (element as HTMLInputElement).placeholder = translation;
                 break;

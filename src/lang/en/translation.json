@@ -96,6 +96,10 @@
             "server-error": "Failed to contact 'Nominatim' server: {1}"
         },
         "sidebar": {
+            "hero": {
+                "title": "Flopp's Map",
+                "content": "Welcome to <b>Flopp's Map</b>!<br /><br />This web application is a hobby project that mainly targets geocachers and other people interested in geography. It has a lot of features, including calculation of distances, waypoint projection, interactively draggable markers, and much more.<br /><br />Have fun,<br /><i>Florian aka. Flopp</i>"
+            },
             "info": {
                 "contact": "Contact/Mail",
                 "contact-help": "If you have any suggestions please feel free to contact me via e-mail.",

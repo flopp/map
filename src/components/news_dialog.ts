@@ -60,6 +60,7 @@ const news_articles: NewsArticle[] = [
 - Add GPX export/import
 - Display line length in map
 - French translation
+- Numbers with a decimal comma instead of decimal point
 */
 
 

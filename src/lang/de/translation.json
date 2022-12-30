@@ -96,6 +96,10 @@
             "server-error": "Fehler beim Kontaktieren des 'Nominatim'-Servers: {1}"
         },
         "sidebar": {
+            "hero": {
+                "title": "Flopps Karte",
+                "content": "Willkommen auf <b>Flopps Karte</b>!<br /><br />Diese Web-Anwendung ist ein Hobby-Projekt, das sich insbesondere an Geocacher und andere Geo-Interessierte richtet. Es gibt Funktionen zur Distanzberechnung, Wegpunkt-Projektion, interaktiv verschiebbare Marker, usw.<br /><br />Viel Spaß,<br /><i>Florian aka. Flopp</i>"
+            },
             "info": {
                 "contact": "Kontakt/Mail",
                 "contact-help": "Wenn du Fragen oder Vorschl\u00e4ge hast, kontaktiere mich bitte via E-Mail.",

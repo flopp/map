@@ -96,6 +96,10 @@
             "server-error": "Erreur lors du contact avec le serveur 'Nominatim' : {1}"
         },
         "sidebar": {
+            "hero": {
+                "title": "Carte de Flopp",
+                "content": "Bienvenue sur la <b>Carte de Flopp</b> !<br /><br />Cette application web est un projet de loisir qui s'adresse en particulier aux géocacheurs et autres personnes intéressées par la géographie. Elle propose des fonctions de calcul de distance, de projection de points de repère, de déplacement interactif de marqueurs, etc.<br /><br />Amusez-vous bien !<br />Florian alias Flopp"
+            },
             "info": {
                 "contact": "Contact / E-Mail",
                 "contact-help": "Si tu as des questions ou des suggestions, n'h\u00e9site pas \u00e0 me contacter par e-mail.",

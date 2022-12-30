@@ -1,6 +1,7 @@
 import {App} from "./app";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
+import {SidebarHero} from "./sidebar_hero";
 import {SidebarInfo} from "./sidebar_info";
 import {SidebarItem} from "./sidebar_item";
 import {SidebarLayers} from "./sidebar_layers";
@@ -22,6 +23,7 @@ export class Sidebar extends MapStateObserver {
 
         this.sidebar_layers = new SidebarLayers(app, "layers");
 
+        // .translate("sidebar.hero.title")
         // .translate("sidebar.search.title")
         // .translate("sidebar.layers.title")
         // .translate("sidebar.markers.title")
@@ -30,6 +32,7 @@ export class Sidebar extends MapStateObserver {
         // .translate("sidebar.info.title")
         this._sidebars = new Map();
         [
+            ["hero", "star", (i: string): SidebarItem => new SidebarHero(app, i)],
             ["search", "search", (i: string): SidebarItem => new SidebarSearch(app, i)],
             ["layers", "layers", (_id: string): SidebarItem => this.sidebar_layers],
             ["markers", "map-pin", (id: string): SidebarItem => new SidebarMarkers(app, id)],
