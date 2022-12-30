@@ -2,11 +2,11 @@ const parse_float = (str: string): number | null => {
     if (!/[0-9]/.test(str)) {
         return null;
     }
-    if (!/^(\+|-)?[0-9]*\.?[0-9]*$/.test(str)) {
+    if (!/^(\+|-)?[0-9]*(\.|,)?[0-9]*$/.test(str)) {
         return null;
     }
 
-    return parseFloat(str);
+    return parseFloat(str.replace(',', '.'));
 };
 
 const parse_int = (str: string): number | null => {
