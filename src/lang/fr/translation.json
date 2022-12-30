@@ -97,8 +97,8 @@
         },
         "sidebar": {
             "hero": {
-                "title": "Carte de Flopp",
-                "content": "Bienvenue sur la <b>Carte de Flopp</b> !<br /><br />Cette application web est un projet de loisir qui s'adresse en particulier aux géocacheurs et autres personnes intéressées par la géographie. Elle propose des fonctions de calcul de distance, de projection de points de repère, de déplacement interactif de marqueurs, etc.<br /><br />Amusez-vous bien !<br />Florian alias Flopp"
+                "content": "Bienvenue sur la <b>Carte de Flopp</b> !<br /><br />Cette application web est un projet de loisir qui s'adresse en particulier aux g\u00e9ocacheurs et autres personnes int\u00e9ress\u00e9es par la g\u00e9ographie. Elle propose des fonctions de calcul de distance, de projection de points de rep\u00e8re, de d\u00e9placement interactif de marqueurs, etc.<br /><br />Amusez-vous bien !<br />Florian alias Flopp",
+                "title": "Carte de Flopp"
             },
             "info": {
                 "contact": "Contact / E-Mail",
@@ -156,6 +156,9 @@
                 "title": "Marqueurs"
             },
             "search": {
+                "add-marker": "Ajouter un marqueur",
+                "add-marker-help": "Ajoute un nouveau marqueur au centre de la carte.",
+                "center-title": "Centre de la carte",
                 "locate-me": "Localise-moi !",
                 "locate-me-help": "Centre la carte sur ta position actuelle.",
                 "search-help": "Cherche un nom de lieu ou saisis des coordonn\u00e9es.",

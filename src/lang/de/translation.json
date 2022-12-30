@@ -97,8 +97,8 @@
         },
         "sidebar": {
             "hero": {
-                "title": "Flopps Karte",
-                "content": "Willkommen auf <b>Flopps Karte</b>!<br /><br />Diese Web-Anwendung ist ein Hobby-Projekt, das sich insbesondere an Geocacher und andere Geo-Interessierte richtet. Es gibt Funktionen zur Distanzberechnung, Wegpunkt-Projektion, interaktiv verschiebbare Marker, usw.<br /><br />Viel Spaß,<br /><i>Florian aka. Flopp</i>"
+                "content": "Willkommen auf <b>Flopps Karte</b>!<br /><br />Diese Web-Anwendung ist ein Hobby-Projekt, das sich insbesondere an Geocacher und andere Geo-Interessierte richtet. Es gibt Funktionen zur Distanzberechnung, Wegpunkt-Projektion, interaktiv verschiebbare Marker, usw.<br /><br />Viel Spa\u00df,<br /><i>Florian aka. Flopp</i>",
+                "title": "Flopps Karte"
             },
             "info": {
                 "contact": "Kontakt/Mail",
@@ -156,6 +156,9 @@
                 "title": "Marker"
             },
             "search": {
+                "add-marker": "Marker hinzuf\u00fcgen",
+                "add-marker-help": "F\u00fcge einen neuen Marker in der Mitte der Karte hinzu.",
+                "center-title": "Mitte der Karte",
                 "locate-me": "Lokalisiere mich!",
                 "locate-me-help": "Zentriere die Karte auf deiner aktuellen Position.",
                 "search-help": "Suche nach einem Ortsnamen oder gib Koordinaten ein.",
