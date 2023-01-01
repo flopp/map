@@ -56,6 +56,8 @@ export class LeafletWrapper extends MapWrapper {
             worldCopyJump: true,
         });
 
+        L.control.scale().addTo(this.map);
+
         this.layer_openstreetmap = L.tileLayer(
             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             {
