@@ -134,7 +134,11 @@
                 "from": "De:",
                 "length": "Longueur :",
                 "title": "Lignes",
-                "to": "\u00c0 :"
+                "to": "\u00c0 :",
+                "show": "Afficher sur la carte",
+                "add": "Ajouter une nouvelle ligne",
+                "delete_all": "Supprimer toutes les lignes",
+                "settings": "Paramètres"
             },
             "markers": {
                 "bad_values_message": "Valeurs erron\u00e9es.",
@@ -153,7 +157,12 @@
                 "edit_radius_placeholder": "Rayon",
                 "no_circle": "Pas de cercle",
                 "projection": "Projection",
-                "title": "Marqueurs"
+                "title": "Marqueurs",
+                "show": "Afficher sur la carte",
+                "copy_coordinates": "Copier les coordonnées dans le presse-papiers",
+                "add": "Ajoute un nouveau marqueur",
+                "delete_all": "Supprimer tous les marqueurs",
+                "settings": "Paramètres"
             },
             "search": {
                 "add-marker": "Ajouter un marqueur",

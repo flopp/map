@@ -9,10 +9,9 @@ import {MarkerSettingsDialog} from "./marker_settings_dialog";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
+    create_icon_button,
     create_color_input,
-    create_dropdown,
     create_element,
-    create_icon,
     create_text_input,
     parse_float,
     parse_int,
@@ -126,14 +125,18 @@ export class SidebarMarkers extends SidebarItem {
 
         const center = create_element("div", ["marker-center"]);
         center.append(create_element("div", ["marker-name"]));
+        center.append(create_element("div", ["marker-coordinates"]));
+        center.append(create_element("div", ["marker-radius"]));
+        m.append(center);
 
-        const coordinates_div = create_element("div", ["is-flex"]);
-        coordinates_div.append(create_element("div", ["marker-coordinates"]));
-        const copy_coordinates = create_element("button", ["button", "is-small", "is-white"]);
-        copy_coordinates.append(create_icon("copy", ["icon", "icon24"]));
-        coordinates_div.append(copy_coordinates);
-        center.append(coordinates_div);
-        copy_coordinates.addEventListener("click", (event: Event): void => {
+        const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);
+        // .translate("sidebar.markers.show")
+        const button_search = create_icon_button("search", "sidebar.markers.show", ["is-info", "is-small"], ["icon16"], (event: Event) => {
+            this.app.map_state.set_center(marker.coordinates);
+            event.stopPropagation();
+        });
+        // .translate("sidebar.markers.copy_coordinates")
+        const button_copy = create_icon_button("copy", "sidebar.markers.copy_coordinates", ["is-info", "is-small"], ["icon16"], (event: Event) => {
             const text = marker.coordinates.to_string(
                 this.app.map_state.settings_marker_coordinates_format,
             );
@@ -144,17 +147,31 @@ export class SidebarMarkers extends SidebarItem {
             );
             event.stopPropagation();
         });
-
-        center.append(create_element("div", ["marker-radius"]));
-        m.append(center);
-
-        const right = create_element("div", ["marker-right"]);
-        right.append(this.create_marker_dropdown(marker));
-        m.append(right);
-
-        m.addEventListener("click", (): void => {
-            this.app.map_state.set_center(marker.coordinates);
+        // .translate("sidebar.markers.projection")
+        const button_project = create_icon_button("arrow-up-right", "sidebar.markers.projection", ["is-success", "is-small"], ["icon16"], (event: Event) => {
+            this.app.show_projection_dialog(marker);
+            event.stopPropagation();
         });
+        // .translate("sidebar.markers.edit")
+        const button_edit = create_icon_button("edit", "sidebar.markers.edit", ["is-warning", "is-small"], ["icon16"], (event: Event) => {
+            if (document.querySelector(`#marker-edit-${marker.get_id()}`) === null) {
+                const div = document.querySelector(`#marker-${marker.get_id()}`)!;
+                const edit_div = this.create_edit_div(marker);
+                div.parentNode!.insertBefore(edit_div, div.nextSibling);
+                this.update_edit_values(marker);
+            }
+            event.stopPropagation();
+        });
+        // .translate("sidebar.markers.delete")
+        const button_delete = create_icon_button("trash-2", "sidebar.markers.delete", ["is-danger", "is-small"], ["icon16"], (event: Event) => {
+            this.app.map_state.delete_marker(marker.get_id());
+            event.stopPropagation();
+        });
+        [button_search, button_project, button_copy, button_edit, button_delete].forEach(button => {
+            buttons.append(button);
+            button.title = this.app.translate(button.getAttribute("data-i18n")!);    
+        });
+        center.append(buttons);
 
         return m;
     }
@@ -202,34 +219,6 @@ export class SidebarMarkers extends SidebarItem {
         div.append(buttons);
 
         return div;
-    }
-
-    private create_marker_dropdown(marker: Marker): HTMLElement {
-        return create_dropdown([
-            {
-                label: this.app.translate("sidebar.markers.edit"),
-                callback: (): void => {
-                    if (document.querySelector(`#marker-edit-${marker.get_id()}`) === null) {
-                        const div = document.querySelector(`#marker-${marker.get_id()}`)!;
-                        const edit_div = this.create_edit_div(marker);
-                        div.parentNode!.insertBefore(edit_div, div.nextSibling);
-                        this.update_edit_values(marker);
-                    }
-                },
-            },
-            {
-                label: this.app.translate("sidebar.markers.projection"),
-                callback: (): void => {
-                    this.app.show_projection_dialog(marker);
-                },
-            },
-            {
-                label: this.app.translate("sidebar.markers.delete"),
-                callback: (): void => {
-                    this.app.map_state.delete_marker(marker.get_id());
-                },
-            },
-        ]);
     }
 
     private update_edit_values(marker: Marker): void {

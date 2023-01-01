@@ -134,6 +134,15 @@ const create_icon = (icon: string, classes: string[] = []): SVGSVGElement => {
     return svg;
 };
 
+const create_icon_button = (icon: string, tooltip_i18n: string, button_classes: string[], icon_classes: string[], callback: (event: Event) => void): HTMLElement => {
+    button_classes.unshift("button");
+    const button = create_element("button", button_classes, {"data-i18n": tooltip_i18n, "data-i18n-target": "title", "title": tooltip_i18n});
+    icon_classes.unshift("icon");
+    button.append(create_icon(icon, icon_classes));
+    button.addEventListener("click", callback);
+    return button;
+}
+
 interface ILabelCallback {
     label: string;
     callback(): void;
@@ -200,6 +209,7 @@ export {
     parse_int,
     create_element,
     create_button,
+    create_icon_button,
     create_dropdown,
     create_text_input,
     create_color_input,

@@ -189,6 +189,12 @@ export class App {
         return s;
     }
 
+    public localize(tree: HTMLElement): void {
+        if (this._lang !== null) {
+            this._lang.localize(tree);
+        }
+    }
+
     public copyClipboard(text: string, success_message: string, error_message: string): void {
         navigator.clipboard.writeText(text).then(
             () => {

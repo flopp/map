@@ -53,16 +53,32 @@ const news_articles: NewsArticle[] = [
     
         Beste Grüße,
         Florian aka. Flopp`),
+    new NewsArticle(
+        "2022-01-01",
+        `The rebuild of <b>flopp.net</b> continues. Due to your feedback, I've
+        - fixed the map state import function (JSON),
+        - add GPX export and import,
+        - added line length display directl to the map,
+        - added french translation,
+        - added support for numbers with a decimal comma instead of decimal point,
+        - added the possibility to create markers from the "search" sidebar,
+        - reintroduced action buttons instead of menus for markers and lines.
+        
+        I hope you had a good start into the new year!
+        <i>Florian aka. Flopp</i>`,
+        `Der Umbau von <b>flopp.net</b> geht weiter. Aufgrund eurer Rückmeldungen habe ich
+        - die Importfunktion (JSON) korrigiert,
+        - GPX-Export und -Import hinzugefügt,
+        - eine Linien-Längen-Anzeige direkt in der Karte hinzugefügt,
+        - die Web-App ins Französische übersetzt,
+        - Unterstützung für Dezimalzahlen mit Komma statt Punkt als Dezimal-Separator hinzugefügt,
+        - die Möglichkeit, Marker direkt auf der "Suche"-Seitenleiste zu erzeugen, hinzugefügt,
+        - Action-Buttons statt Menüs für Marker und Linien wieder eingeführt.
+        
+        Ich hoffe ihr, hattet alle einen guten Start ins neue Jahr!
+        <i>Florian aka. Flopp</i>`
+    )
 ];
-
-/*
-- Fix JSON import
-- Add GPX export/import
-- Display line length in map
-- French translation
-- Numbers with a decimal comma instead of decimal point
-*/
-
 
 export class NewsDialog extends Dialog {
     public shown: number;

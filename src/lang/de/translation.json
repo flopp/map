@@ -134,7 +134,11 @@
                 "from": "Von:",
                 "length": "L\u00e4nge:",
                 "title": "Linien",
-                "to": "Nach:"
+                "to": "Nach:",
+                "show": "Zeige auf der Karte",
+                "add": "Füge neue Linie hinzu",
+                "delete_all": "Lösche alle Linien",
+                "settings": "Einstellungen"
             },
             "markers": {
                 "bad_values_message": "Fehlerhafte Werte.",
@@ -153,7 +157,12 @@
                 "edit_radius_placeholder": "Radius",
                 "no_circle": "Kein Kreis",
                 "projection": "Wegpunkt-Projektion",
-                "title": "Marker"
+                "title": "Marker",
+                "show": "Zeige auf der Karte",
+                "copy_coordinates": "Kopiere Koordinaten in die Zwischenablage",
+                "add": "Füge neuen Marker hinzu",
+                "delete_all": "Lösche alle Marker",
+                "settings": "Einstellungen"
             },
             "search": {
                 "add-marker": "Marker hinzuf\u00fcgen",

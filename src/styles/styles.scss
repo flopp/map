@@ -34,7 +34,7 @@ body {
     flex-grow: 0;
     flex-shrink: 0;
 }
-.marker > .marker-left > .marker-color{
+.marker > .marker-left > .marker-color {
     width: 16px;
     height: 100%;
     margin-left: 1px;
@@ -49,10 +49,11 @@ body {
 .marker > .marker-center > .marker-name {
     font-weight: bold;
 }
-.marker > .marker-right {
-    flex-basis: auto;
-    flex-grow: 0;
-    flex-shrink: 0;
+.action-buttons {
+    margin-bottom: 0;
+}
+.action-buttons:last-child {
+    margin-bottom: 0;
 }
 
 #lines {
@@ -73,7 +74,7 @@ body {
     flex-grow: 0;
     flex-shrink: 0;
 }
-.line > .line-left > .line-color{
+.line > .line-left > .line-color {
     width: 16px;
     height: 100%;
     margin-left: 1px;
@@ -84,11 +85,6 @@ body {
     flex-grow: 1;
     flex-shrink: 1;
     text-align: left;
-}
-.line > .line-right {
-    flex-basis: auto;
-    flex-grow: 0;
-    flex-shrink: 0;
 }
 
 .edit {

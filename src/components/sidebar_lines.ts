@@ -9,8 +9,8 @@ import {Marker} from "./marker";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
+    create_icon_button,
     create_color_input,
-    create_dropdown,
     create_element,
     create_select_input,
     parse_int,
@@ -140,9 +140,32 @@ export class SidebarLines extends SidebarItem {
         center.append(table);
         div.append(center);
 
-        const right = create_element("div", ["line-right"]);
-        right.append(this.create_line_dropdown(line));
-        div.append(right);
+        const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);
+        // .translate("sidebar.markers.show")
+        const button_search = create_icon_button("search", "sidebar.lines.show", ["is-info", "is-small"], ["icon16"], (event: Event) => {
+            this.app.map_state.show_line(line);
+            event.stopPropagation();
+        });
+        // .translate("sidebar.markers.edit")
+        const button_edit = create_icon_button("edit", "sidebar.lines.edit", ["is-warning", "is-small"], ["icon16"], (event: Event) => {
+            if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
+                const div = document.querySelector(`#line-${line.get_id()}`)!;
+                const edit_div = this.create_edit_div(line);
+                div.parentNode!.insertBefore(edit_div, div.nextSibling);
+                this.update_edit_values(line);
+            }
+            event.stopPropagation();
+        });
+        // .translate("sidebar.markers.delete")
+        const button_delete = create_icon_button("trash-2", "sidebar.lines.delete", ["is-danger", "is-small"], ["icon16"], (event: Event) => {
+            this.app.map_state.delete_line(line.get_id());
+            event.stopPropagation();
+        });
+        [button_search, button_edit, button_delete].forEach(button => {
+            buttons.append(button);
+            button.title = this.app.translate(button.getAttribute("data-i18n")!);    
+        });
+        center.append(buttons);
 
         div.addEventListener("click", (): void => {
             this.app.map_state.show_line(line);
@@ -195,28 +218,6 @@ export class SidebarLines extends SidebarItem {
         div.append(buttons);
 
         return div;
-    }
-
-    private create_line_dropdown(line: Line): HTMLElement {
-        return create_dropdown([
-            {
-                label: this.app.translate("sidebar.lines.edit"),
-                callback: (): void => {
-                    if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
-                        const div = document.querySelector(`#line-${line.get_id()}`)!;
-                        const edit_div = this.create_edit_div(line);
-                        div.parentNode!.insertBefore(edit_div, div.nextSibling);
-                        this.update_edit_values(line);
-                    }
-                },
-            },
-            {
-                label: this.app.translate("sidebar.lines.delete"),
-                callback: (): void => {
-                    this.app.map_state.delete_line(line.get_id());
-                },
-            },
-        ]);
     }
 
     private update_edit_values(line: Line): void {

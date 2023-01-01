@@ -134,7 +134,12 @@
                 "from": "From:",
                 "length": "Length:",
                 "title": "Lines",
-                "to": "To:"
+                "to": "To:",
+                "show": "Show on map",
+                "add": "Add new line",
+                "delete_all": "Delete all lines",
+                "settings": "Settings"
+
             },
             "markers": {
                 "bad_values_message": "Bad values.",
@@ -153,7 +158,12 @@
                 "edit_radius_placeholder": "Radius",
                 "no_circle": "No circle",
                 "projection": "Waypoint Projection",
-                "title": "Markers"
+                "title": "Markers",
+                "show": "Show on map",
+                "copy_coordinates": "Copy coordinates to clipboard",
+                "add": "Add new marker",
+                "delete_all": "Delete all markers",
+                "settings": "Settings"
             },
             "search": {
                 "add-marker": "Add marker",
