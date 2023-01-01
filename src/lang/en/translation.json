@@ -123,9 +123,11 @@
                 "title": "Layers"
             },
             "lines": {
+                "add": "Add new line",
                 "bad_values_message": "Bad values.",
                 "bearing": "Bearing:",
                 "delete": "Delete",
+                "delete_all": "Delete all lines",
                 "edit": "Edit",
                 "edit_color": "Color",
                 "edit_color_placeholder": "Color",
@@ -133,20 +135,20 @@
                 "edit_to": "To",
                 "from": "From:",
                 "length": "Length:",
-                "title": "Lines",
-                "to": "To:",
+                "settings": "Settings",
                 "show": "Show on map",
-                "add": "Add new line",
-                "delete_all": "Delete all lines",
-                "settings": "Settings"
-
+                "title": "Lines",
+                "to": "To:"
             },
             "markers": {
+                "add": "Add new marker",
                 "bad_values_message": "Bad values.",
                 "circle": "Circle: {1} m",
+                "copy_coordinates": "Copy coordinates to clipboard",
                 "copy_coordinates_failure_message": "The coordinates could no be copied to the clipboard.",
                 "copy_coordinates_success_message": "The coordinates have been copied to the clipboard: {1}",
                 "delete": "Delete",
+                "delete_all": "Delete all markers",
                 "edit": "Edit",
                 "edit_color": "Color",
                 "edit_color_placeholder": "Color",
@@ -158,12 +160,9 @@
                 "edit_radius_placeholder": "Radius",
                 "no_circle": "No circle",
                 "projection": "Waypoint Projection",
-                "title": "Markers",
+                "settings": "Settings",
                 "show": "Show on map",
-                "copy_coordinates": "Copy coordinates to clipboard",
-                "add": "Add new marker",
-                "delete_all": "Delete all markers",
-                "settings": "Settings"
+                "title": "Markers"
             },
             "search": {
                 "add-marker": "Add marker",

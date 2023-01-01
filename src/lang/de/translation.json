@@ -123,9 +123,11 @@
                 "title": "Ebenen"
             },
             "lines": {
+                "add": "F\u00fcge neue Linie hinzu",
                 "bad_values_message": "Fehlerhafte Werte.",
                 "bearing": "Richtung:",
                 "delete": "L\u00f6schen",
+                "delete_all": "L\u00f6sche alle Linien",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
@@ -133,19 +135,20 @@
                 "edit_to": "Nach",
                 "from": "Von:",
                 "length": "L\u00e4nge:",
-                "title": "Linien",
-                "to": "Nach:",
+                "settings": "Einstellungen",
                 "show": "Zeige auf der Karte",
-                "add": "Füge neue Linie hinzu",
-                "delete_all": "Lösche alle Linien",
-                "settings": "Einstellungen"
+                "title": "Linien",
+                "to": "Nach:"
             },
             "markers": {
+                "add": "F\u00fcge neuen Marker hinzu",
                 "bad_values_message": "Fehlerhafte Werte.",
                 "circle": "Kreis: {1} m",
+                "copy_coordinates": "Kopiere Koordinaten in die Zwischenablage",
                 "copy_coordinates_failure_message": "Die Koordinaten konnten nicht in die Zwischenablage kopiert werden.",
                 "copy_coordinates_success_message": "Koordinaten in die Zwischenablage kopiert: {1}",
                 "delete": "L\u00f6schen",
+                "delete_all": "L\u00f6sche alle Marker",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
@@ -157,12 +160,9 @@
                 "edit_radius_placeholder": "Radius",
                 "no_circle": "Kein Kreis",
                 "projection": "Wegpunkt-Projektion",
-                "title": "Marker",
+                "settings": "Einstellungen",
                 "show": "Zeige auf der Karte",
-                "copy_coordinates": "Kopiere Koordinaten in die Zwischenablage",
-                "add": "Füge neuen Marker hinzu",
-                "delete_all": "Lösche alle Marker",
-                "settings": "Einstellungen"
+                "title": "Marker"
             },
             "search": {
                 "add-marker": "Marker hinzuf\u00fcgen",

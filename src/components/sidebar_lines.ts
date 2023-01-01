@@ -141,12 +141,12 @@ export class SidebarLines extends SidebarItem {
         div.append(center);
 
         const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);
-        // .translate("sidebar.markers.show")
+        // .translate("sidebar.lines.show")
         const button_search = create_icon_button("search", "sidebar.lines.show", ["is-info", "is-small"], ["icon16"], (event: Event) => {
             this.app.map_state.show_line(line);
             event.stopPropagation();
         });
-        // .translate("sidebar.markers.edit")
+        // .translate("sidebar.lines.edit")
         const button_edit = create_icon_button("edit", "sidebar.lines.edit", ["is-warning", "is-small"], ["icon16"], (event: Event) => {
             if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
                 const div = document.querySelector(`#line-${line.get_id()}`)!;
@@ -156,7 +156,7 @@ export class SidebarLines extends SidebarItem {
             }
             event.stopPropagation();
         });
-        // .translate("sidebar.markers.delete")
+        // .translate("sidebar.lines.delete")
         const button_delete = create_icon_button("trash-2", "sidebar.lines.delete", ["is-danger", "is-small"], ["icon16"], (event: Event) => {
             this.app.map_state.delete_line(line.get_id());
             event.stopPropagation();

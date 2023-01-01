@@ -123,9 +123,11 @@
                 "title": "Niveaux"
             },
             "lines": {
+                "add": "Ajouter une nouvelle ligne",
                 "bad_values_message": "Valeurs erron\u00e9es.",
                 "bearing": "Direction :",
                 "delete": "Supprimer",
+                "delete_all": "Supprimer toutes les lignes",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",
@@ -133,19 +135,20 @@
                 "edit_to": "\u00c0",
                 "from": "De:",
                 "length": "Longueur :",
-                "title": "Lignes",
-                "to": "\u00c0 :",
+                "settings": "Param\u00e8tres",
                 "show": "Afficher sur la carte",
-                "add": "Ajouter une nouvelle ligne",
-                "delete_all": "Supprimer toutes les lignes",
-                "settings": "Paramètres"
+                "title": "Lignes",
+                "to": "\u00c0 :"
             },
             "markers": {
+                "add": "Ajoute un nouveau marqueur",
                 "bad_values_message": "Valeurs erron\u00e9es.",
                 "circle": "Cercle : {1} m",
+                "copy_coordinates": "Copier les coordonn\u00e9es dans le presse-papiers",
                 "copy_coordinates_failure_message": "Les coordonn\u00e9es n'ont pas pu \u00eatre copi\u00e9es dans le presse-papiers.",
                 "copy_coordinates_success_message": "Les coordonn\u00e9es ont \u00e9t\u00e9 copi\u00e9es dans le presse-papiers : {1}",
                 "delete": "Supprimer",
+                "delete_all": "Supprimer tous les marqueurs",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",
@@ -157,12 +160,9 @@
                 "edit_radius_placeholder": "Rayon",
                 "no_circle": "Pas de cercle",
                 "projection": "Projection",
-                "title": "Marqueurs",
+                "settings": "Param\u00e8tres",
                 "show": "Afficher sur la carte",
-                "copy_coordinates": "Copier les coordonnées dans le presse-papiers",
-                "add": "Ajoute un nouveau marqueur",
-                "delete_all": "Supprimer tous les marqueurs",
-                "settings": "Paramètres"
+                "title": "Marqueurs"
             },
             "search": {
                 "add-marker": "Ajouter un marqueur",
