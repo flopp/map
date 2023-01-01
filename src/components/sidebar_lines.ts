@@ -9,9 +9,9 @@ import {Marker} from "./marker";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
-    create_icon_button,
     create_color_input,
     create_element,
+    create_icon_button,
     create_select_input,
     parse_int,
     remove_element,
@@ -149,9 +149,9 @@ export class SidebarLines extends SidebarItem {
         // .translate("sidebar.lines.edit")
         const button_edit = create_icon_button("edit", "sidebar.lines.edit", ["is-warning", "is-small"], ["icon16"], (event: Event) => {
             if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
-                const div = document.querySelector(`#line-${line.get_id()}`)!;
+                const line_div = document.querySelector(`#line-${line.get_id()}`)!;
                 const edit_div = this.create_edit_div(line);
-                div.parentNode!.insertBefore(edit_div, div.nextSibling);
+                line_div.parentNode!.insertBefore(edit_div, line_div.nextSibling);
                 this.update_edit_values(line);
             }
             event.stopPropagation();
@@ -161,9 +161,9 @@ export class SidebarLines extends SidebarItem {
             this.app.map_state.delete_line(line.get_id());
             event.stopPropagation();
         });
-        [button_search, button_edit, button_delete].forEach(button => {
+        [button_search, button_edit, button_delete].forEach((button: HTMLElement) => {
             buttons.append(button);
-            button.title = this.app.translate(button.getAttribute("data-i18n")!);    
+            button.title = this.app.translate(button.getAttribute("data-i18n")!);
         });
         center.append(buttons);
 

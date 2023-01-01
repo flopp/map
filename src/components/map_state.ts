@@ -836,15 +836,15 @@ export class MapState {
         const data: string[] = [];
         data.push('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>');
         data.push('<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns="http://www.topografix.com/GPX/1/1" creator="Flopp\'s Map - http://flopp.net/" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd  http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www.garmin.com/xmlschemas/WaypointExtensionv1.xsd" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">');
-        data.push('    <metadata>');
-        data.push('        <name>Export from Flopp\'s Map (flopp.net)</name>');
-        data.push('    </metadata>');
+        data.push("    <metadata>");
+        data.push("        <name>Export from Flopp's Map (flopp.net)</name>");
+        data.push("    </metadata>");
 
         this.markers.forEach((marker: Marker): void => {
             data.push(marker.to_gpx());
         });
 
-        data.push('</gpx>');
+        data.push("</gpx>");
 
         return data.join("\n");
     }
@@ -856,26 +856,27 @@ export class MapState {
             xml = parser.parseFromString(data, "text/xml");
         } catch(e) {
             this.app.message_error(this.app.translate("sidebar.tools.import-gpx-bad-file"));
+
             return;
         }
 
         const markers: Marker[] = [];
         let badWaypoints = 0;
-        const waypoints: Element[] = Array.from(xml.getElementsByTagName('wpt'));
+        const waypoints: Element[] = Array.from(xml.getElementsByTagName("wpt"));
         waypoints.forEach((waypoint: Element, index: number): void => {
             let name = "";
             let radius = 0;
 
-            const nameEl = waypoint.getElementsByTagName('name');
+            const nameEl = waypoint.getElementsByTagName("name");
             if (nameEl.length > 0 && nameEl[0].textContent !== null) {
                 name = nameEl[0].textContent;
             }
             name = name.trim();
-            if (name.length == 0) {
+            if (name.length === 0) {
                 name = `GPX WAYPOINT ${index}`;
             }
 
-            const radiusEl = waypoint.getElementsByTagName('wptx1:Proximity');
+            const radiusEl = waypoint.getElementsByTagName("wptx1:Proximity");
             if (radiusEl.length > 0 && radiusEl[0].textContent !== null) {
                 const r = parse_float(radiusEl[0].textContent);
                 if (r !== null && r >= 0) {
@@ -883,24 +884,28 @@ export class MapState {
                 }
             }
 
-            const latS = waypoint.getAttribute('lat');
+            const latS = waypoint.getAttribute("lat");
             if (latS === null) {
                 badWaypoints += 1;
+
                 return;
             }
             const lat = parse_float(latS);
             if (lat === null || lat < -90 || lat > 90) {
                 badWaypoints += 1;
+
                 return;
-            }   
-            const lonS = waypoint.getAttribute('lon');
+            }
+            const lonS = waypoint.getAttribute("lon");
             if (lonS === null) {
                 badWaypoints += 1;
+
                 return;
             }
             const lon = parse_float(lonS);
             if (lon === null) {
                 badWaypoints += 1;
+
                 return;
             }
 
@@ -913,8 +918,9 @@ export class MapState {
             markers.push(marker);
         });
 
-        if (markers.length == 0) {
+        if (markers.length === 0) {
             this.app.message_error(this.app.translate("sidebar.tools.import-gpx-no-markers", `${badWaypoints}`));
+
             return;
         }
         this.app.message(this.app.translate("sidebar.tools.import-gpx-markers", `${markers.length}`, `${badWaypoints}`));

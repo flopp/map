@@ -45,13 +45,14 @@ export class Marker {
         data.push(`    <name>${xml_escape(this.name)}</name>`);
         data.push(`    <sym>${symbol}</sym>`);
         if (this.radius > 0) {
-            data.push(`    <extensions>`);
-            data.push(`      <wptx1:WaypointExtension>`);
+            data.push("    <extensions>");
+            data.push("      <wptx1:WaypointExtension>");
             data.push(`        <wptx1:Proximity>${this.radius}</wptx1:Proximity>`);
-            data.push(`      </wptx1:WaypointExtension>`);
-            data.push(`    </extensions>`);
+            data.push("      </wptx1:WaypointExtension>");
+            data.push("    </extensions>");
         }
-        data.push(`</wpt>`);
+        data.push("</wpt>");
+
         return data.join("\n");
     }
 

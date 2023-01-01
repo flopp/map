@@ -48,11 +48,10 @@ export class SidebarSearch extends SidebarItem {
             return;
         }
 
-        if (this.app.map_state.center === null) {
-            this.centerField.innerText = "n/a";    
-        } else {
-            this.centerField.innerText = this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
-        }
+        this.centerField.innerText =
+            (this.app.map_state.center === null) ?
+            "n/a" :
+            this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
     }
 
     public perform_search(): void {

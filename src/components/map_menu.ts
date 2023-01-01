@@ -1,6 +1,6 @@
 import {App} from "./app.js";
 import {Coordinates} from "./coordinates.js";
-import {MapWrapper} from "./map_wrapper.js";
+import {LeafletWrapper} from "./leaflet_wrapper.js";
 import {Marker} from "./marker";
 import {create_element} from "./utilities";
 
@@ -85,7 +85,7 @@ export class MapMenu {
         this.menu.style.display = "none";
     }
 
-    public showMap(wrapper: MapWrapper, x: number, y: number, coordinates: Coordinates): void {
+    public showMap(wrapper: LeafletWrapper, x: number, y: number, coordinates: Coordinates): void {
         this.addMarker.style.display = "block";
         this.deleteMarker.style.display = "none";
         this.projection.style.display = "none";
@@ -96,7 +96,7 @@ export class MapMenu {
         this.show(wrapper, x, y);
     }
 
-    public showMarker(wrapper: MapWrapper, x: number, y: number, marker: Marker): void {
+    public showMarker(wrapper: LeafletWrapper, x: number, y: number, marker: Marker): void {
         this.addMarker.style.display = "none";
         this.deleteMarker.style.display = "block";
         this.projection.style.display = "block";
@@ -107,7 +107,7 @@ export class MapMenu {
         this.show(wrapper, x, y);
     }
 
-    public show(wrapper: MapWrapper, x: number, y: number): void {
+    public show(wrapper: LeafletWrapper, x: number, y: number): void {
         this.menu.style.top = `${Math.min(y, wrapper.height() - this.menu.clientHeight)}px`;
         this.menu.style.left = `${Math.min(x, wrapper.width() - this.menu.clientWidth)}px`;
         this.menu.style.display = "block";

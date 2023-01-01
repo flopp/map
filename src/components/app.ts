@@ -24,7 +24,6 @@ export class App {
     public multi_markers_dialog: MultiMarkersDialog;
     public link_dialog: LinkDialog;
     public map_menu: MapMenu;
-    public id_leaflet: string;
     public sidebar: Sidebar;
     public leaflet: LeafletWrapper;
     public news_dialog: NewsDialog;
@@ -47,12 +46,10 @@ export class App {
         this.map_menu = new MapMenu(this);
         this.news_dialog = new NewsDialog(this);
 
-        this.id_leaflet = id_leaflet;
-
         this.sidebar = new Sidebar(this);
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
-
+        this.leaflet.update_state(MapStateChange.EVERYTHING);
         this.switch_map(this.map_state.map_type);
 
         this.news_dialog.maybeShow();
@@ -68,28 +65,6 @@ export class App {
 
     public switch_map(type: MapType | null): void {
         this.map_state.set_map_type(type);
-
-        switch (type) {
-            case MapType.OPENSTREETMAP:
-            case MapType.OPENTOPOMAP:
-            case MapType.STAMEN_TERRAIN:
-            case MapType.HUMANITARIAN:
-            case MapType.ARCGIS_WORLDIMAGERY:
-                this.switch_to_leaflet();
-                break;
-            default:
-        }
-    }
-
-    public switch_to_leaflet(): void {
-        this.show_leaflet_div();
-        this.leaflet.activate();
-        this.map_state.update_observers(MapStateChange.EVERYTHING);
-        this.leaflet.invalidate_size();
-    }
-
-    public show_leaflet_div(): void {
-        (document.querySelector(`#${this.id_leaflet}`) as HTMLElement).style.display = "block";
     }
 
     public update_geometry(): void {

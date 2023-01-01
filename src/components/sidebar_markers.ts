@@ -9,9 +9,9 @@ import {MarkerSettingsDialog} from "./marker_settings_dialog";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
-    create_icon_button,
     create_color_input,
     create_element,
+    create_icon_button,
     create_text_input,
     parse_float,
     parse_int,
@@ -167,9 +167,9 @@ export class SidebarMarkers extends SidebarItem {
             this.app.map_state.delete_marker(marker.get_id());
             event.stopPropagation();
         });
-        [button_search, button_project, button_copy, button_edit, button_delete].forEach(button => {
+        [button_search, button_project, button_copy, button_edit, button_delete].forEach((button: HTMLElement): void => {
             buttons.append(button);
-            button.title = this.app.translate(button.getAttribute("data-i18n")!);    
+            button.title = this.app.translate(button.getAttribute("data-i18n")!);
         });
         center.append(buttons);
 

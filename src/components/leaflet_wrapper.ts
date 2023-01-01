@@ -6,8 +6,9 @@ import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {Distance, DistanceFormat} from "./distance";
 import {Line} from "./line";
+import {MapStateChange} from "./map_state";
+import {MapStateObserver} from "./map_state_observer";
 import {MapType} from "./map_type";
-import {MapWrapper} from "./map_wrapper";
 import {Marker} from "./marker";
 
 const from_coordinates = (c: Coordinates): L.LatLng => L.latLng(c.raw_lat(), c.raw_lng());
@@ -30,28 +31,34 @@ interface ILineObjDict {
     last_color: Color;
 }
 
-export class LeafletWrapper extends MapWrapper {
+export class LeafletWrapper extends MapStateObserver {
+    private readonly div: HTMLElement;
     private automatic_event: boolean = false;
     private german_npa_enabled: boolean = false;
     private german_npa_layer: L.TileLayer | null = null;
-    private map: L.Map;
-    private layer_openstreetmap: L.TileLayer;
-    private layer_opentopomap: L.TileLayer;
-    private layer_stamen_terrain: L.TileLayer;
-    private layer_humanitarian: L.TileLayer;
-    private layer_arcgis_worldimagery: L.TileLayer;
-    private layers: Map<string, L.TileLayer>;
-    private midpoint_icon_css_classes: Map<string, string>;
-    private styles: HTMLStyleElement;
+    private readonly map: L.Map;
+    private readonly layer_openstreetmap: L.TileLayer;
+    private readonly layer_opentopomap: L.TileLayer;
+    private readonly layer_stamen_terrain: L.TileLayer;
+    private readonly layer_humanitarian: L.TileLayer;
+    private readonly layer_arcgis_worldimagery: L.TileLayer;
+    private readonly layers: Map<string, L.TileLayer>;
+    private readonly midpoint_icon_css_classes: Map<string, string>;
+    private readonly styles: HTMLStyleElement;
+    private readonly markers: Map<number, IMarkerObjDict>;
+    private readonly lines: Map<number, ILineObjDict>;
 
     public constructor(div_id: string, app: App) {
-        super(div_id, app);
-        this.midpoint_icon_css_classes = new Map();
-        this.styles = document.createElement('style');
-        document.getElementsByTagName('head')[0].appendChild(this.styles);
-    }
+        super(app);
 
-    public create_map_object(div_id: string): void {
+        this.div = document.getElementById(div_id)!;
+        this.markers = new Map();
+        this.lines = new Map();
+
+        this.midpoint_icon_css_classes = new Map();
+        this.styles = document.createElement("style");
+        document.getElementsByTagName("head")[0].appendChild(this.styles);
+
         this.map = L.map(div_id, {
             worldCopyJump: true,
         });
@@ -109,7 +116,7 @@ export class LeafletWrapper extends MapWrapper {
 
         ["zoom", "move"].forEach((event_name: string): void => {
             this.map.on(event_name, (): void => {
-                if (this.active && !this.automatic_event) {
+                if (!this.automatic_event) {
                     this.app.map_state.set_view(
                         to_coordinates(this.map.getCenter()),
                         this.map.getZoom(),
@@ -200,8 +207,103 @@ export class LeafletWrapper extends MapWrapper {
         }
     }
 
+    public width(): number {
+        return this.div.offsetWidth;
+    }
+
+    public height(): number {
+        return this.div.offsetHeight;
+    }
+
     public invalidate_size(): void {
         this.map.invalidateSize();
+    }
+
+    public update_state(changes: number): void {
+        /* update view */
+        if ((changes & MapStateChange.MAPTYPE) !== 0) {
+            this.set_map_type(this.app.map_state.map_type!);
+            this.set_german_npa(this.app.map_state.german_npa);
+        }
+        if ((changes & MapStateChange.VIEW) !== 0) {
+            this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);
+        }
+
+        if ((changes & MapStateChange.MARKERS) !== 0) {
+            // Update and add markers
+            this.app.map_state.markers.forEach((marker: Marker): void => {
+                if (this.markers.has(marker.get_id())) {
+                    this.update_marker_object(this.markers.get(marker.get_id())!, marker);
+                } else {
+                    this.create_marker_object(marker);
+                }
+            });
+
+            /* remove spurious markers */
+            if (this.markers.size > this.app.map_state.markers.length) {
+                const ids = new Set();
+                this.app.map_state.markers.forEach((marker: Marker): void => {
+                    ids.add(marker.get_id());
+                });
+
+                const deleted_ids: number[] = [];
+                this.markers.forEach((_marker: any, id: number, _map: any): void => {
+                    if (!ids.has(id)) {
+                        deleted_ids.push(id);
+                    }
+                });
+
+                deleted_ids.forEach((id: number): void => {
+                    const marker = this.markers.get(id);
+                    if (marker !== undefined) {
+                        this.delete_marker_object(marker);
+                    }
+                    this.markers.delete(id);
+                });
+            }
+        }
+
+        if ((changes & (MapStateChange.LINES | MapStateChange.ZOOM)) !== 0) {
+            // Update and add lines; also update lines on zoom to redraw arrow heads!
+            this.app.map_state.lines.forEach((line: Line): void => {
+                if (this.lines.has(line.get_id())) {
+                    this.update_line_object(this.lines.get(line.get_id())!, line);
+                } else {
+                    this.create_line_object(line);
+                }
+            });
+
+            /* remove spurious lines */
+            if (this.lines.size > this.app.map_state.lines.length) {
+                const ids = new Set();
+                this.app.map_state.lines.forEach((line: Line): void => {
+                    ids.add(line.get_id());
+                });
+
+                const deleted_ids: number[] = [];
+                this.lines.forEach((_line: any, id: number, _map: any): void => {
+                    if (!ids.has(id)) {
+                        deleted_ids.push(id);
+                    }
+                });
+
+                deleted_ids.forEach((id: number): void => {
+                    const line = this.lines.get(id);
+                    if (line !== undefined) {
+                        this.delete_line_object(line);
+                    }
+                    this.lines.delete(id);
+                });
+            }
+        }
+    }
+
+    public has_marker_object(id: number): boolean {
+        return id >= 0 && this.markers.has(id);
+    }
+
+    public get_marker_object(id: number): any {
+        return this.markers.get(id);
     }
 
     protected create_marker_object(marker: Marker): void {
@@ -369,11 +471,11 @@ export class LeafletWrapper extends MapWrapper {
                 obj.arrow_obj.setLatLngs(this.arrow_head(last1, last));
             }
 
-            // compute midpoint
+            // Compute midpoint
             const dist_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
             if (dist_bearing.distance > 0) {
-                midpoint_text = (new Distance(dist_bearing.distance, DistanceFormat.m)).to_string(this.app.map_state.settings_line_distance_format); 
-                midpoint = marker1.coordinates.project(dist_bearing.bearing, dist_bearing.distance / 2.0);
+                midpoint_text = (new Distance(dist_bearing.distance, DistanceFormat.m)).to_string(this.app.map_state.settings_line_distance_format);
+                midpoint = marker1.coordinates.project(dist_bearing.bearing, dist_bearing.distance / 2);
             }
         }
 
@@ -390,7 +492,7 @@ export class LeafletWrapper extends MapWrapper {
             if (obj.midpoint_obj !== null) {
                 this.map.removeLayer(obj.midpoint_obj);
                 obj.midpoint_obj = null;
-            }  
+            }
         }
 
         if (!line.color.equals(obj.last_color)) {
@@ -430,7 +532,7 @@ export class LeafletWrapper extends MapWrapper {
 
         const className = `midpoint-icon-${colorS}`;
         this.midpoint_icon_css_classes.set(colorS, className);
-        
+
         const value = `
             background: #${colorS};
             color: #${color.text_color().to_string()};
