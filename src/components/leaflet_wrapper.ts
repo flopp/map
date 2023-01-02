@@ -36,6 +36,8 @@ export class LeafletWrapper extends MapStateObserver {
     private automatic_event: boolean = false;
     private german_npa_enabled: boolean = false;
     private german_npa_layer: L.TileLayer | null = null;
+    private osm_overlay_enabled: boolean = false;
+    private osm_overlay_layer: L.TileLayer | null = null;
     private readonly map: L.Map;
     private readonly layer_openstreetmap: L.TileLayer;
     private readonly layer_opentopomap: L.TileLayer;
@@ -113,6 +115,7 @@ export class LeafletWrapper extends MapStateObserver {
         this.layers.set(MapType.STAMEN_TERRAIN, this.layer_stamen_terrain);
         this.layers.set(MapType.HUMANITARIAN, this.layer_humanitarian);
         this.layers.set(MapType.ARCGIS_WORLDIMAGERY, this.layer_arcgis_worldimagery);
+        this.layers.set(MapType.ARCGIS_WORLDIMAGERY_OVERLAY, this.layer_arcgis_worldimagery);
 
         ["zoom", "move"].forEach((event_name: string): void => {
             this.map.on(event_name, (): void => {
@@ -158,6 +161,8 @@ export class LeafletWrapper extends MapStateObserver {
             this.map.addLayer(layer);
             layer.bringToBack();
         }
+
+        this.set_osm_overlay(map_type === MapType.ARCGIS_WORLDIMAGERY_OVERLAY);
     }
 
     public set_german_npa(enabled: boolean): void {
@@ -182,6 +187,32 @@ export class LeafletWrapper extends MapStateObserver {
             this.map.addLayer(this.german_npa_layer);
         } else if (this.german_npa_layer !== null) {
             this.map.removeLayer(this.german_npa_layer);
+        }
+    }
+
+    public set_osm_overlay(enabled: boolean): void {
+        if (this.osm_overlay_enabled === enabled) {
+            return;
+        }
+
+        this.osm_overlay_enabled = enabled;
+        if (enabled) {
+            if (this.osm_overlay_layer === null) {
+                this.osm_overlay_layer = L.tileLayer.wms(
+                    "https://ows.terrestris.de/osm/service?",
+                    {
+                        layers: "OSM-Overlay-WMS",
+                        format: "image/png",
+                        transparent: true,
+                        maxNativeZoom: 14,
+                        maxZoom: 15,
+                        attribution: 'Map tiles by <a href="https://www.terrestris.de/en/osm-overlay-wms/" target="_blank">terrestris</a>',
+                    },
+                );
+            }
+            this.map.addLayer(this.osm_overlay_layer);
+        } else if (this.osm_overlay_layer !== null) {
+            this.map.removeLayer(this.osm_overlay_layer);
         }
     }
 

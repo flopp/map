@@ -2,7 +2,6 @@ import {App} from "./app";
 import {MapStateChange} from "./map_state";
 import {MapType, maptype2human, maptype2string, string2maptype} from "./map_type";
 import {SidebarItem} from "./sidebar_item";
-import {remove_element} from "./utilities";
 
 interface IBaseLayerDict {
     type: MapType;
@@ -23,6 +22,7 @@ export class SidebarLayers extends SidebarItem {
             {type: MapType.STAMEN_TERRAIN, option: null},
             {type: MapType.HUMANITARIAN, option: null},
             {type: MapType.ARCGIS_WORLDIMAGERY, option: null},
+            {type: MapType.ARCGIS_WORLDIMAGERY_OVERLAY, option: null},
         ];
 
         this.base_layer_select = this._div.querySelector("[data-base-layer]")!;
@@ -56,32 +56,5 @@ export class SidebarLayers extends SidebarItem {
 
         /* base_layer */
         this.base_layer_select.value = maptype2string(this.app.map_state.map_type);
-    }
-
-    public disable_layers(check_function: (layer_type: MapType | null) => boolean): void {
-        this.base_layers.forEach((base_layer: IBaseLayerDict): void => {
-            if (check_function(base_layer.type)) {
-                if (base_layer.option !== null) {
-                    remove_element(base_layer.option);
-                    base_layer.option = null;
-                }
-            }
-        });
-    }
-
-    public enable_layers(check_function: (layer_type: MapType | null) => boolean): void {
-        this.base_layers.forEach((base_layer: IBaseLayerDict): void => {
-            if (check_function(base_layer.type)) {
-                if (base_layer.option === null) {
-                    base_layer.option = new Option(
-                        maptype2human(base_layer.type),
-                        maptype2string(base_layer.type),
-                        false,
-                        base_layer.type === this.app.map_state.map_type,
-                    );
-                    this.base_layer_select.append(base_layer.option);
-                }
-            }
-        });
     }
 }

@@ -4,6 +4,7 @@ export enum MapType {
     STAMEN_TERRAIN = "STAMEN_TERRAIN",
     HUMANITARIAN = "HUMANITARIAN",
     ARCGIS_WORLDIMAGERY = "ARCGIS_WORLDIMAGERY",
+    ARCGIS_WORLDIMAGERY_OVERLAY = "ARCGIS_WORLDIMAGERY_OVERLAY",
 }
 
 export const maptype2string = String;
@@ -20,6 +21,8 @@ export const string2maptype = (s: string): MapType | null => {
             return MapType.HUMANITARIAN;
         case MapType.ARCGIS_WORLDIMAGERY:
             return MapType.ARCGIS_WORLDIMAGERY;
+        case MapType.ARCGIS_WORLDIMAGERY_OVERLAY:
+            return MapType.ARCGIS_WORLDIMAGERY_OVERLAY;
         default:
             return null;
     }
@@ -36,7 +39,9 @@ export const maptype2human = (t: MapType | null): string => {
         case MapType.HUMANITARIAN:
             return "Humanitarian";
         case MapType.ARCGIS_WORLDIMAGERY:
-            return "Arcgis World Imagery";
+            return "World Imagery";
+        case MapType.ARCGIS_WORLDIMAGERY_OVERLAY:
+            return "World Imagery + Overlay";
         default:
             return "Unknown";
     }
