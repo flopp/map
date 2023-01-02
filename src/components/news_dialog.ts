@@ -83,6 +83,12 @@ const news_articles: NewsArticle[] = [
     ),
 ];
 
+/*
+- Add an OSM overlay to the World Imagery layer (satellite + roads + labels)
+- Scroll newly created markers and lines into the view
+- Place the notifications on the left side (avoid overlapping with the sidebar)
+*/
+
 export class NewsDialog extends Dialog {
     public shown: number;
 
