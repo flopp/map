@@ -160,6 +160,7 @@ export class SidebarLines extends SidebarItem {
                 const edit_div = this.create_edit_div(line);
                 line_div.parentNode!.insertBefore(edit_div, line_div.nextSibling);
                 this.update_edit_values(line);
+                edit_div.scrollIntoView(false);
             }
             event.stopPropagation();
         });

@@ -166,6 +166,7 @@ export class SidebarMarkers extends SidebarItem {
                 const edit_div = this.create_edit_div(marker);
                 div.parentNode!.insertBefore(edit_div, div.nextSibling);
                 this.update_edit_values(marker);
+                edit_div.scrollIntoView(false);
             }
             event.stopPropagation();
         });
