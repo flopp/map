@@ -60,11 +60,14 @@ export class SidebarLines extends SidebarItem {
             }
 
             // Update and add lines
+            let scrollTo: Element|null = null;
+            const container = document.querySelector("#lines")!;
             this.app.map_state.lines.forEach((line: Line): void => {
                 let div = document.querySelector(`#line-${line.get_id()}`);
                 if (div === null) {
                     div = this.create_div(line);
-                    document.querySelector("#lines")!.append(div);
+                    container.append(div);
+                    div.scrollIntoView(false);
                 }
 
                 const length =
@@ -102,6 +105,10 @@ export class SidebarLines extends SidebarItem {
                     remove_element(document.querySelector(`#line-${id}`));
                     remove_element(document.querySelector(`#line-element-${id}`));
                 });
+            }
+
+            if (scrollTo !== null) {
+                (scrollTo as HTMLElement).scrollIntoView(false);
             }
         }
 

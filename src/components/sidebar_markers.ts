@@ -66,11 +66,14 @@ export class SidebarMarkers extends SidebarItem {
         }
 
         /* update and add markers */
+        let scrollTo: Element|null = null;
+        const container = document.querySelector("#markers")!;
         this.app.map_state.markers.forEach((marker: Marker): void => {
             let div = document.querySelector(`#marker-${marker.get_id()}`);
             if (div === null) {
                 div = this.create_div(marker);
-                document.querySelector("#markers")!.append(div);
+                container.append(div);
+                scrollTo = div;
             }
 
             const circle =
@@ -110,6 +113,10 @@ export class SidebarMarkers extends SidebarItem {
                 remove_element(div as HTMLElement);
                 remove_element(document.querySelector(`#marker-edit-${id}`));
             });
+        }
+
+        if (scrollTo !== null) {
+            (scrollTo as HTMLElement).scrollIntoView(false);
         }
     }
 
