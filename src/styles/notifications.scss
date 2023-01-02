@@ -3,7 +3,7 @@
 #notification-container {
     position: fixed;
     bottom: 0;
-    right: 0;
+    left: 0;
     width: $sidebar_width;
     z-index: $z_index_notifications;
     pointer-events: none;
@@ -25,7 +25,7 @@
 
 @keyframes NotificationIn {
     from {
-        transform: translate3d($sidebar_width, 0, 0);;
+        transform: translate3d(-$sidebar_width, 0, 0);
         opacity: 0;
     }
     to {
@@ -40,7 +40,7 @@
         opacity: 1;
     }
     to {
-        transform: translate3d($sidebar_width, 0, 0);
+        transform: translate3d(-$sidebar_width, 0, 0);
         opacity: 0;
     }
 }
