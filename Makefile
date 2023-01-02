@@ -1,5 +1,6 @@
 UPLOAD_TARGET=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/flopp.net/
 UPLOAD_TARGET_DEV=floppnet@echeclus.uberspace.de:/var/www/virtual/floppnet/2oc.de/
+BUILD_DATE=$(shell date +%s)
 
 .PHONY: setup
 setup:
@@ -50,7 +51,9 @@ run-dev:
 
 .PHONY: build
 build:
+	echo "export const Version = { build_date: ${BUILD_DATE} }" > src/components/version.ts
 	./node_modules/.bin/webpack --config webpack.prod.js
+	echo "{ \"build_date\": ${BUILD_DATE} }" > dist/version.json
 	cp src/.htaccess dist/
 
 .PHONY: upload

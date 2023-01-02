@@ -13,6 +13,7 @@ import {NewsDialog} from "./news_dialog";
 import {Notifications} from "./notifications";
 import {ProjectionDialog} from "./projection_dialog";
 import {Sidebar} from "./sidebar";
+import {VersionCheck} from "./version_check";
 
 export class App {
     private readonly _lang: Language | null = null;
@@ -27,6 +28,7 @@ export class App {
     public sidebar: Sidebar;
     public leaflet: LeafletWrapper;
     public news_dialog: NewsDialog;
+    public version_check: VersionCheck;
 
     public constructor(id_leaflet: string) {
         this.notifications = new Notifications();
@@ -45,6 +47,7 @@ export class App {
         this.link_dialog = new LinkDialog(this);
         this.map_menu = new MapMenu(this);
         this.news_dialog = new NewsDialog(this);
+        this.version_check = new VersionCheck(this);
 
         this.sidebar = new Sidebar(this);
 
