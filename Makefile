@@ -51,7 +51,7 @@ run-dev:
 
 .PHONY: build
 build:
-	echo "export const Version = { build_date: ${BUILD_DATE} }" > src/components/version.ts
+	echo "export const Version = { build_date: ${BUILD_DATE} };" > src/components/version.ts
 	./node_modules/.bin/webpack --config webpack.prod.js
 	echo "{ \"build_date\": ${BUILD_DATE} }" > dist/version.json
 	cp src/.htaccess dist/
