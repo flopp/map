@@ -45,6 +45,8 @@ export class Sidebar extends MapStateObserver {
                 value[2](value[0]),
             ]);
         });
+
+        this.update_state(MapStateChange.SIDEBAR);
     }
 
     public toggle(name: string | null): void {
@@ -102,8 +104,9 @@ export class Sidebar extends MapStateObserver {
         div.append(a);
         this._sidebar_controls.append(div);
 
-        a.addEventListener("click", (): void => {
+        a.addEventListener("click", (event: Event): void => {
             this.toggle(name);
+            event.stopPropagation();
         });
 
         return div;
