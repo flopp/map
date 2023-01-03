@@ -11,17 +11,15 @@ export class VersionCheck extends MapStateObserver {
         super(app);
 
         console.log("This build date", this.build_date);
+        this.check();
     }
 
-    public update_state(changes: number): void {
-        const now_s = Date.now() / 1000;
-        if (now_s < this.last_check_s + this.interval_s) {
-            return;
-        }
+    private check(): void {
+        this.last_check_s = Date.now() / 1000;
 
-        this.last_check_s = now_s;
-
-        fetch("version.json")
+        fetch("version.json", {
+            referrer: this.app.map_state.create_link()
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`status=${response.status}`);
@@ -45,5 +43,14 @@ export class VersionCheck extends MapStateObserver {
                 console.error(
                     "Failed to fetch version.json:", error);
             });
+    }
+
+    public update_state(changes: number): void {
+        const now_s = Date.now() / 1000;
+        if (now_s < this.last_check_s + this.interval_s) {
+            return;
+        }
+
+        this.check();
     }
 }
