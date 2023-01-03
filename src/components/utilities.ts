@@ -93,19 +93,14 @@ const create_color_input = (
     return field;
 };
 
-const create_select_input = (label_text: string, data_tag: string): HTMLElement => {
-    const field = create_element("div", ["field"]);
-    const label = create_element("label", ["label"], {"data-i18n": label_text});
-    label.textContent = label_text;
-    field.append(label);
+const create_select_input = (data_tag: string): {div: HTMLDivElement; select: HTMLSelectElement} => {
     const control = create_element("div", ["control"]);
-    const div = create_element("div", ["select", "is-fullwidth"]);
-    const select = create_element("select", [], {[data_tag]: null});
+    const div = create_element("div", ["select", "is-fullwidth"]) as HTMLDivElement;
+    const select = create_element("select", [], {[data_tag]: null}) as HTMLSelectElement;
     div.append(select);
     control.append(div);
-    field.append(control);
 
-    return field;
+    return {div, select};
 };
 
 const create_button = (label_text: string, callback: () => void): HTMLElement => {

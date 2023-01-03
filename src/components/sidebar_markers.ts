@@ -66,7 +66,7 @@ export class SidebarMarkers extends SidebarItem {
         }
 
         /* update and add markers */
-        let scrollTo: Element|null = null;
+        var scrollTo: Element|null = null;
         const container = document.querySelector("#markers")!;
         this.app.map_state.markers.forEach((marker: Marker): void => {
             let div = document.querySelector(`#marker-${marker.get_id()}`);

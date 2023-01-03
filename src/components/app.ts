@@ -48,11 +48,11 @@ export class App {
         this.map_menu = new MapMenu(this);
         this.news_dialog = new NewsDialog(this);
         this.version_check = new VersionCheck(this);
-        
+
         this.leaflet = new LeafletWrapper(id_leaflet, this);
         this.leaflet.update_state(MapStateChange.EVERYTHING);
         this.switch_map(this.map_state.map_type);
-        
+
         this.sidebar = new Sidebar(this);
 
         this.news_dialog.maybeShow();
