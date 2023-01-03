@@ -23,7 +23,14 @@ export class Marker {
     public constructor(coordinates: Coordinates, app: App) {
         this.marker_id = next_marker_id;
         this.coordinates = coordinates;
-        this.name = `${app.translate("general.marker")} ${this.get_id()}`;
+        const id = this.get_id();
+        const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        if (id < abc.length) {
+            this.name = abc[id];
+        } else {
+            this.name = `${abc[id % abc.length]}${1 + (id / abc.length)}`;
+        }
+        //this.name = `${app.translate("general.marker")} ${this.get_id()}`;
         this.color = Color.random_from_palette();
         this.radius = 0;
 
