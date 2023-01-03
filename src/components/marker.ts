@@ -14,23 +14,18 @@ export interface IMarkerJson {
 }
 
 export class Marker {
-    private readonly marker_id: number;
+    public marker_id: number;
     public coordinates: Coordinates;
     public name: string;
     public color: Color;
     public radius: number;
 
-    public constructor(coordinates: Coordinates, app: App) {
+    public constructor(coordinates: Coordinates) {
         this.marker_id = next_marker_id;
         this.coordinates = coordinates;
         const id = this.get_id();
         const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        if (id < abc.length) {
-            this.name = abc[id];
-        } else {
-            this.name = `${abc[id % abc.length]}${1 + (id / abc.length)}`;
-        }
-        //this.name = `${app.translate("general.marker")} ${this.get_id()}`;
+        this.name = (id < abc.length) ? abc[id] : `${abc[id % abc.length]}${1 + (id / abc.length)}`;
         this.color = Color.random_from_palette();
         this.radius = 0;
 

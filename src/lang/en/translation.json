@@ -75,7 +75,6 @@
         },
         "general": {
             "cancel": "Cancel",
-            "marker": "Marker",
             "no_marker_tag": "<NONE>",
             "submit": "Submit"
         },
@@ -125,20 +124,14 @@
             "lines": {
                 "add": "Add new line",
                 "bad_values_message": "Bad values.",
-                "bearing": "Bearing:",
                 "delete": "Delete",
                 "delete_all": "Delete all lines",
                 "edit": "Edit",
                 "edit_color": "Color",
                 "edit_color_placeholder": "Color",
-                "edit_from": "From",
-                "edit_to": "To",
-                "from": "From:",
-                "length": "Length:",
                 "settings": "Settings",
                 "show": "Show on map",
-                "title": "Lines",
-                "to": "To:"
+                "title": "Lines"
             },
             "markers": {
                 "add": "Add new marker",
@@ -179,14 +172,14 @@
                 "create-link-help": "Create a link to this map, e.g. for sharing it with others.",
                 "create-markers": "Create Multiple Markers",
                 "create-markers-help": "Create multiple markers at once, i.e. by providing a list of coordinates.",
-                "export-gpx": "Export Markers (GPX)",
-                "export-gpx-help": "Export/Import markers (including name & radius) in GPX format. Importing deletes all current markers and lines.",
+                "export-gpx": "Export GPX",
+                "export-gpx-help": "Export/Import markers (including name & radius) and lines in GPX format. Importing deletes all current markers and lines.",
                 "export-json": "Export Map State",
                 "export-json-help": "Export/import a JSON file containing the full map state.",
-                "import-gpx": "Import Markers (GPX)",
+                "import-gpx": "Import GPX",
                 "import-gpx-bad-file": "Bad GPX file",
-                "import-gpx-markers": "{1} markers found ({2} bad waypoints)",
-                "import-gpx-no-markers": "No markers found ({1} bad waypoints)",
+                "import-gpx-markers": "{1} markers found, {2} lines found ({3} ignored waypoints, {4} ignored tracks)",
+                "import-gpx-no-markers": "No markers and lines found ({1} ignored waypoints, {2} ignored tracks)",
                 "import-json": "Import Map State",
                 "language": "Language",
                 "title": "Tools"

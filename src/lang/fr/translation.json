@@ -75,7 +75,6 @@
         },
         "general": {
             "cancel": "Annuler",
-            "marker": "Marqueur",
             "no_marker_tag": "<ABSENT>",
             "submit": "Appliquer"
         },
@@ -125,20 +124,14 @@
             "lines": {
                 "add": "Ajouter une nouvelle ligne",
                 "bad_values_message": "Valeurs erron\u00e9es.",
-                "bearing": "Direction :",
                 "delete": "Supprimer",
                 "delete_all": "Supprimer toutes les lignes",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",
-                "edit_from": "De",
-                "edit_to": "\u00c0",
-                "from": "De:",
-                "length": "Longueur :",
                 "settings": "Param\u00e8tres",
                 "show": "Afficher sur la carte",
-                "title": "Lignes",
-                "to": "\u00c0 :"
+                "title": "Lignes"
             },
             "markers": {
                 "add": "Ajoute un nouveau marqueur",
@@ -179,14 +172,14 @@
                 "create-link-help": "Cr\u00e9e un lien vers la repr\u00e9sentation cartographique actuelle, par exemple pour la partager avec d'autres.",
                 "create-markers": "Cr\u00e9er plusieurs marqueurs",
                 "create-markers-help": "Cr\u00e9e plusieurs marqueurs \u00e0 la fois, c'est-\u00e0-dire en indiquant une liste de coordonn\u00e9es.",
-                "export-gpx": "Exportateur de marqueurs (GPX)",
-                "export-gpx-help": "Exportez/importez les marqueurs (y compris le nom et le rayon) au format GPX. Lors de l'importation, tous les marqueurs et lignes existants sont supprim\u00e9s.",
+                "export-gpx": "Exportateur GPX",
+                "export-gpx-help": "Exportez/importez les marqueurs (y compris le nom et le rayon) et des lignes au format GPX. Lors de l'importation, tous les marqueurs et lignes existants sont supprim\u00e9s.",
                 "export-json": "Exporter l'\u00e9tat des cartes",
                 "export-json-help": "Exporte/importe l'\u00e9tat complet de la carte (marqueurs, lignes, etc.) au format JSON.",
-                "import-gpx": "Importer des marqueurs (GPX)",
+                "import-gpx": "Importer GPX",
                 "import-gpx-bad-file": "Fichier GPX erron\u00e9",
-                "import-gpx-markers": "{1} marqueurs trouv\u00e9s ({2} waypoints erron\u00e9s)",
-                "import-gpx-no-markers": "Aucun marqueur trouv\u00e9 ({1} waypoints erron\u00e9s)",
+                "import-gpx-markers": "{1} marqueurs trouv\u00e9s, {2} lignes trouv\u00e9s ({3} waypoints ignor\u00e9es, {4} tracks ignor\u00e9es)",
+                "import-gpx-no-markers": "Pas de marqueurs et de lignes trouv\u00e9s ({1} waypoints ignor\u00e9es, {2} tracks ignor\u00e9es)",
                 "import-json": "Importer l'\u00e9tat de la carte",
                 "language": "Langue",
                 "title": "Outils"

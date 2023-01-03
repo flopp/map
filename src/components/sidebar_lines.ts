@@ -173,7 +173,7 @@ export class SidebarLines extends SidebarItem {
         };
         center.append(from.div);
         center.append(to.div);
-        center.append(create_element("div", ["line-stats"]))
+        center.append(create_element("div", ["line-stats"]));
         div.append(center);
 
         const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);

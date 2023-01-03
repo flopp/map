@@ -75,7 +75,6 @@
         },
         "general": {
             "cancel": "Abbrechen",
-            "marker": "Marker",
             "no_marker_tag": "<KEINER>",
             "submit": "Anwenden"
         },
@@ -125,20 +124,14 @@
             "lines": {
                 "add": "F\u00fcge neue Linie hinzu",
                 "bad_values_message": "Fehlerhafte Werte.",
-                "bearing": "Richtung:",
                 "delete": "L\u00f6schen",
                 "delete_all": "L\u00f6sche alle Linien",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
-                "edit_from": "Von",
-                "edit_to": "Nach",
-                "from": "Von:",
-                "length": "L\u00e4nge:",
                 "settings": "Einstellungen",
                 "show": "Zeige auf der Karte",
-                "title": "Linien",
-                "to": "Nach:"
+                "title": "Linien"
             },
             "markers": {
                 "add": "F\u00fcge neuen Marker hinzu",
@@ -179,14 +172,14 @@
                 "create-link-help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
                 "create-markers": "Erzeuge mehrere Marker",
                 "create-markers-help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
-                "export-gpx": "Exportiere Marker (GPX)",
-                "export-gpx-help": "Exportiere/Importiere Marker (inlusive Name & Radius) im GPX-Format. Beim Import werden alle existierenden Marker und Linien gel\u00f6scht.",
+                "export-gpx": "Exportiere GPX",
+                "export-gpx-help": "Exportiere/Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Beim Import werden alle existierenden Marker und Linien gel\u00f6scht.",
                 "export-json": "Exportiere Karten-Zustand",
                 "export-json-help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
-                "import-gpx": "Importiere Marker (GPX)",
+                "import-gpx": "Importiere GPX",
                 "import-gpx-bad-file": "Fehlerhafte GPX-Datei",
-                "import-gpx-markers": "{1} Marker gefunden ({2} fehlerhafte Waypoints)",
-                "import-gpx-no-markers": "Keine Marker gefunden ({1} fehlerhafte Waypoints)",
+                "import-gpx-markers": "{1} Marker gefunden, {2} Linien gefunden ({3} ignorierte Waypoints, {4} ignorierte Tracks)",
+                "import-gpx-no-markers": "Keine Marker und Linien gefunden ({1} ignorierte Waypoints, {2} ignorierte Tracks)",
                 "import-json": "Importiere Karten-Zustand",
                 "language": "Sprache",
                 "title": "Werkzeuge"

@@ -80,14 +80,32 @@ const news_articles: NewsArticle[] = [
         Ich hoffe ihr, hattet alle einen guten Start ins neue Jahr!
         <i>Florian aka. Flopp</i>`,
     ),
-];
+    new NewsArticle(
+        "2022-01-01",
+        `And... here's another larger update:
 
-/*
-- Add an OSM overlay to the World Imagery layer (satellite + roads + labels)
-- Scroll newly created markers and lines into the view
-- Simplify line list
-- Place the notifications on the left side (avoid overlapping with the sidebar)
-*/
+        - there's now a satellite base map with roads and labels (World Imagery layer  + OSM overlay),
+        - new markers have shorter names (A, B, C, ...),
+        - lines are included in the GPX export
+        - the line list was siplified a lot (including inline editing of line endpoints),
+        - the marker and line list automatucally scroll to new objects,
+        - notifications are placed on the left side to not overlap with the sidebar.
+
+        Best regards,
+        Florian aka. Flopp`,
+        `Und... hier ist ein weiteres größeres Update:
+
+        - es gibt jetzt eine Satelliten-Basiskarte mit Straßen und Markierungen (World Imagery Layer + OSM Overlay),
+        - neue Marker haben kürzere Namen (A, B, C, ...),
+        - Linien sind im GPX-Export enthalten
+        - die Linienliste wurde stark vereinfacht (einschließlich der Inline-Bearbeitung von Linienendpunkten),
+        - die Marker- und Linienliste scrollt automatisch zu neuen Objekten,
+        - Benachrichtigungen werden auf der linken Seite platziert, damit sie sich nicht mit der Seitenleiste überschneiden.
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
+];
 
 export class NewsDialog extends Dialog {
     public shown: number;

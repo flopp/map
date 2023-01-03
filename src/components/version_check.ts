@@ -18,7 +18,7 @@ export class VersionCheck extends MapStateObserver {
         this.last_check_s = Date.now() / 1000;
 
         fetch("version.json", {
-            referrer: this.app.map_state.create_link()
+            referrer: this.app.map_state.create_link(),
         })
             .then((response) => {
                 if (!response.ok) {

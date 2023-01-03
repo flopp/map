@@ -1,5 +1,6 @@
 import {Color} from "./color";
 import {Distance} from "./distance";
+import { MapState } from "./map_state";
 
 let next_line_id: number = 0;
 
@@ -10,7 +11,7 @@ export interface ILineJson {
 }
 
 export class Line {
-    private readonly line_id: number;
+    public line_id: number;
     public marker1: number;
     public marker2: number;
     public color: Color;
@@ -35,6 +36,25 @@ export class Line {
 
     public get_id(): number {
         return this.line_id;
+    }
+
+    public to_gpx(map_state: MapState): string {
+        const data: string[] = [];
+        data.push("<trk>");
+        data.push(`<name>LINE:${this.marker1}:${this.marker2}:${this.color.to_string()}</name>`);
+        data.push("<trkseg>");
+        if (this.marker1 !== -1) {
+            const c = map_state.markers[this.marker1].coordinates;
+            data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trppt>`);
+        }
+        if (this.marker2 !== -1) {
+            const c = map_state.markers[this.marker2].coordinates;
+            data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trppt>`);
+        }
+        data.push("<trkseg>");
+        data.push("</trk>");
+
+        return data.join("\n");
     }
 
     public to_json(): ILineJson {

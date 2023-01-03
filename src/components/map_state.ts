@@ -122,7 +122,7 @@ export class MapState {
                 const color = this.storage.get_color(`marker[${id}].color`, new Color("FF0000"));
                 const radius = this.storage.get_float(`marker[${id}].radius`, 0)!;
                 if (coordinates !== null) {
-                    const marker = new Marker(coordinates, this.app);
+                    const marker = new Marker(coordinates);
                     marker.name = name;
                     marker.color = color;
                     marker.radius = radius;
@@ -567,7 +567,7 @@ export class MapState {
     }
 
     public add_marker(coordinates: Coordinates | null): Marker {
-        const marker = new Marker(coordinates === null ? this.center! : coordinates, this.app);
+        const marker = new Marker(coordinates === null ? this.center! : coordinates);
         if (!this.settings_marker_random_color) {
             marker.color = this.settings_marker_color;
         }
@@ -844,6 +844,10 @@ export class MapState {
             data.push(marker.to_gpx());
         });
 
+        this.lines.forEach((line: Line): void => {
+            data.push(line.to_gpx(this));
+        });
+
         data.push("</gpx>");
 
         return data.join("\n");
@@ -909,21 +913,52 @@ export class MapState {
                 return;
             }
 
-            const marker = new Marker(new Coordinates(lat, lon), this.app);
+            const marker = new Marker(new Coordinates(lat, lon));
             if (!this.settings_marker_random_color) {
                 marker.color = this.settings_marker_color;
             }
+            marker.marker_id = markers.length;
             marker.name = name;
             marker.radius = radius;
             markers.push(marker);
         });
 
+        const lines: Line[] = [];
+        let badLines = 0;
+        Array.from(xml.getElementsByTagName("trk")).forEach((trk: Element, index: number): void => {
+            let name = "";
+            const nameEl = trk.getElementsByTagName("name");
+            if (nameEl.length > 0 && nameEl[0].textContent !== null) {
+                name = nameEl[0].textContent;
+            }
+            const m = name.match(/^\s*LINE:(-1|\d+):(-1|\d+):([0-9a-f]{6})\s*$/i);
+            if (m === null) {
+                badLines += 1;
+
+                return;
+            }
+
+            const m1 = parse_int(m[1]);
+            const m2 = parse_int(m[2]);
+            if (m1 === null || (m1 !== -1 && (m1 < 0 || m1 >= markers.length)) ||
+                m2 === null || (m2 !== -1 && (m2 < 0 || m2 >= markers.length))) {
+                badLines += 1;
+
+                return;
+            }
+
+            const line = new Line(m1, m2);
+            line.line_id = lines.length;
+            line.color = Color.from_string(m[3])!;
+            lines.push(line);
+        });
+
         if (markers.length === 0) {
-            this.app.message_error(this.app.translate("sidebar.tools.import-gpx-no-markers", `${badWaypoints}`));
+            this.app.message_error(this.app.translate("sidebar.tools.import-gpx-no-markers", `${badWaypoints}`, `${badLines}`));
 
             return;
         }
-        this.app.message(this.app.translate("sidebar.tools.import-gpx-markers", `${markers.length}`, `${badWaypoints}`));
+        this.app.message(this.app.translate("sidebar.tools.import-gpx-markers", `${markers.length}`, `${lines.length}`, `${badWaypoints}`, `${badLines}`));
 
         this.delete_all_lines();
         this.delete_all_markers();
@@ -934,7 +969,14 @@ export class MapState {
             this.update_marker_storage(marker);
         });
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS);
+
+        lines.forEach((line: Line): void => {
+            this.lines.push(line);
+            this.lines_hash.set(line.get_id(), line);
+            this.update_line_storage(line);
+        });
+        this.storage.set("lines", this.get_line_ids_string());
+        this.update_observers(MapStateChange.LINES | MapStateChange.MARKERS);
 
         this.app.leaflet.fit_objects();
     }
@@ -1069,7 +1111,7 @@ export class MapState {
                 }
 
                 if (coordinates !== null) {
-                    const marker = new Marker(coordinates, this.app);
+                    const marker = new Marker(coordinates);
                     this.markers.push(marker);
                     this.markers_hash.set(marker.get_id(), marker);
                     if (id !== null) {
