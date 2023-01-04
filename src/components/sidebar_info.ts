@@ -10,7 +10,7 @@ export class SidebarInfo extends SidebarItem {
         });
     }
 
-    public update_state(_changes: number): void {
+    public update_state(_changes: number, _marker_id: number = -1): void {
         // Nothing
     }
 }

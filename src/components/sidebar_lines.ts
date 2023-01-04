@@ -52,7 +52,7 @@ export class SidebarLines extends SidebarItem {
         });
     }
 
-    public update_state(changes: number): void {
+    public update_state(changes: number, _marker_id: number = -1): void {
         if ((changes & (MapStateChange.LINES | MapStateChange.LANGUAGE | MapStateChange.MARKERS)) === 0) {
             return;
         }

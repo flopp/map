@@ -136,7 +136,7 @@
             "markers": {
                 "add": "Add new marker",
                 "bad_values_message": "Bad values.",
-                "circle": "Circle: {1} m",
+                "circle": "Circle:",
                 "copy_coordinates": "Copy coordinates to clipboard",
                 "copy_coordinates_failure_message": "The coordinates could no be copied to the clipboard.",
                 "copy_coordinates_success_message": "The coordinates have been copied to the clipboard: {1}",

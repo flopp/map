@@ -46,6 +46,10 @@ export class Coordinates {
         this._raw_lng = lng;
     }
 
+    public equals(other: Coordinates): boolean {
+        return this._raw_lat == other._raw_lat && this._raw_lng == other._raw_lng;
+    }
+
     public raw_lat(): number {
         return this._raw_lat;
     }

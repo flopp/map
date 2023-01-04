@@ -451,10 +451,7 @@ export class MapState {
         this.observers.push(observer);
     }
 
-    public update_observers(changes: number): void {
-        if (changes === MapStateChange.NOTHING) {
-            console.error("MapSate.update_observers called with no changes");
-        }
+    public update_observers(changes: number, marker_id: number = -1): void {
         let updatedChanges = changes;
         if ((changes & (MapStateChange.MARKERS | MapStateChange.LINES)) !== 0) {
             if (this.recompute_lines()) {
@@ -462,7 +459,7 @@ export class MapState {
             }
         }
         this.observers.forEach((observer: MapStateObserver): void => {
-            observer.update_state(updatedChanges);
+            observer.update_state(updatedChanges, marker_id);
         });
     }
 
@@ -577,7 +574,7 @@ export class MapState {
         this.markers_hash.set(marker.get_id(), marker);
         this.update_marker_storage(marker);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(MapStateChange.MARKERS, marker.get_id());
 
         this.app.message(this.app.translate("messages.marker_created"));
 
@@ -599,7 +596,7 @@ export class MapState {
         );
         this.markers_hash.delete(id);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(MapStateChange.MARKERS, id);
     }
 
     public delete_all_markers(): void {
@@ -616,9 +613,13 @@ export class MapState {
 
             return;
         }
-        this.markers_hash.get(id)!.coordinates = coordinates;
-        this.storage.set_coordinates(`marker[${id}].coordinates`, coordinates);
-        this.update_observers(MapStateChange.MARKERS);
+
+        const marker = this.markers_hash.get(id)!;
+        if (!coordinates.equals(marker.coordinates)) {
+            marker.coordinates = coordinates;
+            this.storage.set_coordinates(`marker[${id}].coordinates`, coordinates);
+            this.update_observers(MapStateChange.MARKERS, id);
+        }
     }
 
     public set_marker_name(id: number, name: string): void {
@@ -627,9 +628,13 @@ export class MapState {
 
             return;
         }
-        this.markers_hash.get(id)!.name = name;
-        this.storage.set(`marker[${id}].name`, name);
-        this.update_observers(MapStateChange.MARKERS);
+
+        const marker = this.markers_hash.get(id)!;
+        if (name !== marker.name) {
+            marker.name = name;
+            this.storage.set(`marker[${id}].name`, name);
+            this.update_observers(MapStateChange.MARKERS, id);
+        }
     }
 
     public set_marker_color(id: number, color: Color): void {
@@ -638,9 +643,13 @@ export class MapState {
 
             return;
         }
-        this.markers_hash.get(id)!.color = color;
-        this.storage.set_color(`marker[${id}].color`, color);
-        this.update_observers(MapStateChange.MARKERS);
+
+        const marker = this.markers_hash.get(id)!;
+        if (!color.equals(marker.color)) {
+            marker.color = color;
+            this.storage.set_color(`marker[${id}].color`, color);
+            this.update_observers(MapStateChange.MARKERS, id);
+        }
     }
 
     public set_marker_radius(id: number, radius: number): void {
@@ -649,9 +658,13 @@ export class MapState {
 
             return;
         }
-        this.markers_hash.get(id)!.radius = radius;
-        this.storage.set_float(`marker[${id}].radius`, radius);
-        this.update_observers(MapStateChange.MARKERS);
+
+        const marker = this.markers_hash.get(id)!;
+        if (radius !== marker.radius) {
+            marker.radius = radius;
+            this.storage.set_float(`marker[${id}].radius`, radius);
+            this.update_observers(MapStateChange.MARKERS, id);
+        }
     }
 
     public update_marker_storage(marker: Marker): void {

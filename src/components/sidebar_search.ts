@@ -43,7 +43,7 @@ export class SidebarSearch extends SidebarItem {
         });
     }
 
-    public update_state(changes: number): void {
+    public update_state(changes: number, _marker_id: number = -1): void {
         if ((changes & (MapStateChange.CENTER | MapStateChange.MARKERS)) === MapStateChange.NOTHING) {
             return;
         }

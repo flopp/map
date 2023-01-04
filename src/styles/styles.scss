@@ -23,31 +23,42 @@ body {
 }
 
 .marker {
+    display: flex;
+    flex-direction: column;
+}
+.marker-display {
     align-items: stretch;
     display: flex;
     text-align: left;
     border-bottom: 1px solid #e6e6e6;
-    cursor: pointer;
+    overflow-x: hidden;
 }
-.marker > .marker-left {
+.marker-display > .marker-left {
     flex-basis: auto;
     flex-grow: 0;
     flex-shrink: 0;
 }
-.marker > .marker-left > .marker-color {
+.marker-display > .marker-left > .marker-color {
     width: 16px;
     height: 100%;
     margin-left: 1px;
     margin-right: 4px;
 }
-.marker > .marker-center {
+.marker-display > .marker-center {
     flex-basis: auto;
     flex-grow: 1;
     flex-shrink: 1;
     text-align: left;
 }
-.marker > .marker-center > .marker-name {
+.marker-display > .marker-center > .marker-name {
     font-weight: bold;
+}
+.marker-radius {
+    display: flex;
+    flex-direction: row;
+}
+.marker-radius-label {
+    margin-right: 0.5em;
 }
 .action-buttons {
     margin-bottom: 0;
@@ -67,7 +78,6 @@ body {
     display: flex;
     text-align: left;
     border-bottom: 1px solid #e6e6e6;
-    cursor: pointer;
 }
 .line > .line-left {
     flex-basis: auto;

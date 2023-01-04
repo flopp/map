@@ -136,7 +136,7 @@
             "markers": {
                 "add": "Ajoute un nouveau marqueur",
                 "bad_values_message": "Valeurs erron\u00e9es.",
-                "circle": "Cercle : {1} m",
+                "circle": "Cercle :",
                 "copy_coordinates": "Copier les coordonn\u00e9es dans le presse-papiers",
                 "copy_coordinates_failure_message": "Les coordonn\u00e9es n'ont pas pu \u00eatre copi\u00e9es dans le presse-papiers.",
                 "copy_coordinates_success_message": "Les coordonn\u00e9es ont \u00e9t\u00e9 copi\u00e9es dans le presse-papiers : {1}",

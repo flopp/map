@@ -89,7 +89,7 @@ export class SidebarTools extends SidebarItem {
         });
     }
 
-    public update_state(changes: number): void {
+    public update_state(changes: number, _marker_id: number = -1): void {
         if ((changes & MapStateChange.LANGUAGE) === MapStateChange.NOTHING) {
             return;
         }

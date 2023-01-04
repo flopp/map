@@ -6,7 +6,7 @@ export class SidebarHero extends SidebarItem {
         super(app, id);
     }
 
-    public update_state(_changes: number): void {
+    public update_state(_changes: number, _marker_id: number = -1): void {
         // Nothing
     }
 }

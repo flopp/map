@@ -136,7 +136,7 @@
             "markers": {
                 "add": "F\u00fcge neuen Marker hinzu",
                 "bad_values_message": "Fehlerhafte Werte.",
-                "circle": "Kreis: {1} m",
+                "circle": "Kreis:",
                 "copy_coordinates": "Kopiere Koordinaten in die Zwischenablage",
                 "copy_coordinates_failure_message": "Die Koordinaten konnten nicht in die Zwischenablage kopiert werden.",
                 "copy_coordinates_success_message": "Koordinaten in die Zwischenablage kopiert: {1}",

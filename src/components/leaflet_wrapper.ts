@@ -250,7 +250,7 @@ export class LeafletWrapper extends MapStateObserver {
         this.map.invalidateSize();
     }
 
-    public update_state(changes: number): void {
+    public update_state(changes: number, marker_id: number = -1): void {
         /* update view */
         if ((changes & MapStateChange.MAPTYPE) !== 0) {
             this.set_map_type(this.app.map_state.map_type!);
@@ -261,36 +261,57 @@ export class LeafletWrapper extends MapStateObserver {
         }
 
         if ((changes & MapStateChange.MARKERS) !== 0) {
-            // Update and add markers
-            this.app.map_state.markers.forEach((marker: Marker): void => {
-                if (this.markers.has(marker.get_id())) {
-                    this.update_marker_object(this.markers.get(marker.get_id())!, marker);
+            if (marker_id !== -1) {
+                const marker = this.app.map_state.get_marker(marker_id);
+                const marker_obj = this.markers.get(marker_id);
+                if (marker === null) {
+                    // Deleted
+                    if (marker_obj !== undefined) {
+                        this.delete_marker_object(marker_obj);
+                    }
+                    this.markers.delete(marker_id);
                 } else {
-                    this.create_marker_object(marker);
+                    if (marker_obj !== undefined) {
+                        // Added
+                        this.update_marker_object(marker_obj, marker);
+                    } else {
+                        // Changed
+                        this.create_marker_object(marker);
+                    }
                 }
-            });
-
-            /* remove spurious markers */
-            if (this.markers.size > this.app.map_state.markers.length) {
-                const ids = new Set();
+            } else {
+                // Update and add markers
                 this.app.map_state.markers.forEach((marker: Marker): void => {
-                    ids.add(marker.get_id());
-                });
-
-                const deleted_ids: number[] = [];
-                this.markers.forEach((_marker: any, id: number, _map: any): void => {
-                    if (!ids.has(id)) {
-                        deleted_ids.push(id);
+                    const marker_obj = this.markers.get(marker.get_id());
+                    if (marker_obj !== undefined) {
+                        this.update_marker_object(marker_obj, marker);
+                    } else {
+                        this.create_marker_object(marker);
                     }
                 });
 
-                deleted_ids.forEach((id: number): void => {
-                    const marker = this.markers.get(id);
-                    if (marker !== undefined) {
-                        this.delete_marker_object(marker);
-                    }
-                    this.markers.delete(id);
-                });
+                /* remove spurious markers */
+                if (this.markers.size > this.app.map_state.markers.length) {
+                    const ids = new Set();
+                    this.app.map_state.markers.forEach((marker: Marker): void => {
+                        ids.add(marker.get_id());
+                    });
+
+                    const deleted_ids: number[] = [];
+                    this.markers.forEach((_marker: any, id: number, _map: any): void => {
+                        if (!ids.has(id)) {
+                            deleted_ids.push(id);
+                        }
+                    });
+
+                    deleted_ids.forEach((id: number): void => {
+                        const marker = this.markers.get(id);
+                        if (marker !== undefined) {
+                            this.delete_marker_object(marker);
+                        }
+                        this.markers.delete(id);
+                    });
+                }
             }
         }
 
