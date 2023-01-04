@@ -97,6 +97,8 @@
         "sidebar": {
             "hero": {
                 "content": "Welcome to <b>Flopp's Map</b>!<br /><br />This web application is a hobby project that mainly targets geocachers and other people interested in geography. It has a lot of features, including calculation of distances, waypoint projection, interactively draggable markers, and much more.<br /><br />Have fun,<br /><i>Florian aka. Flopp</i>",
+                "documentation": "blog.flopp.net",
+                "documentation-help": "Go to blog.flopp.net to view the documentation and the latest news.",
                 "title": "Flopp's Map"
             },
             "info": {
@@ -151,7 +153,6 @@
                 "edit_name_placeholder": "Name",
                 "edit_radius": "Circle Radius (m)",
                 "edit_radius_placeholder": "Radius",
-                "no_circle": "No circle",
                 "projection": "Waypoint Projection",
                 "settings": "Settings",
                 "show": "Show on map",

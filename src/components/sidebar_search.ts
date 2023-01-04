@@ -48,6 +48,8 @@ export class SidebarSearch extends SidebarItem {
         document.querySelector("#sidebar-search-add-marker")!.addEventListener("click", (): void => {
             this.app.map_state.add_marker(null);
         });
+
+        this.clear_results();
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {

@@ -97,6 +97,8 @@
         "sidebar": {
             "hero": {
                 "content": "Bienvenue sur la <b>Carte de Flopp</b> !<br /><br />Cette application web est un projet de loisir qui s'adresse en particulier aux g\u00e9ocacheurs et autres personnes int\u00e9ress\u00e9es par la g\u00e9ographie. Elle propose des fonctions de calcul de distance, de projection de points de rep\u00e8re, de d\u00e9placement interactif de marqueurs, etc.<br /><br />Amusez-vous bien !<br />Florian alias Flopp",
+                "documentation": "blog.flopp.net",
+                "documentation-help": "Va sur blog.flopp.net pour voir la documentation et les derni\u00e8res nouvelles.",
                 "title": "Carte de Flopp"
             },
             "info": {
@@ -151,7 +153,6 @@
                 "edit_name_placeholder": "Nom",
                 "edit_radius": "Rayon du cercle (m)",
                 "edit_radius_placeholder": "Rayon",
-                "no_circle": "Pas de cercle",
                 "projection": "Projection",
                 "settings": "Param\u00e8tres",
                 "show": "Afficher sur la carte",

@@ -108,7 +108,8 @@ const news_articles: NewsArticle[] = [
 ];
 
 // Optimized updating of markers
-// Multiple search results 
+// Multiple search results
+// Blog 
 
 export class NewsDialog extends Dialog {
     public shown: number;

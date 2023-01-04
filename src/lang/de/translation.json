@@ -97,6 +97,8 @@
         "sidebar": {
             "hero": {
                 "content": "Willkommen auf <b>Flopps Karte</b>!<br /><br />Diese Web-Anwendung ist ein Hobby-Projekt, das sich insbesondere an Geocacher und andere Geo-Interessierte richtet. Es gibt Funktionen zur Distanzberechnung, Wegpunkt-Projektion, interaktiv verschiebbare Marker, usw.<br /><br />Viel Spa\u00df,<br /><i>Florian aka. Flopp</i>",
+                "documentation": "blog.flopp.net",
+                "documentation-help": "Gehe zu blog.flopp.net um dir die Dokumentation und die letzten Neuigkeiten anzuschauen.",
                 "title": "Flopps Karte"
             },
             "info": {
@@ -151,7 +153,6 @@
                 "edit_name_placeholder": "Name",
                 "edit_radius": "Kreis-Radius (m)",
                 "edit_radius_placeholder": "Radius",
-                "no_circle": "Kein Kreis",
                 "projection": "Wegpunkt-Projektion",
                 "settings": "Einstellungen",
                 "show": "Zeige auf der Karte",
