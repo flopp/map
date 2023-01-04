@@ -1,5 +1,4 @@
 import {Coordinates} from "./coordinates";
-import {getScript} from "./get_script";
 import {IconFactory} from "./icon_factory";
 import {Language} from "./language";
 import {LeafletWrapper} from "./leaflet_wrapper";
@@ -90,48 +89,6 @@ export class App {
         } else {
             this.message_error(this.translate("messages.geolocation_not_available"));
         }
-    }
-
-    public search_location(location_string: string): void {
-        const trimmed = location_string.trim();
-        if (trimmed.length === 0) {
-            return;
-        }
-
-        // Try to parse "location_string" as coordinates
-        const coordinates = Coordinates.from_string(trimmed);
-        if (coordinates !== null) {
-            this.map_state.set_center(coordinates);
-
-            return;
-        }
-
-        // Try to resolve "location_string" via a nominatim search
-        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${trimmed}`;
-        fetch(url)
-            .then(
-                (response: Response): Promise<any> => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    const contentType = response.headers.get("content-type");
-                    if (contentType === null || !contentType.includes("application/json")) {
-                        throw new TypeError("Response is not JSON");
-                    }
-
-                    return response.json();
-                },
-            )
-            .then((json_data): void => {
-                if (json_data.length > 0) {
-                    this.map_state.set_center(new Coordinates(json_data[0].lat, json_data[0].lon));
-                } else {
-                    this.message_error(this.translate("search.no-result"));
-                }
-            })
-            .catch((error: any): void => {
-                this.message_error(this.translate("search.server-error", error));
-            });
     }
 
     public show_projection_dialog(marker: Marker): void {

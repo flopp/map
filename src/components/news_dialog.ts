@@ -107,6 +107,9 @@ const news_articles: NewsArticle[] = [
     ),
 ];
 
+// Optimized updating of markers
+// Multiple search results 
+
 export class NewsDialog extends Dialog {
     public shown: number;
 

@@ -98,7 +98,7 @@ export class SidebarMarkers extends SidebarItem {
 
                 // Changed
                 this.update_div(marker, div as HTMLDivElement);
-            
+
                 if (scrollTo !== null) {
                     (scrollTo as HTMLElement).scrollIntoView(false);
                 }
