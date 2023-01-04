@@ -75,8 +75,10 @@
         },
         "general": {
             "cancel": "Abbrechen",
+            "no": "Nein",
             "no_marker_tag": "<KEINER>",
-            "submit": "Anwenden"
+            "submit": "Anwenden",
+            "yes": "Ja"
         },
         "menu": {
             "add-marker": "Marker hinzuf\u00fcgen",
@@ -128,6 +130,7 @@
                 "bad_values_message": "Fehlerhafte Werte.",
                 "delete": "L\u00f6schen",
                 "delete_all": "L\u00f6sche alle Linien",
+                "delete_all_question": "Willst du wirklich alle Linien l\u00f6schen?",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
@@ -144,6 +147,7 @@
                 "copy_coordinates_success_message": "Koordinaten in die Zwischenablage kopiert: {1}",
                 "delete": "L\u00f6schen",
                 "delete_all": "L\u00f6sche alle Marker",
+                "delete_all_question": "Willst du wirklich alle Marker l\u00f6schen?",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",

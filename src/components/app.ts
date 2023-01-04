@@ -140,4 +140,22 @@ export class App {
             },
         );
     }
+
+    public yesNoDialog(title: string, text: string, yes: () => void): void {
+        const dialogEl = document.querySelector("#yesno-dialog")!;
+        const titleEl = document.querySelector("#yesno-title")!;
+        const textEl = document.querySelector("#yesno-text")!;
+        const yesButton = (document.querySelector("#yesno-yes") as HTMLButtonElement);
+        const noButton = (document.querySelector("#yesno-no") as HTMLButtonElement);
+        titleEl.innerHTML = title;
+        textEl.innerHTML = text;
+        yesButton.addEventListener("click", () => {
+            dialogEl.classList.remove("is-active");
+            yes();
+        });
+        noButton.addEventListener("click", () => {
+            dialogEl.classList.remove("is-active");
+        });
+        dialogEl.classList.add("is-active");
+    }
 }

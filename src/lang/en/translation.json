@@ -75,8 +75,10 @@
         },
         "general": {
             "cancel": "Cancel",
+            "no": "No",
             "no_marker_tag": "<NONE>",
-            "submit": "Submit"
+            "submit": "Submit",
+            "yes": "Yes"
         },
         "menu": {
             "add-marker": "Add Marker",
@@ -128,6 +130,7 @@
                 "bad_values_message": "Bad values.",
                 "delete": "Delete",
                 "delete_all": "Delete all lines",
+                "delete_all_question": "Do you really want to delete all lines?",
                 "edit": "Edit",
                 "edit_color": "Color",
                 "edit_color_placeholder": "Color",
@@ -144,6 +147,7 @@
                 "copy_coordinates_success_message": "The coordinates have been copied to the clipboard: {1}",
                 "delete": "Delete",
                 "delete_all": "Delete all markers",
+                "delete_all_question": "Do you really want to delete all markers?",
                 "edit": "Edit",
                 "edit_color": "Color",
                 "edit_color_placeholder": "Color",

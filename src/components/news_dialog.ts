@@ -109,7 +109,9 @@ const news_articles: NewsArticle[] = [
 
 // Optimized updating of markers
 // Multiple search results
-// Blog 
+// Yes/no dialog when deleting all markers/lines
+// Blog
+
 
 export class NewsDialog extends Dialog {
     public shown: number;

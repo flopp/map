@@ -29,7 +29,16 @@ export class SidebarMarkers extends SidebarItem {
             this.app.map_state.add_marker(null);
         });
         document.querySelector("#btn-delete-markers")!.addEventListener("click", (): void => {
-            this.app.map_state.delete_all_markers();
+            if (this.app.map_state.markers.length === 0) {
+                return;
+            }
+            this.app.yesNoDialog(
+                this.app.translate("sidebar.markers.delete_all"),
+                this.app.translate("sidebar.markers.delete_all_question"),
+                () => {
+                    this.app.map_state.delete_all_markers();
+                },
+            );
         });
         document.querySelector("#btn-marker-settings")!.addEventListener("click", (): void => {
             this.settingsDialog.show();

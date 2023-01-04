@@ -75,8 +75,10 @@
         },
         "general": {
             "cancel": "Annuler",
+            "no": "No",
             "no_marker_tag": "<ABSENT>",
-            "submit": "Appliquer"
+            "submit": "Appliquer",
+            "yes": "Oui"
         },
         "menu": {
             "add-marker": "Ajouter un marqueur",
@@ -128,6 +130,7 @@
                 "bad_values_message": "Valeurs erron\u00e9es.",
                 "delete": "Supprimer",
                 "delete_all": "Supprimer toutes les lignes",
+                "delete_all_question": "Tu veux vraiment supprimer toutes les lignes ?",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",
@@ -144,6 +147,7 @@
                 "copy_coordinates_success_message": "Les coordonn\u00e9es ont \u00e9t\u00e9 copi\u00e9es dans le presse-papiers : {1}",
                 "delete": "Supprimer",
                 "delete_all": "Supprimer tous les marqueurs",
+                "delete_all_question": "Tu veux vraiment effacer tous les marqueurs ?",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",

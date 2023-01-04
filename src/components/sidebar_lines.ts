@@ -33,7 +33,16 @@ export class SidebarLines extends SidebarItem {
             this.app.map_state.add_line();
         });
         document.querySelector("#btn-delete-lines")!.addEventListener("click", (): void => {
-            this.app.map_state.delete_all_lines();
+            if (this.app.map_state.lines.length === 0) {
+                return;
+            }
+            this.app.yesNoDialog(
+                this.app.translate("sidebar.lines.delete_all"),
+                this.app.translate("sidebar.lines.delete_all_question"),
+                () => {
+                    this.app.map_state.delete_all_lines();
+                },
+            );
         });
 
         this.settingsDialog = new LineSettingsDialog(app);
