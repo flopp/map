@@ -13,7 +13,8 @@ export class MultiMarkersDialog extends Dialog {
     private readonly _commonColor: HTMLInputElement;
     private readonly _commonRadius: HTMLInputElement;
     private readonly _markerData: HTMLInputElement;
-    private readonly _dataFormat: HTMLTextAreaElement;
+    private readonly _dataFormat: HTMLSpanElement;
+    private readonly _example: HTMLSpanElement;
 
     public constructor(app: App) {
         super("multi-markers-dialog", app);
@@ -26,6 +27,7 @@ export class MultiMarkersDialog extends Dialog {
         this._commonRadius = this._div.querySelector("[data-common-radius]")!;
         this._markerData = this._div.querySelector("[data-marker-data]")!;
         this._dataFormat = this._div.querySelector("[data-format]")!;
+        this._example = this._div.querySelector("[data-example]")!;
 
         this._useCommonName.onchange = (): void => {
             this.update_description();
@@ -36,6 +38,13 @@ export class MultiMarkersDialog extends Dialog {
         this._useCommonRadius.onchange = (): void => {
             this.update_description();
         };
+
+        this._useCommonName.checked = true;
+        this._useCommonColor.checked = true;
+        this._useCommonRadius.checked = true;
+
+        this._commonName.value = "M";
+        this._commonRadius.value = "0";
     }
 
     public show(): void {
@@ -208,15 +217,24 @@ export class MultiMarkersDialog extends Dialog {
         const use_common_radius = this._useCommonRadius.checked;
 
         const description = [`<${this._app.translate("dialog.multi-markers.coordinates_token")}>`];
+        let example1 = "N 47 59.765 E 007 50.964";
+        let example2 = "40.712728 -74.006015";
         if (!use_common_name) {
+            example1 += ";Freiburg";
+            example2 += ";New York";
             description.push(`<${this._app.translate("dialog.multi-markers.name_token")}>`);
         }
         if (!use_common_color) {
+            example1 += ";#FF0000";
+            example2 += ";A020F0";
             description.push(`<${this._app.translate("dialog.multi-markers.color_token")}>`);
         }
         if (!use_common_radius) {
+            example1 += ";5000";
+            example2 += ";0";
             description.push(`<${this._app.translate("dialog.multi-markers.radius_token")}>`);
         }
         this._dataFormat.innerText = description.join(";");
+        this._example.innerHTML = example1 + "<br />" + example2;
     }
 }

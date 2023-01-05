@@ -40,6 +40,7 @@
                 "coordinates_token": "COORDINATES",
                 "create": "Create",
                 "data": "Marker Data",
+                "example": "Example:",
                 "format": "Data format per line:",
                 "name": "Name Prefix",
                 "name_message": "Line {1}: empty name",

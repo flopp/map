@@ -40,6 +40,7 @@
                 "coordinates_token": "COORDONN\u00c9ES",
                 "create": "G\u00e9n\u00e9rer",
                 "data": "Donn\u00e9es des marqueurs",
+                "example": "Exemple :",
                 "format": "Sch\u00e9ma de format par ligne",
                 "name": "Pr\u00e9fixe du nom",
                 "name_message": "Ligne {1} : nom vide",
