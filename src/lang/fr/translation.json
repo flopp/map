@@ -149,6 +149,8 @@
                 "delete": "Supprimer",
                 "delete_all": "Supprimer tous les marqueurs",
                 "delete_all_question": "Tu veux vraiment effacer tous les marqueurs ?",
+                "draggable": "Marqueurs déplaçables",
+                "draggable-help": "Les marqueurs peuvent être déplacés sur la carte en les faisant glisser avec la souris ou le toucher.",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",

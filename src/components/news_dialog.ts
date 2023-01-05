@@ -81,7 +81,7 @@ const news_articles: NewsArticle[] = [
         <i>Florian aka. Flopp</i>`,
     ),
     new NewsArticle(
-        "2022-01-01",
+        "2022-01-03",
         `And... here's another larger update:
 
         - there's now a satellite base map with roads and labels (World Imagery layer  + OSM overlay),
@@ -105,13 +105,30 @@ const news_articles: NewsArticle[] = [
         Beste Grüße,
         Florian aka. Flopp`,
     ),
+    new NewsArticle(
+        "2023-01-05",
+        `Update:
+
+        - Searching for a place name will now produce a list of search results.
+        - Dragging of markers on the map can be disabled to prevent unvoluntary modification of Marker positions (dragging is disbaled by default).
+        - A yes/no dialog is displayed before deleting all markers/lines.
+        - There's now an <a href="https://blog.flopp.net" target="_blank">additional website with documentation and news (blog.flopp.net)</a>; there will be links to specific documentation pages (look for "?" buttons).
+        - Marker updates have been optimized; the map should now behave more smoothly.
+
+        Best regards,
+        Florian aka. Flopp`,
+        `Update:
+
+        - Bei der Suche nach einem Ortsnamen wird nun eine Liste mit Suchergebnissen angezeigt.
+        - Das Ziehen von Markern auf der Karte kann deaktiviert werden um eine ungewollte Änderung der Markerpositionen zu verhindern (das Ziehen ist standardmäßig deaktiviert).
+        - Vor dem Löschen aller Marker/Linien wird ein Ja/Nein-Dialog angezeigt.
+        - Es gibt jetzt eine <a href="https://blog.flopp.net" target="_blank">zusätzliche Website mit Dokumentation und Neuigkeiten (blog.flopp.net)</a>; es wird Links zu spezifischen Dokumentationsseiten geben ("?"-Knöpfe).
+        - Die Aktualisierung von Markern wurde optimiert; die Karte sollte sich nun flüssiger verhalten.
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
 ];
-
-// Optimized updating of markers
-// Multiple search results
-// Yes/no dialog when deleting all markers/lines
-// Blog, add help links
-
 
 export class NewsDialog extends Dialog {
     public shown: number;

@@ -148,6 +148,8 @@
                 "copy_coordinates_success_message": "The coordinates have been copied to the clipboard: {1}",
                 "delete": "Delete",
                 "delete_all": "Delete all markers",
+                "draggable": "Draggable Markers",
+                "draggable-help": "Markers can be moved on the map by dragging them with the mouse or touch.",
                 "delete_all_question": "Do you really want to delete all markers?",
                 "edit": "Edit",
                 "edit_color": "Color",

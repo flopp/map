@@ -401,6 +401,15 @@ export class LeafletWrapper extends MapStateObserver {
     }
 
     protected update_marker_object(obj: IMarkerObjDict, marker: Marker): void {
+        const draggable = this.app.map_state.draggable_markers();
+        if (obj.marker_obj.dragging!.enabled() !== draggable) {
+            if (draggable) {
+                obj.marker_obj.dragging!.enable();
+            } else {
+                obj.marker_obj.dragging!.disable();
+            }
+        }
+
         obj.marker_obj.setLatLng(from_coordinates(marker.coordinates));
         if (marker.radius > 0) {
             if (obj.circle_obj === null) {

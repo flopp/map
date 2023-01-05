@@ -19,6 +19,7 @@ import {
 export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;
     private readonly settingsDialog: MarkerSettingsDialog;
+    private readonly draggableMarkers: HTMLInputElement;
 
     public constructor(app: App, id: string) {
         super(app, id);
@@ -43,6 +44,11 @@ export class SidebarMarkers extends SidebarItem {
         document.querySelector("#btn-marker-settings")!.addEventListener("click", (): void => {
             this.settingsDialog.show();
         });
+
+        this.draggableMarkers = this._div.querySelector("#draggable-markers") as HTMLInputElement;
+        this.draggableMarkers.onchange = (): void => {
+            this.app.map_state.set_draggable_markers(this.draggableMarkers.checked);
+        };
 
         this.sortable = Sortable.create(document.getElementById("markers")!, {
             handle: ".drag-handle",
@@ -85,6 +91,8 @@ export class SidebarMarkers extends SidebarItem {
         if ((changes & MapStateChange.MARKERS) === MapStateChange.NOTHING) {
             return;
         }
+
+        this.draggableMarkers.checked = this.app.map_state.draggable_markers();
 
         const container = document.querySelector("#markers")!;
         let scrollTo: Element|null = null;
