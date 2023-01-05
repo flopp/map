@@ -3,7 +3,7 @@ import {Dialog} from "./dialog";
 
 export class LinkDialog extends Dialog {
     public constructor(app: App) {
-        super("link-dialog", app);
+        super("link-dialog", app, "https://blog.flopp.net/creating-a-link/");
 
         const copy_button = document.getElementById("link-dialog-copy-button") as HTMLButtonElement;
 

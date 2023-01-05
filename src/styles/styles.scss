@@ -188,3 +188,11 @@ body.sidebar-open .map-container {
     display: block;
     margin: 0 auto;
 }
+
+.modal-card-head {
+    gap: 20px;
+    
+    & > .helpButton {
+        color: rgba(10, 10, 10, 0.2);
+    }
+}

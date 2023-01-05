@@ -13,7 +13,7 @@ export class SidebarSearch extends SidebarItem {
     private readonly centerField: HTMLParagraphElement;
 
     public constructor(app: App, id: string) {
-        super(app, id);
+        super(app, id, "https://blog.flopp.net/the-search-sidebar/");
 
         this.centerField = document.querySelector("#sidebar-search-center")!;
 

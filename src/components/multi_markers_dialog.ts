@@ -17,7 +17,7 @@ export class MultiMarkersDialog extends Dialog {
     private readonly _example: HTMLSpanElement;
 
     public constructor(app: App) {
-        super("multi-markers-dialog", app);
+        super("multi-markers-dialog", app, "https://blog.flopp.net/creating-multiple-markers/");
 
         this._useCommonName = this._div.querySelector("[data-use-common-name]")!;
         this._useCommonColor = this._div.querySelector("[data-use-common-color]")!;
@@ -235,6 +235,6 @@ export class MultiMarkersDialog extends Dialog {
             description.push(`<${this._app.translate("dialog.multi-markers.radius_token")}>`);
         }
         this._dataFormat.innerText = description.join(";");
-        this._example.innerHTML = example1 + "<br />" + example2;
+        this._example.innerHTML = `${example1}<br />${example2}`;
     }
 }

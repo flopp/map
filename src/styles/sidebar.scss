@@ -79,13 +79,17 @@ body.sidebar-open #sidebar-controls {
         background-color: hsl(204, 86%, 53%);
         color: #ffffff;
         display: flex;
-        justify-content: space-between;
-
-        & > .close {
+        gap: 20px;
+        
+        & > .closeButton {
             cursor: pointer;    
         }
-
+        & > .helpButton {
+            color: #ffffff;
+            cursor: pointer;    
+        }
         & > h2 {
+            flex-grow: 1;
             margin: 0;
             padding: 0;
             border: 0;

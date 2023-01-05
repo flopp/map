@@ -110,7 +110,7 @@ const news_articles: NewsArticle[] = [
 // Optimized updating of markers
 // Multiple search results
 // Yes/no dialog when deleting all markers/lines
-// Blog
+// Blog, add help links
 
 
 export class NewsDialog extends Dialog {
