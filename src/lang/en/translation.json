@@ -17,7 +17,7 @@
                 "failed-message": "Copying of the link failed.",
                 "help": "You can share this link with others to enable them to view your current map state.",
                 "title": "Create Link",
-                "too-long": "The link is probably too long. Browsers may not be able to handle it correctly."
+                "too-long": "The link is probably too long ({1} characters). Browsers may not be able to handle it correctly."
             },
             "marker-settings": {
                 "apply": "Apply",

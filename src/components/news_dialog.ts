@@ -130,6 +130,8 @@ const news_articles: NewsArticle[] = [
     ),
 ];
 
+// Display warning message if link gets too long
+
 export class NewsDialog extends Dialog {
     public shown: number;
 

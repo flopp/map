@@ -21,6 +21,14 @@ export class LinkDialog extends Dialog {
         const link = this._app.map_state.create_link();
         (document.querySelector("#link-dialog-input") as HTMLInputElement).value = link;
 
+        const too_long = this._div.querySelector("#link-dialog-too-long")!;
+        if (link.length > 2000) {
+            too_long.innerHTML = this._app.translate("dialog.link.too-long", `${link.length}`);
+            too_long.classList.remove("is-hidden");
+        } else {
+            too_long.classList.add("is-hidden");
+        }
+
         super.show();
     }
 }

@@ -2,7 +2,7 @@ import {App} from "./components/app";
 import "./styles/styles.scss";
 
 const main = (): void => {
-    // remove "display:none" from body
+    // Remove "display:none" from body
     document.body.style.display = "block";
     (window as any).app = new App("map-container-leaflet");
 };

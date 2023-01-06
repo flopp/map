@@ -310,7 +310,9 @@ export class MapState {
                         const lon: number | null = parse_float(tokens[2]);
                         let radius: number | null = 0;
                         if (tokens.length > 3) {
-                            radius = parse_float(tokens[3]);
+                            if (tokens[3] !== "") {
+                                radius = parse_float(tokens[3]);
+                            }
                         }
                         let name = id;
                         if (tokens.length > 4) {
@@ -420,25 +422,34 @@ export class MapState {
         });
     }
 
+    public encode_coordinates(coordinates: Coordinates): string {
+        const lat = coordinates.lat().toFixed(6).replace(/\.?0+$/, "");
+        const lng = coordinates.lng().toFixed(6).replace(/\.?0+$/, "");
+
+        return `${lat}:${lng}`;
+    }
+
+    public encode_radius(radius: number): string {
+        if (radius === 0) {
+            return "";
+        }
+
+        return radius.toFixed(1).replace(/\.?0+$/, "");
+    }
+
     public create_link(): string {
         const base = window.location.href.split("?")[0].split("#")[0];
         const markers = this.markers
             .map(
                 (m: Marker): string =>
-                    `${m.get_id()}:${m.coordinates.lat().toFixed(6)}:${m.coordinates
-                        .lng()
-                        .toFixed(6)}:${m.radius.toFixed(1)}:${this.encode(
-                        m.name,
-                    )}:${m.color.to_string()}`,
+                    `${m.get_id()}:${this.encode_coordinates(m.coordinates)}:${this.encode_radius(m.radius)}:${this.encode(m.name)}:${m.color.to_string()}`,
             )
             .join("*");
         const lines = this.lines
             .map((obj: Line): string => `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`)
             .join("*");
 
-        return `${base}?c=${this.center!.lat().toFixed(6)}:${this.center!.lng().toFixed(6)}&z=${
-            this.zoom
-        }&t=${this.map_type}&m=${markers}&d=${lines}`;
+        return `${base}?c=${this.encode_coordinates(this.center!)}&z=${this.zoom}&t=${this.map_type}&m=${markers}&d=${lines}`;
     }
 
     public decode(s: string): string {

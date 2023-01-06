@@ -25,7 +25,7 @@ export class Marker {
         this.coordinates = coordinates;
         const id = this.get_id();
         const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        this.name = (id < abc.length) ? abc[id] : `${abc[id % abc.length]}${1 + (id / abc.length)}`;
+        this.name = (id < abc.length) ? abc[id] : `${abc[id % abc.length]}${1 + Math.floor(id / abc.length)}`;
         this.color = Color.random_from_palette();
         this.radius = 0;
 
