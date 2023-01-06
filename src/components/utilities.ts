@@ -1,23 +1,44 @@
-const parse_float = (str: string): number | null => {
-    if (!/[0-9]/.test(str)) {
+const is_string = (s: any): boolean => Object.prototype.toString.call(s) === "[object String]";
+
+const is_number = (s: any): boolean => Object.prototype.toString.call(s) === "[object Number]";
+
+const parse_float = (str: string|number): number | null => {
+    if (is_number(str)) {
+        return str as number;
+    }
+
+    const s = is_string(str) ? (str as string) : `${str}`;
+
+    if (!/[0-9]/.test(s)) {
         return null;
     }
-    if (!/^(\+|-)?[0-9]*(\.|,)?[0-9]*$/.test(str)) {
+    if (!/^(\+|-)?[0-9]*(\.|,)?[0-9]*$/.test(s)) {
         return null;
     }
 
-    return parseFloat(str.replace(",", "."));
+    return parseFloat(s.replace(",", "."));
 };
 
-const parse_int = (str: string): number | null => {
-    if (!/[0-9]/.test(str)) {
-        return null;
-    }
-    if (!/^(\+|-)?[0-9]+$/.test(str)) {
+const parse_int = (str: string|number): number | null => {
+    if (is_number(str)) {
+        const n = str as number;
+        if (Number.isInteger(n)) {
+            return n;
+        }
+
         return null;
     }
 
-    return parseFloat(str);
+    const s = is_string(str) ? (str as string) : `${str}`;
+
+    if (!/[0-9]/.test(s)) {
+        return null;
+    }
+    if (!/^(\+|-)?[0-9]+$/.test(s)) {
+        return null;
+    }
+
+    return parseFloat(s);
 };
 
 const create_element = (
@@ -211,6 +232,8 @@ export {
     create_select_input,
     create_icon,
     encode_parameters,
+    is_number,
+    is_string,
     remove_element,
     xml_escape,
 };

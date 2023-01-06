@@ -106,7 +106,7 @@ export class MapState {
             this.storage.get_int("zoom", 13),
         );
         this.set_map_type(
-            string2maptype(this.storage.get("map_type", maptype2string(MapType.STAMEN_TERRAIN))!)!,
+            string2maptype(this.storage.get("map_type", maptype2string(MapType.OPENSTREETMAP))!)!,
         );
         this.set_german_npa(this.storage.get_bool("german_npa", false));
 
