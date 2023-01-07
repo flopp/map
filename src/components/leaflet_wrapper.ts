@@ -72,14 +72,16 @@ export class LeafletWrapper extends MapStateObserver {
             {
                 attribution:
                     'Map tiles by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://creativecommons.org/licenses/by/3.0" target="_blank">CC BY 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
-                maxZoom: 17,
+                maxNativeZoom: 19,
+                maxZoom: 20,
                 subdomains: "abc",
             },
         );
         this.layer_opentopomap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
             attribution:
                 'Map tiles by <a href="https://opentopomap.org" target="_blank">OpenTopoMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY SA 3.0</a>. Data by <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
-            maxZoom: 17,
+            maxNativeZoom: 17,
+            maxZoom: 20,
             subdomains: "abc",
         });
         this.layer_stamen_terrain = L.tileLayer(
@@ -87,7 +89,8 @@ export class LeafletWrapper extends MapStateObserver {
             {
                 attribution:
                     'Map tiles by <a href="https://stamen.com" target="_blank">Stamen Design</a>, under <a href="https://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href=https://openstreetmap.org" target="_blank">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright" target="_blank">ODbL</a>.',
-                maxZoom: 17,
+                maxNativeZoom: 17,
+                maxZoom: 20,
                 subdomains: "abcd",
             },
         );
@@ -96,7 +99,7 @@ export class LeafletWrapper extends MapStateObserver {
             {
                 attribution:
                     'Map tiles by the <a href="https://www.hotosm.org/updates/2013-09-29_a_new_window_on_openstreetmap_data" target="_blank">Humanitarian OSM Team</a>, under <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.fr" target="_blank">CC0</a>. Data by <a href="https://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>. Hosted by <a href="https://www.openstreetmap.fr/mentions-legales/" target="_blank">OSM France</a>.',
-                maxZoom: 17,
+                maxZoom: 20,
                 subdomains: "abc",
             },
         );
@@ -105,7 +108,8 @@ export class LeafletWrapper extends MapStateObserver {
             {
                 attribution:
                     "Source: Esri, Maxar, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
-                maxZoom: 18,
+                maxNativeZoom: 18,
+                maxZoom: 20,   
             },
         );
 
