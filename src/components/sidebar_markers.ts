@@ -224,7 +224,7 @@ export class SidebarMarkers extends SidebarItem {
             this.app.map_state.delete_marker(marker.get_id());
             event.stopPropagation();
         });
-        [button_search, button_project, button_copy, button_edit, button_delete].forEach((button: HTMLElement): void => {
+        [button_edit, button_search, button_project, button_copy, button_delete].forEach((button: HTMLElement): void => {
             buttons.append(button);
             button.title = this.app.translate(button.getAttribute("data-i18n")!);
         });
