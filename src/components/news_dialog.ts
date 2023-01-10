@@ -133,6 +133,8 @@ const news_articles: NewsArticle[] = [
 // Display warning message if link gets too long
 // Fix JSON import
 // Increase maximum zoom levels
+// make "edit" the first action button
+// default coordinates format is degrees+minutes
 
 export class NewsDialog extends Dialog {
     public shown: number;

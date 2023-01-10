@@ -45,7 +45,7 @@ export class MapState {
     public markers_hash: Map<number, Marker>;
     public lines: Line[] = [];
     public lines_hash: Map<number, Line>;
-    public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DMS;
+    public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DM;
     public settings_marker_random_color: boolean;
     public settings_marker_color: Color = Color.default_color();
     public settings_marker_radius: number = 0;
