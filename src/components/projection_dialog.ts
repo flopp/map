@@ -9,7 +9,7 @@ export class ProjectionDialog extends Dialog {
     private marker: Marker | null = null;
 
     public constructor(app: App) {
-        super("projection-dialog", app);
+        super("projection-dialog", app, "https://blog.flopp.net/waypoint-projection/");
     }
 
     public showMarker(marker: Marker): void {
