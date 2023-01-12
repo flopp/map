@@ -1006,6 +1006,7 @@ export class MapState {
             this.markers_hash.set(marker.get_id(), marker);
             this.update_marker_storage(marker);
         });
+        Marker.reset_ids(markers.length);
         this.storage.set("markers", this.get_marker_ids_string());
 
         lines.forEach((line: Line): void => {
@@ -1013,6 +1014,7 @@ export class MapState {
             this.lines_hash.set(line.get_id(), line);
             this.update_line_storage(line);
         });
+        Line.reset_ids(lines.length);
         this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES | MapStateChange.MARKERS);
 

@@ -128,13 +128,31 @@ const news_articles: NewsArticle[] = [
         Beste Grüße,
         Florian aka. Flopp`,
     ),
+    new NewsArticle(
+        "2023-01-12",
+        `A small Update:
+
+        - Fix JSON and GPX import.
+        - Increase maximum zoom levels.
+        - Make "edit" the first action button.
+        - Make "Degrees+Minutes" the default coordinates format.
+        - Display warning message in the link dialog if link gets to long."
+
+        Best regards,
+        Florian aka. Flopp`,
+        `Ein kleines Update:
+
+        - JSON und GPX Import korrigiert.
+        - Maximale Zoomstufen erhöht.
+        - "Bearbeiten" ist jetzt der erste Marker-Action-Knopf.
+        - "Degrees+Minutes" ist jetzt das Standard-Koordinatenformat.
+        - Im Link-Dialog wird eine Warning angezeigt, wenn der Link zu lang ist.
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
 ];
 
-// Display warning message if link gets too long
-// Fix JSON import
-// Increase maximum zoom levels
-// make "edit" the first action button
-// default coordinates format is degrees+minutes
 
 export class NewsDialog extends Dialog {
     public shown: number;

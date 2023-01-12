@@ -32,8 +32,8 @@ export class Marker {
         next_marker_id += 1;
     }
 
-    public static reset_ids(): void {
-        next_marker_id = 0;
+    public static reset_ids(next: number = 0): void {
+        next_marker_id = next;
     }
 
     public get_id(): number {
