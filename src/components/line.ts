@@ -45,11 +45,11 @@ export class Line {
         data.push("<trkseg>");
         if (this.marker1 !== -1) {
             const c = map_state.markers[this.marker1].coordinates;
-            data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trppt>`);
+            data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trkpt>`);
         }
         if (this.marker2 !== -1) {
             const c = map_state.markers[this.marker2].coordinates;
-            data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trppt>`);
+            data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trkpt>`);
         }
         data.push("</trkseg>");
         data.push("</trk>");
