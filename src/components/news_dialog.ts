@@ -151,6 +151,21 @@ const news_articles: NewsArticle[] = [
         Beste Grüße,
         Florian aka. Flopp`,
     ),
+    new NewsArticle(
+        "2023-01-25",
+        `A very small Update:
+
+        - Fix GPX export of a map with lines.
+
+        Best regards,
+        Florian aka. Flopp`,
+        `Ein sehr kleines Update:
+
+        - GPX Export von Karten mit Linien korrigiert.
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
 ];
 
 

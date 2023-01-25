@@ -51,7 +51,7 @@ export class Line {
             const c = map_state.markers[this.marker2].coordinates;
             data.push(`<trkpt lat="${c.lat().toFixed(8)}" lon="${c.lng().toFixed(8)}"></trppt>`);
         }
-        data.push("<trkseg>");
+        data.push("</trkseg>");
         data.push("</trk>");
 
         return data.join("\n");
