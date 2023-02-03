@@ -166,6 +166,21 @@ const news_articles: NewsArticle[] = [
         Beste Grüße,
         Florian aka. Flopp`,
     ),
+    new NewsArticle(
+        "2023-02-03",
+        `Another small update:
+
+        - Fix marker creation after location search; thanks to Alex for reporting this issue!)
+
+        Best regards,
+        Florian aka. Flopp`,
+        `Ein weiteres kleines Update:
+
+        - Markererzeugung direkt nach einer Suche funktioniert jetzt wieder korrekt - vielen Dank an Alex für den Fehlerreport!
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
 ];
 
 

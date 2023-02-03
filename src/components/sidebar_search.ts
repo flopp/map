@@ -141,7 +141,7 @@ export class SidebarSearch extends SidebarItem {
                     json_data.forEach((element: any) => {
                         results.push({
                             name: element.display_name,
-                            coordinates: new Coordinates(element.lat, element.lon),
+                            coordinates: new Coordinates(parseFloat(element.lat), parseFloat(element.lon)),
                         });
                     });
                 } else {
