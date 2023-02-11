@@ -183,6 +183,7 @@ const news_articles: NewsArticle[] = [
     ),
 ];
 
+// typo (Grillzombie)
 
 export class NewsDialog extends Dialog {
     public shown: number;
