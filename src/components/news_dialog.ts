@@ -181,9 +181,20 @@ const news_articles: NewsArticle[] = [
         Beste Grüße,
         Florian aka. Flopp`,
     ),
-];
+    new NewsArticle(
+        "2023-02-18",
+        `- Fix a typo (thanks to Grillzombie)
+        - Add documentation for the <a href="https://blog.flopp.net/the-markers-sidebar/" target="_blank">Markers sidebar</a>
 
-// typo (Grillzombie)
+        Best regards,
+        Florian aka. Flopp`,
+        `- Schreibfehler korrigiert (Danke Grillzombie)
+        - Dokumentation für die <a href="https://blog.flopp.net/the-markers-sidebar/" target="_blank">Marker-Seitenleiste</a>
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
+];
 
 export class NewsDialog extends Dialog {
     public shown: number;

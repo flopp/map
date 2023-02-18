@@ -22,7 +22,7 @@ export class SidebarMarkers extends SidebarItem {
     private readonly draggableMarkers: HTMLInputElement;
 
     public constructor(app: App, id: string) {
-        super(app, id);
+        super(app, id, "https://blog.flopp.net/the-markers-sidebar/");
 
         this.settingsDialog = new MarkerSettingsDialog(app);
 
