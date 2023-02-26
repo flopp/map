@@ -250,6 +250,7 @@ export class NewsDialog extends Dialog {
         this.updateContent();
 
         super.show();
+        super.focusCancel();
     }
 
     public maybeShow(): void {

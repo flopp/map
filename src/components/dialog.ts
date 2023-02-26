@@ -38,6 +38,12 @@ export class Dialog {
         this._div.classList.remove("is-active");
     }
 
+    public focusCancel() {
+        this._div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
+            element.focus();
+        });
+    }
+
     public ok() {
         throw new Error("Dialog.ok not implemented by subclass.");
     }
