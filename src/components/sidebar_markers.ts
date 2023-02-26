@@ -29,6 +29,9 @@ export class SidebarMarkers extends SidebarItem {
         document.querySelector("#btn-add-marker")!.addEventListener("click", (): void => {
             this.app.map_state.add_marker(null);
         });
+        document.querySelector("#btn-add-multiple-markers")!.addEventListener("click", (): void => {
+            this.app.show_multi_markers_dialog();
+        });
         document.querySelector("#btn-delete-markers")!.addEventListener("click", (): void => {
             if (this.app.map_state.markers.length === 0) {
                 return;
@@ -40,6 +43,12 @@ export class SidebarMarkers extends SidebarItem {
                     this.app.map_state.delete_all_markers();
                 },
             );
+        });
+        document.querySelector("#marker-sort-name")!.addEventListener("click", (): void => {
+            this.app.map_state.sort_markers_by_name();
+        });
+        document.querySelector("#marker-sort-distance")!.addEventListener("click", (): void => {
+            this.app.map_state.sort_markers_by_distance();
         });
         document.querySelector("#btn-marker-settings")!.addEventListener("click", (): void => {
             this.settingsDialog.show();
@@ -131,6 +140,7 @@ export class SidebarMarkers extends SidebarItem {
                 }
 
                 this.update_div(marker, div as HTMLDivElement);
+                container.insertBefore(div, null);
             });
 
             /* remove spurious markers */

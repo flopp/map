@@ -17,12 +17,43 @@
             <div class="sidebar-container" id="sidebar-hero">
                 <div class="scrollable-content content">
                     <p data-i18n="sidebar.hero.content" data-i18n-target="html"></p>
-                    <hr />
+                    <hr>
                     <div class="field">
                         <div class="control">
                             <a href="https://blog.flopp.net/" target="_blank" data-i18n="sidebar.hero.documentation" class="button is-fullwidth is-success">Documentation & News</a>
                         </div>
                         <p data-i18n="sidebar.hero.documentation-help" class="help">Go to blog.flopp.net to view the documentation and news.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-container" id="sidebar-layers">
+                <div class="scrollable-content content">
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select data-base-layer></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input data-german-npa-layer type="checkbox" />
+                                <span data-i18n="sidebar.layers.german_npa">German NPA</span>
+                            </label>
+                        </div>
+                        <p class="help" data-i18n="sidebar.layers.german_npa-help"></p>
+                        <div class="control">
+                            <a class="button is-text is-small" href="https://geodienste.bfn.de/schutzgebiete" target="_blank">
+                                <span data-i18n="sidebar.layers.german_npa_button">Official NPA Web Map</span>
+                                <svg class="icon icon-small">
+                                    <use xlink:href="assets/feather-sprite.svg#external-link"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,37 +103,6 @@
                 </div>
             </div>
 
-            <div class="sidebar-container" id="sidebar-layers">
-                <div class="scrollable-content content">
-                    <div class="field">
-                        <label class="label" data-i18n="sidebar.layers.base">Base Layer:</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select data-base-layer></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label" data-i18n="sidebar.layers.additional">Additional Layers:</label>
-                        <div class="control">
-                            <label class="checkbox">
-                                <input data-german-npa-layer type="checkbox" />
-                                <span data-i18n="sidebar.layers.german_npa">German NPA</span>
-                            </label>
-                        </div>
-                        <p class="help" data-i18n="sidebar.layers.german_npa-help"></p>
-                        <div class="control">
-                            <a class="button is-text is-small" href="https://geodienste.bfn.de/schutzgebiete" target="_blank">
-                                <span data-i18n="sidebar.layers.german_npa_button">Official NPA Web Map</span>
-                                <svg class="icon icon-small">
-                                    <use xlink:href="assets/feather-sprite.svg#external-link"/>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="sidebar-container" id="sidebar-markers">
                 <div class="content">
                     <div class="field is-grouped">
@@ -114,12 +114,50 @@
                             </a>
                         </p>
                         <p class="control">
+                            <a id="btn-add-multiple-markers" class="button is-success" data-i18n="sidebar.markers.add-multiple" data-i18n-target="title">
+<svg
+   width="24" height="24" viewBox="0 0 24 24"
+   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+   class="icon icon24"
+   xmlns="http://www.w3.org/2000/svg">
+   <line x1="5.6440673" y1="8.9470339" x2="5.6440673" y2="17.697033" />
+   <line x1="1.2690678" y1="13.322033" x2="10.019068" y2="13.322033" />
+   <line x1="18.20339"  y1="13.828389" x2="18.20339"  y2="22.578388" />
+   <line x1="13.82839"  y1="18.203392" x2="22.57839"  y2="18.203392" />
+   <line x1="14.440678" y1="1.1165265" x2="14.440678" y2="9.8665247" />
+   <line x1="10.065679" y1="5.4915266" x2="18.815678" y2="5.4915266" />
+</svg>
+                            </a>
+                        </p>
+                        <p class="control">
                             <a id="btn-delete-markers" class="button is-danger" data-i18n="sidebar.markers.delete_all" data-i18n-target="title">
                                 <svg class="icon icon24">
                                     <use xlink:href="assets/feather-sprite.svg#trash-2"/>
                                 </svg>
                             </a>
                         </p>
+                        <div class="control">
+                            <div class="dropdown is-hoverable is-right">
+                                <div class="dropdown-trigger">
+                                    <button class="button" aria-haspopup="true" aria-controls="dropdown-marker-sort" data-i18n="sidebar.markers.sort" data-i18n-target="title">
+                                        <svg class="icon icon24">
+                                            <use xlink:href="assets/feather-sprite.svg#bar-chart"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-marker-sort" role="menu">
+                                    <div class="dropdown-content">
+                                        <a id="marker-sort-name" href="#" class="dropdown-item" data-i18n="sidebar.markers.sort-name">
+                                            Sort by name
+                                        </a>
+                                        <hr class="dropdown-divider">
+                                        <a id="marker-sort-distance" href="#" class="dropdown-item" data-i18n="sidebar.markers.sort-distance">
+                                            Sort by distance to the current map center
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <p class="control">
                             <a id="btn-marker-settings" class="button" data-i18n="sidebar.markers.settings" data-i18n-target="title">
                                 <svg class="icon icon24">
@@ -185,7 +223,7 @@
                         </div>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
                         <div class="control">
@@ -194,10 +232,10 @@
                         <p class="help" data-i18n="sidebar.tools.create-link-help">Create a link to this map, e.g. for sharing it with others.</p>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
-                        <div class="field"></span>
+                        <div class="field">
                             <div class="control">
                                 <a id="btn-export-gpx" class="button is-success is-fullwidth" data-i18n="sidebar.tools.export-gpx">Export Markers (GPX)</a>
                             </div>
@@ -212,10 +250,10 @@
                         <p class="help" data-i18n="sidebar.tools.export-gpx-help">Export/import a GPX file containing map markers.</p>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
-                        <div class="field"></span>
+                        <div class="field">
                             <div class="control">
                                 <a id="btn-export-json" class="button is-success is-fullwidth" data-i18n="sidebar.tools.export-json">Export Full Map State (JSON)</a>
                             </div>
@@ -229,7 +267,7 @@
                         <p class="help" data-i18n="sidebar.tools.export-json-help">Export/import a JSON file containing the full map state.</p>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
                         <div class="control">
@@ -249,7 +287,7 @@
                         <p class="help" data-i18n="sidebar.info.news-help">Show the latest news.</p>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.legal">Privacy Policy/Imprint</label>
@@ -259,7 +297,7 @@
                         </p>
                     </div>
 
-                    <hr />
+                    <hr>
                     
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.contact">Contact/Mail</label>
@@ -274,7 +312,7 @@
                         </div>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.sources">Source Code/Github</label>
@@ -289,7 +327,7 @@
                         </div>
                     </div>
 
-                    <hr />
+                    <hr>
 
                     <div class="field">
                         <label class="label" data-i18n="sidebar.info.support">Support/Paypal</label>
@@ -311,41 +349,39 @@
 
         <div id="yesno-dialog" class="modal">
             <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <h2 class="modal-card-title" id="yesno-title">TITLE</h2>
-                    </header>
-                    <section class="modal-card-body">
-                        <p id="yesno-text">TEXT</p>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button" id="yesno-yes" data-i18n="general.yes">YES</button>
-                        <button class="button" id="yesno-no" data-i18n="general.no">NO</button>
-                    </footer>
-                </div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h2 class="modal-card-title" id="yesno-title">TITLE</h2>
+                </header>
+                <section class="modal-card-body">
+                    <p id="yesno-text">TEXT</p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" id="yesno-yes" data-i18n="general.yes">YES</button>
+                    <button class="button" id="yesno-no" data-i18n="general.no">NO</button>
+                </footer>
             </div>
         </div>
 
         <div id="news-dialog" class="modal">
             <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <h2 class="modal-card-title" data-i18n="dialog.news.title">News</h2>
-                        <button class="delete" data-cancel aria-label="close"></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <p id="news-dialog-date"></p>
-                        <p id="news-dialog-text"></p>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button" data-cancel data-i18n="general.cancel">Close</button>
-                        <button class="button" id="news-dialog-older" data-i18n="dialog.news.older">Older</button>
-                        <button class="button" id="news-dialog-newer" data-i18n="dialog.news.newer">Newer</button>
-                    </footer>
-                </div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h2 class="modal-card-title" data-i18n="dialog.news.title">News</h2>
+                    <button class="delete" data-cancel aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <p id="news-dialog-date"></p>
+                    <p id="news-dialog-text"></p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" data-cancel data-i18n="general.cancel">Close</button>
+                    <button class="button" id="news-dialog-older" data-i18n="dialog.news.older">Older</button>
+                    <button class="button" id="news-dialog-newer" data-i18n="dialog.news.newer">Newer</button>
+                </footer>
             </div>
         </div>
-
+    
         <div id="projection-dialog" class="modal">
             <div class="modal-background"></div>
             <div class="modal-card">
@@ -407,31 +443,30 @@
 
         <div id="link-dialog" class="modal">
             <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <h2 class="modal-card-title" data-i18n="dialog.link.title">Create Map Link</h2>
-                        <button class="delete" data-cancel aria-label="close"></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <p data-i18n="dialog.link.help">You can share this link with others to enable them to view your current map state.</p>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <h2 class="modal-card-title" data-i18n="dialog.link.title">Create Map Link</h2>
+                    <button class="delete" data-cancel aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <p data-i18n="dialog.link.help">You can share this link with others to enable them to view your current map state.</p>
 
-                        <div class="field has-addons">
-                            <div class="control is-expanded">
-                                <input id="link-dialog-input" class="input" type="text" readonly />
-                            </div>
-                            <div class="control">
-                                <a id="link-dialog-copy-button" class="button is-info" data-i18n="dialog.link.copy">
-                                    Copy
-                                </a>
-                            </div>
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input id="link-dialog-input" class="input" type="text" readonly />
                         </div>
+                        <div class="control">
+                            <a id="link-dialog-copy-button" class="button is-info" data-i18n="dialog.link.copy">
+                                Copy
+                            </a>
+                        </div>
+                    </div>
 
-                        <p id="link-dialog-too-long" class="help is-hidden" data-i18n="dialog.link.too-long">Link too long</p>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button" data-cancel data-i18n="general.cancel">Close</button>
-                    </footer>
-                </div>
+                    <p id="link-dialog-too-long" class="help is-hidden" data-i18n="dialog.link.too-long">Link too long</p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" data-cancel data-i18n="general.cancel">Close</button>
+                </footer>
             </div>
         </div>
 

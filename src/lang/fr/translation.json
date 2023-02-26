@@ -141,6 +141,7 @@
             },
             "markers": {
                 "add": "Ajoute un nouveau marqueur",
+                "add-multiple": "Cr\u00e9er plusieurs marqueurs",
                 "bad_values_message": "Valeurs erron\u00e9es.",
                 "circle": "Cercle :",
                 "copy_coordinates": "Copier les coordonn\u00e9es dans le presse-papiers",
@@ -163,6 +164,9 @@
                 "projection": "Projection",
                 "settings": "Param\u00e8tres",
                 "show": "Afficher sur la carte",
+                "sort": "Trier les marqueurs",
+                "sort-distance": "Trier par distance au centre de la carte",
+                "sort-name": "Trier par nom",
                 "title": "Marqueurs"
             },
             "search": {

@@ -694,6 +694,35 @@ export class MapState {
         return this.markers.map((m: Marker): string => `${m.get_id()}`).join(";");
     }
 
+    public sort_markers_by_name(): void {
+        this.markers.sort((a: Marker, b: Marker): number => {
+            if (a.name < b.name) {
+                return -1;
+            } else if (a.name > b.name) {
+                return +1;
+            }
+            return 0;
+        });
+        this.storage.set("markers", this.get_marker_ids_string());
+        this.update_observers(MapStateChange.MARKERS);
+    }
+
+    public sort_markers_by_distance(): void {
+        if (this.center === null) {
+            return;
+        }
+
+        const distances = new Map();
+        this.markers.forEach((marker: Marker): void => {
+            distances.set(marker.marker_id, marker.coordinates.distance(this.center!));
+        });
+        this.markers.sort((a: Marker, b: Marker): number => {
+            return distances.get(a.marker_id) - distances.get(b.marker_id);
+        });
+        this.storage.set("markers", this.get_marker_ids_string());
+        this.update_observers(MapStateChange.MARKERS);
+    }
+
     public reorder_markers(old_index: number, new_index: number): void {
         if (old_index === new_index) {
             return;

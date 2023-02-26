@@ -3,7 +3,7 @@ import {SidebarItem} from "./sidebar_item";
 
 export class SidebarHero extends SidebarItem {
     public constructor(app: App, id: string) {
-        super(app, id);
+        super(app, id, "https://blog.flopp.net");
     }
 
     public update_state(_changes: number, _marker_id: number = -1): void {

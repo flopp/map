@@ -141,6 +141,7 @@
             },
             "markers": {
                 "add": "Add new marker",
+                "add-multiple": "Create multiple markers",
                 "bad_values_message": "Bad values.",
                 "circle": "Circle:",
                 "copy_coordinates": "Copy coordinates to clipboard",
@@ -163,6 +164,9 @@
                 "projection": "Waypoint Projection",
                 "settings": "Settings",
                 "show": "Show on map",
+                "sort": "Sort markers",
+                "sort-distance": "Sort by distance to the map's center",
+                "sort-name": "Sort by name",
                 "title": "Markers"
             },
             "search": {

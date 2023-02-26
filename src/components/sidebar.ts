@@ -33,8 +33,8 @@ export class Sidebar extends MapStateObserver {
         this._sidebars = new Map();
         [
             ["hero", "star", (i: string): SidebarItem => new SidebarHero(app, i)],
-            ["search", "search", (i: string): SidebarItem => new SidebarSearch(app, i)],
             ["layers", "layers", (_id: string): SidebarItem => this.sidebar_layers],
+            ["search", "search", (i: string): SidebarItem => new SidebarSearch(app, i)],
             ["markers", "map-pin", (id: string): SidebarItem => new SidebarMarkers(app, id)],
             ["lines", "maximize-2", (id: string): SidebarItem => new SidebarLines(app, id)],
             ["tools", "tool", (id: string): SidebarItem => new SidebarTools(app, id)],

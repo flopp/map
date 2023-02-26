@@ -141,6 +141,7 @@
             },
             "markers": {
                 "add": "F\u00fcge neuen Marker hinzu",
+                "add-multiple": "Erzeuge mehrere Marker",
                 "bad_values_message": "Fehlerhafte Werte.",
                 "circle": "Kreis:",
                 "copy_coordinates": "Kopiere Koordinaten in die Zwischenablage",
@@ -163,6 +164,9 @@
                 "projection": "Wegpunkt-Projektion",
                 "settings": "Einstellungen",
                 "show": "Zeige auf der Karte",
+                "sort": "Marker sortieren",
+                "sort-distance": "Sortieren nach Distanz zur Kartenmitte",
+                "sort-name": "Sortieren nach Name",
                 "title": "Marker"
             },
             "search": {
