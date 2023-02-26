@@ -195,9 +195,19 @@ const news_articles: NewsArticle[] = [
         Florian aka. Flopp`,
     ),
     new NewsArticle(
-        "2023-02-26",
+        "2023-02-23",
         `- Sorting of the markers list by name and distance to the map's center (thanks to David and Dirk for the suggestion)
-        - Add a button to the markers sidebar that allows for opening the "Create Multiple Markers" dialog (thanks to Gerti for the suggestion)
+      
+        Best regards,
+        Florian aka. Flopp`,
+        `- Sortiern der Marker-Liste nach Name oder Distanz zum Kartenzentrum (Danke David und Dirk für den Vorschlag)
+      
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
+    new NewsArticle(
+        "2023-02-26",
+        `- Add a button to the markers sidebar that allows for opening the "Create Multiple Markers" dialog (thanks to Gerti for the suggestion)
         - Changing of the sidebar buttons order (thanks Gerti) 
         - Focusing of the "yes" button in confirmation dialogs (thanks Michael)
 
@@ -205,8 +215,7 @@ const news_articles: NewsArticle[] = [
 
         Best regards,
         Florian aka. Flopp`,
-        `- Sortiern der Marker-Liste nach Name oder Distanz zum Kartenzentrum (Danke David und Dirk für den Vorschlag)
-        - Neuer Button in der Marker-Seitenleiste um den "Mehere Marker Erzeugen"-Dialog aufzurufen (Danke Gerti für den Vorschlag)
+        `- Neuer Button in der Marker-Seitenleiste um den "Mehere Marker Erzeugen"-Dialog aufzurufen (Danke Gerti für den Vorschlag)
         - Reihenfolge der Seitenleisten-Buttons geändert (Danke Gerti) 
         - Fokussieren des "Ja"-Buttons in Bestätigungsdialogen (Danke Michael)
 
