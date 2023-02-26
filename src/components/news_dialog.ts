@@ -194,6 +194,27 @@ const news_articles: NewsArticle[] = [
         Beste Grüße,
         Florian aka. Flopp`,
     ),
+    new NewsArticle(
+        "2023-02-26",
+        `- Sorting of the markers list by name and distance to the map's center (thanks to David and Dirk for the suggestion)
+        - Add a button to the markers sidebar that allows for opening the "Create Multiple Markers" dialog (thanks to Gerti for the suggestion)
+        - Changing of the sidebar buttons order (thanks Gerti) 
+        - Focusing of the "yes" button in confirmation dialogs (thanks Michael)
+
+        There's also a <a href="https://blog.flopp.net/update-sorting-usability/" target="_blank">news article</a> for all the changes.
+
+        Best regards,
+        Florian aka. Flopp`,
+        `- Sortiern der Marker-Liste nach Name oder Distanz zum Kartenzentrum (Danke David und Dirk für den Vorschlag)
+        - Neuer Button in der Marker-Seitenleiste um den "Mehere Marker Erzeugen"-Dialog aufzurufen (Danke Gerti für den Vorschlag)
+        - Reihenfolge der Seitenleisten-Buttons geändert (Danke Gerti) 
+        - Fokussieren des "Ja"-Buttons in Bestätigungsdialogen (Danke Michael)
+
+        Es gibt auch einen <a href="https://blog.flopp.net/update-sorting-usability/" target="_blank">News-Beitrag im Blog</a> dazu.
+
+        Beste Grüße,
+        Florian aka. Flopp`,
+    ),
 ];
 
 export class NewsDialog extends Dialog {

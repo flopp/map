@@ -157,5 +157,6 @@ export class App {
             dialogEl.classList.remove("is-active");
         });
         dialogEl.classList.add("is-active");
+        yesButton.focus();
     }
 }
