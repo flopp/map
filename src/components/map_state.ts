@@ -27,6 +27,7 @@ interface IMarkerSettingsDict {
     random_color: boolean;
     color: Color;
     radius: number;
+    filled: boolean;
 }
 interface ILineSettingsDict {
     distance_format: DistanceFormat;
@@ -50,6 +51,7 @@ export class MapState {
     public settings_marker_color: Color = Color.default_color();
     public settings_marker_radius: number = 0;
     public settings_marker_draggable: boolean = false;
+    public settings_marker_filled: boolean = true;
     public settings_line_distance_format: DistanceFormat = DistanceFormat.m;
     public settings_line_random_color: boolean = true;
     public settings_line_color: Color = Color.default_color();
@@ -89,6 +91,7 @@ export class MapState {
         this.storage.set_color("settings.marker.color", this.settings_marker_color);
         this.storage.set_float("settings.marker.radius", this.settings_marker_radius);
         this.storage.set_bool("settings.marker.draggable", this.settings_marker_draggable);
+        this.storage.set_bool("settings.marker.filled", this.settings_marker_filled);
 
         this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
@@ -174,6 +177,7 @@ export class MapState {
             random_color: this.storage.get_bool("settings.marker.random_color", true),
             color: this.storage.get_color("settings.marker.color", new Color("FF0000")),
             radius: this.storage.get_float("settings.marker.radius", 0)!,
+            filled: this.storage.get_bool("settings.marker.filled", true),
         });
         this.set_draggable_markers(this.storage.get_bool("settings.marker.draggable", false));
 
@@ -223,6 +227,7 @@ export class MapState {
         ok_keys.add("settings.marker.color");
         ok_keys.add("settings.marker.radius");
         ok_keys.add("settings.marker.draggable");
+        ok_keys.add("settings.marker.filled");
         ok_keys.add("settings.line.distance_format");
         ok_keys.add("settings.line.random_color");
         ok_keys.add("settings.line.color");
@@ -866,6 +871,9 @@ export class MapState {
         this.settings_marker_radius = settings.radius;
         this.storage.set_float("settings.marker.radius", this.settings_marker_radius);
 
+        this.settings_marker_filled = settings.filled;
+        this.storage.set_bool("settings.marker.filled", this.settings_marker_filled);
+
         this.update_observers(MapStateChange.MARKERS);
     }
 
@@ -877,6 +885,16 @@ export class MapState {
 
     public draggable_markers(): boolean {
         return this.settings_marker_draggable;
+    }
+
+    public set_filled_markers(value: boolean): void {
+        this.settings_marker_filled = value;
+        this.storage.set_bool("settings.marker.filled", this.settings_marker_filled);
+        this.update_observers(MapStateChange.MARKERS);
+    }
+
+    public filled_markers(): boolean {
+        return this.settings_marker_filled;
     }
 
     public set_default_line_settings(settings: ILineSettingsDict): void {
@@ -1063,6 +1081,7 @@ export class MapState {
                     color: this.settings_marker_color.to_hash_string(),
                     radius: this.settings_marker_radius,
                     draggable: this.settings_marker_draggable,
+                    filled: this.settings_marker_filled,
                 },
                 lines: {
                     distance_format: this.settings_line_distance_format,
@@ -1132,6 +1151,9 @@ export class MapState {
                 }
                 if ("draggable" in data.settings.markers) {
                     this.settings_marker_draggable = data.settings.markers.draggable;
+                }
+                if ("filled" in data.settings.markers) {
+                    this.settings_marker_filled = data.settings.markers.filled;
                 }
             }
             if ("lines" in data.settings) {

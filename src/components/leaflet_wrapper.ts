@@ -416,16 +416,21 @@ export class LeafletWrapper extends MapStateObserver {
 
         obj.marker_obj.setLatLng(from_coordinates(marker.coordinates));
         if (marker.radius > 0) {
+            const is_filled = this.app.map_state.filled_markers();
             if (obj.circle_obj === null) {
                 obj.circle_obj = L.polygon([], {
                     color: marker.color.to_hash_string(),
                     weight: 1,
                     interactive: false,
+                    fill: is_filled,
                 }).addTo(this.map);
             }
             obj.circle_obj.setLatLngs(
                 marker.coordinates.geodesic_circle(marker.radius).map(from_coordinates),
             );
+            obj.circle_obj.setStyle({
+                fill: is_filled,
+            });
         } else if (obj.circle_obj !== null) {
             this.map.removeLayer(obj.circle_obj);
             obj.circle_obj = null;

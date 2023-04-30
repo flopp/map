@@ -26,6 +26,7 @@
                 "default-color": "Default Color",
                 "default-radius": "Default Radius (m)",
                 "default-radius-placeholder": "radius",
+                "filled": "Filled Circles",
                 "random-colors": "Use Random Colors",
                 "title": "Marker Settings"
             },

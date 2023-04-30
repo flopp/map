@@ -26,6 +26,7 @@
                 "default-color": "Couleur standard",
                 "default-radius": "Rayon standard (m)",
                 "default-radius-placeholder": "Rayon",
+                "filled": "Cercles remplis",
                 "random-colors": "Couleur al\u00e9atoire",
                 "title": "R\u00e9glages des marqueurs"
             },

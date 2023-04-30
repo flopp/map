@@ -1,7 +1,7 @@
 {
     "version": "0.1",
     "language": "en",
-    "import": ["./node_modules/cspell-dict-de-de/cspell-ext.json"],
+    "import": ["@cspell/dict-de-de/cspell-ext.json"],
     "dictionaries": [
         "css",
         "de-de",

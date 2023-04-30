@@ -5,7 +5,6 @@ BUILD_DATE=$(shell date +%s)
 .PHONY: setup
 setup:
 	npm install .
-	./node_modules/.bin/cspell-dict-de-de-link
 
 .PHONY: spell
 spell:

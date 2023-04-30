@@ -26,6 +26,7 @@
                 "default-color": "Standardfarbe",
                 "default-radius": "Standardradius (m)",
                 "default-radius-placeholder": "Radius",
+                "filled": "Gef\u00fcllte Kreise",
                 "random-colors": "Zuf\u00e4llige Farbe",
                 "title": "Markereinstellungen"
             },

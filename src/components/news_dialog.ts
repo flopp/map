@@ -48,7 +48,7 @@ const news_articles: NewsArticle[] = [
 
         Best regards,
         Florian aka. Flopp`,
-        `In den letzten Tagen musste ich flopp.net grundlegend umbauen - quasi eine Operation am lebenden Partienten.
+        `In den letzten Tagen musste ich flopp.net grundlegend umbauen - quasi eine Operation am lebenden Patienten.
         Grund dafür sind hauptsächlich Lizenz-Komplikationen mit Google Maps, weswegen Google Maps komplett entfernt wurde und die Karte nun 100% auf frei verfügbaren Inhalten basiert.
         Der Umbau ist noch nicht komplett vollzogen und es fehlen noch Funktionalitäten (z.B. GPX Import/Export), die bald nachgereicht werden.
         Ich habe auch schon viel konstruktives Feedback erhalten, das ich in die Weiterentwicklung einfließen lassen werde - vielen Dank dafür!
@@ -60,7 +60,7 @@ const news_articles: NewsArticle[] = [
         `The rebuild of <b>flopp.net</b> continues. Due to your feedback, I've
         - fixed the map state import function (JSON),
         - add GPX export and import,
-        - added line length display directl to the map,
+        - added line length display directly to the map,
         - added french translation,
         - added support for numbers with a decimal comma instead of decimal point,
         - added the possibility to create markers from the "search" sidebar,
@@ -87,8 +87,8 @@ const news_articles: NewsArticle[] = [
         - there's now a satellite base map with roads and labels (World Imagery layer  + OSM overlay),
         - new markers have shorter names (A, B, C, ...),
         - lines are included in the GPX export
-        - the line list was siplified a lot (including inline editing of line endpoints),
-        - the marker and line list automatucally scroll to new objects,
+        - the line list was simplified a lot (including inline editing of line endpoints),
+        - the marker and line list automatically scroll to new objects,
         - notifications are placed on the left side to not overlap with the sidebar.
 
         Best regards,
@@ -110,7 +110,7 @@ const news_articles: NewsArticle[] = [
         `Update:
 
         - Searching for a place name will now produce a list of search results.
-        - Dragging of markers on the map can be disabled to prevent unvoluntary modification of Marker positions (dragging is disbaled by default).
+        - Dragging of markers on the map can be disabled to prevent unvoluntary modification of Marker positions (dragging is disabled by default).
         - A yes/no dialog is displayed before deleting all markers/lines.
         - There's now an <a href="https://blog.flopp.net" target="_blank">additional website with documentation and news (blog.flopp.net)</a>; there will be links to specific documentation pages (look for "?" buttons).
         - Marker updates have been optimized; the map should now behave more smoothly.
@@ -200,7 +200,7 @@ const news_articles: NewsArticle[] = [
       
         Best regards,
         Florian aka. Flopp`,
-        `- Sortiern der Marker-Liste nach Name oder Distanz zum Kartenzentrum (Danke David und Dirk für den Vorschlag)
+        `- Sortieren der Marker-Liste nach Name oder Distanz zum Kartenzentrum (Danke David und Dirk für den Vorschlag)
       
         Beste Grüße,
         Florian aka. Flopp`,
@@ -215,7 +215,7 @@ const news_articles: NewsArticle[] = [
 
         Best regards,
         Florian aka. Flopp`,
-        `- Neuer Button in der Marker-Seitenleiste um den "Mehere Marker Erzeugen"-Dialog aufzurufen (Danke Gerti für den Vorschlag)
+        `- Neuer Button in der Marker-Seitenleiste um den "Mehrere Marker Erzeugen"-Dialog aufzurufen (Danke Gerti für den Vorschlag)
         - Reihenfolge der Seitenleisten-Buttons geändert (Danke Gerti) 
         - Fokussieren des "Ja"-Buttons in Bestätigungsdialogen (Danke Michael)
 
@@ -223,6 +223,11 @@ const news_articles: NewsArticle[] = [
 
         Beste Grüße,
         Florian aka. Flopp`,
+    ),
+    new NewsArticle(
+        "2023-04-30",
+        `Add an option (via the Marker Settings dialog) to have filled or unfilled circles.`,
+        `Neue Option (in den Markereinstellungen) um Markerkreise gefüllt oder ungefüllt darzustellen.`, 
     ),
 ];
 
