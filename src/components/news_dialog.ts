@@ -229,6 +229,11 @@ const news_articles: NewsArticle[] = [
         `Add an option (via the Marker Settings dialog) to have filled or unfilled circles.`,
         `Neue Option (in den Markereinstellungen) um Markerkreise gefüllt oder ungefüllt darzustellen.`, 
     ),
+    new NewsArticle(
+        "2023-10-31",
+        `Fix bug where deleting all lines would also delete all markers.`,
+        `Fehler korrigiert: alle Linien Löschen hat auch alle Marker gelöscht.`, 
+    ),
 ];
 
 export class NewsDialog extends Dialog {

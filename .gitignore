@@ -3,6 +3,7 @@
 .google_api
 .tracking
 .vscode
+.DS_Store
 dist
 node_modules
 package-lock.json
