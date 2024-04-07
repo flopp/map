@@ -45,6 +45,7 @@ export class Marker {
         const data: string[] = [];
         data.push(`<wpt lat="${this.coordinates.lat().toFixed(8)}" lon="${this.coordinates.lng().toFixed(8)}">`);
         data.push(`    <name>${xml_escape(this.name)}</name>`);
+        data.push(`    <desc>color="${this.color.to_string()}"</desc>`);
         data.push(`    <sym>${symbol}</sym>`);
         if (this.radius > 0) {
             data.push("    <extensions>");

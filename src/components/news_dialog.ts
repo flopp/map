@@ -234,6 +234,11 @@ const news_articles: NewsArticle[] = [
         `Fix bug where deleting all lines would also delete all markers.`,
         `Fehler korrigiert: alle Linien Löschen hat auch alle Marker gelöscht.`, 
     ),
+    new NewsArticle(
+        "2024-04-07",
+        `GPX export/import: support marker colors (via "desc" waypoint attribute).`,
+        `GPX Export/Import: Marker-Farben im "desc" waypoint-Attribut.`, 
+    ),
 ];
 
 export class NewsDialog extends Dialog {

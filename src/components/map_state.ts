@@ -954,6 +954,7 @@ export class MapState {
         const waypoints: Element[] = Array.from(xml.getElementsByTagName("wpt"));
         waypoints.forEach((waypoint: Element, index: number): void => {
             let name = "";
+            let color: Color|null = null;
             let radius = 0;
 
             const nameEl = waypoint.getElementsByTagName("name");
@@ -963,6 +964,16 @@ export class MapState {
             name = name.trim();
             if (name.length === 0) {
                 name = `GPX WAYPOINT ${index}`;
+            }
+            
+            const descEl = waypoint.getElementsByTagName("desc");
+            if (descEl.length > 0 && descEl[0].textContent !== null) {
+                [...descEl[0].textContent.matchAll(/color="([^"]+)"/g)].forEach((match: string[]): void => {
+                    const c = Color.from_string(match[1]);
+                    if (c !== null) {
+                        color = c;
+                    }
+                });
             }
 
             const radiusEl = waypoint.getElementsByTagName("wptx1:Proximity");
@@ -999,7 +1010,9 @@ export class MapState {
             }
 
             const marker = new Marker(new Coordinates(lat, lon));
-            if (!this.settings_marker_random_color) {
+            if (color !== null) {
+                marker.color = color;
+            } else if (!this.settings_marker_random_color) {
                 marker.color = this.settings_marker_color;
             }
             marker.marker_id = markers.length;
