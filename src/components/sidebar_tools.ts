@@ -58,7 +58,26 @@ export class SidebarTools extends SidebarItem {
             if (files === null) {
                 return;
             }
-            this.import_gpx(files[0]);
+            this.import_gpx(files[0], true);
+        };
+
+        document
+            .querySelector("#btn-import-gpx-keep")!
+            .addEventListener("click", (event: InputEvent): void => {
+                (document.querySelector("#inp-import-gpx") as HTMLButtonElement).click();
+                event.preventDefault();
+            });
+        (document.querySelector("#inp-import-gpx") as HTMLInputElement).onchange = (
+            event: InputEvent,
+        ): void => {
+            if (event.target === null) {
+                return;
+            }
+            const files = (event.target as HTMLInputElement).files;
+            if (files === null) {
+                return;
+            }
+            this.import_gpx(files[0], false);
         };
 
         document.querySelector("#btn-export-json")!.addEventListener("click", (): void => {
@@ -109,11 +128,11 @@ export class SidebarTools extends SidebarItem {
         document.body.removeChild(element);
     }
 
-    public import_gpx(file: File): void {
+    public import_gpx(file: File, clear: boolean): void {
         const reader = new FileReader();
         reader.onloadend = (): void => {
             const data = (reader.result as string);
-            this.app.map_state.from_gpx(data);
+            this.app.map_state.from_gpx(data, clear);
         };
         reader.readAsText(file);
 

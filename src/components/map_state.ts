@@ -938,7 +938,7 @@ export class MapState {
         return data.join("\n");
     }
 
-    public from_gpx(data: string): void {
+    public from_gpx(data: string, clear: boolean): void {
         let xml: null|Document = null;
         try {
             const parser = new DOMParser();
@@ -948,6 +948,9 @@ export class MapState {
 
             return;
         }
+
+        const markerIdMap = new Map<number, number>();
+        markerIdMap.set(-1, -1);
 
         const markers: Marker[] = [];
         let badWaypoints = 0;
@@ -1015,12 +1018,15 @@ export class MapState {
             } else if (!this.settings_marker_random_color) {
                 marker.color = this.settings_marker_color;
             }
-            marker.marker_id = markers.length;
+            if (clear) {
+                marker.marker_id = markers.length;
+            }
+            markerIdMap.set(markers.length, marker.marker_id);
             marker.name = name;
             marker.radius = radius;
             markers.push(marker);
         });
-
+        
         const lines: Line[] = [];
         let badLines = 0;
         Array.from(xml.getElementsByTagName("trk")).forEach((trk: Element, index: number): void => {
@@ -1032,41 +1038,41 @@ export class MapState {
             const m = name.match(/^\s*LINE:(-1|\d+):(-1|\d+):([0-9a-f]{6})\s*$/i);
             if (m === null) {
                 badLines += 1;
-
+                
                 return;
             }
-
+            
             const m1 = parse_int(m[1]);
             const m2 = parse_int(m[2]);
-            if (m1 === null || (m1 !== -1 && (m1 < 0 || m1 >= markers.length)) ||
-                m2 === null || (m2 !== -1 && (m2 < 0 || m2 >= markers.length))) {
+            if (m1 === null || !markerIdMap.has(m1) ||
+            m2 === null || !markerIdMap.has(m2)) {
                 badLines += 1;
-
+                
                 return;
             }
-
-            const line = new Line(m1, m2);
-            line.line_id = lines.length;
+            
+            const line = new Line(markerIdMap.get(m1)!, markerIdMap.get(m2)!);
+            if (clear) {
+                line.line_id = lines.length;
+            }
             line.color = Color.from_string(m[3])!;
             lines.push(line);
         });
-
-        if (markers.length === 0) {
-            this.app.message_error(this.app.translate("sidebar.tools.import-gpx-no-markers", `${badWaypoints}`, `${badLines}`));
-
-            return;
-        }
         this.app.message(this.app.translate("sidebar.tools.import-gpx-markers", `${markers.length}`, `${lines.length}`, `${badWaypoints}`, `${badLines}`));
 
-        this.delete_all_lines();
-        this.delete_all_markers();
+        if (clear) {
+            this.delete_all_lines();
+            this.delete_all_markers();
+        }
 
         markers.forEach((marker: Marker): void => {
             this.markers.push(marker);
             this.markers_hash.set(marker.get_id(), marker);
             this.update_marker_storage(marker);
         });
-        Marker.reset_ids(markers.length);
+        if (clear) {
+            Marker.reset_ids(markers.length);
+        }
         this.storage.set("markers", this.get_marker_ids_string());
 
         lines.forEach((line: Line): void => {
@@ -1074,7 +1080,9 @@ export class MapState {
             this.lines_hash.set(line.get_id(), line);
             this.update_line_storage(line);
         });
-        Line.reset_ids(lines.length);
+        if (clear) {
+            Line.reset_ids(lines.length);
+        }
         this.storage.set("lines", this.get_line_ids_string());
         this.update_observers(MapStateChange.LINES | MapStateChange.MARKERS);
 

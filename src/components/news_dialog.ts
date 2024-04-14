@@ -239,6 +239,11 @@ const news_articles: NewsArticle[] = [
         `GPX export/import: support marker colors (via "desc" waypoint attribute).`,
         `GPX Export/Import: Marker-Farben im "desc" waypoint-Attribut.`, 
     ),
+    new NewsArticle(
+        "2024-04-14",
+        `GPX import: add option to keep kurrent state.`,
+        `GPX Import: Option zu Behalten des aktuellen Zustands hinzugefügt.`, 
+    ),
 ];
 
 export class NewsDialog extends Dialog {
