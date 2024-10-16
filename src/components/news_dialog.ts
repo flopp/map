@@ -244,6 +244,11 @@ const news_articles: NewsArticle[] = [
         `GPX import: add option to keep kurrent state.`,
         `GPX Import: Option zu Behalten des aktuellen Zustands hinzugefügt.`, 
     ),
+    new NewsArticle(
+        "2024-10-16",
+        `NPA layer: also display German national parks.`,
+        `Anzeige von Nationalparks.`, 
+    ),
 ];
 
 export class NewsDialog extends Dialog {

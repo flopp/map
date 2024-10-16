@@ -180,7 +180,7 @@ export class LeafletWrapper extends MapStateObserver {
                 this.german_npa_layer = L.tileLayer.wms(
                     "https://geodienste.bfn.de/ogc/wms/schutzgebiet?",
                     {
-                        layers: "Naturschutzgebiete",
+                        layers: "Naturschutzgebiete,Nationalparke",
                         format: "image/png",
                         transparent: true,
                         opacity: 0.5,
