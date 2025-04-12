@@ -249,6 +249,11 @@ const news_articles: NewsArticle[] = [
         `NPA layer: also display German national parks.`,
         `Anzeige von Nationalparks.`, 
     ),
+    new NewsArticle(
+        "2025-04-12",
+        `Display total line length.`,
+        `Anzeige der Gesamtlänge aller Linien.`, 
+    ),
 ];
 
 export class NewsDialog extends Dialog {

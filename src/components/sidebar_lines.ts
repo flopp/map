@@ -16,6 +16,10 @@ import {
     parse_int,
     remove_element,
 } from "./utilities";
+import {
+    Distance,
+    DistanceFormat,
+} from "./distance";
 
 interface INameId {
     name: string;
@@ -79,6 +83,8 @@ export class SidebarLines extends SidebarItem {
         }
 
         // Update and add lines
+        let hasTotal = false;
+        let totalM: number = 0; 
         let scrollTo: Element|null = null;
         const container = document.querySelector("#lines")!;
         this.app.map_state.lines.forEach((line: Line): void => {
@@ -110,11 +116,21 @@ export class SidebarLines extends SidebarItem {
             if (line.length !== null) {
                 const length = line.length.to_string(this.app.map_state.settings_line_distance_format);
                 stats = (line.bearing !== null) ? `${length}, ${line.bearing.toFixed(2)}°` : length;
+                hasTotal = true;
+                totalM += line.length.m();
             }
             div.querySelector(".line-stats")!.textContent = stats;
 
             this.update_edit_values(line);
         });
+
+        const totalDiv = document.querySelector("#total-lines-length");
+        if (hasTotal) {
+            const distance = new Distance(totalM, DistanceFormat.m);
+            totalDiv!.textContent = this.app.translate("sidebar.lines.total", distance.to_string(this.app.map_state.settings_line_distance_format));
+        } else {
+            totalDiv!.textContent = this.app.translate("sidebar.lines.total", "n/a");
+        }
 
         /* remove spurious lines */
         const lines = document.querySelectorAll("#lines > .line");

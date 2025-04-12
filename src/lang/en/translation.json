@@ -138,7 +138,8 @@
                 "edit_color_placeholder": "Color",
                 "settings": "Settings",
                 "show": "Show on map",
-                "title": "Lines"
+                "title": "Lines",
+                "total": "Total length: {1}"
             },
             "markers": {
                 "add": "Add new marker",

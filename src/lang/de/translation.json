@@ -138,7 +138,8 @@
                 "edit_color_placeholder": "Farbe",
                 "settings": "Einstellungen",
                 "show": "Zeige auf der Karte",
-                "title": "Linien"
+                "title": "Linien",
+                "total": "Gesamtlänge: {1}"
             },
             "markers": {
                 "add": "F\u00fcge neuen Marker hinzu",
