@@ -117,6 +117,8 @@
                 "sources-help": "Der Quellcode dieser Web-App ist Open-Source und unter einer freien Lizenz auf Github verf\u00fcgbar.",
                 "support": "Unterst\u00fctzung/Paypal",
                 "support-help": "Diese Web-App wird kostenlos zur Verf\u00fcgung gestellt, allerdings fallen im Hintergrund Kosten an (Hosting, Domains, usw.). Wenn du dich daran beteiligen willst, benutze bitte Paypal.",
+                "projects": "Meine weiteren Projekte",
+                "projects-help": "Ich betreibe einige andere Projekte, die vielleicht interessant sein könnten:",
                 "title": "Infos"
             },
             "layers": {

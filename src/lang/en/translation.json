@@ -117,6 +117,8 @@
                 "sources-help": "The code for this website is open source, hosted at Github.",
                 "support": "Support/Paypal",
                 "support-help": "This website is free to use, but - of course - some costs occur (hosting, domain, etc.). If you want to cover some of these costs, head over to Paypal.",
+                "projects": "My other Projects",
+                "projects-help": "I have some other projects which you might find interesting:",
                 "title": "Info"
             },
             "layers": {
