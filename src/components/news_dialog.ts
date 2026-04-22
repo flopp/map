@@ -254,6 +254,11 @@ const news_articles: NewsArticle[] = [
         `Display total line length.`,
         `Anzeige der Gesamtlänge aller Linien.`, 
     ),
+    new NewsArticle(
+        "2026-04-22",
+        `Fixed a couple of bugs: coordinate parsing, GPX import.`,
+        `Ein paar Fehler behoben: Koordinatenparsing, GPX-Import.`, 
+    ),
 ];
 
 export class NewsDialog extends Dialog {
