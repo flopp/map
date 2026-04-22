@@ -434,7 +434,7 @@ export class Coordinates {
                     i * da12,
                     Geodesic.LATITUDE | Geodesic.LONGITUDE | Geodesic.LONG_UNROLL,
                 );
-                points[i] = new Coordinates(point.lat2, point.lon2);
+                points[i] = new Coordinates(point.lat2!, point.lon2!);
             }
         }
 
