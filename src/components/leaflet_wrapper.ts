@@ -202,17 +202,15 @@ export class LeafletWrapper extends MapStateObserver {
         this.osm_overlay_enabled = enabled;
         if (enabled) {
             if (this.osm_overlay_layer === null) {
-                this.osm_overlay_layer = L.tileLayer.wms(
-                    "https://ows.terrestris.de/osm/service?",
-                    {
-                        layers: "OSM-Overlay-WMS",
-                        format: "image/png",
-                        transparent: true,
-                        maxNativeZoom: 14,
-                        maxZoom: 15,
-                        attribution: 'Map tiles by <a href="https://www.terrestris.de/en/osm-overlay-wms/" target="_blank">terrestris</a>',
-                    },
-                );
+                this.osm_overlay_layer = L.tileLayer.wms("https://ows.terrestris.de/osm/service?", {
+                    layers: "OSM-Overlay-WMS",
+                    format: "image/png",
+                    transparent: true,
+                    maxNativeZoom: 14,
+                    maxZoom: 15,
+                    attribution:
+                        'Map tiles by <a href="https://www.terrestris.de/en/osm-overlay-wms/" target="_blank">terrestris</a>',
+                });
             }
             this.map.addLayer(this.osm_overlay_layer);
         } else if (this.osm_overlay_layer !== null) {
@@ -471,7 +469,11 @@ export class LeafletWrapper extends MapStateObserver {
                 interactive: false,
             }),
             midpoint_obj: null,
-            midpoint_icon: new L.DivIcon({className: "midpoint-icon", html: "n/a", iconSize: null!}),
+            midpoint_icon: new L.DivIcon({
+                className: "midpoint-icon",
+                html: "n/a",
+                iconSize: null!,
+            }),
             last_color: line.color,
         };
 
@@ -523,7 +525,7 @@ export class LeafletWrapper extends MapStateObserver {
         }
 
         let midpoint_text = "";
-        let midpoint: Coordinates|null = null;
+        let midpoint: Coordinates | null = null;
         const marker1 = this.app.map_state.get_marker(line.marker1);
         const marker2 = this.app.map_state.get_marker(line.marker2);
         if (marker1 !== null && marker2 !== null) {
@@ -546,7 +548,10 @@ export class LeafletWrapper extends MapStateObserver {
             if (dist_bearing.distance > 0) {
                 const dist = new Distance(dist_bearing.distance, DistanceFormat.m);
                 midpoint_text = dist.to_string(this.app.map_state.settings_line_distance_format);
-                midpoint = marker1.coordinates.project(dist_bearing.bearing, dist_bearing.distance / 2);
+                midpoint = marker1.coordinates.project(
+                    dist_bearing.bearing,
+                    dist_bearing.distance / 2,
+                );
             }
         }
 
@@ -556,7 +561,10 @@ export class LeafletWrapper extends MapStateObserver {
                 obj.midpoint_obj.setLatLng(from_coordinates(midpoint));
                 obj.midpoint_obj.setIcon(obj.midpoint_icon);
             } else {
-                obj.midpoint_obj = new L.Marker(from_coordinates(midpoint), {interactive: false, icon: obj.midpoint_icon});
+                obj.midpoint_obj = new L.Marker(from_coordinates(midpoint), {
+                    interactive: false,
+                    icon: obj.midpoint_icon,
+                });
                 this.map.addLayer(obj.midpoint_obj);
             }
         } else {
@@ -618,7 +626,7 @@ export class LeafletWrapper extends MapStateObserver {
             display: inline-block;
         `;
 
-        this.styles.innerHTML += `.${className} \{${value}\}\n`;
+        this.styles.innerHTML += `.${className} {${value}}\n`;
 
         return className;
     }

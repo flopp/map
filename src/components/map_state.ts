@@ -96,7 +96,10 @@ export class MapState {
         this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
         this.storage.set_color("settings.line.color", this.settings_line_color);
-        this.storage.set_bool("settings.line.display_distance", this.settings_line_display_distance);
+        this.storage.set_bool(
+            "settings.line.display_distance",
+            this.settings_line_display_distance,
+        );
     }
 
     public restore(): void {
@@ -428,8 +431,14 @@ export class MapState {
     }
 
     public encode_coordinates(coordinates: Coordinates): string {
-        const lat = coordinates.lat().toFixed(6).replace(/\.?0+$/, "");
-        const lng = coordinates.lng().toFixed(6).replace(/\.?0+$/, "");
+        const lat = coordinates
+            .lat()
+            .toFixed(6)
+            .replace(/\.?0+$/, "");
+        const lng = coordinates
+            .lng()
+            .toFixed(6)
+            .replace(/\.?0+$/, "");
 
         return `${lat}:${lng}`;
     }
@@ -714,8 +723,10 @@ export class MapState {
         this.markers.forEach((marker: Marker): void => {
             distances.set(marker.marker_id, marker.coordinates.distance(this.center!));
         });
-        this.markers.sort((a: Marker, b: Marker): number =>
-            distances.get(a.marker_id) - distances.get(b.marker_id));
+        this.markers.sort(
+            (a: Marker, b: Marker): number =>
+                distances.get(a.marker_id) - distances.get(b.marker_id),
+        );
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
     }
@@ -904,7 +915,10 @@ export class MapState {
 
     public set_display_distance(d: boolean): void {
         this.settings_line_display_distance = d;
-        this.storage.set_bool("settings.line.display_distance", this.settings_line_display_distance);
+        this.storage.set_bool(
+            "settings.line.display_distance",
+            this.settings_line_display_distance,
+        );
 
         this.update_observers(MapStateChange.LINES);
     }
@@ -912,7 +926,9 @@ export class MapState {
     public to_gpx(): string {
         const data: string[] = [];
         data.push('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>');
-        data.push('<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns="http://www.topografix.com/GPX/1/1" creator="Flopp\'s Map - http://flopp.net/" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd  http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www.garmin.com/xmlschemas/WaypointExtensionv1.xsd" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">');
+        data.push(
+            '<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" xmlns="http://www.topografix.com/GPX/1/1" creator="Flopp\'s Map - http://flopp.net/" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd  http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www.garmin.com/xmlschemas/WaypointExtensionv1.xsd" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">',
+        );
         data.push("    <metadata>");
         data.push("        <name>Export from Flopp's Map (flopp.net)</name>");
         data.push("    </metadata>");
@@ -931,11 +947,11 @@ export class MapState {
     }
 
     public from_gpx(data: string, clear: boolean): void {
-        let xml: null|Document = null;
+        let xml: null | Document = null;
         try {
             const parser = new DOMParser();
             xml = parser.parseFromString(data, "text/xml");
-        } catch(e) {
+        } catch (_e) {
             this.app.message_error(this.app.translate("sidebar.tools.import-gpx-bad-file"));
 
             return;
@@ -949,7 +965,7 @@ export class MapState {
         const waypoints: Element[] = Array.from(xml.getElementsByTagName("wpt"));
         waypoints.forEach((waypoint: Element, index: number): void => {
             let name = "";
-            let color: Color|null = null;
+            let color: Color | null = null;
             let radius = 0;
 
             const nameEl = waypoint.getElementsByTagName("name");
@@ -963,12 +979,14 @@ export class MapState {
 
             const descEl = waypoint.getElementsByTagName("desc");
             if (descEl.length > 0) {
-                [...descEl[0].textContent.matchAll(/color="([^"]+)"/g)].forEach((match: string[]): void => {
-                    const c = Color.from_string(match[1]);
-                    if (c !== null) {
-                        color = c;
-                    }
-                });
+                [...descEl[0].textContent.matchAll(/color="([^"]+)"/g)].forEach(
+                    (match: string[]): void => {
+                        const c = Color.from_string(match[1]);
+                        if (c !== null) {
+                            color = c;
+                        }
+                    },
+                );
             }
 
             const radiusEl = waypoint.getElementsByTagName("wptx1:Proximity");
@@ -1022,36 +1040,45 @@ export class MapState {
 
         const lines: Line[] = [];
         let badLines = 0;
-        Array.from(xml.getElementsByTagName("trk")).forEach((trk: Element, index: number): void => {
-            let name = "";
-            const nameEl = trk.getElementsByTagName("name");
-            if (nameEl.length > 0) {
-                name = nameEl[0].textContent;
-            }
-            const m = name.match(/^\s*LINE:(-1|\d+):(-1|\d+):([0-9a-f]{6})\s*$/i);
-            if (m === null) {
-                badLines += 1;
+        Array.from(xml.getElementsByTagName("trk")).forEach(
+            (trk: Element, _index: number): void => {
+                let name = "";
+                const nameEl = trk.getElementsByTagName("name");
+                if (nameEl.length > 0) {
+                    name = nameEl[0].textContent;
+                }
+                const m = name.match(/^\s*LINE:(-1|\d+):(-1|\d+):([0-9a-f]{6})\s*$/i);
+                if (m === null) {
+                    badLines += 1;
 
-                return;
-            }
+                    return;
+                }
 
-            const m1 = parse_int(m[1]);
-            const m2 = parse_int(m[2]);
-            if (m1 === null || !markerIdMap.has(m1) ||
-            m2 === null || !markerIdMap.has(m2)) {
-                badLines += 1;
+                const m1 = parse_int(m[1]);
+                const m2 = parse_int(m[2]);
+                if (m1 === null || !markerIdMap.has(m1) || m2 === null || !markerIdMap.has(m2)) {
+                    badLines += 1;
 
-                return;
-            }
+                    return;
+                }
 
-            const line = new Line(markerIdMap.get(m1)!, markerIdMap.get(m2)!);
-            if (clear) {
-                line.line_id = lines.length;
-            }
-            line.color = Color.from_string(m[3])!;
-            lines.push(line);
-        });
-        this.app.message(this.app.translate("sidebar.tools.import-gpx-markers", `${markers.length}`, `${lines.length}`, `${badWaypoints}`, `${badLines}`));
+                const line = new Line(markerIdMap.get(m1)!, markerIdMap.get(m2)!);
+                if (clear) {
+                    line.line_id = lines.length;
+                }
+                line.color = Color.from_string(m[3])!;
+                lines.push(line);
+            },
+        );
+        this.app.message(
+            this.app.translate(
+                "sidebar.tools.import-gpx-markers",
+                `${markers.length}`,
+                `${lines.length}`,
+                `${badWaypoints}`,
+                `${badLines}`,
+            ),
+        );
 
         if (clear) {
             this.delete_all_lines();

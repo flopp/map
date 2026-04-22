@@ -46,7 +46,10 @@ export class Language extends MapStateObserver {
             return;
         }
 
-        if (this.app.map_state.language === i18next.language || i18next.language.startsWith(this.app.map_state.language)) {
+        if (
+            this.app.map_state.language === i18next.language ||
+            i18next.language.startsWith(this.app.map_state.language)
+        ) {
             return;
         }
         this.app.message(`${i18next.language} => ${this.app.map_state.language}`);

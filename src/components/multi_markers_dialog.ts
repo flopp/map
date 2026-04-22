@@ -48,9 +48,8 @@ export class MultiMarkersDialog extends Dialog {
     }
 
     public show(): void {
-        (this._div.querySelector(
-            "[data-common-color]",
-        ) as HTMLInputElement).value = Color.random_from_palette().to_hash_string();
+        (this._div.querySelector("[data-common-color]") as HTMLInputElement).value =
+            Color.random_from_palette().to_hash_string();
         this.update_description();
         super.show();
     }

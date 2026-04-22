@@ -2,7 +2,7 @@ import {App} from "./app";
 import {Coordinates} from "./coordinates";
 import {MapStateChange} from "./map_state";
 import {SidebarItem} from "./sidebar_item";
-import { create_element } from "./utilities";
+import {create_element} from "./utilities";
 
 interface INameCoordinates {
     name: string;
@@ -25,47 +25,54 @@ export class SidebarSearch extends SidebarItem {
         });
         const searchInput = document.querySelector("#input-search") as HTMLInputElement;
         searchInput.addEventListener("keyup", (event: KeyboardEvent): void => {
-                if (event.key === "Enter") {
-                    this.perform_search();
-                }
-            });
-        document.querySelector("#sidebar-search-center-copy")!.addEventListener("click", (event: Event): void => {
-            const center = this.app.map_state.center;
-            if (center === null) {
-                return;
+            if (event.key === "Enter") {
+                this.perform_search();
             }
-            const text = center.to_string(
-                this.app.map_state.settings_marker_coordinates_format,
-            );
-            this.app.copyClipboard(
-                text,
-                this.app.translate("sidebar.markers.copy_coordinates_success_message", text),
-                this.app.translate("sidebar.markers.copy_coordinates_failure_message"),
-            );
-            event.stopPropagation();
         });
-        document.querySelector("#sidebar-search-add-marker")!.addEventListener("click", (): void => {
-            this.app.map_state.add_marker(null);
-        });
+        document
+            .querySelector("#sidebar-search-center-copy")!
+            .addEventListener("click", (event: Event): void => {
+                const center = this.app.map_state.center;
+                if (center === null) {
+                    return;
+                }
+                const text = center.to_string(
+                    this.app.map_state.settings_marker_coordinates_format,
+                );
+                this.app.copyClipboard(
+                    text,
+                    this.app.translate("sidebar.markers.copy_coordinates_success_message", text),
+                    this.app.translate("sidebar.markers.copy_coordinates_failure_message"),
+                );
+                event.stopPropagation();
+            });
+        document
+            .querySelector("#sidebar-search-add-marker")!
+            .addEventListener("click", (): void => {
+                this.app.map_state.add_marker(null);
+            });
 
         this.clear_results();
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & (MapStateChange.CENTER | MapStateChange.MARKERS)) === MapStateChange.NOTHING) {
+        if (
+            (changes & (MapStateChange.CENTER | MapStateChange.MARKERS)) ===
+            MapStateChange.NOTHING
+        ) {
             return;
         }
 
         this.centerField.innerText =
-            (this.app.map_state.center === null) ?
-            "n/a" :
-            this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
+            this.app.map_state.center === null
+                ? "n/a"
+                : this.app.map_state.center.to_string(
+                      this.app.map_state.settings_marker_coordinates_format,
+                  );
     }
 
     public display_results(results: INameCoordinates[]): void {
-        const list = document.querySelector(
-            "#search-results",
-        ) as HTMLUListElement;
+        const list = document.querySelector("#search-results") as HTMLUListElement;
 
         list.innerHTML = "";
 
@@ -92,9 +99,7 @@ export class SidebarSearch extends SidebarItem {
     }
 
     public clear_results(): void {
-        const list = document.querySelector(
-            "#search-results",
-        ) as HTMLUListElement;
+        const list = document.querySelector("#search-results") as HTMLUListElement;
 
         list.innerHTML = "";
         list.classList.add("is-hidden");
@@ -103,9 +108,9 @@ export class SidebarSearch extends SidebarItem {
     public perform_search(): void {
         this.clear_results();
 
-        const location_string = (document.querySelector(
-            "#input-search",
-        ) as HTMLInputElement).value.trim();
+        const location_string = (
+            document.querySelector("#input-search") as HTMLInputElement
+        ).value.trim();
         if (location_string.length === 0) {
             return;
         }
@@ -113,7 +118,14 @@ export class SidebarSearch extends SidebarItem {
         // Try to parse "location_string" as coordinates
         const coordinates = Coordinates.from_string(location_string);
         if (coordinates !== null) {
-            this.display_results([{name: coordinates.to_string(this.app.map_state.settings_marker_coordinates_format), coordinates}]);
+            this.display_results([
+                {
+                    name: coordinates.to_string(
+                        this.app.map_state.settings_marker_coordinates_format,
+                    ),
+                    coordinates,
+                },
+            ]);
 
             return;
         }
@@ -121,26 +133,27 @@ export class SidebarSearch extends SidebarItem {
         // Try to resolve "location_string" via a nominatim search
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${location_string}`;
         fetch(url)
-            .then(
-                (response: Response): Promise<any> => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    const contentType = response.headers.get("content-type");
-                    if (contentType === null || !contentType.includes("application/json")) {
-                        throw new TypeError("Response is not JSON");
-                    }
+            .then((response: Response): Promise<any> => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const contentType = response.headers.get("content-type");
+                if (contentType === null || !contentType.includes("application/json")) {
+                    throw new TypeError("Response is not JSON");
+                }
 
-                    return response.json();
-                },
-            )
+                return response.json();
+            })
             .then((json_data): void => {
                 const results: INameCoordinates[] = [];
                 if (json_data.length > 0) {
                     json_data.forEach((element: any) => {
                         results.push({
                             name: element.display_name,
-                            coordinates: new Coordinates(parseFloat(element.lat), parseFloat(element.lon)),
+                            coordinates: new Coordinates(
+                                parseFloat(element.lat),
+                                parseFloat(element.lon),
+                            ),
                         });
                     });
                 } else {

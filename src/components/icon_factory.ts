@@ -39,14 +39,14 @@ export class IconFactory {
                        <path
                          fill="#7F7F7F" stroke="#7F7F7F"
                          d="M 4 4 L 4 26 L ${w2 - d} 26 L ${w2} 33 L ${w2 + d} 26 L ${w - d} 26 L ${
-            w - d
-        } 4 L 4 4 z"
+                             w - d
+                         } 4 L 4 4 z"
                          filter="url(#shadow)" />
                        <path
                          fill="${color.to_hash_string()}" stroke="#000000"
                          d="M 4 4 L 4 26 L ${w2 - d} 26 L ${w2} 33 L ${w2 + d} 26 L ${w - d} 26 L ${
-            w - d
-        } 4 L 4 4 z" />
+                             w - d
+                         } 4 L 4 4 z" />
                        <text
                          style="text-anchor:middle;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-weight:normal;font-size:16px;line-height:100%;font-family:sans;letter-spacing:0px;word-spacing:0px;fill:${text_color};fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
                          x="${w2}" y="21">${encoded_text}</text>

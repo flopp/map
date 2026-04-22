@@ -1,6 +1,6 @@
 import {Color} from "./color";
 import {Distance} from "./distance";
-import { MapState } from "./map_state";
+import {MapState} from "./map_state";
 
 let next_line_id: number = 0;
 

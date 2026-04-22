@@ -28,7 +28,7 @@ export class VersionCheck extends MapStateObserver {
                 return response.json();
             })
             .then((json) => {
-                if (!json.hasOwnProperty("build_date")) {
+                if (!Object.prototype.hasOwnProperty.call(json, "build_date")) {
                     throw new Error(`Key "build_date" is missing: ${json}`);
                 }
 
@@ -36,12 +36,13 @@ export class VersionCheck extends MapStateObserver {
                 const build_date = new Date(build_date_s * 1000);
                 console.log("Latest build date", build_date);
                 if (build_date_s > Version.build_date + this.interval_s) {
-                    console.log(`App is outdated, you might want to reload the page. current=${this.build_date.toString()} available=${build_date.toString()}`);
+                    console.log(
+                        `App is outdated, you might want to reload the page. current=${this.build_date.toString()} available=${build_date.toString()}`,
+                    );
                 }
             })
             .catch((error) => {
-                console.error(
-                    "Failed to fetch version.json:", error);
+                console.error("Failed to fetch version.json:", error);
             });
     }
 

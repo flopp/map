@@ -16,9 +16,7 @@ spell:
 
 .PHONY: lint
 lint:
-	./node_modules/.bin/tslint  \
-		--project tsconfig.json \
-		--config tslint.json \
+	./node_modules/.bin/eslint \
 		src/*.ts \
 		src/**/*.ts
 	./node_modules/.bin/prettier  \

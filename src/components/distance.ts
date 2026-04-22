@@ -31,12 +31,16 @@ export class Distance {
         switch (format) {
             case DistanceFormat.m:
                 this._raw_m = value;
+                break;
             case DistanceFormat.km:
                 this._raw_m = value * 1000;
+                break;
             case DistanceFormat.ft:
                 this._raw_m = value * 0.3048;
+                break;
             case DistanceFormat.mi:
                 this._raw_m = value * 1609.344;
+                break;
             default:
                 this._raw_m = value;
         }

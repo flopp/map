@@ -2,10 +2,7 @@ import Sortable from "sortablejs";
 
 import {App} from "./app";
 import {Color} from "./color";
-import {
-    Distance,
-    DistanceFormat,
-} from "./distance";
+import {Distance, DistanceFormat} from "./distance";
 import {Line} from "./line";
 import {LineSettingsDialog} from "./line_settings_dialog";
 import {MapStateChange} from "./map_state";
@@ -66,7 +63,11 @@ export class SidebarLines extends SidebarItem {
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & (MapStateChange.LINES | MapStateChange.LANGUAGE | MapStateChange.MARKERS)) === 0) {
+        if (
+            (changes &
+                (MapStateChange.LINES | MapStateChange.LANGUAGE | MapStateChange.MARKERS)) ===
+            0
+        ) {
             return;
         }
 
@@ -85,7 +86,7 @@ export class SidebarLines extends SidebarItem {
         // Update and add lines
         let hasTotal = false;
         let totalM: number = 0;
-        let scrollTo: Element|null = null;
+        let scrollTo: Element | null = null;
         const container = document.querySelector("#lines")!;
         this.app.map_state.lines.forEach((line: Line): void => {
             let div = document.querySelector(`#line-${line.get_id()}`);
@@ -95,9 +96,8 @@ export class SidebarLines extends SidebarItem {
                 scrollTo = div;
             }
 
-            (div.querySelector(
-                ".line-color",
-            ) as HTMLElement).style.backgroundColor = line.color.to_hash_string();
+            (div.querySelector(".line-color") as HTMLElement).style.backgroundColor =
+                line.color.to_hash_string();
 
             const from_select = div.querySelector("[data-from]")!;
             const to_select = div.querySelector("[data-to]")!;
@@ -105,17 +105,29 @@ export class SidebarLines extends SidebarItem {
             to_select.innerHTML = "";
             markers.forEach((name_id: INameId): void => {
                 from_select.append(
-                    new Option(name_id.name, String(name_id.id), false, name_id.id === line.marker1),
+                    new Option(
+                        name_id.name,
+                        String(name_id.id),
+                        false,
+                        name_id.id === line.marker1,
+                    ),
                 );
                 to_select.append(
-                    new Option(name_id.name, String(name_id.id), false, name_id.id === line.marker2),
+                    new Option(
+                        name_id.name,
+                        String(name_id.id),
+                        false,
+                        name_id.id === line.marker2,
+                    ),
                 );
             });
 
             let stats = "n/a";
             if (line.length !== null) {
-                const length = line.length.to_string(this.app.map_state.settings_line_distance_format);
-                stats = (line.bearing !== null) ? `${length}, ${line.bearing.toFixed(2)}°` : length;
+                const length = line.length.to_string(
+                    this.app.map_state.settings_line_distance_format,
+                );
+                stats = line.bearing !== null ? `${length}, ${line.bearing.toFixed(2)}°` : length;
                 hasTotal = true;
                 totalM += line.length.m();
             }
@@ -127,7 +139,10 @@ export class SidebarLines extends SidebarItem {
         const totalDiv = document.querySelector("#total-lines-length");
         if (hasTotal) {
             const distance = new Distance(totalM, DistanceFormat.m);
-            totalDiv!.textContent = this.app.translate("sidebar.lines.total", distance.to_string(this.app.map_state.settings_line_distance_format));
+            totalDiv!.textContent = this.app.translate(
+                "sidebar.lines.total",
+                distance.to_string(this.app.map_state.settings_line_distance_format),
+            );
         } else {
             totalDiv!.textContent = this.app.translate("sidebar.lines.total", "n/a");
         }
@@ -204,26 +219,44 @@ export class SidebarLines extends SidebarItem {
 
         const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);
         // .translate("sidebar.lines.show")
-        const button_search = create_icon_button("search", "sidebar.lines.show", ["is-info", "is-small"], ["icon16"], (event: Event) => {
-            this.app.map_state.show_line(line);
-            event.stopPropagation();
-        });
+        const button_search = create_icon_button(
+            "search",
+            "sidebar.lines.show",
+            ["is-info", "is-small"],
+            ["icon16"],
+            (event: Event) => {
+                this.app.map_state.show_line(line);
+                event.stopPropagation();
+            },
+        );
         // .translate("sidebar.lines.edit")
-        const button_edit = create_icon_button("edit", "sidebar.lines.edit", ["is-warning", "is-small"], ["icon16"], (event: Event) => {
-            if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
-                const line_div = document.querySelector(`#line-${line.get_id()}`)!;
-                const edit_div = this.create_edit_div(line);
-                line_div.parentNode!.insertBefore(edit_div, line_div.nextSibling);
-                this.update_edit_values(line);
-                edit_div.scrollIntoView(false);
-            }
-            event.stopPropagation();
-        });
+        const button_edit = create_icon_button(
+            "edit",
+            "sidebar.lines.edit",
+            ["is-warning", "is-small"],
+            ["icon16"],
+            (event: Event) => {
+                if (document.querySelector(`#line-edit-${line.get_id()}`) === null) {
+                    const line_div = document.querySelector(`#line-${line.get_id()}`)!;
+                    const edit_div = this.create_edit_div(line);
+                    line_div.parentNode!.insertBefore(edit_div, line_div.nextSibling);
+                    this.update_edit_values(line);
+                    edit_div.scrollIntoView(false);
+                }
+                event.stopPropagation();
+            },
+        );
         // .translate("sidebar.lines.delete")
-        const button_delete = create_icon_button("trash-2", "sidebar.lines.delete", ["is-danger", "is-small"], ["icon16"], (event: Event) => {
-            this.app.map_state.delete_line(line.get_id());
-            event.stopPropagation();
-        });
+        const button_delete = create_icon_button(
+            "trash-2",
+            "sidebar.lines.delete",
+            ["is-danger", "is-small"],
+            ["icon16"],
+            (event: Event) => {
+                this.app.map_state.delete_line(line.get_id());
+                event.stopPropagation();
+            },
+        );
         [button_search, button_edit, button_delete].forEach((button: HTMLElement) => {
             buttons.append(button);
             button.title = this.app.translate(button.getAttribute("data-i18n")!);
@@ -262,7 +295,8 @@ export class SidebarLines extends SidebarItem {
     private update_edit_values(line: Line): void {
         const div = document.querySelector(`#line-edit-${line.get_id()}`);
         if (div !== null) {
-            (div.querySelector("[data-color]") as HTMLInputElement).value = line.color.to_hash_string();
+            (div.querySelector("[data-color]") as HTMLInputElement).value =
+                line.color.to_hash_string();
         }
     }
 
@@ -288,7 +322,7 @@ export class SidebarLines extends SidebarItem {
         }
     }
 
-    private set_from(line: Line, marker: number|null): void {
+    private set_from(line: Line, marker: number | null): void {
         const m = marker !== null ? marker : -1;
         if (line.marker1 === m) {
             return;
@@ -300,7 +334,7 @@ export class SidebarLines extends SidebarItem {
         this.app.map_state.update_observers(MapStateChange.LINES);
     }
 
-    private set_to(line: Line, marker: number|null): void {
+    private set_to(line: Line, marker: number | null): void {
         const m = marker !== null ? marker : -1;
         if (line.marker2 === m) {
             return;

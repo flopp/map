@@ -40,20 +40,19 @@ export class Sidebar extends MapStateObserver {
             ["tools", "tool", (id: string): SidebarItem => new SidebarTools(app, id)],
             ["info", "help-circle", (id: string): SidebarItem => new SidebarInfo(app, id)],
         ];
-        sidebar_definitions.forEach((value: [string, string, (id: string) => SidebarItem]): void => {
-            const sidebar_id = value[0];
-            const sidebar_icon = value[1];
-            const sidebar_item_factory = value[2];
-            const sidebar_control = this._create_sidebar_control(sidebar_id, sidebar_icon);
-            const sidebar_item = sidebar_item_factory(sidebar_id);
+        sidebar_definitions.forEach(
+            (value: [string, string, (id: string) => SidebarItem]): void => {
+                const sidebar_id = value[0];
+                const sidebar_icon = value[1];
+                const sidebar_item_factory = value[2];
+                const sidebar_control = this._create_sidebar_control(sidebar_id, sidebar_icon);
+                const sidebar_item = sidebar_item_factory(sidebar_id);
 
-            this._sidebars.set(sidebar_id, [
-                sidebar_control,
-                sidebar_item,
-            ]);
+                this._sidebars.set(sidebar_id, [sidebar_control, sidebar_item]);
 
-            console.log("added sidebar control for", sidebar_id);
-        });
+                console.log("added sidebar control for", sidebar_id);
+            },
+        );
 
         this.update_state(MapStateChange.SIDEBAR);
     }

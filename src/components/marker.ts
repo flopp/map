@@ -1,4 +1,3 @@
-import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {xml_escape} from "./utilities";
@@ -25,7 +24,8 @@ export class Marker {
         this.coordinates = coordinates;
         const id = this.get_id();
         const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        this.name = (id < abc.length) ? abc[id] : `${abc[id % abc.length]}${1 + Math.floor(id / abc.length)}`;
+        this.name =
+            id < abc.length ? abc[id] : `${abc[id % abc.length]}${1 + Math.floor(id / abc.length)}`;
         this.color = Color.random_from_palette();
         this.radius = 0;
 
@@ -43,7 +43,9 @@ export class Marker {
     public to_gpx(): string {
         const symbol = "flag";
         const data: string[] = [];
-        data.push(`<wpt lat="${this.coordinates.lat().toFixed(8)}" lon="${this.coordinates.lng().toFixed(8)}">`);
+        data.push(
+            `<wpt lat="${this.coordinates.lat().toFixed(8)}" lon="${this.coordinates.lng().toFixed(8)}">`,
+        );
         data.push(`    <name>${xml_escape(this.name)}</name>`);
         data.push(`    <desc>color="${this.color.to_string()}"</desc>`);
         data.push(`    <sym>${symbol}</sym>`);

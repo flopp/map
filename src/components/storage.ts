@@ -1,7 +1,6 @@
 import {Color} from "./color";
 import {Coordinates, CoordinatesFormat} from "./coordinates";
 import {MapType} from "./map_type";
-import {Marker} from "./marker";
 import {parse_float, parse_int} from "./utilities";
 
 export class Storage {
@@ -13,7 +12,7 @@ export class Storage {
             const x = "__storage_test__";
             window.localStorage.setItem(x, x);
             window.localStorage.removeItem(x);
-        } catch (e) {
+        } catch (_e) {
             this.ok = false;
             console.error("Local storage not available!");
         }

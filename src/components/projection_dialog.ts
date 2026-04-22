@@ -18,13 +18,11 @@ export class ProjectionDialog extends Dialog {
         (this._div.querySelector("[data-bearing]") as HTMLInputElement).value = "";
         const name = this._app.translate("dialog.projection.new_marker_name", marker.name);
         (this._div.querySelector("[data-target-name]") as HTMLInputElement).value = name;
-        (this._div.querySelector(
-            "[data-target-color]",
-        ) as HTMLInputElement).value = marker.color.to_hash_string();
+        (this._div.querySelector("[data-target-color]") as HTMLInputElement).value =
+            marker.color.to_hash_string();
         (this._div.querySelector("[data-target-radius]") as HTMLInputElement).value = "";
-        (this._div.querySelector(
-            "[data-line-color]",
-        ) as HTMLInputElement).value = marker.color.to_hash_string();
+        (this._div.querySelector("[data-line-color]") as HTMLInputElement).value =
+            marker.color.to_hash_string();
 
         super.show();
     }

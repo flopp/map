@@ -131,7 +131,7 @@ export class SidebarTools extends SidebarItem {
     public import_gpx(file: File, clear: boolean, selector: string): void {
         const reader = new FileReader();
         reader.onloadend = (): void => {
-            const data = (reader.result as string);
+            const data = reader.result as string;
             this.app.map_state.from_gpx(data, clear);
         };
         reader.readAsText(file);

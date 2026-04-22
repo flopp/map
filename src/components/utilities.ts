@@ -2,7 +2,7 @@ const is_string = (s: any): boolean => Object.prototype.toString.call(s) === "[o
 
 const is_number = (s: any): boolean => Object.prototype.toString.call(s) === "[object Number]";
 
-const parse_float = (str: string|number): number | null => {
+const parse_float = (str: string | number): number | null => {
     if (is_number(str)) {
         return str as number;
     }
@@ -19,7 +19,7 @@ const parse_float = (str: string|number): number | null => {
     return parseFloat(s.replace(",", "."));
 };
 
-const parse_int = (str: string|number): number | null => {
+const parse_int = (str: string | number): number | null => {
     if (is_number(str)) {
         const n = str as number;
         if (Number.isInteger(n)) {
@@ -114,7 +114,9 @@ const create_color_input = (
     return field;
 };
 
-const create_select_input = (data_tag: string): {div: HTMLDivElement; select: HTMLSelectElement} => {
+const create_select_input = (
+    data_tag: string,
+): {div: HTMLDivElement; select: HTMLSelectElement} => {
     const control = create_element("div", ["control"]);
     const div = create_element("div", ["select", "is-fullwidth"]) as HTMLDivElement;
     const select = create_element("select", [], {[data_tag]: null}) as HTMLSelectElement;
@@ -150,9 +152,19 @@ const create_icon = (icon: string, classes: string[] = []): SVGSVGElement => {
     return svg;
 };
 
-const create_icon_button = (icon: string, tooltip_i18n: string, button_classes: string[], icon_classes: string[], callback: (event: Event) => void): HTMLElement => {
+const create_icon_button = (
+    icon: string,
+    tooltip_i18n: string,
+    button_classes: string[],
+    icon_classes: string[],
+    callback: (event: Event) => void,
+): HTMLElement => {
     button_classes.unshift("button");
-    const button = create_element("button", button_classes, {"data-i18n": tooltip_i18n, "data-i18n-target": "title", title: tooltip_i18n});
+    const button = create_element("button", button_classes, {
+        "data-i18n": tooltip_i18n,
+        "data-i18n-target": "title",
+        title: tooltip_i18n,
+    });
     icon_classes.unshift("icon");
     button.append(create_icon(icon, icon_classes));
     button.addEventListener("click", callback);
@@ -213,7 +225,7 @@ const xml_escape = (s: string): string => {
     escapes.set(">", "&gt;");
     escapes.set("<", "&lt;");
     escapes.set("'", "&apos;");
-    escapes.set("\"", "&quot;");
+    escapes.set('"', "&quot;");
     escapes.set("&", "&amp;");
     const re = new RegExp("([&\"<>'])", "g");
 

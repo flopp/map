@@ -54,7 +54,8 @@ const news_articles: NewsArticle[] = [
         Ich habe auch schon viel konstruktives Feedback erhalten, das ich in die Weiterentwicklung einfließen lassen werde - vielen Dank dafür!
 
         Beste Grüße,
-        Florian aka. Flopp`),
+        Florian aka. Flopp`,
+    ),
     new NewsArticle(
         "2022-01-01",
         `The rebuild of <b>flopp.net</b> continues. Due to your feedback, I've
@@ -268,8 +269,8 @@ export class NewsDialog extends Dialog {
         super("news-dialog", app);
         this.shown = -1;
 
-        const older = (document.querySelector("#news-dialog-older") as HTMLButtonElement);
-        const newer = (document.querySelector("#news-dialog-newer") as HTMLButtonElement);
+        const older = document.querySelector("#news-dialog-older") as HTMLButtonElement;
+        const newer = document.querySelector("#news-dialog-newer") as HTMLButtonElement;
         older.addEventListener("click", () => {
             this.older();
         });
@@ -291,7 +292,7 @@ export class NewsDialog extends Dialog {
     public maybeShow(): void {
         const shown = this._app.map_state.storage.get_int("news.shown", -1);
 
-        if (shown < news_articles.length-1) {
+        if (shown < news_articles.length - 1) {
             this.show();
         }
     }
@@ -308,28 +309,31 @@ export class NewsDialog extends Dialog {
     public newer(): void {
         this.shown += 1;
         if (this.shown >= news_articles.length) {
-            this.shown = news_articles.length-1;
+            this.shown = news_articles.length - 1;
         }
 
         this.updateContent();
     }
 
     public updateContent(): void {
-        const textEl = (document.querySelector("#news-dialog-text") as HTMLParagraphElement);
-        const dateEl = (document.querySelector("#news-dialog-date") as HTMLParagraphElement);
+        const textEl = document.querySelector("#news-dialog-text") as HTMLParagraphElement;
+        const dateEl = document.querySelector("#news-dialog-date") as HTMLParagraphElement;
 
         if (this.shown < 0 || this.shown >= news_articles.length) {
             textEl.textContent = "n/a";
             dateEl.textContent = "n/a";
         } else {
             const article = news_articles[this.shown];
-            dateEl.textContent =  article.date;
-            textEl.innerHTML = article.getText(this._app.map_state.language).split("\n").join("<br />");
+            dateEl.textContent = article.date;
+            textEl.innerHTML = article
+                .getText(this._app.map_state.language)
+                .split("\n")
+                .join("<br />");
         }
 
-        const older = (document.querySelector("#news-dialog-older") as HTMLButtonElement);
-        const newer = (document.querySelector("#news-dialog-newer") as HTMLButtonElement);
+        const older = document.querySelector("#news-dialog-older") as HTMLButtonElement;
+        const newer = document.querySelector("#news-dialog-newer") as HTMLButtonElement;
         older.disabled = this.shown <= 0;
-        newer.disabled = this.shown >= news_articles.length-1;
+        newer.disabled = this.shown >= news_articles.length - 1;
     }
 }

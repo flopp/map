@@ -145,8 +145,8 @@ export class App {
         const dialogEl = document.querySelector("#yesno-dialog")!;
         const titleEl = document.querySelector("#yesno-title")!;
         const textEl = document.querySelector("#yesno-text")!;
-        let yesButton = (document.querySelector("#yesno-yes") as HTMLButtonElement);
-        let noButton = (document.querySelector("#yesno-no") as HTMLButtonElement);
+        let yesButton = document.querySelector("#yesno-yes") as HTMLButtonElement;
+        let noButton = document.querySelector("#yesno-no") as HTMLButtonElement;
         titleEl.innerHTML = title;
         textEl.innerHTML = text;
 
@@ -156,14 +156,14 @@ export class App {
         */
         const yesButtonClone = yesButton.cloneNode(true);
         yesButton.parentNode!.replaceChild(yesButtonClone, yesButton);
-        yesButton = (document.querySelector("#yesno-yes") as HTMLButtonElement);
+        yesButton = document.querySelector("#yesno-yes") as HTMLButtonElement;
         yesButton.addEventListener("click", () => {
             dialogEl.classList.remove("is-active");
             yes();
         });
         const noButtonClone = noButton.cloneNode(true);
         noButton.parentNode!.replaceChild(noButtonClone, noButton);
-        noButton = (document.querySelector("#yesno-no") as HTMLButtonElement);
+        noButton = document.querySelector("#yesno-no") as HTMLButtonElement;
         noButton.addEventListener("click", () => {
             dialogEl.classList.remove("is-active");
         });
