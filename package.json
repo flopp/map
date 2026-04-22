@@ -21,8 +21,8 @@
         "clipboard": "^2.0.11",
         "feather-icons": "^4.29.0",
         "geographiclib-geodesic": "^2.0.0",
-        "i18next": "^22.4.6",
-        "i18next-browser-languagedetector": "^7.0.1",
+        "i18next": "^26.0.6",
+        "i18next-browser-languagedetector": "^8.2.1",
         "leaflet": "^1.9.3",
         "sortablejs": "^1.15.0"
     },
