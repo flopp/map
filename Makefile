@@ -31,6 +31,10 @@ format:
 		src/*.ts \
 		src/**/*.ts
 
+.PHONY: test
+test:
+	./node_modules/.bin/vitest run
+
 
 .PHONY: update-translation
 update-translation:
