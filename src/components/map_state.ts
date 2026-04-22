@@ -47,7 +47,7 @@ export class MapState {
     public lines: Line[] = [];
     public lines_hash: Map<number, Line>;
     public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DM;
-    public settings_marker_random_color: boolean;
+    public settings_marker_random_color: boolean = true;
     public settings_marker_color: Color = Color.default_color();
     public settings_marker_radius: number = 0;
     public settings_marker_draggable: boolean = false;
@@ -391,7 +391,7 @@ export class MapState {
         if (center === null) {
             let lat = 0;
             let lon = 0;
-            markers.forEach((marker: Marker): void => {
+            markers.forEach((marker: IMarkerDict): void => {
                 lat += marker.coordinates.lat();
                 lon += marker.coordinates.lng();
             });
@@ -700,14 +700,7 @@ export class MapState {
     }
 
     public sort_markers_by_name(): void {
-        this.markers.sort((a: Marker, b: Marker): number => {
-            if (a.name < b.name) {
-                return -1;
-            } else if (a.name > b.name) {
-                return +1;
-            }
-            return 0;
-        });
+        this.markers.sort((a: Marker, b: Marker): number => a.name.localeCompare(b.name));
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
     }
@@ -721,9 +714,8 @@ export class MapState {
         this.markers.forEach((marker: Marker): void => {
             distances.set(marker.marker_id, marker.coordinates.distance(this.center!));
         });
-        this.markers.sort((a: Marker, b: Marker): number => {
-            return distances.get(a.marker_id) - distances.get(b.marker_id);
-        });
+        this.markers.sort((a: Marker, b: Marker): number =>
+            distances.get(a.marker_id) - distances.get(b.marker_id));
         this.storage.set("markers", this.get_marker_ids_string());
         this.update_observers(MapStateChange.MARKERS);
     }
@@ -968,7 +960,7 @@ export class MapState {
             if (name.length === 0) {
                 name = `GPX WAYPOINT ${index}`;
             }
-            
+
             const descEl = waypoint.getElementsByTagName("desc");
             if (descEl.length > 0 && descEl[0].textContent !== null) {
                 [...descEl[0].textContent.matchAll(/color="([^"]+)"/g)].forEach((match: string[]): void => {
@@ -1026,7 +1018,7 @@ export class MapState {
             marker.radius = radius;
             markers.push(marker);
         });
-        
+
         const lines: Line[] = [];
         let badLines = 0;
         Array.from(xml.getElementsByTagName("trk")).forEach((trk: Element, index: number): void => {
@@ -1038,19 +1030,19 @@ export class MapState {
             const m = name.match(/^\s*LINE:(-1|\d+):(-1|\d+):([0-9a-f]{6})\s*$/i);
             if (m === null) {
                 badLines += 1;
-                
+
                 return;
             }
-            
+
             const m1 = parse_int(m[1]);
             const m2 = parse_int(m[2]);
             if (m1 === null || !markerIdMap.has(m1) ||
             m2 === null || !markerIdMap.has(m2)) {
                 badLines += 1;
-                
+
                 return;
             }
-            
+
             const line = new Line(markerIdMap.get(m1)!, markerIdMap.get(m2)!);
             if (clear) {
                 line.line_id = lines.length;

@@ -44,12 +44,12 @@ export class SidebarTools extends SidebarItem {
 
         document
             .querySelector("#btn-import-gpx")!
-            .addEventListener("click", (event: InputEvent): void => {
+            .addEventListener("click", (event: Event): void => {
                 (document.querySelector("#inp-import-gpx") as HTMLButtonElement).click();
                 event.preventDefault();
             });
         (document.querySelector("#inp-import-gpx") as HTMLInputElement).onchange = (
-            event: InputEvent,
+            event: Event,
         ): void => {
             if (event.target === null) {
                 return;
@@ -63,12 +63,12 @@ export class SidebarTools extends SidebarItem {
 
         document
             .querySelector("#btn-import-gpx-keep")!
-            .addEventListener("click", (event: InputEvent): void => {
+            .addEventListener("click", (event: Event): void => {
                 (document.querySelector("#inp-import-gpx-keep") as HTMLButtonElement).click();
                 event.preventDefault();
             });
         (document.querySelector("#inp-import-gpx-keep") as HTMLInputElement).onchange = (
-            event: InputEvent,
+            event: Event,
         ): void => {
             if (event.target === null) {
                 return;
@@ -86,12 +86,12 @@ export class SidebarTools extends SidebarItem {
 
         document
             .querySelector("#btn-import-json")!
-            .addEventListener("click", (event: InputEvent): void => {
+            .addEventListener("click", (event: Event): void => {
                 (document.querySelector("#inp-import-json") as HTMLButtonElement).click();
                 event.preventDefault();
             });
         (document.querySelector("#inp-import-json") as HTMLInputElement).onchange = (
-            event: InputEvent,
+            event: Event,
         ): void => {
             if (event.target === null) {
                 return;

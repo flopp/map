@@ -2,6 +2,10 @@ import Sortable from "sortablejs";
 
 import {App} from "./app";
 import {Color} from "./color";
+import {
+    Distance,
+    DistanceFormat,
+} from "./distance";
 import {Line} from "./line";
 import {LineSettingsDialog} from "./line_settings_dialog";
 import {MapStateChange} from "./map_state";
@@ -16,10 +20,6 @@ import {
     parse_int,
     remove_element,
 } from "./utilities";
-import {
-    Distance,
-    DistanceFormat,
-} from "./distance";
 
 interface INameId {
     name: string;
@@ -84,7 +84,7 @@ export class SidebarLines extends SidebarItem {
 
         // Update and add lines
         let hasTotal = false;
-        let totalM: number = 0; 
+        let totalM: number = 0;
         let scrollTo: Element|null = null;
         const container = document.querySelector("#lines")!;
         this.app.map_state.lines.forEach((line: Line): void => {
@@ -141,7 +141,7 @@ export class SidebarLines extends SidebarItem {
             });
 
             const deleted_ids: string[] = [];
-            lines.forEach((obj: HTMLElement): void => {
+            lines.forEach((obj: Element): void => {
                 const id = obj.getAttribute("id")!.substring(5);
                 if (!ids.has(id)) {
                     deleted_ids.push(id);

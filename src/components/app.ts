@@ -149,8 +149,8 @@ export class App {
         let noButton = (document.querySelector("#yesno-no") as HTMLButtonElement);
         titleEl.innerHTML = title;
         textEl.innerHTML = text;
-        
-        // clone button to remove all event listeners, see https://stackoverflow.com/questions/19469881/remove-all-event-listeners-of-specific-type
+
+        // Clone button to remove all event listeners, see https://stackoverflow.com/questions/19469881/remove-all-event-listeners-of-specific-type
         const yesButtonClone = yesButton.cloneNode(true);
         yesButton.parentNode!.replaceChild(yesButtonClone, yesButton);
         yesButton = (document.querySelector("#yesno-yes") as HTMLButtonElement);

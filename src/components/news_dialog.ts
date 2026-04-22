@@ -197,18 +197,18 @@ const news_articles: NewsArticle[] = [
     new NewsArticle(
         "2023-02-23",
         `- Sorting of the markers list by name and distance to the map's center (thanks to David and Dirk for the suggestion)
-      
+
         Best regards,
         Florian aka. Flopp`,
         `- Sortieren der Marker-Liste nach Name oder Distanz zum Kartenzentrum (Danke David und Dirk für den Vorschlag)
-      
+
         Beste Grüße,
         Florian aka. Flopp`,
     ),
     new NewsArticle(
         "2023-02-26",
         `- Add a button to the markers sidebar that allows for opening the "Create Multiple Markers" dialog (thanks to Gerti for the suggestion)
-        - Changing of the sidebar buttons order (thanks Gerti) 
+        - Changing of the sidebar buttons order (thanks Gerti)
         - Focusing of the "yes" button in confirmation dialogs (thanks Michael)
 
         There's also a <a href="https://blog.flopp.net/update-sorting-usability/" target="_blank">news article</a> for all the changes.
@@ -216,7 +216,7 @@ const news_articles: NewsArticle[] = [
         Best regards,
         Florian aka. Flopp`,
         `- Neuer Button in der Marker-Seitenleiste um den "Mehrere Marker Erzeugen"-Dialog aufzurufen (Danke Gerti für den Vorschlag)
-        - Reihenfolge der Seitenleisten-Buttons geändert (Danke Gerti) 
+        - Reihenfolge der Seitenleisten-Buttons geändert (Danke Gerti)
         - Fokussieren des "Ja"-Buttons in Bestätigungsdialogen (Danke Michael)
 
         Es gibt auch einen <a href="https://blog.flopp.net/update-sorting-usability/" target="_blank">News-Beitrag im Blog</a> dazu.
@@ -227,37 +227,37 @@ const news_articles: NewsArticle[] = [
     new NewsArticle(
         "2023-04-30",
         `Add an option (via the Marker Settings dialog) to have filled or unfilled circles.`,
-        `Neue Option (in den Markereinstellungen) um Markerkreise gefüllt oder ungefüllt darzustellen.`, 
+        `Neue Option (in den Markereinstellungen) um Markerkreise gefüllt oder ungefüllt darzustellen.`,
     ),
     new NewsArticle(
         "2023-10-31",
         `Fix bug where deleting all lines would also delete all markers.`,
-        `Fehler korrigiert: alle Linien Löschen hat auch alle Marker gelöscht.`, 
+        `Fehler korrigiert: alle Linien Löschen hat auch alle Marker gelöscht.`,
     ),
     new NewsArticle(
         "2024-04-07",
         `GPX export/import: support marker colors (via "desc" waypoint attribute).`,
-        `GPX Export/Import: Marker-Farben im "desc" waypoint-Attribut.`, 
+        `GPX Export/Import: Marker-Farben im "desc" waypoint-Attribut.`,
     ),
     new NewsArticle(
         "2024-04-14",
         `GPX import: add option to keep kurrent state.`,
-        `GPX Import: Option zu Behalten des aktuellen Zustands hinzugefügt.`, 
+        `GPX Import: Option zu Behalten des aktuellen Zustands hinzugefügt.`,
     ),
     new NewsArticle(
         "2024-10-16",
         `NPA layer: also display German national parks.`,
-        `Anzeige von Nationalparks.`, 
+        `Anzeige von Nationalparks.`,
     ),
     new NewsArticle(
         "2025-04-12",
         `Display total line length.`,
-        `Anzeige der Gesamtlänge aller Linien.`, 
+        `Anzeige der Gesamtlänge aller Linien.`,
     ),
     new NewsArticle(
         "2026-04-22",
         `Fixed a couple of bugs: coordinate parsing, GPX import.`,
-        `Ein paar Fehler behoben: Koordinatenparsing, GPX-Import.`, 
+        `Ein paar Fehler behoben: Koordinatenparsing, GPX-Import.`,
     ),
 ];
 
