@@ -189,7 +189,7 @@ export class Coordinates {
             // DMS / D M S H
             {
                 regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                fields: [4, 1, 2, 3, 6, 5, 6, 7],
+                fields: [4, 1, 2, 3, 8, 5, 6, 7],
             },
             // DMS / D M S
             {
