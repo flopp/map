@@ -85,8 +85,8 @@ export class Language extends MapStateObserver {
 
         (tree !== null ? tree : document)
             .querySelectorAll("[data-i18n]")
-            .forEach((element: HTMLElement): void => {
-                this.localizeElement(element);
+            .forEach((element: Element): void => {
+                this.localizeElement(element as HTMLElement);
             });
         this.app.map_state.update_observers(MapStateChange.LANGUAGE);
     }

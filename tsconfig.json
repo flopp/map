@@ -2,6 +2,7 @@
     "compilerOptions": {
         "outDir": "./dist/",
         "moduleResolution": "node",
+        "ignoreDeprecations": "6.0",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,

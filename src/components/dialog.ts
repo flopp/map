@@ -18,13 +18,13 @@ export class Dialog {
             title.parentElement!.insertBefore(help, title.nextSibling);
         }
 
-        this._div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
+        this._div.querySelectorAll("[data-cancel]").forEach((element: Element): void => {
+            (element as HTMLElement).addEventListener("click", (): void => {
                 this.hide();
             });
         });
-        this._div.querySelectorAll("[data-ok]").forEach((element: HTMLElement): void => {
-            element.addEventListener("click", (): void => {
+        this._div.querySelectorAll("[data-ok]").forEach((element: Element): void => {
+            (element as HTMLElement).addEventListener("click", (): void => {
                 this.ok();
             });
         });
@@ -39,8 +39,8 @@ export class Dialog {
     }
 
     public focusCancel() {
-        this._div.querySelectorAll("[data-cancel]").forEach((element: HTMLElement): void => {
-            element.focus();
+        this._div.querySelectorAll("[data-cancel]").forEach((element: Element): void => {
+            (element as HTMLElement).focus();
         });
     }
 

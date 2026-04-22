@@ -21,7 +21,7 @@ export const parseDistanceFormat = (value: string, fallback: DistanceFormat): Di
 };
 
 export class Distance {
-    private _raw_m: number;
+    private _raw_m: number = 0;
 
     public constructor(value: number, format: DistanceFormat) {
         this.set(value, format);

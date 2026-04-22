@@ -953,7 +953,7 @@ export class MapState {
             let radius = 0;
 
             const nameEl = waypoint.getElementsByTagName("name");
-            if (nameEl.length > 0 && nameEl[0].textContent !== null) {
+            if (nameEl.length > 0) {
                 name = nameEl[0].textContent;
             }
             name = name.trim();
@@ -962,7 +962,7 @@ export class MapState {
             }
 
             const descEl = waypoint.getElementsByTagName("desc");
-            if (descEl.length > 0 && descEl[0].textContent !== null) {
+            if (descEl.length > 0) {
                 [...descEl[0].textContent.matchAll(/color="([^"]+)"/g)].forEach((match: string[]): void => {
                     const c = Color.from_string(match[1]);
                     if (c !== null) {
@@ -972,7 +972,7 @@ export class MapState {
             }
 
             const radiusEl = waypoint.getElementsByTagName("wptx1:Proximity");
-            if (radiusEl.length > 0 && radiusEl[0].textContent !== null) {
+            if (radiusEl.length > 0) {
                 const r = parse_float(radiusEl[0].textContent);
                 if (r !== null && r >= 0) {
                     radius = r;
@@ -1024,7 +1024,7 @@ export class MapState {
         Array.from(xml.getElementsByTagName("trk")).forEach((trk: Element, index: number): void => {
             let name = "";
             const nameEl = trk.getElementsByTagName("name");
-            if (nameEl.length > 0 && nameEl[0].textContent !== null) {
+            if (nameEl.length > 0) {
                 name = nameEl[0].textContent;
             }
             const m = name.match(/^\s*LINE:(-1|\d+):(-1|\d+):([0-9a-f]{6})\s*$/i);

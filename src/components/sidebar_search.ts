@@ -23,9 +23,8 @@ export class SidebarSearch extends SidebarItem {
         document.querySelector("#btn-search")!.addEventListener("click", (): void => {
             this.perform_search();
         });
-        document
-            .querySelector("#input-search")!
-            .addEventListener("keyup", (event: KeyboardEvent): void => {
+        const searchInput = document.querySelector("#input-search") as HTMLInputElement;
+        searchInput.addEventListener("keyup", (event: KeyboardEvent): void => {
                 if (event.key === "Enter") {
                     this.perform_search();
                 }

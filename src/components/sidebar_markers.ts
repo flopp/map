@@ -152,7 +152,7 @@ export class SidebarMarkers extends SidebarItem {
                 });
 
                 const deleted_ids: string[] = [];
-                markers.forEach((m: HTMLElement): void => {
+                markers.forEach((m: Element): void => {
                     const id = m.getAttribute("id")!.substring(7);
                     if (!ids.has(id)) {
                         deleted_ids.push(id);
