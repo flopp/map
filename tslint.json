@@ -5,12 +5,7 @@
     ],
     "jsRules": {},
     "rules": {
-        "max-line-length": {
-            "options": [
-                "warning",
-                140
-            ]
-        },
+        "max-line-length": [true, 140],
         "indent": [
             true,
             "spaces",
