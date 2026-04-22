@@ -1,4 +1,4 @@
-@import 'config.scss';
+@use 'config' as *;
 
 #sidebar {
     display: none;

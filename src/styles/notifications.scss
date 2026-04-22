@@ -1,4 +1,4 @@
-@import 'config.scss';
+@use 'config' as *;
 
 #notification-container {
     position: fixed;
