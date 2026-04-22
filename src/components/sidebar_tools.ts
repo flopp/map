@@ -58,16 +58,16 @@ export class SidebarTools extends SidebarItem {
             if (files === null) {
                 return;
             }
-            this.import_gpx(files[0], true);
+            this.import_gpx(files[0], true, "#inp-import-gpx");
         };
 
         document
             .querySelector("#btn-import-gpx-keep")!
             .addEventListener("click", (event: InputEvent): void => {
-                (document.querySelector("#inp-import-gpx") as HTMLButtonElement).click();
+                (document.querySelector("#inp-import-gpx-keep") as HTMLButtonElement).click();
                 event.preventDefault();
             });
-        (document.querySelector("#inp-import-gpx") as HTMLInputElement).onchange = (
+        (document.querySelector("#inp-import-gpx-keep") as HTMLInputElement).onchange = (
             event: InputEvent,
         ): void => {
             if (event.target === null) {
@@ -77,7 +77,7 @@ export class SidebarTools extends SidebarItem {
             if (files === null) {
                 return;
             }
-            this.import_gpx(files[0], false);
+            this.import_gpx(files[0], false, "#inp-import-gpx-keep");
         };
 
         document.querySelector("#btn-export-json")!.addEventListener("click", (): void => {
@@ -128,7 +128,7 @@ export class SidebarTools extends SidebarItem {
         document.body.removeChild(element);
     }
 
-    public import_gpx(file: File, clear: boolean): void {
+    public import_gpx(file: File, clear: boolean, selector: string): void {
         const reader = new FileReader();
         reader.onloadend = (): void => {
             const data = (reader.result as string);
@@ -137,7 +137,7 @@ export class SidebarTools extends SidebarItem {
         reader.readAsText(file);
 
         // Reset file input
-        (document.querySelector("#inp-import-gpx") as HTMLInputElement).value = "";
+        (document.querySelector(selector) as HTMLInputElement).value = "";
     }
 
     public export_json(): void {

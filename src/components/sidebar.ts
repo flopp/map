@@ -31,7 +31,7 @@ export class Sidebar extends MapStateObserver {
         // .translate("sidebar.tools.title")
         // .translate("sidebar.info.title")
         this._sidebars = new Map();
-        [
+        const sidebar_definitions: Array<[string, string, (id: string) => SidebarItem]> = [
             ["hero", "star", (i: string): SidebarItem => new SidebarHero(app, i)],
             ["layers", "layers", (_id: string): SidebarItem => this.sidebar_layers],
             ["search", "search", (i: string): SidebarItem => new SidebarSearch(app, i)],
@@ -39,17 +39,27 @@ export class Sidebar extends MapStateObserver {
             ["lines", "maximize-2", (id: string): SidebarItem => new SidebarLines(app, id)],
             ["tools", "tool", (id: string): SidebarItem => new SidebarTools(app, id)],
             ["info", "help-circle", (id: string): SidebarItem => new SidebarInfo(app, id)],
-        ].forEach((value: [string, string, (id: string) => SidebarItem]): void => {
-            this._sidebars.set(value[0], [
-                this._create_sidebar_control(value[0], value[1]),
-                value[2](value[0]),
+        ];
+        sidebar_definitions.forEach((value: [string, string, (id: string) => SidebarItem]): void => {
+            const sidebar_id = value[0];
+            const sidebar_icon = value[1];
+            const sidebar_item_factory = value[2];
+            const sidebar_control = this._create_sidebar_control(sidebar_id, sidebar_icon);
+            const sidebar_item = sidebar_item_factory(sidebar_id);
+
+            this._sidebars.set(sidebar_id, [
+                sidebar_control,
+                sidebar_item,
             ]);
+
+            console.log("added sidebar control for", sidebar_id);
         });
 
         this.update_state(MapStateChange.SIDEBAR);
     }
 
     public toggle(name: string | null): void {
+        console.log("toggling sidebar", name, "currently open:", this.app.map_state.sidebar_open);
         if (name === null || this.app.map_state.sidebar_open === name) {
             this.app.map_state.set_sidebar_open(null);
         } else {
