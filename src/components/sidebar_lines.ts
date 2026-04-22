@@ -154,6 +154,7 @@ export class SidebarLines extends SidebarItem {
             });
         }
 
+        // tslint:disable-next-line: strict-type-predicates
         if (scrollTo !== null) {
             (scrollTo as HTMLElement).scrollIntoView(false);
         }

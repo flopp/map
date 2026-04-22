@@ -1005,6 +1005,7 @@ export class MapState {
             }
 
             const marker = new Marker(new Coordinates(lat, lon));
+            // tslint:disable-next-line: strict-type-predicates
             if (color !== null) {
                 marker.color = color;
             } else if (!this.settings_marker_random_color) {

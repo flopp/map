@@ -226,38 +226,38 @@ const news_articles: NewsArticle[] = [
     ),
     new NewsArticle(
         "2023-04-30",
-        `Add an option (via the Marker Settings dialog) to have filled or unfilled circles.`,
-        `Neue Option (in den Markereinstellungen) um Markerkreise gefüllt oder ungefüllt darzustellen.`,
+        "Add an option (via the Marker Settings dialog) to have filled or unfilled circles.",
+        "Neue Option (in den Markereinstellungen) um Markerkreise gefüllt oder ungefüllt darzustellen.",
     ),
     new NewsArticle(
         "2023-10-31",
-        `Fix bug where deleting all lines would also delete all markers.`,
-        `Fehler korrigiert: alle Linien Löschen hat auch alle Marker gelöscht.`,
+        "Fix bug where deleting all lines would also delete all markers.",
+        "Fehler korrigiert: alle Linien Löschen hat auch alle Marker gelöscht.",
     ),
     new NewsArticle(
         "2024-04-07",
-        `GPX export/import: support marker colors (via "desc" waypoint attribute).`,
-        `GPX Export/Import: Marker-Farben im "desc" waypoint-Attribut.`,
+        'GPX export/import: support marker colors (via "desc" waypoint attribute).',
+        'GPX Export/Import: Marker-Farben im "desc" waypoint-Attribut.',
     ),
     new NewsArticle(
         "2024-04-14",
-        `GPX import: add option to keep kurrent state.`,
-        `GPX Import: Option zu Behalten des aktuellen Zustands hinzugefügt.`,
+        "GPX import: add option to keep kurrent state.",
+        "GPX Import: Option zu Behalten des aktuellen Zustands hinzugefügt.",
     ),
     new NewsArticle(
         "2024-10-16",
-        `NPA layer: also display German national parks.`,
-        `Anzeige von Nationalparks.`,
+        "NPA layer: also display German national parks.",
+        "Anzeige von Nationalparks.",
     ),
     new NewsArticle(
         "2025-04-12",
-        `Display total line length.`,
-        `Anzeige der Gesamtlänge aller Linien.`,
+        "Display total line length.",
+        "Anzeige der Gesamtlänge aller Linien.",
     ),
     new NewsArticle(
         "2026-04-22",
-        `Fixed a couple of bugs: coordinate parsing, GPX import.`,
-        `Ein paar Fehler behoben: Koordinatenparsing, GPX-Import.`,
+        "Fixed a couple of bugs: coordinate parsing, GPX import.",
+        "Ein paar Fehler behoben: Koordinatenparsing, GPX-Import.",
     ),
 ];
 
