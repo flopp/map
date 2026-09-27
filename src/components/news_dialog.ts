@@ -260,6 +260,11 @@ const news_articles: NewsArticle[] = [
         "Fixed a couple of bugs: coordinate parsing, GPX import.",
         "Ein paar Fehler behoben: Koordinatenparsing, GPX-Import.",
     ),
+    new NewsArticle(
+        "2026-09-27",
+        "Fixed overflowing search field on mobile.",
+        "Suchfeld läuft auf Mobilgeräten nicht mehr über.",
+    ),
 ];
 
 export class NewsDialog extends Dialog {

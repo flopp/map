@@ -6,6 +6,9 @@
 
 html {
     overflow: hidden;
+    /* prevent mobile browsers from auto-boosting font size, which can overflow flex layouts (e.g. the search field) */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
