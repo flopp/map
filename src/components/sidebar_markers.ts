@@ -184,8 +184,16 @@ export class SidebarMarkers extends SidebarItem {
         m.append(left);
 
         const center = create_element("div", ["marker-center"]);
-        center.append(create_element("div", ["marker-name"]));
-        center.append(create_element("div", ["marker-coordinates"]));
+        const show_marker = (event: Event): void => {
+            this.app.map_state.set_center(marker.coordinates);
+            event.stopPropagation();
+        };
+        for (const cls of ["marker-name", "marker-coordinates"]) {
+            const el = create_element("div", [cls]);
+            el.style.cursor = "pointer";
+            el.addEventListener("click", show_marker);
+            center.append(el);
+        }
         const circleDiv = create_element("div", ["marker-radius", "is-hidden"]);
         const circleDivLabel = create_element("div", ["marker-radius-label"], {
             "data-i18n": "sidebar.markers.circle",
@@ -203,10 +211,7 @@ export class SidebarMarkers extends SidebarItem {
             "sidebar.markers.show",
             ["is-info", "is-small"],
             ["icon16"],
-            (event: Event) => {
-                this.app.map_state.set_center(marker.coordinates);
-                event.stopPropagation();
-            },
+            show_marker,
         );
         // .translate("sidebar.markers.copy_coordinates")
         const button_copy = create_icon_button(
@@ -264,7 +269,7 @@ export class SidebarMarkers extends SidebarItem {
                 event.stopPropagation();
             },
         );
-        [button_edit, button_search, button_project, button_copy, button_delete].forEach(
+        [button_search, button_edit, button_project, button_copy, button_delete].forEach(
             (button: HTMLElement): void => {
                 buttons.append(button);
                 button.title = this.app.translate(button.getAttribute("data-i18n")!);

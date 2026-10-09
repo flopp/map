@@ -265,6 +265,11 @@ const news_articles: NewsArticle[] = [
         "Fixed overflowing search field on mobile.",
         "Suchfeld läuft auf Mobilgeräten nicht mehr über.",
     ),
+    new NewsArticle(
+        "2026-10-09",
+        "Simplified marker navigation in the sidebar.",
+        "Vereinfachte Markernavigation in der Seitenleiste.",
+    ),
 ];
 
 export class NewsDialog extends Dialog {
