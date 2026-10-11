@@ -87,6 +87,7 @@
         },
         "general": {
             "cancel": "Annuler",
+            "close": "Fermer",
             "no": "No",
             "no_marker_tag": "<ABSENT>",
             "submit": "Appliquer",

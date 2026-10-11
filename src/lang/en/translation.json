@@ -87,6 +87,7 @@
         },
         "general": {
             "cancel": "Cancel",
+            "close": "Close",
             "no": "No",
             "no_marker_tag": "<NONE>",
             "submit": "Submit",
