@@ -57,6 +57,16 @@
                 "older": "\u00c4ltere",
                 "title": "Neuigkeiten"
             },
+            "overwrite-protection": {
+                "current-map": "Aktuelle Karte",
+                "keep": "Aktuelle Karte behalten",
+                "lines": "Linien",
+                "linked-map": "Karte aus dem Link",
+                "markers": "Marker",
+                "message": "Der Link enthält eine Karte. Wenn du sie übernimmst, werden die aktuelle Ansicht, Ebenen, Marker und Linien ersetzt.",
+                "overwrite": "Karte überschreiben",
+                "title": "Aktuelle Karte überschreiben?"
+            },
             "projection": {
                 "bad_bearing_message": "Fehlerhafter Richtungswert",
                 "bad_distance_message": "Fehlerhafter Distanzwert.",

@@ -35,6 +35,29 @@ interface ILineSettingsDict {
     random_color: boolean;
     color: Color;
 }
+
+interface IMarkerUrlData {
+    name: string;
+    coordinates: Coordinates;
+    color: Color;
+    radius: number;
+}
+
+interface ILineUrlData {
+    from: number;
+    to: number;
+    color: Color;
+}
+
+export interface MapStateFromUrl {
+    center: Coordinates;
+    zoom: number | null;
+    map_type: MapType | null;
+    hillshading: boolean;
+    markers: IMarkerUrlData[];
+    lines: ILineUrlData[];
+}
+
 export class MapState {
     public app: App;
     public language: string = "";
@@ -66,6 +89,10 @@ export class MapState {
         this.markers_hash = new Map();
         this.lines_hash = new Map();
         this.storage = new Storage();
+    }
+
+    public has_markers_or_lines(): boolean {
+        return this.markers.length > 0 || this.lines.length > 0;
     }
 
     public store(): void {
@@ -253,7 +280,7 @@ export class MapState {
         });
     }
 
-    public restore_from_url(): void {
+    public parse_url_state(): MapStateFromUrl | null {
         const params = new Map();
         window.location.search
             .substr(1)
@@ -273,20 +300,9 @@ export class MapState {
         let zoom: number | null = null;
         let map_type: MapType | null = null;
         let hillshading = false;
-        interface IMarkerDict {
-            name: string;
-            coordinates: Coordinates;
-            color: Color;
-            radius: number;
-        }
-        const markers: IMarkerDict[] = [];
+        const markers: IMarkerUrlData[] = [];
         const marker_hash: Map<string, number> = new Map();
-        interface ILineDict {
-            from: number;
-            to: number;
-            color: Color;
-        }
-        const lines: ILineDict[] = [];
+        const lines: ILineUrlData[] = [];
 
         params.forEach((value: string, key: string): void => {
             switch (key) {
@@ -392,52 +408,74 @@ export class MapState {
             }
         });
 
-        // tslint:disable-next-line: strict-type-predicates
         if (center === null && markers.length === 0) {
-            return;
+            return null;
         }
 
-        this.clear_storage();
-
-        // tslint:disable-next-line: strict-type-predicates
         if (center === null) {
             let lat = 0;
             let lon = 0;
-            markers.forEach((marker: IMarkerDict): void => {
+            markers.forEach((marker: IMarkerUrlData): void => {
                 lat += marker.coordinates.lat();
                 lon += marker.coordinates.lng();
             });
             center = new Coordinates(lat / markers.length, lon / markers.length);
         }
-        this.storage.set_coordinates("center", center);
 
-        // tslint:disable-next-line: strict-type-predicates
-        if (zoom !== null) {
-            this.storage.set_int("zoom", zoom);
-        }
+        return {center, zoom, map_type, hillshading, markers, lines};
+    }
 
-        // tslint:disable-next-line: strict-type-predicates
-        if (map_type !== null) {
-            this.storage.set("map_type", map_type);
-        }
-        this.storage.set_bool("hillshading", hillshading);
+    public apply_url_state(url_state: MapStateFromUrl): void {
+        this.markers = [];
+        this.markers_hash.clear();
+        Marker.reset_ids();
 
-        const marker_ids = markers.map((_m: IMarkerDict, i: number): number => i);
-        this.storage.set("markers", marker_ids.join(";"));
-        markers.forEach((obj: IMarkerDict, i: number): void => {
-            this.storage.set(`marker[${i}].name`, obj.name);
-            this.storage.set_coordinates(`marker[${i}].coordinates`, obj.coordinates);
-            this.storage.set_float(`marker[${i}].radius`, obj.radius);
-            this.storage.set_color(`marker[${i}].color`, obj.color);
+        url_state.markers.forEach((data: IMarkerUrlData): void => {
+            const marker = new Marker(data.coordinates);
+            marker.name = data.name;
+            marker.color = data.color;
+            marker.radius = data.radius;
+            this.markers.push(marker);
+            this.markers_hash.set(marker.get_id(), marker);
         });
+        Marker.reset_ids(this.markers.length);
 
-        const line_ids = lines.map((_l: ILineDict, i: number): number => i);
-        this.storage.set("lines", line_ids.join(";"));
-        lines.forEach((obj: ILineDict, i: number): void => {
-            this.storage.set_int(`line[${i}].marker1`, obj.from);
-            this.storage.set_int(`line[${i}].marker2`, obj.to);
-            this.storage.set_color(`line[${i}].color`, obj.color);
+        this.lines = [];
+        this.lines_hash.clear();
+        Line.reset_ids();
+        url_state.lines.forEach((data: ILineUrlData): void => {
+            const marker1 =
+                data.from >= 0 && data.from < this.markers.length
+                    ? this.markers[data.from].get_id()
+                    : -1;
+            const marker2 =
+                data.to >= 0 && data.to < this.markers.length ? this.markers[data.to].get_id() : -1;
+            const line = new Line(marker1, marker2);
+            line.color = data.color;
+            this.lines.push(line);
+            this.lines_hash.set(line.get_id(), line);
         });
+        Line.reset_ids(this.lines.length);
+
+        this.center = url_state.center;
+        if (url_state.zoom !== null) {
+            this.zoom = url_state.zoom;
+        }
+        if (url_state.map_type !== null) {
+            this.map_type = url_state.map_type;
+        }
+        this.hillshading = url_state.hillshading;
+
+        this.clear_storage();
+        this.store();
+        this.update_observers(MapStateChange.EVERYTHING);
+    }
+
+    public restore_from_url(): void {
+        const url_state = this.parse_url_state();
+        if (url_state !== null) {
+            this.apply_url_state(url_state);
+        }
     }
 
     public encode_coordinates(coordinates: Coordinates): string {

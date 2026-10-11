@@ -4,12 +4,13 @@ import {Language} from "./language";
 import {LeafletWrapper} from "./leaflet_wrapper";
 import {LinkDialog} from "./link_dialog";
 import {MapMenu} from "./map_menu";
-import {MapState, MapStateChange} from "./map_state";
+import {MapState, MapStateChange, MapStateFromUrl} from "./map_state";
 import {MapType} from "./map_type";
 import {Marker} from "./marker";
 import {MultiMarkersDialog} from "./multi_markers_dialog";
 import {NewsDialog} from "./news_dialog";
 import {Notifications} from "./notifications";
+import {OverwriteProtectionDialog} from "./overwrite_protection_dialog";
 import {ProjectionDialog} from "./projection_dialog";
 import {Sidebar} from "./sidebar";
 import {VersionCheck} from "./version_check";
@@ -36,7 +37,7 @@ export class App {
 
         this._lang = new Language(this);
 
-        this.map_state.restore_from_url();
+        const url_state: MapStateFromUrl | null = this.map_state.parse_url_state();
         this.map_state.restore();
         this.map_state.clear_storage();
 
@@ -54,7 +55,26 @@ export class App {
 
         this.sidebar = new Sidebar(this);
 
-        this.news_dialog.maybeShow();
+        if (url_state !== null && this.map_state.has_markers_or_lines()) {
+            const overwrite_dialog = new OverwriteProtectionDialog(this);
+            overwrite_dialog.show(
+                this.map_state.markers.length,
+                this.map_state.lines.length,
+                url_state.markers.length,
+                url_state.lines.length,
+                (overwrite: boolean): void => {
+                    if (overwrite) {
+                        this.map_state.apply_url_state(url_state);
+                    }
+                    this.news_dialog.maybeShow();
+                },
+            );
+        } else {
+            if (url_state !== null) {
+                this.map_state.apply_url_state(url_state);
+            }
+            this.news_dialog.maybeShow();
+        }
     }
 
     public message(text: string): void {
