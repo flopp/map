@@ -102,6 +102,7 @@
         "messages": {
             "geolocation_error": "Geolocation error: {1}",
             "geolocation_not_available": "Geolocation services are not available.",
+            "german_npa_load_error": "German nature protection areas could not be loaded from the BfN map service.",
             "line_created": "A new line has been created.",
             "marker_created": "A new marker has been created."
         },

@@ -102,6 +102,7 @@
         "messages": {
             "geolocation_error": "Geolocation-Fehler: {1}",
             "geolocation_not_available": "Geolocation ist nicht verf\u00fcgbar.",
+            "german_npa_load_error": "Naturschutzgebiete konnten nicht vom Kartendienst des BfN geladen werden.",
             "line_created": "Eine neue Linie wurde hinzugef\u00fcgt.",
             "marker_created": "Ein neuer Marker wurde hinzugef\u00fcgt."
         },

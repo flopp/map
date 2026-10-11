@@ -37,6 +37,7 @@ export class LeafletWrapper extends MapStateObserver {
     private readonly div: HTMLElement;
     private automatic_event: boolean = false;
     private german_npa_enabled: boolean = false;
+    private german_npa_error_reported: boolean = false;
     private german_npa_layer: L.TileLayer | null = null;
     private osm_overlay_enabled: boolean = false;
     private osm_overlay_layer: L.TileLayer | null = null;
@@ -178,6 +179,7 @@ export class LeafletWrapper extends MapStateObserver {
         }
 
         this.german_npa_enabled = enabled;
+        this.german_npa_error_reported = false;
         if (enabled) {
             if (this.german_npa_layer === null) {
                 this.german_npa_layer = L.tileLayer.wms(
@@ -190,6 +192,14 @@ export class LeafletWrapper extends MapStateObserver {
                         attribution: "Bundesamt für Naturschutz (BfN)",
                     },
                 );
+                this.german_npa_layer.on("tileerror", (): void => {
+                    if (this.german_npa_enabled && !this.german_npa_error_reported) {
+                        this.german_npa_error_reported = true;
+                        this.app.message_error(
+                            this.app.translate("messages.german_npa_load_error"),
+                        );
+                    }
+                });
             }
             this.map.addLayer(this.german_npa_layer);
         } else if (this.german_npa_layer !== null) {
