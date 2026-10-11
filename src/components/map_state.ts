@@ -19,6 +19,7 @@ export enum MapStateChange {
     MARKERS = 16,
     LINES = 32,
     LANGUAGE = 64,
+    HILLSHADING = 128,
     EVERYTHING = 255,
 }
 
@@ -42,6 +43,7 @@ export class MapState {
     public zoom: number | null = null;
     public center: Coordinates | null = null;
     public german_npa: boolean = false;
+    public hillshading: boolean = false;
     public markers: Marker[] = [];
     public markers_hash: Map<number, Marker>;
     public lines: Line[] = [];
@@ -74,6 +76,7 @@ export class MapState {
         this.storage.set_int("zoom", this.zoom);
         this.storage.set("map_type", maptype2string(this.map_type));
         this.storage.set_bool("german_npa", this.german_npa);
+        this.storage.set_bool("hillshading", this.hillshading);
         this.storage.set("markers", this.get_marker_ids_string());
         this.markers.forEach((marker: Marker): void => {
             this.update_marker_storage(marker);
@@ -115,6 +118,7 @@ export class MapState {
             string2maptype(this.storage.get("map_type", maptype2string(MapType.OPENSTREETMAP))!)!,
         );
         this.set_german_npa(this.storage.get_bool("german_npa", false));
+        this.set_hillshading(this.storage.get_bool("hillshading", false));
 
         // Markers
         const marker_ids: Map<number, number> = new Map();
@@ -209,6 +213,7 @@ export class MapState {
         ok_keys.add("zoom");
         ok_keys.add("map_type");
         ok_keys.add("german_npa");
+        ok_keys.add("hillshading");
         ok_keys.add("sidebar_open");
         ok_keys.add("markers");
         this.markers.forEach((obj: Marker): void => {
@@ -267,6 +272,7 @@ export class MapState {
         let center: Coordinates | null = null;
         let zoom: number | null = null;
         let map_type: MapType | null = null;
+        let hillshading = false;
         interface IMarkerDict {
             name: string;
             coordinates: Coordinates;
@@ -305,6 +311,9 @@ export class MapState {
                                 map_type = null;
                         }
                     }
+                    break;
+                case "h":
+                    hillshading = value === "1";
                     break;
                 case "m":
                     value.split("*").forEach((token: string): void => {
@@ -411,6 +420,7 @@ export class MapState {
         if (map_type !== null) {
             this.storage.set("map_type", map_type);
         }
+        this.storage.set_bool("hillshading", hillshading);
 
         const marker_ids = markers.map((_m: IMarkerDict, i: number): number => i);
         this.storage.set("markers", marker_ids.join(";"));
@@ -463,7 +473,9 @@ export class MapState {
             .map((obj: Line): string => `${obj.marker1}:${obj.marker2}:${obj.color.to_string()}`)
             .join("*");
 
-        return `${base}?c=${this.encode_coordinates(this.center!)}&z=${this.zoom}&t=${this.map_type}&m=${markers}&d=${lines}`;
+        const hillshading = this.hillshading ? "&h=1" : "";
+
+        return `${base}?c=${this.encode_coordinates(this.center!)}&z=${this.zoom}&t=${this.map_type}&m=${markers}&d=${lines}${hillshading}`;
     }
 
     public decode(s: string): string {
@@ -570,6 +582,12 @@ export class MapState {
         this.german_npa = enabled;
         this.storage.set_bool("german_npa", this.german_npa);
         this.update_observers(MapStateChange.MAPTYPE);
+    }
+
+    public set_hillshading(enabled: boolean): void {
+        this.hillshading = enabled;
+        this.storage.set_bool("hillshading", this.hillshading);
+        this.update_observers(MapStateChange.HILLSHADING);
     }
 
     public set_view(center: Coordinates, zoom: number): void {
@@ -1115,6 +1133,7 @@ export class MapState {
             center: this.center!.to_string_D(),
             zoom: this.zoom,
             german_npa: this.german_npa,
+            hillshading: this.hillshading,
             settings: {
                 markers: {
                     coordinates_format: this.settings_marker_coordinates_format,
@@ -1165,6 +1184,9 @@ export class MapState {
 
         if ("german_npa" in data) {
             this.german_npa = data.german_npa;
+        }
+        if ("hillshading" in data) {
+            this.hillshading = data.hillshading;
         }
 
         if ("settings" in data) {

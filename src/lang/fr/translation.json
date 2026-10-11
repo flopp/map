@@ -127,6 +127,8 @@
                 "german_npa": "R\u00e9serves naturelles (Allemagne)",
                 "german_npa-help": "Affiche les r\u00e9serves naturelles allemandes sous forme de carte superpos\u00e9e (fl\u00e8ches rouges). Les donn\u00e9es sont mises \u00e0 disposition par l'Office f\u00e9d\u00e9ral allemand de la protection de la nature (Bundesamt f\u00fcr Naturschutz).",
                 "german_npa_button": "Carte officielle de la r\u00e9serve naturelle",
+                "hillshading": "Ombrage du relief (Mapterhorn)",
+                "hillshading-help": "Superpose un relief ombrag\u00e9 calcul\u00e9 \u00e0 partir des donn\u00e9es de terrain de Mapterhorn.",
                 "title": "Niveaux"
             },
             "lines": {
