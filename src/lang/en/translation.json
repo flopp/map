@@ -57,6 +57,16 @@
                 "older": "Older",
                 "title": "News"
             },
+            "overwrite-protection": {
+                "current-map": "Current map",
+                "keep": "Keep current map",
+                "lines": "lines",
+                "linked-map": "Map from link",
+                "markers": "markers",
+                "message": "A map from this link is ready. Replacing the current map will overwrite its view, layers, markers, and lines.",
+                "overwrite": "Overwrite map",
+                "title": "Overwrite the current map?"
+            },
             "projection": {
                 "bad_bearing_message": "Bad bearing value.",
                 "bad_distance_message": "Bad distance value.",

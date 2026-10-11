@@ -57,6 +57,16 @@
                 "older": "Plus anciens",
                 "title": "Nouvelles"
             },
+            "overwrite-protection": {
+                "current-map": "Carte actuelle",
+                "keep": "Conserver la carte actuelle",
+                "lines": "lignes",
+                "linked-map": "Carte du lien",
+                "markers": "marqueurs",
+                "message": "Ce lien contient une carte. La remplacer écrasera la vue, les couches, les marqueurs et les lignes actuels.",
+                "overwrite": "Remplacer la carte",
+                "title": "Remplacer la carte actuelle ?"
+            },
             "projection": {
                 "bad_bearing_message": "Valeur directionnelle erron\u00e9e",
                 "bad_distance_message": "Valeur de distance erron\u00e9e",

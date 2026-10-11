@@ -272,8 +272,12 @@ const news_articles: NewsArticle[] = [
     ),
     new NewsArticle(
         "2026-10-11",
-        "Added optional Mapterhorn hillshading. Enable it in the Layers sidebar; your choice is saved and included in shareable links.",
-        "Optionale Mapterhorn-Schummerung hinzugefügt. Aktiviere sie in der Ebenen-Seitenleiste; die Auswahl wird gespeichert und in geteilte Links übernommen.",
+        `Added optional Mapterhorn hillshading. Enable it in the Layers sidebar; your choice is saved and included in shareable links.
+Shared map links now ask before replacing a map that already has markers or lines, and show counts for both maps.
+Links load directly when the current map has no markers or lines.`,
+        `Optionale Mapterhorn-Schummerung hinzugefügt. Aktiviere sie in der Ebenen-Seitenleiste; die Auswahl wird gespeichert und in geteilte Links übernommen.
+Beim Öffnen geteilter Kartenlinks wird vor dem Ersetzen einer Karte mit Markern oder Linien nachgefragt; die Anzahl beider Karten wird angezeigt.
+Links werden direkt geladen, wenn die aktuelle Karte keine Marker oder Linien enthält.`,
     ),
 ];
 
