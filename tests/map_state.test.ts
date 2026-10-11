@@ -1,6 +1,7 @@
 import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 
 import type {App} from "../src/components/app";
+import {Color} from "../src/components/color";
 import {Coordinates} from "../src/components/coordinates";
 import {MapState, MapStateChange} from "../src/components/map_state";
 import {MapStateObserver} from "../src/components/map_state_observer";
@@ -44,7 +45,9 @@ describe("MapState mutation side effects", () => {
     const create_app = (): App =>
         ({
             message: vi.fn(),
+            message_error: vi.fn(),
             translate: (key: string): string => key,
+            leaflet: {fit_objects: vi.fn()},
         }) as unknown as App;
 
     const observe = (
@@ -63,6 +66,8 @@ describe("MapState mutation side effects", () => {
         const second_marker = state.add_marker(new Coordinates(49, 9));
         const line = state.add_line();
 
+        expect(second_marker.get_id()).toBe(first_marker.get_id() + 1);
+        expect(line.get_id()).toBe(0);
         state.set_line_marker1(line.get_id(), first_marker.get_id());
         state.set_line_marker2(line.get_id(), second_marker.get_id());
 
@@ -88,20 +93,70 @@ describe("MapState mutation side effects", () => {
         expect(values.get("lines")).toBe("");
     });
 
+    test("adds multiple markers as one state change and returns a detached collection", () => {
+        const app = create_app();
+        const state = new MapState(app);
+        const update_state = observe(state);
+        const added = state.add_markers([
+            {
+                coordinates: new Coordinates(48, 8),
+                attributes: {name: "Start", color: new Color("ff0000")},
+            },
+            {coordinates: new Coordinates(49, 9), attributes: {name: "Finish", radius: 20}},
+        ]);
+
+        expect(added.map((marker) => marker.name)).toEqual(["Start", "Finish"]);
+        expect(added[1].radius).toBe(20);
+        expect(state.markers).toHaveLength(2);
+        expect(update_state).toHaveBeenCalledTimes(1);
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, -1);
+        expect(app.message).toHaveBeenCalledTimes(2);
+
+        const detached_collection = state.markers as Marker[];
+        detached_collection.pop();
+        expect(state.markers).toHaveLength(2);
+    });
+
     test("persists marker edits and notifies observers with the changed marker ID", () => {
         const state = new MapState(create_app());
         const update_state = observe(state);
         const marker = state.add_marker(new Coordinates(48, 8));
         update_state.mockClear();
 
-        state.set_marker_name(marker.get_id(), "Changed name");
-        state.set_marker_coordinates(marker.get_id(), new Coordinates(48.5, 8.5));
+        state.update_marker(marker.get_id(), {
+            name: "Changed name",
+            coordinates: new Coordinates(48.5, 8.5),
+        });
 
         expect(marker.name).toBe("Changed name");
         expect(values.get(`marker[${marker.get_id()}].name`)).toBe("Changed name");
         expect(values.get(`marker[${marker.get_id()}].coordinates`)).toBe("48.5;8.5");
-        expect(update_state).toHaveBeenNthCalledWith(1, MapStateChange.MARKERS, marker.get_id());
-        expect(update_state).toHaveBeenNthCalledWith(2, MapStateChange.MARKERS, marker.get_id());
+        expect(update_state).toHaveBeenCalledTimes(1);
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, marker.get_id());
+    });
+
+    test("updates related line properties as one persisted notification", () => {
+        const state = new MapState(create_app());
+        const update_state = observe(state);
+        const marker1 = state.add_marker(new Coordinates(48, 8));
+        const marker2 = state.add_marker(new Coordinates(49, 9));
+        const line = state.add_line();
+        update_state.mockClear();
+
+        state.update_line(line.get_id(), {
+            marker1: marker1.get_id(),
+            marker2: marker2.get_id(),
+            color: new Color("ff0000"),
+        });
+
+        expect(line.marker1).toBe(marker1.get_id());
+        expect(line.marker2).toBe(marker2.get_id());
+        expect(line.color.to_string()).toBe("ff0000");
+        expect(values.get(`line[${line.get_id()}].marker1`)).toBe(String(marker1.get_id()));
+        expect(values.get(`line[${line.get_id()}].marker2`)).toBe(String(marker2.get_id()));
+        expect(values.get(`line[${line.get_id()}].color`)).toBe("ff0000");
+        expect(update_state).toHaveBeenCalledTimes(1);
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.LINES, -1);
     });
 
     test("recomputes line distance and bearing when a marker moves", () => {
@@ -226,5 +281,69 @@ describe("MapState mutation side effects", () => {
                 ],
             }),
         ).toBeNull();
+    });
+
+    test("replaces markers and lines from GPX using consistent generated IDs", () => {
+        const state = new MapState(create_app());
+        state.add_marker(new Coordinates(40, 5));
+
+        const create_element = (
+            tag: string,
+            textContent: string,
+            attributes: Record<string, string> = {},
+        ): Element =>
+            ({
+                textContent,
+                getAttribute: (name: string): string | null => attributes[name] ?? null,
+                getElementsByTagName: (name: string): Element[] =>
+                    name === tag ? ([{textContent}] as Element[]) : [],
+            }) as unknown as Element;
+        class TestDOMParser {
+            public parseFromString(): Document {
+                const waypoints = [
+                    create_element("wpt", "", {
+                        lat: "48",
+                        lon: "8",
+                    }),
+                    create_element("wpt", "", {
+                        lat: "49",
+                        lon: "9",
+                    }),
+                ];
+                const tracks = [create_element("trk", "")];
+                tracks[0].getElementsByTagName = (tag: string): HTMLCollectionOf<Element> =>
+                    (tag === "name"
+                        ? [create_element("name", "LINE:0:1:00ff00")]
+                        : []) as unknown as HTMLCollectionOf<Element>;
+                waypoints[0].getElementsByTagName = (tag: string): HTMLCollectionOf<Element> =>
+                    (tag === "name"
+                        ? [create_element("name", "Start")]
+                        : []) as unknown as HTMLCollectionOf<Element>;
+                waypoints[1].getElementsByTagName = (tag: string): HTMLCollectionOf<Element> =>
+                    (tag === "name"
+                        ? [create_element("name", "Finish")]
+                        : []) as unknown as HTMLCollectionOf<Element>;
+
+                return {
+                    getElementsByTagName: (tag: string): HTMLCollectionOf<Element> =>
+                        (tag === "wpt"
+                            ? waypoints
+                            : tag === "trk"
+                              ? tracks
+                              : []) as unknown as HTMLCollectionOf<Element>,
+                } as unknown as Document;
+            }
+        }
+        vi.stubGlobal("DOMParser", TestDOMParser);
+        state.from_gpx("<gpx></gpx>", true);
+
+        expect(state.markers.map((marker) => marker.name)).toEqual(["Start", "Finish"]);
+        expect(state.markers.map((marker) => marker.get_id())).toEqual([0, 1]);
+        expect(state.get_marker(0)).toBe(state.markers[0]);
+        expect(state.lines).toHaveLength(1);
+        expect(state.lines[0].get_id()).toBe(0);
+        expect(state.lines[0].marker1).toBe(0);
+        expect(state.lines[0].marker2).toBe(1);
+        expect(state.get_line(0)).toBe(state.lines[0]);
     });
 });

@@ -6,12 +6,12 @@ import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {Distance, DistanceFormat} from "./distance";
-import {Line} from "./line";
+import {LineView} from "./line";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {MapType} from "./map_type";
 import {mapterhorn_elevation_url} from "./mapterhorn_tiles";
-import {Marker} from "./marker";
+import {MarkerView} from "./marker";
 
 const from_coordinates = (c: Coordinates): L.LatLng => L.latLng(c.raw_lat(), c.raw_lng());
 
@@ -250,7 +250,7 @@ export class LeafletWrapper extends MapStateObserver {
 
     public fit_objects(): void {
         let bounds: any | L.LatLngBounds = null;
-        this.app.map_state.markers.forEach((marker: Marker): void => {
+        this.app.map_state.markers.forEach((marker: MarkerView): void => {
             const c = from_coordinates(marker.coordinates);
             if (bounds === null) {
                 bounds = new L.LatLngBounds(c, c);
@@ -310,7 +310,7 @@ export class LeafletWrapper extends MapStateObserver {
                 }
             } else {
                 // Update and add markers
-                this.app.map_state.markers.forEach((marker: Marker): void => {
+                this.app.map_state.markers.forEach((marker: MarkerView): void => {
                     const marker_obj = this.markers.get(marker.get_id());
                     if (marker_obj !== undefined) {
                         this.update_marker_object(marker_obj, marker);
@@ -322,7 +322,7 @@ export class LeafletWrapper extends MapStateObserver {
                 /* remove spurious markers */
                 if (this.markers.size > this.app.map_state.markers.length) {
                     const ids = new Set();
-                    this.app.map_state.markers.forEach((marker: Marker): void => {
+                    this.app.map_state.markers.forEach((marker: MarkerView): void => {
                         ids.add(marker.get_id());
                     });
 
@@ -346,7 +346,7 @@ export class LeafletWrapper extends MapStateObserver {
 
         if ((changes & (MapStateChange.LINES | MapStateChange.ZOOM)) !== 0) {
             // Update and add lines; also update lines on zoom to redraw arrow heads!
-            this.app.map_state.lines.forEach((line: Line): void => {
+            this.app.map_state.lines.forEach((line: LineView): void => {
                 if (this.lines.has(line.get_id())) {
                     this.update_line_object(this.lines.get(line.get_id())!, line);
                 } else {
@@ -357,7 +357,7 @@ export class LeafletWrapper extends MapStateObserver {
             /* remove spurious lines */
             if (this.lines.size > this.app.map_state.lines.length) {
                 const ids = new Set();
-                this.app.map_state.lines.forEach((line: Line): void => {
+                this.app.map_state.lines.forEach((line: LineView): void => {
                     ids.add(line.get_id());
                 });
 
@@ -387,7 +387,7 @@ export class LeafletWrapper extends MapStateObserver {
         return this.markers.get(id);
     }
 
-    protected create_marker_object(marker: Marker): void {
+    protected create_marker_object(marker: MarkerView): void {
         const obj: IMarkerObjDict = {
             marker_obj: L.marker(from_coordinates(marker.coordinates), {
                 draggable: true,
@@ -429,7 +429,7 @@ export class LeafletWrapper extends MapStateObserver {
         this.update_marker_object(obj, marker);
     }
 
-    protected update_marker_object(obj: IMarkerObjDict, marker: Marker): void {
+    protected update_marker_object(obj: IMarkerObjDict, marker: MarkerView): void {
         const draggable = this.app.map_state.draggable_markers();
         if (obj.marker_obj.dragging!.enabled() !== draggable) {
             if (draggable) {
@@ -479,7 +479,7 @@ export class LeafletWrapper extends MapStateObserver {
         this.map.removeLayer(obj.marker_obj);
     }
 
-    public create_line_object(line: Line): void {
+    public create_line_object(line: LineView): void {
         if (!this.has_marker_object(line.marker1) || !this.has_marker_object(line.marker2)) {
             return;
         }
@@ -543,7 +543,7 @@ export class LeafletWrapper extends MapStateObserver {
         return [this.map.unproject(arrowHead1, zoom), p2, this.map.unproject(arrowHead2, zoom)];
     }
 
-    public update_line_object(obj: ILineObjDict, line: Line): void {
+    public update_line_object(obj: ILineObjDict, line: LineView): void {
         if (!this.has_marker_object(line.marker1) || !this.has_marker_object(line.marker2)) {
             this.delete_line_object(obj);
             this.lines.delete(line.get_id());
@@ -620,7 +620,7 @@ export class LeafletWrapper extends MapStateObserver {
         }
     }
 
-    public create_icon(marker: Marker): L.Icon {
+    public create_icon(marker: MarkerView): L.Icon {
         const icon = this.app.icon_factory.create_map_icon(marker.name, marker.color);
 
         return L.icon({

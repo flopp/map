@@ -6,7 +6,7 @@ import {LinkDialog} from "./link_dialog";
 import {MapMenu} from "./map_menu";
 import {MapState, MapStateChange, MapStateFromUrl} from "./map_state";
 import {MapType} from "./map_type";
-import {Marker} from "./marker";
+import {MarkerView} from "./marker";
 import {MultiMarkersDialog} from "./multi_markers_dialog";
 import {NewsDialog} from "./news_dialog";
 import {Notifications} from "./notifications";
@@ -111,7 +111,7 @@ export class App {
         }
     }
 
-    public show_projection_dialog(marker: Marker): void {
+    public show_projection_dialog(marker: MarkerView): void {
         this.projection_dialog.showMarker(marker);
     }
 

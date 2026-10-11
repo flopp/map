@@ -17,12 +17,16 @@ mutation API. It is created by [`App`](../src/components/app.ts) and holds:
 - A `Storage` instance and a list of observers.
 
 [`Marker`](../src/components/marker.ts) and [`Line`](../src/components/line.ts)
-are mutable model objects. Their IDs are allocated by module-level counters.
-Lines refer to marker IDs and hold derived distance and bearing values, which
-`MapState.recompute_lines()` updates when marker or line state changes.
+are model objects with read-only data properties and controlled update methods.
+Their IDs are allocated by module-level counters. Lines refer to marker IDs and
+hold derived distance and bearing values, which `MapState.recompute_lines()`
+updates when marker or line state changes.
 
-State, collections, models, observer lists, and storage are currently public.
-This means callers can mutate state without using a `MapState` operation.
+Marker and line collections are private to `MapState`; their public accessors
+return read-only snapshots that do not alias the stored arrays. The snapshot
+model types omit mutation methods. The ID indexes are also private. Callers use
+state operations to add, update, delete, sort, and reorder models, so collection
+changes, indexes, persistence, and notifications remain coordinated.
 
 ## State lifecycle
 
@@ -90,22 +94,25 @@ design; they are not claims that all of them cause a user-visible defect.
 
 ### 1. Centralize mutations and protect invariants
 
-**Current situation:** `MapState` exposes mutable collections and model fields.
-Some callers use its setters, while others directly edit models or collections
-and then separately update storage and notify observers. For example,
-[`MultiMarkersDialog`](../src/components/multi_markers_dialog.ts) and
-[`ProjectionDialog`](../src/components/projection_dialog.ts) assemble marker
-and line additions using multiple state operations.
+**Current situation:** Collections and model fields are now encapsulated.
+[`MultiMarkersDialog`](../src/components/multi_markers_dialog.ts) adds markers
+through one bulk state operation; [`ProjectionDialog`](../src/components/projection_dialog.ts)
+passes new marker and line attributes into state operations. Marker and line
+editors also use cohesive state updates instead of editing model fields and
+then separately writing storage and notifying observers.
 
-**Risk:** A caller can update the model without updating its indexes, persisted
-representation, derived line values, or observers. Requiring several
-follow-up calls makes this easy to get wrong.
+**Remaining risk:** The internal model classes have update methods, but
+`MapState` returns view types that omit those methods. Keep returning these view
+types rather than exposing mutable model references to application components.
+Array accessors return snapshots to prevent callers from mutating the store's
+collections.
 
-**Improvement:** Gradually make collections and model mutation details private
-or read-only to consumers. Add cohesive operations for multi-item changes that
-update indexes, persistence, derived values, and notifications together.
-Migrate call sites in small batches rather than rewriting the whole state
-layer.
+**Implementation:** Collection storage and ID indexes are private.
+`markers`/`lines` expose read-only snapshots; model data uses read-only
+properties. `add_markers()`, `update_marker()`, and `update_line()` coordinate
+model changes with persistence and a single observer notification. Add and
+update operations accept attributes, so callers do not need to mutate returned
+objects. Keep direct model updates inside `MapState`.
 
 ### 2. Make persistence and notification behavior consistent
 
@@ -180,9 +187,7 @@ framework is not required to address these issues.
    updates, and ordering.
 2. Extend typed parse/validate/apply boundaries to URL and GPX imports where
    useful.
-3. Encapsulate direct model and collection mutations behind cohesive state
-   operations.
-4. Revisit observer subscription lifecycle and nullable-state types as
+3. Revisit observer subscription lifecycle and nullable-state types as
    call-sites are migrated.
 
 Keep URL, JSON, GPX, and persisted-state compatibility in mind throughout the

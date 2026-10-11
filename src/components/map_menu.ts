@@ -1,7 +1,7 @@
 import {App} from "./app.js";
 import {Coordinates} from "./coordinates.js";
 import {LeafletWrapper} from "./leaflet_wrapper.js";
-import {Marker} from "./marker";
+import {MarkerView} from "./marker";
 import {create_element} from "./utilities";
 
 export class MapMenu {
@@ -10,7 +10,7 @@ export class MapMenu {
     public addMarker: HTMLElement;
     public deleteMarker: HTMLElement;
     public projection: HTMLElement;
-    public marker: Marker | null = null;
+    public marker: MarkerView | null = null;
     public coordinates: Coordinates | null = null;
 
     public constructor(app: App) {
@@ -96,7 +96,7 @@ export class MapMenu {
         this.show(wrapper, x, y);
     }
 
-    public showMarker(wrapper: LeafletWrapper, x: number, y: number, marker: Marker): void {
+    public showMarker(wrapper: LeafletWrapper, x: number, y: number, marker: MarkerView): void {
         this.addMarker.style.display = "none";
         this.deleteMarker.style.display = "block";
         this.projection.style.display = "block";
