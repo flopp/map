@@ -209,6 +209,7 @@
                 "import-gpx": "Importiere GPX",
                 "import-gpx-keep": "Importiere GPX; behalte Zustand",
                 "import-gpx-bad-file": "Fehlerhafte GPX-Datei",
+                "import-json-bad-file": "Ungültige JSON-Datei für den Kartenzustand",
                 "import-gpx-markers": "{1} Marker gefunden, {2} Linien gefunden ({3} ignorierte Waypoints, {4} ignorierte Tracks)",
                 "import-gpx-no-markers": "Keine Marker und Linien gefunden ({1} ignorierte Waypoints, {2} ignorierte Tracks)",
                 "import-json": "Importiere Karten-Zustand",

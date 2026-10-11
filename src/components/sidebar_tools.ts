@@ -155,8 +155,25 @@ export class SidebarTools extends SidebarItem {
     public import_json(file: File): void {
         const reader = new FileReader();
         reader.onloadend = (): void => {
-            const data = JSON.parse(reader.result as string);
-            this.app.map_state.from_json(data);
+            if (reader.error !== null || typeof reader.result !== "string") {
+                this.app.message_error(this.app.translate("sidebar.tools.import-json-bad-file"));
+
+                return;
+            }
+
+            let data: unknown;
+            try {
+                data = JSON.parse(reader.result);
+            } catch (_error) {
+                this.app.message_error(this.app.translate("sidebar.tools.import-json-bad-file"));
+
+                return;
+            }
+            if (!this.app.map_state.from_json(data)) {
+                this.app.message_error(this.app.translate("sidebar.tools.import-json-bad-file"));
+
+                return;
+            }
             this.app.switch_map(this.app.map_state.map_type);
         };
         reader.readAsText(file);

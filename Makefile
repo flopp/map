@@ -11,24 +11,28 @@ spell:
 		--config .cspell.json \
 		src/**/*.html \
 		src/**/*.ts \
-		src/**/*.scss
+		src/**/*.scss \
+		tests/*.ts
 
 .PHONY: lint
 lint:
 	./node_modules/.bin/eslint \
 		src/*.ts \
-		src/**/*.ts
+		src/**/*.ts \
+		tests/*.ts
 	./node_modules/.bin/prettier  \
 		--check \
 		src/*.ts \
-		src/**/*.ts
+		src/**/*.ts \
+		tests/*.ts
 
 .PHONY: format
 format:
 	./node_modules/.bin/prettier  \
 		--write \
 		src/*.ts \
-		src/**/*.ts
+		src/**/*.ts \
+		tests/*.ts
 
 .PHONY: test
 test:

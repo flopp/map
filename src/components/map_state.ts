@@ -58,6 +58,81 @@ export interface MapStateFromUrl {
     lines: ILineUrlData[];
 }
 
+export interface MapStateJsonMarker {
+    id?: number;
+    coordinates: Coordinates;
+    name?: string;
+    color?: Color;
+    radius?: number;
+}
+
+export interface MapStateJsonLine {
+    marker1?: number;
+    marker2?: number;
+    color?: Color;
+}
+
+export interface MapStateJsonImport {
+    map_type?: MapType;
+    center?: Coordinates;
+    zoom?: number;
+    german_npa?: boolean;
+    hillshading?: boolean;
+    settings?: {
+        markers?: {
+            coordinates_format?: CoordinatesFormat;
+            random_color?: boolean;
+            color?: Color;
+            radius?: number;
+            draggable?: boolean;
+            filled?: boolean;
+        };
+        lines?: {
+            distance_format?: DistanceFormat;
+            random_color?: boolean;
+            color?: Color;
+            display_distance?: boolean;
+        };
+    };
+    markers?: MapStateJsonMarker[];
+    lines?: MapStateJsonLine[];
+}
+
+const is_record = (value: unknown): value is Record<string, unknown> =>
+    typeof value === "object" && value !== null && !Array.isArray(value);
+
+const has_property = (value: Record<string, unknown>, key: string): boolean =>
+    Object.prototype.hasOwnProperty.call(value, key);
+
+const parse_json_integer = (value: unknown): number | null => {
+    if (typeof value === "number" && Number.isSafeInteger(value)) {
+        return value;
+    }
+    if (typeof value === "string" && /^[+-]?\d+$/.test(value)) {
+        const parsed = Number(value);
+        return Number.isSafeInteger(parsed) ? parsed : null;
+    }
+
+    return null;
+};
+
+const parse_json_nonnegative_number = (value: unknown): number | null => {
+    const parsed =
+        typeof value === "number"
+            ? value
+            : typeof value === "string" && value.trim() !== ""
+              ? Number(value)
+              : Number.NaN;
+
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+};
+
+const parse_json_boolean = (value: unknown): boolean | null =>
+    typeof value === "boolean" ? value : null;
+
+const parse_json_color = (value: unknown): Color | null =>
+    typeof value === "string" ? Color.from_string(value) : null;
+
 export class MapState {
     public app: App;
     public language: string = "";
@@ -794,6 +869,7 @@ export class MapState {
 
         this.markers.splice(new_index, 0, this.markers.splice(old_index, 1)[0]);
         this.storage.set("markers", this.get_marker_ids_string());
+        this.update_observers(MapStateChange.MARKERS);
     }
 
     public add_line(): Line {
@@ -890,6 +966,7 @@ export class MapState {
 
         this.lines.splice(new_index, 0, this.lines.splice(old_index, 1)[0]);
         this.storage.set("lines", this.get_line_ids_string());
+        this.update_observers(MapStateChange.LINES);
     }
 
     public show_line(line: Line): void {
@@ -1202,170 +1279,357 @@ export class MapState {
         return data;
     }
 
-    public from_json(data: any): void {
-        if ("maptype" in data) {
-            const map_type = string2maptype(data.maptype);
-            if (map_type !== null) {
-                this.map_type = map_type;
-            }
-        }
-        if ("zoom" in data) {
-            const zoom = parseInt(data.zoom, 10);
-            this.zoom = zoom;
-        }
-        if ("center" in data) {
-            const center = Coordinates.from_string(data.center);
-            if (center !== null) {
-                this.center = center;
-            }
+    public static parse_json(data: unknown): MapStateJsonImport | null {
+        if (!is_record(data)) {
+            return null;
         }
 
-        if ("german_npa" in data) {
+        const parsed: MapStateJsonImport = {};
+        if (has_property(data, "maptype")) {
+            if (typeof data.maptype !== "string") {
+                return null;
+            }
+            const map_type = string2maptype(data.maptype);
+            if (map_type === null) {
+                return null;
+            }
+            parsed.map_type = map_type;
+        }
+        if (has_property(data, "zoom")) {
+            const zoom = parse_json_integer(data.zoom);
+            if (zoom === null) {
+                return null;
+            }
+            parsed.zoom = zoom;
+        }
+        if (has_property(data, "center")) {
+            if (typeof data.center !== "string") {
+                return null;
+            }
+            const center = Coordinates.from_string(data.center);
+            if (center === null) {
+                return null;
+            }
+            parsed.center = center;
+        }
+        if (has_property(data, "german_npa")) {
+            const german_npa = parse_json_boolean(data.german_npa);
+            if (german_npa === null) {
+                return null;
+            }
+            parsed.german_npa = german_npa;
+        }
+        if (has_property(data, "hillshading")) {
+            const hillshading = parse_json_boolean(data.hillshading);
+            if (hillshading === null) {
+                return null;
+            }
+            parsed.hillshading = hillshading;
+        }
+
+        if (has_property(data, "settings")) {
+            if (!is_record(data.settings)) {
+                return null;
+            }
+            const settings: NonNullable<MapStateJsonImport["settings"]> = {};
+            if (has_property(data.settings, "markers")) {
+                if (!is_record(data.settings.markers)) {
+                    return null;
+                }
+                const marker_settings: NonNullable<typeof settings.markers> = {};
+                const raw = data.settings.markers;
+                if (has_property(raw, "coordinates_format")) {
+                    if (typeof raw.coordinates_format !== "string") {
+                        return null;
+                    }
+                    const value = raw.coordinates_format.toUpperCase();
+                    if (!Object.values(CoordinatesFormat).includes(value as CoordinatesFormat)) {
+                        return null;
+                    }
+                    marker_settings.coordinates_format = value as CoordinatesFormat;
+                }
+                if (has_property(raw, "random_color")) {
+                    const value = parse_json_boolean(raw.random_color);
+                    if (value === null) {
+                        return null;
+                    }
+                    marker_settings.random_color = value;
+                }
+                if (has_property(raw, "color")) {
+                    const value = parse_json_color(raw.color);
+                    if (value === null) {
+                        return null;
+                    }
+                    marker_settings.color = value;
+                }
+                if (has_property(raw, "radius")) {
+                    const value = parse_json_nonnegative_number(raw.radius);
+                    if (value === null) {
+                        return null;
+                    }
+                    marker_settings.radius = value;
+                }
+                if (has_property(raw, "draggable")) {
+                    const value = parse_json_boolean(raw.draggable);
+                    if (value === null) {
+                        return null;
+                    }
+                    marker_settings.draggable = value;
+                }
+                if (has_property(raw, "filled")) {
+                    const value = parse_json_boolean(raw.filled);
+                    if (value === null) {
+                        return null;
+                    }
+                    marker_settings.filled = value;
+                }
+                settings.markers = marker_settings;
+            }
+            if (has_property(data.settings, "lines")) {
+                if (!is_record(data.settings.lines)) {
+                    return null;
+                }
+                const line_settings: NonNullable<typeof settings.lines> = {};
+                const raw = data.settings.lines;
+                if (has_property(raw, "distance_format")) {
+                    if (typeof raw.distance_format !== "string") {
+                        return null;
+                    }
+                    const value = raw.distance_format.toLowerCase();
+                    if (!Object.values(DistanceFormat).includes(value as DistanceFormat)) {
+                        return null;
+                    }
+                    line_settings.distance_format = value as DistanceFormat;
+                }
+                if (has_property(raw, "random_color")) {
+                    const value = parse_json_boolean(raw.random_color);
+                    if (value === null) {
+                        return null;
+                    }
+                    line_settings.random_color = value;
+                }
+                if (has_property(raw, "color")) {
+                    const value = parse_json_color(raw.color);
+                    if (value === null) {
+                        return null;
+                    }
+                    line_settings.color = value;
+                }
+                if (has_property(raw, "display_distance")) {
+                    const value = parse_json_boolean(raw.display_distance);
+                    if (value === null) {
+                        return null;
+                    }
+                    line_settings.display_distance = value;
+                }
+                settings.lines = line_settings;
+            }
+            parsed.settings = settings;
+        }
+
+        if (has_property(data, "markers")) {
+            if (!Array.isArray(data.markers)) {
+                return null;
+            }
+            const markers: MapStateJsonMarker[] = [];
+            const imported_ids = new Set<number>();
+            for (const raw_marker of data.markers) {
+                if (!is_record(raw_marker) || !has_property(raw_marker, "coordinates")) {
+                    return null;
+                }
+                if (typeof raw_marker.coordinates !== "string") {
+                    return null;
+                }
+                const coordinates = Coordinates.from_string(raw_marker.coordinates);
+                if (coordinates === null) {
+                    return null;
+                }
+                const marker: MapStateJsonMarker = {coordinates};
+                if (has_property(raw_marker, "marker_id")) {
+                    const id = parse_json_integer(raw_marker.marker_id);
+                    if (id === null || imported_ids.has(id)) {
+                        return null;
+                    }
+                    marker.id = id;
+                    imported_ids.add(id);
+                }
+                if (has_property(raw_marker, "name")) {
+                    if (typeof raw_marker.name !== "string") {
+                        return null;
+                    }
+                    marker.name = raw_marker.name;
+                }
+                if (has_property(raw_marker, "color")) {
+                    const color = parse_json_color(raw_marker.color);
+                    if (color === null) {
+                        return null;
+                    }
+                    marker.color = color;
+                }
+                if (has_property(raw_marker, "radius")) {
+                    const radius = parse_json_nonnegative_number(raw_marker.radius);
+                    if (radius === null) {
+                        return null;
+                    }
+                    marker.radius = radius;
+                }
+                markers.push(marker);
+            }
+            parsed.markers = markers;
+        }
+
+        if (has_property(data, "lines")) {
+            if (!Array.isArray(data.lines)) {
+                return null;
+            }
+            const lines: MapStateJsonLine[] = [];
+            for (const raw_line of data.lines) {
+                if (!is_record(raw_line)) {
+                    return null;
+                }
+                const line: MapStateJsonLine = {};
+                for (const endpoint of ["marker1", "marker2"] as const) {
+                    if (has_property(raw_line, endpoint)) {
+                        const id = parse_json_integer(raw_line[endpoint]);
+                        if (id === null || id < -1) {
+                            return null;
+                        }
+                        line[endpoint] = id;
+                    }
+                }
+                if (has_property(raw_line, "color")) {
+                    const color = parse_json_color(raw_line.color);
+                    if (color === null) {
+                        return null;
+                    }
+                    line.color = color;
+                }
+                lines.push(line);
+            }
+            parsed.lines = lines;
+        }
+
+        return parsed;
+    }
+
+    public apply_json(data: MapStateJsonImport): void {
+        if (data.map_type !== undefined) {
+            this.map_type = data.map_type;
+        }
+        if (data.zoom !== undefined) {
+            this.zoom = data.zoom;
+        }
+        if (data.center !== undefined) {
+            this.center = data.center;
+        }
+        if (data.german_npa !== undefined) {
             this.german_npa = data.german_npa;
         }
-        if ("hillshading" in data) {
+        if (data.hillshading !== undefined) {
             this.hillshading = data.hillshading;
         }
 
-        if ("settings" in data) {
-            if ("markers" in data.settings) {
-                if ("coordinates_format" in data.settings.markers) {
-                    this.settings_marker_coordinates_format = parseCoordinatesFormat(
-                        data.settings.markers.coordinates_format,
-                        this.settings_marker_coordinates_format,
-                    );
-                }
-                if ("random_color" in data.settings.markers) {
-                    this.settings_marker_random_color = data.settings.markers.random_color;
-                }
-                if ("color" in data.settings.markers) {
-                    const color = Color.from_string(data.settings.markers.color);
-                    if (color !== null) {
-                        this.settings_marker_color = color;
-                    }
-                }
-                if ("radius" in data.settings.markers) {
-                    const radius = parse_float(data.settings.markers.radius);
-                    if (radius !== null) {
-                        this.settings_marker_radius = radius;
-                    }
-                }
-                if ("draggable" in data.settings.markers) {
-                    this.settings_marker_draggable = data.settings.markers.draggable;
-                }
-                if ("filled" in data.settings.markers) {
-                    this.settings_marker_filled = data.settings.markers.filled;
-                }
+        if (data.settings?.markers !== undefined) {
+            const settings = data.settings.markers;
+            if (settings.coordinates_format !== undefined) {
+                this.settings_marker_coordinates_format = settings.coordinates_format;
             }
-            if ("lines" in data.settings) {
-                if ("distance_format" in data.settings.lines) {
-                    this.settings_line_distance_format = parseDistanceFormat(
-                        data.settings.lines.distance_format,
-                        this.settings_line_distance_format,
-                    );
-                }
-                if ("random_color" in data.settings.lines) {
-                    this.settings_line_random_color = data.settings.lines.random_color;
-                }
-                if ("color" in data.settings.lines) {
-                    const color = Color.from_string(data.settings.lines.color);
-                    if (color !== null) {
-                        this.settings_line_color = color;
-                    }
-                }
-                if ("display_distance" in data.settings.lines) {
-                    this.settings_line_display_distance = data.settings.lines.display_distance;
-                }
+            if (settings.random_color !== undefined) {
+                this.settings_marker_random_color = settings.random_color;
+            }
+            if (settings.color !== undefined) {
+                this.settings_marker_color = settings.color;
+            }
+            if (settings.radius !== undefined) {
+                this.settings_marker_radius = settings.radius;
+            }
+            if (settings.draggable !== undefined) {
+                this.settings_marker_draggable = settings.draggable;
+            }
+            if (settings.filled !== undefined) {
+                this.settings_marker_filled = settings.filled;
+            }
+        }
+        if (data.settings?.lines !== undefined) {
+            const settings = data.settings.lines;
+            if (settings.distance_format !== undefined) {
+                this.settings_line_distance_format = settings.distance_format;
+            }
+            if (settings.random_color !== undefined) {
+                this.settings_line_random_color = settings.random_color;
+            }
+            if (settings.color !== undefined) {
+                this.settings_line_color = settings.color;
+            }
+            if (settings.display_distance !== undefined) {
+                this.settings_line_display_distance = settings.display_distance;
             }
         }
 
-        const marker_ids: Map<number, number> = new Map();
-        if ("markers" in data && Array.isArray(data.markers)) {
-            this.markers = [];
-            this.markers_hash.clear();
+        const marker_ids = new Map<number, number>();
+        if (data.markers !== undefined) {
+            const markers: Marker[] = [];
             Marker.reset_ids();
-            data.markers.forEach((m: any): void => {
-                let id = null;
-                let coordinates = null;
-                let name = null;
-                let color = null;
-                let radius = null;
-                if ("marker_id" in m) {
-                    id = parseInt(m.marker_id, 10);
+            data.markers.forEach((entry: MapStateJsonMarker): void => {
+                const marker = new Marker(entry.coordinates);
+                if (entry.id !== undefined) {
+                    marker_ids.set(entry.id, marker.get_id());
                 }
-                if ("coordinates" in m) {
-                    coordinates = Coordinates.from_string(m.coordinates);
+                if (entry.name !== undefined) {
+                    marker.name = entry.name;
                 }
-                if ("name" in m) {
-                    name = String(m.name);
+                if (entry.color !== undefined) {
+                    marker.color = entry.color;
                 }
-                if ("color" in m) {
-                    color = Color.from_string(m.color);
+                if (entry.radius !== undefined) {
+                    marker.radius = entry.radius;
                 }
-                if ("radius" in m) {
-                    radius = parseFloat(m.radius);
-                }
-
-                if (coordinates !== null) {
-                    const marker = new Marker(coordinates);
-                    this.markers.push(marker);
-                    this.markers_hash.set(marker.get_id(), marker);
-                    if (id !== null) {
-                        marker_ids.set(id, marker.get_id());
-                    }
-
-                    if (name !== null) {
-                        marker.name = name;
-                    }
-                    if (color !== null) {
-                        marker.color = color;
-                    }
-                    if (radius !== null) {
-                        marker.radius = radius;
-                    }
-                }
+                markers.push(marker);
             });
+            Marker.reset_ids(markers.length);
+            this.markers = markers;
+            this.markers_hash = new Map(
+                markers.map((marker: Marker): [number, Marker] => [marker.get_id(), marker]),
+            );
         }
 
-        if ("lines" in data && Array.isArray(data.lines)) {
-            this.lines = [];
-            this.lines_hash.clear();
+        if (data.lines !== undefined) {
+            const lines: Line[] = [];
             Line.reset_ids();
-            data.lines.forEach((l: any): void => {
-                let old_marker1 = -1;
-                let old_marker2 = -1;
-                let color = null;
-                if ("marker1" in l) {
-                    old_marker1 = parseInt(l.marker1, 10);
-                }
-                if ("marker2" in l) {
-                    old_marker2 = parseInt(l.marker2, 10);
-                }
-                if ("color" in l) {
-                    color = Color.from_string(l.color);
-                }
-
-                let marker1 = -1;
-                if (marker_ids.has(old_marker1)) {
-                    marker1 = marker_ids.get(old_marker1)!;
-                }
-
-                let marker2 = -1;
-                if (marker_ids.has(old_marker2)) {
-                    marker2 = marker_ids.get(old_marker2)!;
-                }
-
+            data.lines.forEach((entry: MapStateJsonLine): void => {
+                const marker1 =
+                    entry.marker1 !== undefined && marker_ids.has(entry.marker1)
+                        ? marker_ids.get(entry.marker1)!
+                        : -1;
+                const marker2 =
+                    entry.marker2 !== undefined && marker_ids.has(entry.marker2)
+                        ? marker_ids.get(entry.marker2)!
+                        : -1;
                 const line = new Line(marker1, marker2);
-                if (color !== null) {
-                    line.color = color;
+                if (entry.color !== undefined) {
+                    line.color = entry.color;
                 }
-
-                this.lines.push(line);
-                this.lines_hash.set(line.get_id(), line);
+                lines.push(line);
             });
+            Line.reset_ids(lines.length);
+            this.lines = lines;
+            this.lines_hash = new Map(
+                lines.map((line: Line): [number, Line] => [line.get_id(), line]),
+            );
         }
 
+        this.recompute_lines();
         this.store();
         this.update_observers(MapStateChange.EVERYTHING);
+    }
+
+    public from_json(data: unknown): boolean {
+        const parsed = MapState.parse_json(data);
+        if (parsed === null) {
+            return false;
+        }
+        this.apply_json(parsed);
+
+        return true;
     }
 }

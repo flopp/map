@@ -125,17 +125,22 @@ consumers evolve.
 
 ### 3. Parse imports into validated typed data before applying them
 
-**Current situation:** `from_json()` accepts `any` and updates live state while
-parsing. URL and GPX import also have their own parsing and validation paths.
+**Current situation:** JSON import is parsed from `unknown` into a typed
+candidate state before `apply_json()` changes live state. The file-import
+handler reports malformed JSON and rejected state files through the existing
+user-facing notification path. URL and GPX import still have their own parsing
+and validation paths.
 
-**Risk:** Invalid or unexpected data can be accepted or cause state to be
-partially replaced before parsing finishes. Input validation and error handling
-are harder to test when coupled to the live state.
+**Remaining risk:** URL and GPX validation remain separate from JSON, and the
+JSON schema is validated in application code rather than against a versioned
+external schema.
 
-**Improvement:** Parse each format into a typed candidate state, validate
-required values and relationships, then apply it as one operation. Preserve
-the existing partial-import behavior where it is intentional, and report
-invalid input through the application's existing user-facing error path.
+**Implementation:** `MapState.parse_json()` validates into
+`MapStateJsonImport | null` without mutating live state. `apply_json()` accepts
+only this typed representation. The existing `from_json()` method remains as a
+parse-and-apply convenience wrapper. JSON imports remain partial: absent
+properties leave current values unchanged, while malformed supplied values
+reject the complete import before state is changed.
 
 ### 4. Clarify nullable state and model invariants
 
@@ -173,7 +178,8 @@ framework is not required to address these issues.
    [`tests/map_state.test.ts`](../tests/map_state.test.ts), covering
    collection/index consistency, storage writes, notifications, derived line
    updates, and ordering.
-2. Add typed parse/validate/apply boundaries for imports, starting with JSON.
+2. Extend typed parse/validate/apply boundaries to URL and GPX imports where
+   useful.
 3. Encapsulate direct model and collection mutations behind cohesive state
    operations.
 4. Revisit observer subscription lifecycle and nullable-state types as

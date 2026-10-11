@@ -45,7 +45,7 @@ describe("MapState mutation side effects", () => {
         ({
             message: vi.fn(),
             translate: (key: string): string => key,
-        }) as App;
+        }) as unknown as App;
 
     const observe = (
         state: MapState,
@@ -153,5 +153,78 @@ describe("MapState mutation side effects", () => {
             [lines[1], lines[2], lines[0]].map((line) => String(line.get_id())).join(";"),
         );
         expect(update_state).toHaveBeenCalledWith(MapStateChange.LINES, -1);
+    });
+
+    test("parses and applies valid JSON using a typed import state", () => {
+        const state = new MapState(create_app());
+        const parsed = MapState.parse_json({
+            maptype: "OPENSTREETMAP",
+            center: "N 48 E 8",
+            zoom: 12,
+            german_npa: true,
+            settings: {
+                markers: {coordinates_format: "dms", radius: 25},
+                lines: {distance_format: "km", display_distance: false},
+            },
+            markers: [
+                {marker_id: 41, coordinates: "N 48 E 8", name: "Start", color: "#ff0000"},
+                {marker_id: 99, coordinates: "N 49 E 9", name: "Finish"},
+            ],
+            lines: [{marker1: 41, marker2: 99, color: "00ff00"}],
+        });
+
+        expect(parsed).not.toBeNull();
+        state.apply_json(parsed!);
+
+        expect(state.map_type).toBe("OPENSTREETMAP");
+        expect(state.center!.lat()).toBe(48);
+        expect(state.zoom).toBe(12);
+        expect(state.german_npa).toBe(true);
+        expect(state.settings_marker_radius).toBe(25);
+        expect(state.settings_line_display_distance).toBe(false);
+        expect(state.markers.map((marker) => marker.name)).toEqual(["Start", "Finish"]);
+        expect(state.get_marker(state.markers[0].get_id())).toBe(state.markers[0]);
+        expect(state.lines[0].marker1).toBe(state.markers[0].get_id());
+        expect(state.lines[0].marker2).toBe(state.markers[1].get_id());
+        expect(state.get_line(state.lines[0].get_id())).toBe(state.lines[0]);
+    });
+
+    test("rejects invalid JSON state without changing state, storage, or observers", () => {
+        const state = new MapState(create_app());
+        state.set_view(new Coordinates(48, 8), 12);
+        const marker = state.add_marker(new Coordinates(49, 9));
+        const update_state = observe(state);
+        const persisted_values = new Map(values);
+
+        const imported = state.from_json({
+            center: "N 50 E 10",
+            markers: [{coordinates: "N 50 E 10", radius: -1}],
+        });
+
+        expect(imported).toBe(false);
+        expect(state.center!.lat()).toBe(48);
+        expect(state.markers).toEqual([marker]);
+        expect(state.get_marker(marker.get_id())).toBe(marker);
+        expect(values).toEqual(persisted_values);
+        expect(update_state).not.toHaveBeenCalled();
+    });
+
+    test("accepts partial JSON imports but rejects malformed collections and duplicate IDs", () => {
+        const state = new MapState(create_app());
+        const marker = state.add_marker(new Coordinates(48, 8));
+
+        expect(state.from_json({hillshading: true})).toBe(true);
+        expect(state.hillshading).toBe(true);
+        expect(state.markers).toEqual([marker]);
+
+        expect(MapState.parse_json({markers: {}})).toBeNull();
+        expect(
+            MapState.parse_json({
+                markers: [
+                    {marker_id: 4, coordinates: "N 48 E 8"},
+                    {marker_id: 4, coordinates: "N 49 E 9"},
+                ],
+            }),
+        ).toBeNull();
     });
 });
