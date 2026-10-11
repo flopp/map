@@ -127,6 +127,8 @@
                 "german_npa": "Nature Protection Areas (Germany)",
                 "german_npa-help": "Overlay the map with German Nature Protection Areas (in red). The data is provided by the Bundesamt f\u00fcr Naturschutz.",
                 "german_npa_button": "Official NPA Web Map",
+                "hillshading": "Hillshading (Mapterhorn)",
+                "hillshading-help": "Overlay the map with shaded relief derived from Mapterhorn terrain data.",
                 "title": "Layers"
             },
             "lines": {

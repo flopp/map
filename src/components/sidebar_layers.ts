@@ -12,6 +12,7 @@ export class SidebarLayers extends SidebarItem {
     private readonly base_layers: IBaseLayerDict[];
     private readonly base_layer_select: HTMLSelectElement;
     private readonly german_npa_checkbox: HTMLInputElement;
+    private readonly hillshading_checkbox: HTMLInputElement;
 
     public constructor(app: App, id: string) {
         super(app, id);
@@ -44,17 +45,21 @@ export class SidebarLayers extends SidebarItem {
         this.german_npa_checkbox.onchange = (): void => {
             this.app.map_state.set_german_npa(this.german_npa_checkbox.checked);
         };
+
+        this.hillshading_checkbox = this._div.querySelector("[data-hillshading-layer]")!;
+        this.hillshading_checkbox.checked = this.app.map_state.hillshading;
+        this.hillshading_checkbox.onchange = (): void => {
+            this.app.map_state.set_hillshading(this.hillshading_checkbox.checked);
+        };
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & MapStateChange.MAPTYPE) === MapStateChange.NOTHING) {
-            return;
-        }
-        if (this.app.map_state.map_type === null) {
-            return;
+        if ((changes & MapStateChange.MAPTYPE) !== 0 && this.app.map_state.map_type !== null) {
+            this.base_layer_select.value = maptype2string(this.app.map_state.map_type);
         }
 
-        /* base_layer */
-        this.base_layer_select.value = maptype2string(this.app.map_state.map_type);
+        if ((changes & (MapStateChange.MAPTYPE | MapStateChange.HILLSHADING)) !== 0) {
+            this.hillshading_checkbox.checked = this.app.map_state.hillshading;
+        }
     }
 }

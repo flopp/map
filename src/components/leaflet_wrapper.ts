@@ -1,5 +1,6 @@
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet-relief";
 
 import {App} from "./app";
 import {Color} from "./color";
@@ -9,6 +10,7 @@ import {Line} from "./line";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {MapType} from "./map_type";
+import {mapterhorn_elevation_url} from "./mapterhorn_tiles";
 import {Marker} from "./marker";
 
 const from_coordinates = (c: Coordinates): L.LatLng => L.latLng(c.raw_lat(), c.raw_lng());
@@ -49,6 +51,7 @@ export class LeafletWrapper extends MapStateObserver {
     private readonly styles: HTMLStyleElement;
     private readonly markers: Map<number, IMarkerObjDict>;
     private readonly lines: Map<number, ILineObjDict>;
+    private mapterhorn_hillshade_layer: L.GridLayer.Relief | null = null;
 
     public constructor(div_id: string, app: App) {
         super(app);
@@ -194,6 +197,27 @@ export class LeafletWrapper extends MapStateObserver {
         }
     }
 
+    public set_hillshading(enabled: boolean): void {
+        if (enabled) {
+            if (this.mapterhorn_hillshade_layer === null) {
+                this.mapterhorn_hillshade_layer = L.gridLayer.relief({
+                    attribution: L.GridLayer.Relief.elevationAttributions.mapterhorn,
+                    elevationExtractor: L.GridLayer.Relief.elevationExtractors.mapterhorn,
+                    elevationUrl: mapterhorn_elevation_url,
+                    maxNativeZoom: L.GridLayer.Relief.elevationMaxNativeZooms.mapterhorn + 1,
+                    mode: "hillshade",
+                    opacity: 0.45,
+                    tileSize: 512,
+                });
+            }
+            if (!this.map.hasLayer(this.mapterhorn_hillshade_layer)) {
+                this.map.addLayer(this.mapterhorn_hillshade_layer);
+            }
+        } else if (this.mapterhorn_hillshade_layer !== null) {
+            this.map.removeLayer(this.mapterhorn_hillshade_layer);
+        }
+    }
+
     public set_osm_overlay(enabled: boolean): void {
         if (this.osm_overlay_enabled === enabled) {
             return;
@@ -257,6 +281,9 @@ export class LeafletWrapper extends MapStateObserver {
         if ((changes & MapStateChange.MAPTYPE) !== 0) {
             this.set_map_type(this.app.map_state.map_type!);
             this.set_german_npa(this.app.map_state.german_npa);
+        }
+        if ((changes & MapStateChange.HILLSHADING) !== 0) {
+            this.set_hillshading(this.app.map_state.hillshading);
         }
         if ((changes & MapStateChange.VIEW) !== 0) {
             this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);

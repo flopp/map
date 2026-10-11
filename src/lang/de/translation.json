@@ -127,6 +127,8 @@
                 "german_npa": "Naturschutzgebiete (Deutschland)",
                 "german_npa-help": "Zeige Deutsche Naturschutzgebiete als Karten-Overlay an (rote Fl\u00e4chen). Die Daten werden vom Bundesamt f\u00fcr Naturschutz zur Verf\u00fcgung gestellt.",
                 "german_npa_button": "Offizielle Naturschutzgebiet-Karte",
+                "hillshading": "Schummerung (Mapterhorn)",
+                "hillshading-help": "Zeigt schattiertes Relief aus Mapterhorn-Gel\u00e4ndedaten als Kartenebene an.",
                 "title": "Ebenen"
             },
             "lines": {

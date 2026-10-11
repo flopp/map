@@ -270,6 +270,11 @@ const news_articles: NewsArticle[] = [
         "Simplified marker navigation in the sidebar.",
         "Vereinfachte Markernavigation in der Seitenleiste.",
     ),
+    new NewsArticle(
+        "2026-10-11",
+        "Added optional Mapterhorn hillshading. Enable it in the Layers sidebar; your choice is saved and included in shareable links.",
+        "Optionale Mapterhorn-Schummerung hinzugefügt. Aktiviere sie in der Ebenen-Seitenleiste; die Auswahl wird gespeichert und in geteilte Links übernommen.",
+    ),
 ];
 
 export class NewsDialog extends Dialog {
