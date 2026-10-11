@@ -5,6 +5,15 @@ const main = (): void => {
     // Remove "display:none" from body
     document.body.style.display = "block";
     (window as any).app = new App("map-container-leaflet");
+
+    if (location.hash === '#disable-umami') {
+        localStorage.setItem('umami.disabled', 'true');
+        alert('Umami is now DISABLED in this browser.');
+    }
+    if (location.hash === '#enable-umami') {
+        localStorage.removeItem('umami.disabled');
+        alert('Umami is now ENABLED in this browser.');
+    }
 };
 
 console.log(document.readyState);

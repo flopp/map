@@ -53,7 +53,7 @@ run-dev:
 build:
 	echo "export const Version = { build_date: ${BUILD_DATE} };" > src/components/version.ts
 	./node_modules/.bin/webpack --config webpack.prod.js
-	curl --fail --location --silent --show-error https://cloud.umami.is/script.js --output dist/umami.js
+	curl --fail --location --silent --show-error https://cloud.umami.is/script.js --output dist/u.js
 	echo "{ \"build_date\": ${BUILD_DATE} }" > dist/version.json
 	cp src/.htaccess dist/
 
