@@ -1,5 +1,6 @@
 import {App} from "./app";
 import {Dialog} from "./dialog";
+import {create_element} from "./utilities";
 
 class NewsArticle {
     public date: string;
@@ -363,66 +364,57 @@ export class NewsDialog extends Dialog {
 }
 
 function create_news_dialog(): void {
-    const modal = document.createElement("div");
-    modal.id = "news-dialog";
-    modal.className = "modal";
+    const modal = create_element("div", ["modal"], {id: "news-dialog"});
 
-    const background = document.createElement("div");
-    background.className = "modal-background";
+    const background = create_element("div", ["modal-background"]);
     modal.append(background);
 
-    const card = document.createElement("div");
-    card.className = "modal-card";
+    const card = create_element("div", ["modal-card"]);
 
-    const header = document.createElement("header");
-    header.className = "modal-card-head";
+    const header = create_element("header", ["modal-card-head"]);
 
-    const title = document.createElement("h2");
-    title.className = "modal-card-title";
-    title.dataset.i18n = "dialog.news.title";
+    const title = create_element("h2", ["modal-card-title"], {
+        "data-i18n": "dialog.news.title",
+    });
     title.textContent = "News";
     header.append(title);
 
-    const closeButton = document.createElement("button");
-    closeButton.className = "delete";
-    closeButton.dataset.cancel = "";
-    closeButton.setAttribute("aria-label", "close");
+    const closeButton = create_element("button", ["delete"], {
+        "data-cancel": null,
+        "aria-label": "close",
+    });
     header.append(closeButton);
     card.append(header);
 
-    const body = document.createElement("section");
-    body.className = "modal-card-body";
+    const body = create_element("section", ["modal-card-body"]);
 
-    const date = document.createElement("p");
-    date.id = "news-dialog-date";
+    const date = create_element("p", [], {id: "news-dialog-date"});
     body.append(date);
 
-    const text = document.createElement("p");
-    text.id = "news-dialog-text";
+    const text = create_element("p", [], {id: "news-dialog-text"});
     body.append(text);
     card.append(body);
 
-    const footer = document.createElement("footer");
-    footer.className = "modal-card-foot";
+    const footer = create_element("footer", ["modal-card-foot"]);
 
-    const close = document.createElement("button");
-    close.className = "button";
-    close.dataset.cancel = "";
-    close.dataset.i18n = "general.close";
+    const close = create_element("button", ["button"], {
+        "data-cancel": null,
+        "data-i18n": "general.close",
+    });
     close.textContent = "Close";
     footer.append(close);
 
-    const older = document.createElement("button");
-    older.className = "button";
-    older.id = "news-dialog-older";
-    older.dataset.i18n = "dialog.news.older";
+    const older = create_element("button", ["button"], {
+        id: "news-dialog-older",
+        "data-i18n": "dialog.news.older",
+    });
     older.textContent = "Older";
     footer.append(older);
 
-    const newer = document.createElement("button");
-    newer.className = "button";
-    newer.id = "news-dialog-newer";
-    newer.dataset.i18n = "dialog.news.newer";
+    const newer = create_element("button", ["button"], {
+        id: "news-dialog-newer",
+        "data-i18n": "dialog.news.newer",
+    });
     newer.textContent = "Newer";
     footer.append(newer);
 
