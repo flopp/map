@@ -288,11 +288,13 @@ export class NewsDialog extends Dialog {
     public shown: number;
 
     public constructor(app: App) {
+        create_news_dialog();
         super("news-dialog", app);
         this.shown = -1;
+        this._app.localize(this._div);
 
-        const older = document.querySelector("#news-dialog-older") as HTMLButtonElement;
-        const newer = document.querySelector("#news-dialog-newer") as HTMLButtonElement;
+        const older = this._div.querySelector("#news-dialog-older") as HTMLButtonElement;
+        const newer = this._div.querySelector("#news-dialog-newer") as HTMLButtonElement;
         older.addEventListener("click", () => {
             this.older();
         });
@@ -338,8 +340,8 @@ export class NewsDialog extends Dialog {
     }
 
     public updateContent(): void {
-        const textEl = document.querySelector("#news-dialog-text") as HTMLParagraphElement;
-        const dateEl = document.querySelector("#news-dialog-date") as HTMLParagraphElement;
+        const textEl = this._div.querySelector("#news-dialog-text") as HTMLParagraphElement;
+        const dateEl = this._div.querySelector("#news-dialog-date") as HTMLParagraphElement;
 
         if (this.shown < 0 || this.shown >= news_articles.length) {
             textEl.textContent = "n/a";
@@ -353,9 +355,78 @@ export class NewsDialog extends Dialog {
                 .join("<br />");
         }
 
-        const older = document.querySelector("#news-dialog-older") as HTMLButtonElement;
-        const newer = document.querySelector("#news-dialog-newer") as HTMLButtonElement;
+        const older = this._div.querySelector("#news-dialog-older") as HTMLButtonElement;
+        const newer = this._div.querySelector("#news-dialog-newer") as HTMLButtonElement;
         older.disabled = this.shown <= 0;
         newer.disabled = this.shown >= news_articles.length - 1;
     }
+}
+
+function create_news_dialog(): void {
+    const modal = document.createElement("div");
+    modal.id = "news-dialog";
+    modal.className = "modal";
+
+    const background = document.createElement("div");
+    background.className = "modal-background";
+    modal.append(background);
+
+    const card = document.createElement("div");
+    card.className = "modal-card";
+
+    const header = document.createElement("header");
+    header.className = "modal-card-head";
+
+    const title = document.createElement("h2");
+    title.className = "modal-card-title";
+    title.dataset.i18n = "dialog.news.title";
+    title.textContent = "News";
+    header.append(title);
+
+    const closeButton = document.createElement("button");
+    closeButton.className = "delete";
+    closeButton.dataset.cancel = "";
+    closeButton.setAttribute("aria-label", "close");
+    header.append(closeButton);
+    card.append(header);
+
+    const body = document.createElement("section");
+    body.className = "modal-card-body";
+
+    const date = document.createElement("p");
+    date.id = "news-dialog-date";
+    body.append(date);
+
+    const text = document.createElement("p");
+    text.id = "news-dialog-text";
+    body.append(text);
+    card.append(body);
+
+    const footer = document.createElement("footer");
+    footer.className = "modal-card-foot";
+
+    const close = document.createElement("button");
+    close.className = "button";
+    close.dataset.cancel = "";
+    close.dataset.i18n = "general.close";
+    close.textContent = "Close";
+    footer.append(close);
+
+    const older = document.createElement("button");
+    older.className = "button";
+    older.id = "news-dialog-older";
+    older.dataset.i18n = "dialog.news.older";
+    older.textContent = "Older";
+    footer.append(older);
+
+    const newer = document.createElement("button");
+    newer.className = "button";
+    newer.id = "news-dialog-newer";
+    newer.dataset.i18n = "dialog.news.newer";
+    newer.textContent = "Newer";
+    footer.append(newer);
+
+    card.append(footer);
+    modal.append(card);
+    document.body.append(modal);
 }
