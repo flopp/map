@@ -107,7 +107,7 @@ describe("German nature protection areas overlay", () => {
         const wrapper = new LeafletWrapper("map", app);
         wrapper.set_german_npa(true);
 
-        const layer = leaflet_mocks.layers[leaflet_mocks.layers.length - 1]!;
+        const layer = leaflet_mocks.layers.at(-1)!;
         const tile_error_handler = layer.on.mock.calls.find(([event]) => event === "tileerror")![1];
 
         tile_error_handler();

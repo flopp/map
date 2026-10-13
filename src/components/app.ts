@@ -55,11 +55,6 @@ export class App {
 
         this.sidebar = new Sidebar(this);
 
-        // track the URL for debugging purposes
-        if (url_state !== null) {
-            window.umami?.track("url_open", {url: window.location.href});
-        }
-
         if (url_state !== null && this.map_state.has_markers_or_lines()) {
             const overwrite_dialog = new OverwriteProtectionDialog(this);
             overwrite_dialog.show(
