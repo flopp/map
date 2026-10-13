@@ -102,7 +102,6 @@
         "messages": {
             "geolocation_error": "Erreur de g\u00e9olocalisation : {1}",
             "geolocation_not_available": "La g\u00e9olocalisation n'est pas disponible.",
-            "german_npa_load_error": "Les espaces naturels protégés allemands n'ont pas pu être chargés depuis le service cartographique du BfN.",
             "line_created": "Une nouvelle ligne a \u00e9t\u00e9 ajout\u00e9e.",
             "marker_created": "Un nouveau marqueur a \u00e9t\u00e9 ajout\u00e9."
         },
