@@ -12,63 +12,24 @@ export interface IMarkerJson {
     radius: number;
 }
 
-export interface MarkerUpdate {
-    coordinates?: Coordinates;
-    name?: string;
-    color?: Color;
-    radius?: number;
-}
-
-export type MarkerView = Omit<Marker, "update">;
-
 export class Marker {
-    public readonly marker_id: number;
-    private _coordinates: Coordinates;
-    private _name: string;
-    private _color: Color;
-    private _radius: number;
+    public marker_id: number;
+    public coordinates: Coordinates;
+    public name: string;
+    public color: Color;
+    public radius: number;
 
-    public constructor(coordinates: Coordinates, marker_id?: number) {
-        this.marker_id = marker_id ?? next_marker_id;
-        next_marker_id = Math.max(next_marker_id, this.marker_id + 1);
-        this._coordinates = coordinates;
+    public constructor(coordinates: Coordinates) {
+        this.marker_id = next_marker_id;
+        this.coordinates = coordinates;
         const id = this.get_id();
         const abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        this._name =
+        this.name =
             id < abc.length ? abc[id] : `${abc[id % abc.length]}${1 + Math.floor(id / abc.length)}`;
-        this._color = Color.random_from_palette();
-        this._radius = 0;
-    }
+        this.color = Color.random_from_palette();
+        this.radius = 0;
 
-    public get coordinates(): Coordinates {
-        return this._coordinates;
-    }
-
-    public get name(): string {
-        return this._name;
-    }
-
-    public get color(): Color {
-        return this._color;
-    }
-
-    public get radius(): number {
-        return this._radius;
-    }
-
-    public update(attributes: MarkerUpdate): void {
-        if (attributes.coordinates !== undefined) {
-            this._coordinates = attributes.coordinates;
-        }
-        if (attributes.name !== undefined) {
-            this._name = attributes.name;
-        }
-        if (attributes.color !== undefined) {
-            this._color = attributes.color;
-        }
-        if (attributes.radius !== undefined) {
-            this._radius = attributes.radius;
-        }
+        next_marker_id += 1;
     }
 
     public static reset_ids(next: number = 0): void {

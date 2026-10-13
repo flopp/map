@@ -3,10 +3,10 @@ import Sortable from "sortablejs";
 import {App} from "./app";
 import {Color} from "./color";
 import {Distance, DistanceFormat} from "./distance";
-import {LineView} from "./line";
+import {Line} from "./line";
 import {LineSettingsDialog} from "./line_settings_dialog";
 import {MapStateChange} from "./map_state";
-import {MarkerView} from "./marker";
+import {Marker} from "./marker";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
@@ -88,7 +88,7 @@ export class SidebarLines extends SidebarItem {
         let totalM: number = 0;
         let scrollTo: Element | null = null;
         const container = document.querySelector("#lines")!;
-        this.app.map_state.lines.forEach((line: LineView): void => {
+        this.app.map_state.lines.forEach((line: Line): void => {
             let div = document.querySelector(`#line-${line.get_id()}`);
             if (div === null) {
                 div = this.create_div(line);
@@ -151,7 +151,7 @@ export class SidebarLines extends SidebarItem {
         const lines = document.querySelectorAll("#lines > .line");
         if (lines.length > this.app.map_state.lines.length) {
             const ids = new Set();
-            this.app.map_state.lines.forEach((line: LineView): void => {
+            this.app.map_state.lines.forEach((line: Line): void => {
                 ids.add(line.get_id().toString());
             });
 
@@ -177,7 +177,7 @@ export class SidebarLines extends SidebarItem {
 
     private get_markers(): INameId[] {
         const markers = [{name: this.app.translate("general.no_marker_tag"), id: -1}];
-        this.app.map_state.markers.forEach((marker: MarkerView): void => {
+        this.app.map_state.markers.forEach((marker: Marker): void => {
             markers.push({name: marker.name, id: marker.get_id()});
         });
         markers.sort((a: INameId, b: INameId): number => {
@@ -194,7 +194,7 @@ export class SidebarLines extends SidebarItem {
         return markers;
     }
 
-    private create_div(line: LineView): HTMLElement {
+    private create_div(line: Line): HTMLElement {
         const div = create_element("div", ["line"], {
             id: `line-${line.get_id()}`,
         });
@@ -266,7 +266,7 @@ export class SidebarLines extends SidebarItem {
         return div;
     }
 
-    private create_edit_div(line: LineView): HTMLElement {
+    private create_edit_div(line: Line): HTMLElement {
         const div = create_element("div", ["edit"], {
             id: `line-edit-${line.get_id()}`,
         });
@@ -292,7 +292,7 @@ export class SidebarLines extends SidebarItem {
         return div;
     }
 
-    private update_edit_values(line: LineView): void {
+    private update_edit_values(line: Line): void {
         const div = document.querySelector(`#line-edit-${line.get_id()}`);
         if (div !== null) {
             (div.querySelector("[data-color]") as HTMLInputElement).value =
@@ -300,7 +300,7 @@ export class SidebarLines extends SidebarItem {
         }
     }
 
-    private submit_edit(line: LineView): void {
+    private submit_edit(line: Line): void {
         const div = document.querySelector(`#line-edit-${line.get_id()}`) as HTMLElement;
         const color = Color.from_string(
             (div.querySelector("[data-color]") as HTMLInputElement).value,
@@ -314,24 +314,35 @@ export class SidebarLines extends SidebarItem {
 
         remove_element(div);
 
-        this.app.map_state.set_line_color(line.get_id(), color);
+        if (!line.color.equals(color)) {
+            line.color = color;
+
+            this.app.map_state.update_line_storage(line);
+            this.app.map_state.update_observers(MapStateChange.LINES);
+        }
     }
 
-    private set_from(line: LineView, marker: number | null): void {
+    private set_from(line: Line, marker: number | null): void {
         const m = marker !== null ? marker : -1;
         if (line.marker1 === m) {
             return;
         }
 
-        this.app.map_state.set_line_marker1(line.get_id(), m);
+        line.marker1 = m;
+
+        this.app.map_state.update_line_storage(line);
+        this.app.map_state.update_observers(MapStateChange.LINES);
     }
 
-    private set_to(line: LineView, marker: number | null): void {
+    private set_to(line: Line, marker: number | null): void {
         const m = marker !== null ? marker : -1;
         if (line.marker2 === m) {
             return;
         }
 
-        this.app.map_state.set_line_marker2(line.get_id(), m);
+        line.marker2 = m;
+
+        this.app.map_state.update_line_storage(line);
+        this.app.map_state.update_observers(MapStateChange.LINES);
     }
 }

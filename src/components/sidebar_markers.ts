@@ -4,7 +4,7 @@ import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {MapStateChange} from "./map_state";
-import {MarkerView} from "./marker";
+import {Marker} from "./marker";
 import {MarkerSettingsDialog} from "./marker_settings_dialog";
 import {SidebarItem} from "./sidebar_item";
 import {
@@ -71,7 +71,7 @@ export class SidebarMarkers extends SidebarItem {
         this.update_state(MapStateChange.EVERYTHING);
     }
 
-    private update_div(marker: MarkerView, div: HTMLDivElement): void {
+    private update_div(marker: Marker, div: HTMLDivElement): void {
         const display_div = div.querySelector(".marker-display") as HTMLDivElement;
 
         (display_div.querySelector(".marker-color") as HTMLElement).style.backgroundColor =
@@ -129,7 +129,7 @@ export class SidebarMarkers extends SidebarItem {
             }
         } else {
             /* update and add markers */
-            this.app.map_state.markers.forEach((marker: MarkerView): void => {
+            this.app.map_state.markers.forEach((marker: Marker): void => {
                 let div = document.querySelector(`#marker-${marker.get_id()}`);
                 if (div === null) {
                     div = this.create_div(marker);
@@ -145,7 +145,7 @@ export class SidebarMarkers extends SidebarItem {
             const markers = document.querySelectorAll("#markers > .marker");
             if (markers.length > this.app.map_state.markers.length) {
                 const ids = new Set();
-                this.app.map_state.markers.forEach((marker: MarkerView): void => {
+                this.app.map_state.markers.forEach((marker: Marker): void => {
                     ids.add(marker.get_id().toString());
                 });
 
@@ -171,7 +171,7 @@ export class SidebarMarkers extends SidebarItem {
         }
     }
 
-    private create_div(marker: MarkerView): HTMLElement {
+    private create_div(marker: Marker): HTMLElement {
         const div = create_element("div", ["marker"], {
             id: `marker-${marker.get_id()}`,
         });
@@ -282,7 +282,7 @@ export class SidebarMarkers extends SidebarItem {
         return div;
     }
 
-    private create_edit_div(marker: MarkerView): HTMLDivElement {
+    private create_edit_div(marker: Marker): HTMLDivElement {
         const div = create_element("div", ["edit"], {
             id: `marker-edit-${marker.get_id()}`,
         }) as HTMLDivElement;
@@ -327,7 +327,7 @@ export class SidebarMarkers extends SidebarItem {
         return div;
     }
 
-    private update_edit_values(marker: MarkerView, div: HTMLDivElement): void {
+    private update_edit_values(marker: Marker, div: HTMLDivElement): void {
         (div.querySelector("[data-name]") as HTMLInputElement).value = marker.name;
         (div.querySelector("[data-coordinates]") as HTMLInputElement).value =
             marker.coordinates.to_string(this.app.map_state.settings_marker_coordinates_format);
@@ -336,7 +336,7 @@ export class SidebarMarkers extends SidebarItem {
             marker.color.to_hash_string();
     }
 
-    private submit_edit(marker: MarkerView, div: HTMLDivElement): void {
+    private submit_edit(marker: Marker, div: HTMLDivElement): void {
         const name = (div.querySelector("[data-name]") as HTMLInputElement).value;
         const coordinates = Coordinates.from_string(
             (div.querySelector("[data-coordinates]") as HTMLInputElement).value,
@@ -354,11 +354,11 @@ export class SidebarMarkers extends SidebarItem {
 
         div.remove();
 
-        this.app.map_state.update_marker(marker.get_id(), {
-            name,
-            coordinates,
-            radius,
-            color,
-        });
+        marker.name = name;
+        marker.coordinates = coordinates;
+        marker.radius = radius;
+        marker.color = color;
+        this.app.map_state.update_marker_storage(marker);
+        this.app.map_state.update_observers(MapStateChange.MARKERS);
     }
 }

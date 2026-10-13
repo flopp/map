@@ -1,17 +1,18 @@
 import {App} from "./app";
 import {Color} from "./color";
 import {Dialog} from "./dialog";
-import {MarkerView} from "./marker";
+import {MapStateChange} from "./map_state";
+import {Marker} from "./marker";
 import {parse_float} from "./utilities";
 
 export class ProjectionDialog extends Dialog {
-    private marker: MarkerView | null = null;
+    private marker: Marker | null = null;
 
     public constructor(app: App) {
         super("projection-dialog", app, "https://blog.flopp.net/waypoint-projection/");
     }
 
-    public showMarker(marker: MarkerView): void {
+    public showMarker(marker: Marker): void {
         this.marker = marker;
         (this._div.querySelector("[data-distance]") as HTMLInputElement).value = "";
         (this._div.querySelector("[data-bearing]") as HTMLInputElement).value = "";
@@ -58,18 +59,21 @@ export class ProjectionDialog extends Dialog {
         }
 
         const coordinates = this.marker!.coordinates.project(bearing, distance);
-        const target_marker = this._app.map_state.add_marker(coordinates, {
-            name: target_name,
-            radius: target_radius !== null ? target_radius : -1,
-            color: target_color !== null ? target_color : this.marker!.color,
-        });
+        const target_marker = this._app.map_state.add_marker(coordinates);
+        target_marker.name = target_name;
+        target_marker.radius = target_radius !== null ? target_radius : -1;
+        target_marker.color = target_color !== null ? target_color : this.marker!.color;
+        this._app.map_state.update_marker_storage(target_marker);
 
         if (create_line) {
-            this._app.map_state.add_line({
-                marker1: this.marker!.get_id(),
-                marker2: target_marker.get_id(),
-                color: line_color !== null ? line_color : this.marker!.color,
-            });
+            const line = this._app.map_state.add_line();
+            line.marker1 = this.marker!.get_id();
+            line.marker2 = target_marker.get_id();
+            line.color = line_color !== null ? line_color : this.marker!.color;
+            this._app.map_state.update_line_storage(line);
+            this._app.map_state.update_observers(MapStateChange.MARKERS | MapStateChange.LINES);
+        } else {
+            this._app.map_state.update_observers(MapStateChange.MARKERS);
         }
 
         this.hide();

@@ -2,7 +2,9 @@ import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 
 import type {App} from "../src/components/app";
 import {Coordinates} from "../src/components/coordinates";
+import {Line} from "../src/components/line";
 import {MapState} from "../src/components/map_state";
+import {Marker} from "../src/components/marker";
 
 describe("overwrite protection", () => {
     let values: Map<string, string>;
@@ -42,17 +44,14 @@ describe("overwrite protection", () => {
     });
 
     test("only requires confirmation when the current map has markers or lines", () => {
-        const state = new MapState({
-            message: vi.fn(),
-            translate: (key: string): string => key,
-        } as unknown as App);
+        const state = new MapState({} as App);
         expect(state.has_markers_or_lines()).toBe(false);
 
-        state.add_marker(new Coordinates(48, 8));
+        state.markers.push(new Marker(new Coordinates(48, 8)));
         expect(state.has_markers_or_lines()).toBe(true);
 
-        state.delete_all_markers();
-        state.add_line();
+        state.markers = [];
+        state.lines.push(new Line(-1, -1));
         expect(state.has_markers_or_lines()).toBe(true);
     });
 

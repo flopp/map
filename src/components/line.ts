@@ -10,70 +10,24 @@ export interface ILineJson {
     color: string;
 }
 
-export interface LineUpdate {
-    marker1?: number;
-    marker2?: number;
-    color?: Color;
-}
-
-export type LineView = Omit<Line, "update" | "update_measurements" | "length"> & {
-    readonly length: Omit<Distance, "set"> | null;
-};
-
 export class Line {
-    public readonly line_id: number;
-    private _marker1: number;
-    private _marker2: number;
-    private _color: Color;
-    private _length: Distance | null;
-    private _bearing: number | null;
+    public line_id: number;
+    public marker1: number;
+    public marker2: number;
+    public color: Color;
+    public length: Distance | null;
+    public bearing: number | null;
 
-    public constructor(marker_id1: number, marker_id2: number, line_id?: number) {
-        this.line_id = line_id ?? next_line_id;
-        next_line_id = Math.max(next_line_id, this.line_id + 1);
-        this._marker1 = marker_id1;
-        this._marker2 = marker_id2;
-        this._color = Color.random_from_palette();
+    public constructor(marker_id1: number, marker_id2: number) {
+        this.line_id = next_line_id;
+        this.marker1 = marker_id1;
+        this.marker2 = marker_id2;
+        this.color = Color.random_from_palette();
 
-        this._length = null;
-        this._bearing = null;
-    }
+        this.length = null;
+        this.bearing = null;
 
-    public get marker1(): number {
-        return this._marker1;
-    }
-
-    public get marker2(): number {
-        return this._marker2;
-    }
-
-    public get color(): Color {
-        return this._color;
-    }
-
-    public get length(): Distance | null {
-        return this._length;
-    }
-
-    public get bearing(): number | null {
-        return this._bearing;
-    }
-
-    public update(attributes: LineUpdate): void {
-        if (attributes.marker1 !== undefined) {
-            this._marker1 = attributes.marker1;
-        }
-        if (attributes.marker2 !== undefined) {
-            this._marker2 = attributes.marker2;
-        }
-        if (attributes.color !== undefined) {
-            this._color = attributes.color;
-        }
-    }
-
-    public update_measurements(length: Distance | null, bearing: number | null): void {
-        this._length = length;
-        this._bearing = bearing;
+        next_line_id += 1;
     }
 
     public static reset_ids(next: number = 0): void {

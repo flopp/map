@@ -2,6 +2,7 @@ import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {Dialog} from "./dialog";
+import {MapStateChange} from "./map_state";
 import {parse_float} from "./utilities";
 
 export class MultiMarkersDialog extends Dialog {
@@ -197,16 +198,15 @@ export class MultiMarkersDialog extends Dialog {
             return;
         }
 
-        this._app.map_state.add_markers(
-            data.map((marker_data: IMarkerDict) => ({
-                coordinates: marker_data.coordinates,
-                attributes: {
-                    name: marker_data.name,
-                    color: marker_data.color,
-                    radius: marker_data.radius,
-                },
-            })),
-        );
+        data.forEach((marker_data: IMarkerDict): void => {
+            const marker = this._app.map_state.add_marker(marker_data.coordinates);
+            marker.name = marker_data.name;
+            marker.color = marker_data.color;
+            marker.radius = marker_data.radius;
+            this._app.map_state.update_marker_storage(marker);
+        });
+
+        this._app.map_state.update_observers(MapStateChange.MARKERS);
         this.hide();
     }
 
