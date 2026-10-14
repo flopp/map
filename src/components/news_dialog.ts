@@ -286,11 +286,13 @@ Links werden direkt geladen, wenn die aktuelle Karte keine Marker oder Linien en
 ];
 
 export class NewsDialog extends Dialog {
+    private readonly _has_local_map_data: boolean;
     public shown: number;
 
     public constructor(app: App) {
         create_news_dialog();
         super("news-dialog", app);
+        this._has_local_map_data = app.map_state.has_markers_or_lines();
         this.shown = -1;
         this._app.localize(this._div);
 
@@ -317,7 +319,7 @@ export class NewsDialog extends Dialog {
     public maybeShow(): void {
         const shown = this._app.map_state.storage.get_int("news.shown", -1);
 
-        if (shown < news_articles.length - 1) {
+        if (this._has_local_map_data && shown < news_articles.length - 1) {
             this.show();
         }
     }
