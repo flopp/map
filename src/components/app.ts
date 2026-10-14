@@ -59,6 +59,10 @@ export class App {
         if (url_state !== null) {
             window.umami?.track("url_open", {url: window.location.href});
         }
+        // track big maps for debugging purposes
+        if (this.map_state.markers.length >= 10) {
+            window.umami?.track("big_map", {url: this.map_state.create_link()});
+        }
 
         if (url_state !== null && this.map_state.has_markers_or_lines()) {
             const overwrite_dialog = new OverwriteProtectionDialog(this);

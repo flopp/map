@@ -207,6 +207,32 @@ export class MapState {
         );
     }
 
+    public has_data_in_storage(): boolean {
+        const data_keys = [
+            "center",
+            "zoom",
+            "map_type",
+            "german_npa",
+            "hillshading",
+            "sidebar_open",
+            "markers",
+            "lines",
+            "settings.marker.coordinates_format",
+            "settings.marker.distance_format",
+            "settings.marker.random_color",
+            "settings.marker.color",
+            "settings.marker.radius",
+            "settings.marker.draggable",
+            "settings.marker.filled",
+            "settings.line.distance_format",
+            "settings.line.random_color",
+            "settings.line.color",
+            "settings.line.display_distance",
+        ];
+
+        return data_keys.some((key: string): boolean => this.storage.exists(key));
+    }
+
     public restore(): void {
         // Sidebar
         this.set_sidebar_open(this.storage.get("sidebar_open", null));
