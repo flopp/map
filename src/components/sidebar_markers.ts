@@ -175,6 +175,15 @@ export class SidebarMarkers extends SidebarItem {
         const div = create_element("div", ["marker"], {
             id: `marker-${marker.get_id()}`,
         });
+        div.addEventListener("click", (event: MouseEvent): void => {
+            if (
+                event.target instanceof Element &&
+                event.target.closest("button, select, input, a, .edit") !== null
+            ) {
+                return;
+            }
+            this.app.leaflet.fit_coordinates([marker.coordinates]);
+        });
 
         const m = create_element("div", ["marker-display"]);
 
@@ -185,13 +194,11 @@ export class SidebarMarkers extends SidebarItem {
 
         const center = create_element("div", ["marker-center"]);
         const show_marker = (event: Event): void => {
-            this.app.map_state.set_center(marker.coordinates);
+            this.app.leaflet.fit_coordinates([marker.coordinates]);
             event.stopPropagation();
         };
         for (const cls of ["marker-name", "marker-coordinates"]) {
             const el = create_element("div", [cls]);
-            el.style.cursor = "pointer";
-            el.addEventListener("click", show_marker);
             center.append(el);
         }
         const circleDiv = create_element("div", ["marker-radius", "is-hidden"]);
