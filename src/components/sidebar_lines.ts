@@ -198,6 +198,15 @@ export class SidebarLines extends SidebarItem {
         const div = create_element("div", ["line"], {
             id: `line-${line.get_id()}`,
         });
+        div.addEventListener("click", (event: MouseEvent): void => {
+            if (
+                event.target instanceof Element &&
+                event.target.closest("button, select, input, a") !== null
+            ) {
+                return;
+            }
+            this.app.map_state.show_line(line);
+        });
         const left = create_element("div", ["line-left", "drag-handle"]);
         const color = create_element("div", ["line-color"]);
         left.append(color);

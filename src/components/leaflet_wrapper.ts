@@ -264,6 +264,31 @@ export class LeafletWrapper extends MapStateObserver {
         }
     }
 
+    public fit_coordinates(coordinates: Coordinates[]): void {
+        if (coordinates.length === 0) {
+            return;
+        }
+
+        this.automatic_event = true;
+        try {
+            if (coordinates.length === 1) {
+                this.map.setView(from_coordinates(coordinates[0]), this.map.getZoom(), {
+                    animate: false,
+                });
+            } else {
+                this.map.fitBounds(L.latLngBounds(coordinates.map(from_coordinates)), {
+                    animate: false,
+                    maxZoom: 16,
+                    padding: [40, 40],
+                });
+            }
+        } finally {
+            this.automatic_event = false;
+        }
+
+        this.app.map_state.set_view(to_coordinates(this.map.getCenter()), this.map.getZoom());
+    }
+
     public width(): number {
         return this.div.offsetWidth;
     }

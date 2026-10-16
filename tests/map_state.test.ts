@@ -126,6 +126,30 @@ describe("MapState mutation side effects", () => {
         expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, marker.get_id());
     });
 
+    test("applies optional line properties before persisting and notifying", () => {
+        const state = new MapState(create_app());
+        const update_state = observe(state);
+        const first_marker = state.add_marker(new Coordinates(48, 8));
+        const second_marker = state.add_marker(new Coordinates(49, 9));
+        update_state.mockClear();
+        const color = new Color("123456");
+
+        const line = state.add_line({
+            marker1: first_marker.get_id(),
+            marker2: second_marker.get_id(),
+            color,
+        });
+
+        expect(line.marker1).toBe(first_marker.get_id());
+        expect(line.marker2).toBe(second_marker.get_id());
+        expect(line.color).toBe(color);
+        expect(values.get(`line[${line.get_id()}].marker1`)).toBe(String(first_marker.get_id()));
+        expect(values.get(`line[${line.get_id()}].marker2`)).toBe(String(second_marker.get_id()));
+        expect(values.get(`line[${line.get_id()}].color`)).toBe("123456");
+        expect(update_state).toHaveBeenCalledTimes(1);
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.LINES, -1);
+    });
+
     test("recomputes line distance and bearing when a marker moves", () => {
         const state = new MapState(create_app());
         const update_state = observe(state);
@@ -146,6 +170,27 @@ describe("MapState mutation side effects", () => {
             MapStateChange.MARKERS | MapStateChange.LINES,
             second_marker.get_id(),
         );
+    });
+
+    test("focuses a line on its available marker endpoints", () => {
+        const fit_coordinates = vi.fn();
+        const app = {
+            ...create_app(),
+            leaflet: {fit_coordinates},
+        } as unknown as App;
+        const state = new MapState(app);
+        const first_marker = state.add_marker(new Coordinates(48, 8));
+        const second_marker = state.add_marker(new Coordinates(49, 9));
+        const line = state.add_line();
+
+        state.set_line_marker1(line.get_id(), first_marker.get_id());
+        state.set_line_marker2(line.get_id(), second_marker.get_id());
+        state.show_line(line);
+
+        expect(fit_coordinates).toHaveBeenCalledWith([
+            first_marker.coordinates,
+            second_marker.coordinates,
+        ]);
     });
 
     test("persists marker and line ordering and notifies observers", () => {

@@ -33,6 +33,8 @@ interface IMarkerSettingsDict {
 
 export type IMarkerProperties = Partial<Pick<Marker, "name" | "color" | "radius">>;
 
+export type ILineProperties = Partial<Pick<Line, "marker1" | "marker2" | "color">>;
+
 interface ILineSettingsDict {
     distance_format: DistanceFormat;
     random_color: boolean;
@@ -917,11 +919,12 @@ export class MapState {
         this.update_observers(MapStateChange.MARKERS);
     }
 
-    public add_line(): Line {
-        const line = new Line(-1, -1);
+    public add_line(properties: ILineProperties = {}): Line {
+        const line = new Line(properties.marker1 ?? -1, properties.marker2 ?? -1);
         if (!this.settings_line_random_color) {
             line.color = this.settings_line_color;
         }
+        line.color = properties.color ?? line.color;
 
         this.lines.push(line);
         this.lines_hash.set(line.get_id(), line);
@@ -1017,22 +1020,12 @@ export class MapState {
     public show_line(line: Line): void {
         const marker1 = this.get_marker(line.marker1);
         const marker2 = this.get_marker(line.marker2);
+        const coordinates = [marker1, marker2]
+            .filter((marker): marker is Marker => marker !== null)
+            .map((marker: Marker): Coordinates => marker.coordinates);
 
-        if (marker1 !== null) {
-            if (marker2 !== null && line.marker1 !== line.marker2) {
-                const distance_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
-                const center = marker1.coordinates.project(
-                    distance_bearing.bearing,
-                    distance_bearing.distance * 0.5,
-                );
-                this.set_center(center);
-            } else {
-                this.set_center(marker1.coordinates);
-            }
-        } else if (marker2 !== null) {
-            this.set_center(marker2.coordinates);
-        } else {
-            // Nothing
+        if (coordinates.length > 0) {
+            this.app.leaflet.fit_coordinates(coordinates);
         }
     }
 

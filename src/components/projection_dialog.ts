@@ -1,7 +1,6 @@
 import {App} from "./app";
 import {Color} from "./color";
 import {Dialog} from "./dialog";
-import {MapStateChange} from "./map_state";
 import {Marker} from "./marker";
 import {parse_float} from "./utilities";
 
@@ -66,14 +65,11 @@ export class ProjectionDialog extends Dialog {
         });
 
         if (create_line) {
-            const line = this._app.map_state.add_line();
-            line.marker1 = this.marker!.get_id();
-            line.marker2 = target_marker.get_id();
-            line.color = line_color !== null ? line_color : this.marker!.color;
-            this._app.map_state.update_line_storage(line);
-            this._app.map_state.update_observers(MapStateChange.MARKERS | MapStateChange.LINES);
-        } else {
-            this._app.map_state.update_observers(MapStateChange.MARKERS);
+            this._app.map_state.add_line({
+                marker1: this.marker!.get_id(),
+                marker2: target_marker.get_id(),
+                color: line_color !== null ? line_color : this.marker!.color,
+            });
         }
 
         this.hide();
