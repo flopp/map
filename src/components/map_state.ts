@@ -382,18 +382,15 @@ export class MapState {
     }
 
     public parse_url_state(): MapStateFromUrl | null {
-        const params = new Map();
+        const params = new Map<string, string>();
         window.location.search
-            .substr(1)
+            .slice(1)
             .split("&")
             .forEach((token: string): void => {
-                const tokens = token.split("=", 2);
-                if (tokens[0].length > 0) {
-                    if (tokens.length === 1) {
-                        params.set(tokens[0], "");
-                    } else {
-                        params.set(tokens[0], tokens[1]);
-                    }
+                const separator = token.indexOf("=");
+                const key = separator < 0 ? token : token.slice(0, separator);
+                if (key.length > 0) {
+                    params.set(key, separator < 0 ? "" : token.slice(separator + 1));
                 }
             });
 
@@ -401,6 +398,7 @@ export class MapState {
         let zoom: number | null = null;
         let map_type: MapType | null = null;
         let hillshading = false;
+        let line_value: string | null = null;
         const markers: IMarkerUrlData[] = [];
         const marker_hash: Map<string, number> = new Map();
         const lines: ILineUrlData[] = [];
@@ -433,81 +431,88 @@ export class MapState {
                     hillshading = value === "1";
                     break;
                 case "m":
-                    value.split("*").forEach((token: string): void => {
-                        // A:47.984967:7.908317:1000:markerA:ff0000
-                        const tokens = token.split(":");
-                        if (tokens.length < 3 || tokens.length > 6) {
-                            return;
-                        }
-                        const id = tokens[0];
-                        const lat: number | null = parse_float(tokens[1]);
-                        const lon: number | null = parse_float(tokens[2]);
-                        let radius: number | null = 0;
-                        if (tokens.length > 3) {
-                            if (tokens[3] !== "") {
-                                radius = parse_float(tokens[3]);
-                            }
-                        }
-                        let name = id;
-                        if (tokens.length > 4) {
-                            name = this.decode(tokens[4]);
-                        }
-                        let color: Color | null = Color.random_from_palette();
-                        if (tokens.length > 5) {
-                            color = Color.from_string(tokens[5]);
-                        }
-
-                        if (
-                            id.length > 0 &&
-                            lat !== null &&
-                            lon !== null &&
-                            radius !== null &&
-                            color !== null
-                        ) {
-                            marker_hash.set(id, markers.length);
-                            markers.push({
-                                name,
-                                coordinates: new Coordinates(lat, lon),
-                                color,
-                                radius,
-                            });
-                        }
-                    });
                     break;
                 case "d":
-                    value.split("*").forEach((token: string): void => {
-                        // From:to:color
-                        const tokens = token.split(":");
-                        if (tokens.length < 2 || tokens.length > 3) {
-                            return;
-                        }
-
-                        let from = null;
-                        if (tokens[0].length === 0) {
-                            from = -1;
-                        } else if (marker_hash.has(tokens[0])) {
-                            from = marker_hash.get(tokens[0])!;
-                        }
-                        let to = null;
-                        if (tokens[1].length === 0) {
-                            to = -1;
-                        } else if (marker_hash.has(tokens[1])) {
-                            to = marker_hash.get(tokens[1])!;
-                        }
-                        let color = Color.from_string("#ff0000");
-                        if (tokens.length > 2) {
-                            color = Color.from_string(tokens[2]);
-                        }
-
-                        if (from !== null && to !== null && color !== null) {
-                            lines.push({from, to, color});
-                        }
-                    });
+                    line_value = value;
                     break;
                 default:
                     console.log(`ignoring unsupported url parameter: ${key}=${value}`);
             }
         });
+
+        const marker_value = params.get("m");
+        if (marker_value !== undefined) {
+            marker_value.split("*").forEach((token: string): void => {
+                // A:47.984967:7.908317:1000:markerA:ff0000
+                const tokens = token.split(":");
+                if (tokens.length < 3 || tokens.length > 6) {
+                    return;
+                }
+                const id = tokens[0];
+                const lat: number | null = parse_float(tokens[1]);
+                const lon: number | null = parse_float(tokens[2]);
+                let radius: number | null = 0;
+                if (tokens.length > 3 && tokens[3] !== "") {
+                    radius = parse_float(tokens[3]);
+                }
+                let name = id;
+                if (tokens.length > 4) {
+                    name = this.decode(tokens[4]);
+                }
+                let color: Color | null = Color.random_from_palette();
+                if (tokens.length > 5) {
+                    color = Color.from_string(tokens[5]);
+                }
+
+                if (
+                    id.length > 0 &&
+                    lat !== null &&
+                    lon !== null &&
+                    radius !== null &&
+                    color !== null
+                ) {
+                    marker_hash.set(id, markers.length);
+                    markers.push({
+                        name,
+                        coordinates: new Coordinates(lat, lon),
+                        color,
+                        radius,
+                    });
+                }
+            });
+        }
+
+        const parsed_line_value = line_value as string | null;
+        if (parsed_line_value !== null) {
+            parsed_line_value.split("*").forEach((token: string): void => {
+                // From:to:color
+                const tokens = token.split(":");
+                if (tokens.length < 2 || tokens.length > 3) {
+                    return;
+                }
+
+                let from = null;
+                if (tokens[0].length === 0) {
+                    from = -1;
+                } else if (marker_hash.has(tokens[0])) {
+                    from = marker_hash.get(tokens[0])!;
+                }
+                let to = null;
+                if (tokens[1].length === 0) {
+                    to = -1;
+                } else if (marker_hash.has(tokens[1])) {
+                    to = marker_hash.get(tokens[1])!;
+                }
+                let color = Color.from_string("#ff0000");
+                if (tokens.length > 2) {
+                    color = Color.from_string(tokens[2]);
+                }
+
+                if (from !== null && to !== null && color !== null) {
+                    lines.push({from, to, color});
+                }
+            });
+        }
 
         if (center === null && markers.length === 0) {
             return null;
@@ -618,7 +623,15 @@ export class MapState {
     }
 
     public decode(s: string): string {
-        return decodeURIComponent(s);
+        try {
+            return decodeURIComponent(s);
+        } catch (error) {
+            if (error instanceof URIError) {
+                return s;
+            }
+
+            throw error;
+        }
     }
 
     public encode(s: string): string {

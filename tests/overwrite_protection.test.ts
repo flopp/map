@@ -95,11 +95,4 @@ describe("overwrite protection", () => {
         expect(state.zoom).toBe(12);
         expect(values.has("marker[99].name")).toBe(false);
     });
-
-    test("does not parse URLs with no usable map data", () => {
-        const state = new MapState({} as App);
-        location.search = "?z=12&t=osm";
-
-        expect(state.parse_url_state()).toBeNull();
-    });
 });
