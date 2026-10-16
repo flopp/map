@@ -64,9 +64,8 @@ describe("MapState mutation side effects", () => {
         const second_marker = state.add_marker(new Coordinates(49, 9));
         const line = state.add_line();
 
-        state.set_line_marker1(line.get_id(), first_marker.get_id());
-        state.set_line_marker2(line.get_id(), second_marker.get_id());
-
+        state.update_line_attributes(line.get_id(), {marker1: first_marker.get_id(), marker2: second_marker.get_id()});
+        
         expect(state.markers).toEqual([first_marker, second_marker]);
         expect(state.get_marker(first_marker.get_id())).toBe(first_marker);
         expect(values.get("markers")).toBe(`${first_marker.get_id()};${second_marker.get_id()}`);
@@ -95,14 +94,85 @@ describe("MapState mutation side effects", () => {
         const marker = state.add_marker(new Coordinates(48, 8));
         update_state.mockClear();
 
-        state.set_marker_name(marker.get_id(), "Changed name");
-        state.set_marker_coordinates(marker.get_id(), new Coordinates(48.5, 8.5));
+        state.update_marker_attributes(marker.get_id(), {
+            name: "Changed name",
+            coordinates: new Coordinates(48.5, 8.5),
+        });
 
         expect(marker.name).toBe("Changed name");
         expect(values.get(`marker[${marker.get_id()}].name`)).toBe("Changed name");
         expect(values.get(`marker[${marker.get_id()}].coordinates`)).toBe("48.5;8.5");
-        expect(update_state).toHaveBeenNthCalledWith(1, MapStateChange.MARKERS, marker.get_id());
-        expect(update_state).toHaveBeenNthCalledWith(2, MapStateChange.MARKERS, marker.get_id());
+        expect(update_state).toHaveBeenCalledOnce();
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, 0);
+    });
+
+    test("updates all marker attributes, persists them, and notifies observers once", () => {
+        const state = new MapState(create_app());
+        const update_state = observe(state);
+        const marker = state.add_marker(new Coordinates(48, 8));
+        update_state.mockClear();
+        const coordinates = new Coordinates(48.5, 8.5);
+        const color = new Color("123456");
+
+        state.update_marker_attributes(marker.get_id(), {
+            name: "Updated marker",
+            coordinates,
+            radius: 125,
+            color,
+        });
+
+        expect(marker.name).toBe("Updated marker");
+        expect(marker.coordinates).toBe(coordinates);
+        expect(marker.radius).toBe(125);
+        expect(marker.color).toBe(color);
+        expect(values.get(`marker[${marker.get_id()}].name`)).toBe("Updated marker");
+        expect(values.get(`marker[${marker.get_id()}].coordinates`)).toBe("48.5;8.5");
+        expect(values.get(`marker[${marker.get_id()}].radius`)).toBe("125");
+        expect(values.get(`marker[${marker.get_id()}].color`)).toBe("123456");
+        expect(update_state).toHaveBeenCalledTimes(1);
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, 0);
+    });
+
+    test("updates only the supplied marker attributes", () => {
+        const state = new MapState(create_app());
+        const update_state = observe(state);
+        const marker = state.add_marker(new Coordinates(48, 8));
+        const original_coordinates = marker.coordinates;
+        const original_color = marker.color;
+        const original_radius = marker.radius;
+        update_state.mockClear();
+
+        state.update_marker_attributes(marker.get_id(), {name: "Updated marker"});
+
+        expect(marker.name).toBe("Updated marker");
+        expect(marker.coordinates).toBe(original_coordinates);
+        expect(marker.color).toBe(original_color);
+        expect(marker.radius).toBe(original_radius);
+        expect(values.get(`marker[${marker.get_id()}].name`)).toBe("Updated marker");
+        expect(values.get(`marker[${marker.get_id()}].coordinates`)).toBe("48;8");
+        expect(values.get(`marker[${marker.get_id()}].color`)).toBe(original_color.to_string());
+        expect(values.get(`marker[${marker.get_id()}].radius`)).toBe(String(original_radius));
+        expect(update_state).toHaveBeenCalledOnce();
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, 0);
+    });
+
+    test("updates the current marker when an older instance has the same ID", () => {
+        const state = new MapState(create_app());
+        const update_state = observe(state);
+        const old_marker = state.add_marker(new Coordinates(48, 8));
+        const current_marker = new Marker(new Coordinates(49, 9));
+        current_marker.marker_id = old_marker.get_id();
+        state.markers[0] = current_marker;
+        state.markers_hash.set(current_marker.get_id(), current_marker);
+        update_state.mockClear();
+
+        state.update_marker_attributes(old_marker.get_id(), {name: "Updated marker"});
+
+        expect(old_marker.name).not.toBe("Updated marker");
+        expect(current_marker.name).toBe("Updated marker");
+        expect(values.get(`marker[${current_marker.get_id()}].name`)).toBe("Updated marker");
+        expect(update_state).toHaveBeenCalledOnce();
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, current_marker.get_id());
     });
 
     test("applies optional marker properties before persisting and notifying", () => {
@@ -156,12 +226,13 @@ describe("MapState mutation side effects", () => {
         const first_marker = state.add_marker(new Coordinates(48, 8));
         const second_marker = state.add_marker(new Coordinates(48, 9));
         const line = state.add_line();
-        state.set_line_marker1(line.get_id(), first_marker.get_id());
-        state.set_line_marker2(line.get_id(), second_marker.get_id());
+        state.update_line_attributes(line.get_id(), {marker1: first_marker.get_id(), marker2: second_marker.get_id()});
         update_state.mockClear();
 
         const initial_length = line.length!.m();
-        state.set_marker_coordinates(second_marker.get_id(), new Coordinates(48, 10));
+        state.update_marker_attributes(second_marker.get_id(), {
+            coordinates: new Coordinates(48, 10),
+        });
 
         expect(line.length).not.toBeNull();
         expect(line.length!.m()).toBeGreaterThan(initial_length);
@@ -183,8 +254,7 @@ describe("MapState mutation side effects", () => {
         const second_marker = state.add_marker(new Coordinates(49, 9));
         const line = state.add_line();
 
-        state.set_line_marker1(line.get_id(), first_marker.get_id());
-        state.set_line_marker2(line.get_id(), second_marker.get_id());
+        state.update_line_attributes(line.get_id(), {marker1: first_marker.get_id(), marker2: second_marker.get_id()});
         state.show_line(line);
 
         expect(fit_coordinates).toHaveBeenCalledWith([

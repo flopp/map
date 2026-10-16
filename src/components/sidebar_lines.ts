@@ -215,11 +215,11 @@ export class SidebarLines extends SidebarItem {
         const center = create_element("div", ["line-center"]);
         const from = create_select_input("data-from");
         from.select.onchange = (): void => {
-            this.set_from(line, parse_int(from.select.value));
+            this.app.map_state.update_line_attributes(line.get_id(), {marker1: parse_int(from.select.value) ?? -1});
         };
         const to = create_select_input("data-to");
         to.select.onchange = (): void => {
-            this.set_to(line, parse_int(to.select.value));
+            this.app.map_state.update_line_attributes(line.get_id(), {marker2: parse_int(to.select.value) ?? -1});
         };
         center.append(from.div);
         center.append(to.div);
@@ -323,35 +323,6 @@ export class SidebarLines extends SidebarItem {
 
         remove_element(div);
 
-        if (!line.color.equals(color)) {
-            line.color = color;
-
-            this.app.map_state.update_line_storage(line);
-            this.app.map_state.update_observers(MapStateChange.LINES);
-        }
-    }
-
-    private set_from(line: Line, marker: number | null): void {
-        const m = marker !== null ? marker : -1;
-        if (line.marker1 === m) {
-            return;
-        }
-
-        line.marker1 = m;
-
-        this.app.map_state.update_line_storage(line);
-        this.app.map_state.update_observers(MapStateChange.LINES);
-    }
-
-    private set_to(line: Line, marker: number | null): void {
-        const m = marker !== null ? marker : -1;
-        if (line.marker2 === m) {
-            return;
-        }
-
-        line.marker2 = m;
-
-        this.app.map_state.update_line_storage(line);
-        this.app.map_state.update_observers(MapStateChange.LINES);
+        this.app.map_state.update_line_attributes(line.get_id(), {color: color});
     }
 }

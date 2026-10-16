@@ -3,7 +3,6 @@ import Sortable from "sortablejs";
 import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
-import {MapStateChange} from "./map_state";
 import {Marker} from "./marker";
 import {MarkerSettingsDialog} from "./marker_settings_dialog";
 import {SidebarItem} from "./sidebar_item";
@@ -15,6 +14,7 @@ import {
     create_text_input,
     parse_float,
 } from "./utilities";
+import {MapStateChange} from "./map_state";
 
 export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;
@@ -361,11 +361,11 @@ export class SidebarMarkers extends SidebarItem {
 
         div.remove();
 
-        marker.name = name;
-        marker.coordinates = coordinates;
-        marker.radius = radius;
-        marker.color = color;
-        this.app.map_state.update_marker_storage(marker);
-        this.app.map_state.update_observers(MapStateChange.MARKERS);
+        this.app.map_state.update_marker_attributes(marker.get_id(), {
+            name,
+            coordinates,
+            radius,
+            color,
+        });
     }
 }

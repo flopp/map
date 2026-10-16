@@ -426,16 +426,9 @@ export class LeafletWrapper extends MapStateObserver {
         obj.marker_obj.addTo(this.map);
 
         obj.marker_obj.on("drag", (): void => {
-            this.app.map_state.set_marker_coordinates(
-                marker.get_id(),
-                to_coordinates(obj.marker_obj.getLatLng()),
-            );
-            const marker_obj = this.markers.get(marker.get_id()) as IMarkerObjDict;
-            if (marker_obj.circle_obj !== null) {
-                const center = to_coordinates(obj.marker_obj.getLatLng());
-                const points = center.geodesic_circle(marker.radius).map(from_coordinates);
-                marker_obj.circle_obj.setLatLngs(points);
-            }
+            this.app.map_state.update_marker_attributes(marker.get_id(), {
+                coordinates: to_coordinates(obj.marker_obj.getLatLng()),
+            });
         });
 
         obj.marker_obj.on("contextmenu", (event: L.LeafletMouseEvent): boolean => {

@@ -814,62 +814,44 @@ export class MapState {
         this.update_observers(MapStateChange.MARKERS);
     }
 
-    public set_marker_coordinates(id: number, coordinates: Coordinates): void {
-        if (!this.markers_hash.has(id)) {
+    public update_marker_attributes(
+        id: number,
+        attributes: Partial<Pick<Marker, "name" | "coordinates" | "radius" | "color">>,
+    ): void {
+        const marker = this.markers_hash.get(id);
+        if (marker === undefined) {
             console.log("bad marker id", id);
 
             return;
         }
 
-        const marker = this.markers_hash.get(id)!;
-        if (!coordinates.equals(marker.coordinates)) {
-            marker.coordinates = coordinates;
-            this.storage.set_coordinates(`marker[${id}].coordinates`, coordinates);
-            this.update_observers(MapStateChange.MARKERS, id);
+        let updated = false;
+
+        if (attributes.name !== undefined && attributes.name !== marker.name) {
+            marker.name = attributes.name;
+            this.storage.set(`marker[${id}].name`, marker.name);
+            updated = true;
         }
-    }
-
-    public set_marker_name(id: number, name: string): void {
-        if (!this.markers_hash.has(id)) {
-            console.log("bad marker id", id);
-
-            return;
+        if (
+            attributes.coordinates !== undefined &&
+            !attributes.coordinates.equals(marker.coordinates)
+        ) {
+            marker.coordinates = attributes.coordinates;
+            this.storage.set_coordinates(`marker[${id}].coordinates`, marker.coordinates);
+            updated = true;
         }
-
-        const marker = this.markers_hash.get(id)!;
-        if (name !== marker.name) {
-            marker.name = name;
-            this.storage.set(`marker[${id}].name`, name);
-            this.update_observers(MapStateChange.MARKERS, id);
+        if (attributes.radius !== undefined && attributes.radius !== marker.radius) {
+            marker.radius = attributes.radius;
+            this.storage.set_float(`marker[${id}].radius`, marker.radius);
+            updated = true;
         }
-    }
-
-    public set_marker_color(id: number, color: Color): void {
-        if (!this.markers_hash.has(id)) {
-            console.log("bad marker id", id);
-
-            return;
+        if (attributes.color !== undefined && !attributes.color.equals(marker.color)) {
+            marker.color = attributes.color;
+            this.storage.set_color(`marker[${id}].color`, marker.color);
+            updated = true;
         }
 
-        const marker = this.markers_hash.get(id)!;
-        if (!color.equals(marker.color)) {
-            marker.color = color;
-            this.storage.set_color(`marker[${id}].color`, color);
-            this.update_observers(MapStateChange.MARKERS, id);
-        }
-    }
-
-    public set_marker_radius(id: number, radius: number): void {
-        if (!this.markers_hash.has(id)) {
-            console.log("bad marker id", id);
-
-            return;
-        }
-
-        const marker = this.markers_hash.get(id)!;
-        if (radius !== marker.radius) {
-            marker.radius = radius;
-            this.storage.set_float(`marker[${id}].radius`, radius);
+        if (updated) {
             this.update_observers(MapStateChange.MARKERS, id);
         }
     }
@@ -963,37 +945,35 @@ export class MapState {
         this.update_observers(MapStateChange.LINES);
     }
 
-    public set_line_marker1(id: number, marker_id: number): void {
-        if (!this.lines_hash.has(id)) {
+    public update_line_attributes(id: number, attributes: Partial<ILineProperties>): void {
+        const line = this.get_line(id);
+        if (line === null) {
             console.log("bad line id", id);
 
             return;
         }
-        this.lines_hash.get(id)!.marker1 = marker_id;
-        this.storage.set_int(`line[${id}].marker1`, marker_id);
-        this.update_observers(MapStateChange.LINES);
-    }
 
-    public set_line_marker2(id: number, marker_id: number): void {
-        if (!this.lines_hash.has(id)) {
-            console.log("bad line id", id);
+        let updated = false;
 
-            return;
+        if (attributes.marker1 !== undefined && attributes.marker1 !== line.marker1) {
+            line.marker1 = attributes.marker1;
+            this.storage.set_int(`line[${id}].marker1`, attributes.marker1);
+            updated = true;
         }
-        this.lines_hash.get(id)!.marker2 = marker_id;
-        this.storage.set_int(`line[${id}].marker2`, marker_id);
-        this.update_observers(MapStateChange.LINES);
-    }
-
-    public set_line_color(id: number, color: Color): void {
-        if (!this.lines_hash.has(id)) {
-            console.log("bad line id", id);
-
-            return;
+        if (attributes.marker2 !== undefined && attributes.marker2 !== line.marker2) {
+            line.marker2 = attributes.marker2;
+            this.storage.set_int(`line[${id}].marker2`, attributes.marker2);
+            updated = true;
         }
-        this.lines_hash.get(id)!.color = color;
-        this.storage.set_color(`line[${id}].color`, color);
-        this.update_observers(MapStateChange.LINES);
+        if (attributes.color !== undefined && attributes.color !== line.color) {
+            line.color = attributes.color;
+            this.storage.set_color(`line[${id}].color`, attributes.color);
+            updated = true;
+        }
+
+        if (updated) {
+            this.update_observers(MapStateChange.LINES);
+        }
     }
 
     public update_line_storage(line: Line): void {
