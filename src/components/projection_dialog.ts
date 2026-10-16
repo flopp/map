@@ -59,11 +59,11 @@ export class ProjectionDialog extends Dialog {
         }
 
         const coordinates = this.marker!.coordinates.project(bearing, distance);
-        const target_marker = this._app.map_state.add_marker(coordinates);
-        target_marker.name = target_name;
-        target_marker.radius = target_radius !== null ? target_radius : -1;
-        target_marker.color = target_color !== null ? target_color : this.marker!.color;
-        this._app.map_state.update_marker_storage(target_marker);
+        const target_marker = this._app.map_state.add_marker(coordinates, {
+            name: target_name,
+            radius: target_radius !== null ? target_radius : -1,
+            color: target_color !== null ? target_color : this.marker!.color,
+        });
 
         if (create_line) {
             const line = this._app.map_state.add_line();

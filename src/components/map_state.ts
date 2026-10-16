@@ -30,6 +30,9 @@ interface IMarkerSettingsDict {
     radius: number;
     filled: boolean;
 }
+
+export type IMarkerProperties = Partial<Pick<Marker, "name" | "color" | "radius">>;
+
 interface ILineSettingsDict {
     distance_format: DistanceFormat;
     random_color: boolean;
@@ -762,12 +765,15 @@ export class MapState {
         this.update_observers(MapStateChange.CENTER);
     }
 
-    public add_marker(coordinates: Coordinates | null): Marker {
+    public add_marker(coordinates: Coordinates | null, properties: IMarkerProperties = {}): Marker {
         const marker = new Marker(coordinates === null ? this.center! : coordinates);
         if (!this.settings_marker_random_color) {
             marker.color = this.settings_marker_color;
         }
         marker.radius = this.settings_marker_radius;
+        marker.name = properties.name ?? marker.name;
+        marker.color = properties.color ?? marker.color;
+        marker.radius = properties.radius ?? marker.radius;
 
         this.markers.push(marker);
         this.markers_hash.set(marker.get_id(), marker);

@@ -1,6 +1,7 @@
 import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 
 import type {App} from "../src/components/app";
+import {Color} from "../src/components/color";
 import {Coordinates} from "../src/components/coordinates";
 import {MapState, MapStateChange} from "../src/components/map_state";
 import {MapStateObserver} from "../src/components/map_state_observer";
@@ -102,6 +103,27 @@ describe("MapState mutation side effects", () => {
         expect(values.get(`marker[${marker.get_id()}].coordinates`)).toBe("48.5;8.5");
         expect(update_state).toHaveBeenNthCalledWith(1, MapStateChange.MARKERS, marker.get_id());
         expect(update_state).toHaveBeenNthCalledWith(2, MapStateChange.MARKERS, marker.get_id());
+    });
+
+    test("applies optional marker properties before persisting and notifying", () => {
+        const state = new MapState(create_app());
+        const update_state = observe(state);
+        const color = new Color("123456");
+
+        const marker = state.add_marker(new Coordinates(48, 8), {
+            name: "Custom marker",
+            color,
+            radius: 125,
+        });
+
+        expect(marker.name).toBe("Custom marker");
+        expect(marker.color).toBe(color);
+        expect(marker.radius).toBe(125);
+        expect(values.get(`marker[${marker.get_id()}].name`)).toBe("Custom marker");
+        expect(values.get(`marker[${marker.get_id()}].color`)).toBe("123456");
+        expect(values.get(`marker[${marker.get_id()}].radius`)).toBe("125");
+        expect(update_state).toHaveBeenCalledTimes(1);
+        expect(update_state).toHaveBeenCalledWith(MapStateChange.MARKERS, marker.get_id());
     });
 
     test("recomputes line distance and bearing when a marker moves", () => {
