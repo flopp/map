@@ -14,6 +14,7 @@ import {create_element, create_icon} from "./utilities";
 export class Sidebar extends MapStateObserver {
     private readonly _sidebar_controls: HTMLDivElement;
     private readonly _sidebars: Map<string, [HTMLDivElement, SidebarItem]>;
+    private readonly _sidebar_counts: Map<string, HTMLSpanElement>;
     public sidebar_layers: SidebarLayers;
 
     public constructor(app: App) {
@@ -31,6 +32,7 @@ export class Sidebar extends MapStateObserver {
         // .translate("sidebar.tools.title")
         // .translate("sidebar.info.title")
         this._sidebars = new Map();
+        this._sidebar_counts = new Map();
         const sidebar_definitions: Array<[string, string, (id: string) => SidebarItem]> = [
             ["hero", "star", (i: string): SidebarItem => new SidebarHero(app, i)],
             ["layers", "layers", (_id: string): SidebarItem => this.sidebar_layers],
@@ -54,7 +56,7 @@ export class Sidebar extends MapStateObserver {
             },
         );
 
-        this.update_state(MapStateChange.SIDEBAR);
+        this.update_state(MapStateChange.SIDEBAR | MapStateChange.MARKERS | MapStateChange.LINES);
     }
 
     public toggle(name: string | null): void {
@@ -67,6 +69,13 @@ export class Sidebar extends MapStateObserver {
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
+        if ((changes & MapStateChange.MARKERS) !== MapStateChange.NOTHING) {
+            this._update_sidebar_count("markers", this.app.map_state.markers.length);
+        }
+        if ((changes & MapStateChange.LINES) !== MapStateChange.NOTHING) {
+            this._update_sidebar_count("lines", this.app.map_state.lines.length);
+        }
+
         if ((changes & MapStateChange.SIDEBAR) === MapStateChange.NOTHING) {
             return;
         }
@@ -110,6 +119,11 @@ export class Sidebar extends MapStateObserver {
         const a = create_element("a", ["sidebar-control-button"], {href: "#"});
         const svg = create_icon(icon, ["icon24"]);
         a.append(svg);
+        if (name === "markers" || name === "lines") {
+            const count = create_element("span", ["sidebar-control-count", "is-hidden"]);
+            a.append(count);
+            this._sidebar_counts.set(name, count as HTMLSpanElement);
+        }
         div.append(a);
         this._sidebar_controls.append(div);
 
@@ -119,5 +133,15 @@ export class Sidebar extends MapStateObserver {
         });
 
         return div;
+    }
+
+    private _update_sidebar_count(name: string, value: number): void {
+        const count = this._sidebar_counts.get(name);
+        if (count === undefined) {
+            return;
+        }
+
+        count.textContent = String(value);
+        count.classList.toggle("is-hidden", value === 0);
     }
 }
