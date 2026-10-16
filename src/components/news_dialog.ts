@@ -283,6 +283,11 @@ Links load directly when the current map has no markers or lines.`,
         `Beim Öffnen geteilter Kartenlinks wird vor dem Ersetzen einer Karte mit Markern oder Linien nachgefragt; die Anzahl beider Karten wird angezeigt.
 Links werden direkt geladen, wenn die aktuelle Karte keine Marker oder Linien enthält.`,
     ),
+    new NewsArticle(
+        "2026-10-16",
+        "Marker and line counts in the sidebar.",
+        "Marker- und Linienanzahl in der Seitenleiste.",
+    ),
 ];
 
 export class NewsDialog extends Dialog {
