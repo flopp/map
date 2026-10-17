@@ -5,9 +5,9 @@ export class Dialog {
     protected readonly _app: App;
     protected readonly _div: HTMLDivElement;
 
-    public constructor(id: string, app: App, helpUrl: string = "") {
+    public constructor(id: string | HTMLDivElement, app: App, helpUrl: string = "") {
         this._app = app;
-        this._div = document.getElementById(id) as HTMLDivElement;
+        this._div = typeof id === "string" ? (document.getElementById(id) as HTMLDivElement) : id;
 
         if (helpUrl !== "") {
             const title = this._div.querySelector(".modal-card-title")!;

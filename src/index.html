@@ -488,69 +488,6 @@
             </div>
         </div>
 
-        <div id="multi-markers-dialog" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <h2 class="modal-card-title" data-i18n="dialog.multi-markers.title">Create Multiple Markers</h2>
-                    <button class="delete" data-cancel aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                    <h3 class="is-size-4" data-i18n="dialog.multi-markers.common-attributes">Common Marker Attributes</h3>
-
-                    <div class="columns">
-                        <div class="column">
-                            <label class="checkbox">
-                                <input type="checkbox" data-use-common-name>
-                                <span data-i18n="dialog.multi-markers.name">Name Prefix</span>
-                            </label>
-                            <div class="field">
-                                <div class="control">
-                                    <input data-common-name class="input" type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <label class="checkbox">
-                                <input type="checkbox" data-use-common-color>
-                                <span data-i18n="dialog.multi-markers.color">Color</span>
-                            </label>
-                            <div class="field">
-                                <div class="control">
-                                    <input data-common-color class="input" type="color">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column">
-                            <label class="checkbox">
-                                <input type="checkbox" data-use-common-radius>
-                                <span data-i18n="dialog.multi-markers.radius">Circle Radius (m)</span>
-                            </label>
-                            <div class="field">
-                                <div class="control">
-                                    <input data-common-radius class="input" type="text">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h3 class="is-size-4" data-i18n="dialog.multi-markers.data">Marker Data</h3>
-                    <p>
-                        <span data-i18n="dialog.multi-markers.format">Data format per line:</span><br />
-                        <span data-format class="is-family-code"></span><br />
-                        <span data-i18n="dialog.multi-markers.example">Example:</span><br />
-                        <span data-example class="is-family-code"></span>
-                    </p>
-
-                    <textarea data-marker-data class="textarea is-family-code" placeholder="Marker Data"></textarea>
-                </section>
-                <footer class="modal-card-foot">
-                    <button class="button is-success" data-ok data-i18n="dialog.multi-markers.create">Create Markers</button>
-                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                </footer>
-            </div>
-        </div>
-
         <div id="marker-settings-dialog" class="modal">
             <div class="modal-background"></div>
             <div class="modal-card">

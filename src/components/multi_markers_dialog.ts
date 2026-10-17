@@ -2,7 +2,7 @@ import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {Dialog} from "./dialog";
-import {parse_float} from "./utilities";
+import {create_element, parse_float} from "./utilities";
 
 export class MultiMarkersDialog extends Dialog {
     private readonly _useCommonName: HTMLInputElement;
@@ -16,7 +16,11 @@ export class MultiMarkersDialog extends Dialog {
     private readonly _example: HTMLSpanElement;
 
     public constructor(app: App) {
-        super("multi-markers-dialog", app, "https://blog.flopp.net/creating-multiple-markers/");
+        super(
+            MultiMarkersDialog.create_dialog(),
+            app,
+            "https://blog.flopp.net/creating-multiple-markers/",
+        );
 
         this._useCommonName = this._div.querySelector("[data-use-common-name]")!;
         this._useCommonColor = this._div.querySelector("[data-use-common-color]")!;
@@ -44,6 +48,144 @@ export class MultiMarkersDialog extends Dialog {
 
         this._commonName.value = "M";
         this._commonRadius.value = "0";
+    }
+
+    private static create_dialog(): HTMLDivElement {
+        const dialog = create_element("div", ["modal"], {
+            id: "multi-markers-dialog",
+        }) as HTMLDivElement;
+        const modal_card = create_element("div", ["modal-card"]);
+        const header = create_element("header", ["modal-card-head"]);
+        const title = create_element("h2", ["modal-card-title"], {
+            "data-i18n": "dialog.multi-markers.title",
+        });
+        title.textContent = "Create Multiple Markers";
+        header.append(title);
+        const close_button = create_element("button", ["delete"], {
+            "data-cancel": null,
+            "aria-label": "close",
+        });
+        header.append(close_button);
+        modal_card.append(header);
+
+        const body = create_element("section", ["modal-card-body"]);
+        const common_attributes_heading = create_element("h3", ["is-size-4"], {
+            "data-i18n": "dialog.multi-markers.common-attributes",
+        });
+        common_attributes_heading.textContent = "Common Marker Attributes";
+        body.append(common_attributes_heading);
+
+        const columns = create_element("div", ["columns"]);
+        const name_column = MultiMarkersDialog.create_common_attribute_column(
+            "name",
+            "Name Prefix",
+            "text",
+        );
+        const color_column = MultiMarkersDialog.create_common_attribute_column(
+            "color",
+            "Color",
+            "color",
+        );
+        const radius_column = MultiMarkersDialog.create_common_attribute_column(
+            "radius",
+            "Circle Radius (m)",
+            "text",
+        );
+        columns.append(name_column, color_column, radius_column);
+        body.append(columns);
+
+        const data_heading = create_element("h3", ["is-size-4"], {
+            "data-i18n": "dialog.multi-markers.data",
+        });
+        data_heading.textContent = "Marker Data";
+        body.append(data_heading);
+
+        const data_description = create_element("p");
+        const format_label = create_element("span", [], {
+            "data-i18n": "dialog.multi-markers.format",
+        });
+        format_label.textContent = "Data format per line:";
+        const data_format = create_element("span", ["is-family-code"], {
+            "data-format": null,
+        });
+        const example_label = create_element("span", [], {
+            "data-i18n": "dialog.multi-markers.example",
+        });
+        example_label.textContent = "Example:";
+        const example = create_element("span", ["is-family-code"], {
+            "data-example": null,
+        });
+        data_description.append(
+            format_label,
+            create_element("br"),
+            data_format,
+            create_element("br"),
+            example_label,
+            create_element("br"),
+            example,
+        );
+        body.append(data_description);
+
+        const marker_data = create_element("textarea", ["textarea", "is-family-code"], {
+            "data-marker-data": null,
+            placeholder: "Marker Data",
+        });
+        body.append(marker_data);
+        modal_card.append(body);
+
+        const footer = create_element("footer", ["modal-card-foot"]);
+        const create_button = create_element("button", ["button", "is-success"], {
+            "data-ok": null,
+            "data-i18n": "dialog.multi-markers.create",
+        });
+        create_button.textContent = "Create Markers";
+        footer.append(create_button);
+        const cancel_button = create_element("button", ["button"], {
+            "data-cancel": null,
+            "data-i18n": "general.cancel",
+        });
+        cancel_button.textContent = "Cancel";
+        footer.append(cancel_button);
+        modal_card.append(footer);
+
+        dialog.append(create_element("div", ["modal-background"]), modal_card);
+        document.body.append(dialog);
+
+        return dialog;
+    }
+
+    private static create_common_attribute_column(
+        attribute: "name" | "color" | "radius",
+        label: string,
+        input_type: "text" | "color",
+    ): HTMLElement {
+        const column = create_element("div", ["column"]);
+        const checkbox_label = create_element("label", ["checkbox"]);
+        checkbox_label.append(
+            create_element("input", [], {
+                type: "checkbox",
+                [`data-use-common-${attribute}`]: null,
+            }),
+        );
+        const label_text = create_element("span", [], {
+            "data-i18n": `dialog.multi-markers.${attribute}`,
+        });
+        label_text.textContent = label;
+        checkbox_label.append(label_text);
+        column.append(checkbox_label);
+
+        const field = create_element("div", ["field"]);
+        const control = create_element("div", ["control"]);
+        control.append(
+            create_element("input", ["input"], {
+                [`data-common-${attribute}`]: null,
+                type: input_type,
+            }),
+        );
+        field.append(control);
+        column.append(field);
+
+        return column;
     }
 
     public show(): void {
