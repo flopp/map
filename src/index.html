@@ -429,56 +429,6 @@
             </div>
         </div>
 
-        <div id="marker-settings-dialog" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <h2 class="modal-card-title" data-i18n="dialog.marker-settings.title"></h2>
-                    <button class="delete" data-cancel aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                    <div class="field">
-                        <label class="label" data-i18n="dialog.marker-settings.coordinates-format">Coordinates Display Format</label>
-                        <div class="control">
-                            <div class="select">
-                                <select data-coordinates-format></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label" data-i18n="dialog.marker-settings.default-color">Default Color</label>
-                        <div class="control">
-                            <label class="checkbox">
-                                <input data-random-color type="checkbox" />
-                                <span data-i18n="dialog.marker-settings.random-colors">Use random colors</span>
-                            </label>
-                        </div>
-                        <div class="control">
-                            <input class="input" data-color type="color" placeholder="Color">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label" data-i18n="dialog.marker-settings.default-radius">Default Circle Radius (m)</label>
-                        <div class="control">
-                            <input class="input" data-radius type="text" placeholder="Circle Radius" data-i18n="dialog.marker-settings.default-radius-placeholder" data-i18n-target="placeholder">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <label class="checkbox">
-                                <input data-filled type="checkbox" />
-                                <span data-i18n="dialog.marker-settings.filled">Filled circles</span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-                <footer class="modal-card-foot">
-                    <button class="button is-success" data-ok data-i18n="dialog.marker-settings.apply"></button>
-                    <button class="button" data-cancel data-i18n="general.cancel">Cancel</button>
-                </footer>
-            </div>
-        </div>
-
         <div id="line-settings-dialog" class="modal">
             <div class="modal-background"></div>
             <div class="modal-card">
