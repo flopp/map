@@ -14,6 +14,7 @@ import {OverwriteProtectionDialog} from "./overwrite_protection_dialog";
 import {ProjectionDialog} from "./projection_dialog";
 import {Sidebar} from "./sidebar";
 import {VersionCheck} from "./version_check";
+import {YesNoDialog} from "./yesno_dialog";
 
 export class App {
     private readonly _lang: Language | null = null;
@@ -29,6 +30,7 @@ export class App {
     public leaflet: LeafletWrapper;
     public news_dialog: NewsDialog;
     public version_check: VersionCheck;
+    private yes_no_dialog: YesNoDialog;
 
     public constructor(id_leaflet: string) {
         this.notifications = new Notifications();
@@ -36,6 +38,7 @@ export class App {
         this.map_state = new MapState(this);
 
         this._lang = new Language(this);
+        this.yes_no_dialog = new YesNoDialog(this);
 
         const url_state: MapStateFromUrl | null = this.map_state.parse_url_state();
         this.map_state.restore();
@@ -171,33 +174,6 @@ export class App {
     }
 
     public yesNoDialog(title: string, text: string, yes: () => void): void {
-        const dialogEl = document.querySelector("#yesno-dialog")!;
-        const titleEl = document.querySelector("#yesno-title")!;
-        const textEl = document.querySelector("#yesno-text")!;
-        let yesButton = document.querySelector("#yesno-yes") as HTMLButtonElement;
-        let noButton = document.querySelector("#yesno-no") as HTMLButtonElement;
-        titleEl.innerHTML = title;
-        textEl.innerHTML = text;
-
-        /*
-            Clone button to remove all event listeners, see
-            https://stackoverflow.com/questions/19469881/remove-all-event-listeners-of-specific-type
-        */
-        const yesButtonClone = yesButton.cloneNode(true);
-        yesButton.parentNode!.replaceChild(yesButtonClone, yesButton);
-        yesButton = document.querySelector("#yesno-yes") as HTMLButtonElement;
-        yesButton.addEventListener("click", () => {
-            dialogEl.classList.remove("is-active");
-            yes();
-        });
-        const noButtonClone = noButton.cloneNode(true);
-        noButton.parentNode!.replaceChild(noButtonClone, noButton);
-        noButton = document.querySelector("#yesno-no") as HTMLButtonElement;
-        noButton.addEventListener("click", () => {
-            dialogEl.classList.remove("is-active");
-        });
-
-        dialogEl.classList.add("is-active");
-        yesButton.focus();
+        this.yes_no_dialog.show(title, text, yes);
     }
 }
