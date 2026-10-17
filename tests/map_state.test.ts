@@ -1,11 +1,14 @@
 import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
+import {readFileSync} from "node:fs";
 
 import type {App} from "../src/components/app";
 import {Color} from "../src/components/color";
-import {Coordinates} from "../src/components/coordinates";
+import {Coordinates, CoordinatesFormat} from "../src/components/coordinates";
+import {DistanceFormat} from "../src/components/distance";
 import {map_state_change, MapState} from "../src/components/map_state";
 import {MapStateObserver} from "../src/components/map_state_observer";
 import {Line} from "../src/components/line";
+import {MapType} from "../src/components/map_type";
 import {Marker} from "../src/components/marker";
 
 describe("MapState mutation side effects", () => {
@@ -351,6 +354,50 @@ describe("MapState mutation side effects", () => {
         expect(state.get_line(state.lines[0].get_id())).toBe(state.lines[0]);
     });
 
+    test("round trips exported JSON through import", () => {
+        const state = new MapState(create_app());
+        state.set_view(new Coordinates(48.123456, 8.654321), 12);
+        state.set_map_type(MapType.ARCGIS_WORLDIMAGERY);
+        state.german_npa = true;
+        state.hillshading = true;
+        state.settings_marker_coordinates_format = CoordinatesFormat.DMS;
+        state.settings_marker_random_color = false;
+        state.settings_marker_color = new Color("123456");
+        state.settings_marker_radius = 125;
+        state.settings_marker_draggable = true;
+        state.settings_marker_filled = false;
+        state.settings_line_distance_format = DistanceFormat.km;
+        state.settings_line_random_color = false;
+        state.settings_line_color = new Color("654321");
+        state.settings_line_display_distance = false;
+        const first_marker = state.add_marker(new Coordinates(48.234567, 8.345678), {
+            name: "Start",
+            color: new Color("abcdef"),
+            radius: 25,
+        });
+        const second_marker = state.add_marker(new Coordinates(49.345678, 9.456789), {
+            name: "Finish",
+        });
+        state.add_line({
+            marker1: first_marker.get_id(),
+            marker2: second_marker.get_id(),
+            color: new Color("fedcba"),
+        });
+        const exported = JSON.parse(JSON.stringify(state.to_json()));
+        const imported = new MapState(create_app());
+
+        expect(imported.from_json(exported)).toBe(true);
+        expect(imported.to_json()).toEqual(exported);
+    });
+
+    test("imports the map state JSON fixture", () => {
+        const exported: unknown = JSON.parse(readFileSync("tests/data/map_state.json", "utf8"));
+        const state = new MapState(create_app());
+
+        expect(state.from_json(exported)).toBe(true);
+        expect(state.to_json()).toEqual(exported);
+    });
+
     test("rejects invalid JSON state without changing state, storage, or observers", () => {
         const state = new MapState(create_app());
         state.set_view(new Coordinates(48, 8), 12);
@@ -360,7 +407,7 @@ describe("MapState mutation side effects", () => {
 
         const imported = state.from_json({
             center: "N 50 E 10",
-            markers: [{coordinates: "N 50 E 10", radius: -1}],
+            settings: {markers: {radius: -1}},
         });
 
         expect(imported).toBe(false);

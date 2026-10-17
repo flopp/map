@@ -188,7 +188,7 @@ export class ProjectionDialog extends Dialog {
         const coordinates = this.marker!.coordinates.project(bearing, distance);
         const target_marker = this._app.map_state.add_marker(coordinates, {
             name: target_name,
-            radius: target_radius !== null ? target_radius : -1,
+            radius: target_radius !== null ? target_radius : 0,
             color: target_color !== null ? target_color : this.marker!.color,
         });
 
