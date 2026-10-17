@@ -2,7 +2,7 @@ import {App} from "./app";
 import {Color} from "./color";
 import {Dialog} from "./dialog";
 import {Marker} from "./marker";
-import {create_element, parse_float} from "./utilities";
+import {create_element, create_input_field, parse_float} from "./utilities";
 
 export class ProjectionDialog extends Dialog {
     private marker: Marker | null = null;
@@ -33,40 +33,50 @@ export class ProjectionDialog extends Dialog {
         const body = create_element("section", ["modal-card-body"]);
         body.append(ProjectionDialog.create_heading("data", "Projection Data"));
         body.append(
-            ProjectionDialog.create_input_field(
-                "distance",
-                "text",
-                "Distance (m)",
-                "dialog.projection.distance",
-            ),
-            ProjectionDialog.create_input_field(
-                "bearing",
-                "text",
-                "Bearing (°)",
-                "dialog.projection.bearing",
-            ),
+            create_input_field({
+                type: "text",
+                attributes: {"data-distance": null},
+                placeholder: {
+                    text: "Distance (m)",
+                    translation_key: "dialog.projection.distance",
+                },
+            }),
+            create_input_field({
+                type: "text",
+                attributes: {"data-bearing": null},
+                placeholder: {
+                    text: "Bearing (°)",
+                    translation_key: "dialog.projection.bearing",
+                },
+            }),
         );
 
         body.append(ProjectionDialog.create_heading("marker", "Created Marker"));
         body.append(
-            ProjectionDialog.create_input_field(
-                "target-name",
-                "text",
-                "Name of created marker",
-                "dialog.projection.marker_name",
-            ),
-            ProjectionDialog.create_input_field(
-                "target-color",
-                "color",
-                "Color of created marker",
-                "dialog.projection.marker_color",
-            ),
-            ProjectionDialog.create_input_field(
-                "target-radius",
-                "text",
-                "Circle radius of created marker",
-                "dialog.projection.marker_radius",
-            ),
+            create_input_field({
+                type: "text",
+                attributes: {"data-target-name": null},
+                placeholder: {
+                    text: "Name of created marker",
+                    translation_key: "dialog.projection.marker_name",
+                },
+            }),
+            create_input_field({
+                type: "color",
+                attributes: {"data-target-color": null},
+                placeholder: {
+                    text: "Color of created marker",
+                    translation_key: "dialog.projection.marker_color",
+                },
+            }),
+            create_input_field({
+                type: "text",
+                attributes: {"data-target-radius": null},
+                placeholder: {
+                    text: "Circle radius of created marker",
+                    translation_key: "dialog.projection.marker_radius",
+                },
+            }),
         );
 
         body.append(ProjectionDialog.create_heading("line", "Created Line"));
@@ -88,12 +98,14 @@ export class ProjectionDialog extends Dialog {
         line_field.append(line_control);
         body.append(
             line_field,
-            ProjectionDialog.create_input_field(
-                "line-color",
-                "color",
-                "Color of created line",
-                "dialog.projection.line_color",
-            ),
+            create_input_field({
+                type: "color",
+                attributes: {"data-line-color": null},
+                placeholder: {
+                    text: "Color of created line",
+                    translation_key: "dialog.projection.line_color",
+                },
+            }),
         );
         modal_card.append(body);
 
@@ -125,28 +137,6 @@ export class ProjectionDialog extends Dialog {
         heading.textContent = text;
 
         return heading;
-    }
-
-    private static create_input_field(
-        data_key: string,
-        type: "text" | "color",
-        placeholder: string,
-        translation_key: string,
-    ): HTMLElement {
-        const field = create_element("div", ["field"]);
-        const control = create_element("div", ["control"]);
-        control.append(
-            create_element("input", ["input"], {
-                [`data-${data_key}`]: null,
-                type,
-                placeholder,
-                "data-i18n": translation_key,
-                "data-i18n-target": "placeholder",
-            }),
-        );
-        field.append(control);
-
-        return field;
     }
 
     public showMarker(marker: Marker): void {

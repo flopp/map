@@ -68,51 +68,66 @@ const remove_element = (node: HTMLElement | null): void => {
     node.parentNode.removeChild(node);
 };
 
-const create_text_input = (
-    label_text: string,
-    data_tag: string,
-    placeholder: string,
-): HTMLElement => {
-    const field = create_element("div", ["field"]);
-    const label = create_element("label", ["label"], {"data-i18n": label_text});
-    label.textContent = label_text;
-    field.append(label);
+interface IInputFieldOptions {
+    type: string;
+    attributes?: Record<string, string | null>;
+    input_classes?: string[];
+    label?: {text: string; translation_key?: string};
+    placeholder?: {text: string; translation_key?: string};
+}
+
+const create_input_field = (options: IInputFieldOptions): HTMLDivElement => {
+    const field = create_element("div", ["field"]) as HTMLDivElement;
+    if (options.label !== undefined) {
+        const label = create_element("label", ["label"], {
+            "data-i18n": options.label.translation_key ?? options.label.text,
+        });
+        label.textContent = options.label.text;
+        field.append(label);
+    }
+
     const control = create_element("div", ["control"]);
-    const input = create_element("input", ["input", "is-fullwidth"], {
-        type: "text",
-        [data_tag]: null,
-        placeholder,
-        "data-i18n": placeholder,
-        "data-i18n-target": "placeholder",
-    });
+    const attributes: Record<string, string | null> = {
+        type: options.type,
+        ...options.attributes,
+    };
+    if (options.placeholder !== undefined) {
+        attributes.placeholder = options.placeholder.text;
+        attributes["data-i18n"] = options.placeholder.translation_key ?? options.placeholder.text;
+        attributes["data-i18n-target"] = "placeholder";
+    }
+    const input = create_element("input", options.input_classes ?? ["input"], attributes);
     control.append(input);
     field.append(control);
 
     return field;
 };
+
+const create_text_input = (
+    label_text: string,
+    data_tag: string,
+    placeholder: string,
+): HTMLElement =>
+    create_input_field({
+        type: "text",
+        attributes: {[data_tag]: null},
+        input_classes: ["input", "is-fullwidth"],
+        label: {text: label_text},
+        placeholder: {text: placeholder},
+    });
 
 const create_color_input = (
     label_text: string,
     data_tag: string,
     placeholder: string,
-): HTMLElement => {
-    const field = create_element("div", ["field"]);
-    const label = create_element("label", ["label"], {"data-i18n": label_text});
-    label.textContent = label_text;
-    field.append(label);
-    const control = create_element("div", ["control"]);
-    const input = create_element("input", ["input", "is-fullwidth"], {
+): HTMLElement =>
+    create_input_field({
         type: "color",
-        [data_tag]: null,
-        placeholder,
-        "data-i18n": placeholder,
-        "data-i18n-target": "placeholder",
+        attributes: {[data_tag]: null},
+        input_classes: ["input", "is-fullwidth"],
+        label: {text: label_text},
+        placeholder: {text: placeholder},
     });
-    control.append(input);
-    field.append(control);
-
-    return field;
-};
 
 const create_select_input = (
     data_tag: string,
@@ -239,6 +254,7 @@ export {
     create_button,
     create_icon_button,
     create_dropdown,
+    create_input_field,
     create_text_input,
     create_color_input,
     create_select_input,

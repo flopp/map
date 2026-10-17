@@ -2,7 +2,7 @@ import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {Dialog} from "./dialog";
-import {create_element, parse_float} from "./utilities";
+import {create_element, create_input_field, parse_float} from "./utilities";
 
 export class MultiMarkersDialog extends Dialog {
     private readonly _useCommonName: HTMLInputElement;
@@ -174,16 +174,15 @@ export class MultiMarkersDialog extends Dialog {
         checkbox_label.append(label_text);
         column.append(checkbox_label);
 
-        const field = create_element("div", ["field"]);
-        const control = create_element("div", ["control"]);
-        control.append(
-            create_element("input", ["input"], {
-                [`data-common-${attribute}`]: null,
+        column.append(
+            create_input_field({
                 type: input_type,
+                input_classes: ["input"],
+                attributes: {
+                    [`data-common-${attribute}`]: null,
+                },
             }),
         );
-        field.append(control);
-        column.append(field);
 
         return column;
     }
