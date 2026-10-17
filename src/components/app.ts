@@ -4,7 +4,7 @@ import {Language} from "./language";
 import {LeafletWrapper} from "./leaflet_wrapper";
 import {LinkDialog} from "./link_dialog";
 import {MapMenu} from "./map_menu";
-import {MapState, MapStateChange, MapStateFromUrl} from "./map_state";
+import {ALL_MAP_STATE_PARTS, map_state_change, MapState, MapStateFromUrl} from "./map_state";
 import {MapType} from "./map_type";
 import {Marker} from "./marker";
 import {MultiMarkersDialog} from "./multi_markers_dialog";
@@ -53,7 +53,7 @@ export class App {
         this.version_check = new VersionCheck(this);
 
         this.leaflet = new LeafletWrapper(id_leaflet, this);
-        this.leaflet.update_state(MapStateChange.EVERYTHING);
+        this.leaflet.update_state(map_state_change(ALL_MAP_STATE_PARTS));
         this.switch_map(this.map_state.map_type);
 
         this.sidebar = new Sidebar(this);

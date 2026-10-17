@@ -9,19 +9,41 @@ import {IMarkerJson, Marker} from "./marker";
 import {Storage} from "./storage";
 import {parse_float, parse_int} from "./utilities";
 
-export enum MapStateChange {
-    NOTHING = 0,
-    SIDEBAR = 1,
-    MAPTYPE = 2,
-    CENTER = 4,
-    ZOOM = 8,
-    VIEW = 12,
-    MARKERS = 16,
-    LINES = 32,
-    LANGUAGE = 64,
-    HILLSHADING = 128,
-    EVERYTHING = 255,
+export type MapStatePart =
+    | "sidebar"
+    | "map_type"
+    | "german_npa"
+    | "center"
+    | "zoom"
+    | "markers"
+    | "lines"
+    | "language"
+    | "hillshading";
+
+export interface MapStateChange {
+    readonly parts: ReadonlySet<MapStatePart>;
+    readonly marker_id?: number;
 }
+
+export const ALL_MAP_STATE_PARTS: readonly MapStatePart[] = [
+    "sidebar",
+    "map_type",
+    "german_npa",
+    "center",
+    "zoom",
+    "markers",
+    "lines",
+    "language",
+    "hillshading",
+];
+
+export const map_state_change = (
+    parts: readonly MapStatePart[],
+    marker_id?: number,
+): MapStateChange => ({
+    parts: new Set(parts),
+    ...(marker_id === undefined ? {} : {marker_id}),
+});
 
 interface IMarkerSettingsDict {
     coordinates_format: CoordinatesFormat;
@@ -579,7 +601,7 @@ export class MapState {
 
         this.clear_storage();
         this.store();
-        this.update_observers(MapStateChange.EVERYTHING);
+        this.update_observers(map_state_change(ALL_MAP_STATE_PARTS));
     }
 
     public restore_from_url(): void {
@@ -649,15 +671,15 @@ export class MapState {
         this.observers.push(observer);
     }
 
-    public update_observers(changes: number, marker_id: number = -1): void {
-        let updatedChanges = changes;
-        if ((changes & (MapStateChange.MARKERS | MapStateChange.LINES)) !== 0) {
+    public update_observers(change: MapStateChange): void {
+        let updated_change = change;
+        if (change.parts.has("markers") || change.parts.has("lines")) {
             if (this.recompute_lines()) {
-                updatedChanges = changes | MapStateChange.LINES;
+                updated_change = map_state_change([...change.parts, "lines"], change.marker_id);
             }
         }
         this.observers.forEach((observer: MapStateObserver): void => {
-            observer.update_state(updatedChanges, marker_id);
+            observer.update_state(updated_change);
         });
     }
 
@@ -720,31 +742,31 @@ export class MapState {
             console.log(`Normalizing language settings: "${language}" => "${this.language}"`);
         }
         this.storage.set("language", this.language);
-        this.update_observers(MapStateChange.LANGUAGE);
+        this.update_observers(map_state_change(["language"]));
     }
 
     public set_sidebar_open(section: string | null): void {
         this.sidebar_open = section;
         this.storage.set("sidebar_open", section);
-        this.update_observers(MapStateChange.SIDEBAR);
+        this.update_observers(map_state_change(["sidebar"]));
     }
 
     public set_map_type(map_type: MapType | null): void {
         this.map_type = map_type;
         this.storage.set("map_type", maptype2string(this.map_type));
-        this.update_observers(MapStateChange.MAPTYPE);
+        this.update_observers(map_state_change(["map_type"]));
     }
 
     public set_german_npa(enabled: boolean): void {
         this.german_npa = enabled;
         this.storage.set_bool("german_npa", this.german_npa);
-        this.update_observers(MapStateChange.MAPTYPE);
+        this.update_observers(map_state_change(["german_npa"]));
     }
 
     public set_hillshading(enabled: boolean): void {
         this.hillshading = enabled;
         this.storage.set_bool("hillshading", this.hillshading);
-        this.update_observers(MapStateChange.HILLSHADING);
+        this.update_observers(map_state_change(["hillshading"]));
     }
 
     public set_view(center: Coordinates, zoom: number): void {
@@ -752,19 +774,19 @@ export class MapState {
         this.zoom = zoom;
         this.storage.set_coordinates("center", this.center);
         this.storage.set_int("zoom", this.zoom);
-        this.update_observers(MapStateChange.VIEW);
+        this.update_observers(map_state_change(["center", "zoom"]));
     }
 
     public set_zoom(zoom: number): void {
         this.zoom = zoom;
         this.storage.set_int("zoom", this.zoom);
-        this.update_observers(MapStateChange.ZOOM);
+        this.update_observers(map_state_change(["zoom"]));
     }
 
     public set_center(coordinates: Coordinates): void {
         this.center = coordinates;
         this.storage.set_coordinates("center", this.center);
-        this.update_observers(MapStateChange.CENTER);
+        this.update_observers(map_state_change(["center"]));
     }
 
     public add_marker(coordinates: Coordinates | null, properties: IMarkerProperties = {}): Marker {
@@ -781,7 +803,7 @@ export class MapState {
         this.markers_hash.set(marker.get_id(), marker);
         this.update_marker_storage(marker);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS, marker.get_id());
+        this.update_observers(map_state_change(["markers"], marker.get_id()));
 
         this.app.message(this.app.translate("messages.marker_created"));
 
@@ -803,7 +825,7 @@ export class MapState {
         );
         this.markers_hash.delete(id);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS, id);
+        this.update_observers(map_state_change(["markers"], id));
     }
 
     public delete_all_markers(): void {
@@ -811,7 +833,7 @@ export class MapState {
         this.markers = [];
         this.markers_hash.clear();
         this.storage.set("markers", null);
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public update_marker_attributes(
@@ -852,7 +874,7 @@ export class MapState {
         }
 
         if (updated) {
-            this.update_observers(MapStateChange.MARKERS, id);
+            this.update_observers(map_state_change(["markers"], id));
         }
     }
 
@@ -871,7 +893,7 @@ export class MapState {
     public sort_markers_by_name(): void {
         this.markers.sort((a: Marker, b: Marker): number => a.name.localeCompare(b.name));
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public sort_markers_by_distance(): void {
@@ -888,7 +910,7 @@ export class MapState {
                 distances.get(a.marker_id) - distances.get(b.marker_id),
         );
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public reorder_markers(old_index: number, new_index: number): void {
@@ -898,7 +920,7 @@ export class MapState {
 
         this.markers.splice(new_index, 0, this.markers.splice(old_index, 1)[0]);
         this.storage.set("markers", this.get_marker_ids_string());
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public add_line(properties: ILineProperties = {}): Line {
@@ -912,7 +934,7 @@ export class MapState {
         this.lines_hash.set(line.get_id(), line);
         this.update_line_storage(line);
         this.storage.set("lines", this.get_line_ids_string());
-        this.update_observers(MapStateChange.LINES);
+        this.update_observers(map_state_change(["lines"]));
 
         this.app.message(this.app.translate("messages.line_created"));
 
@@ -934,7 +956,7 @@ export class MapState {
         );
         this.lines_hash.delete(id);
         this.storage.set("lines", this.get_line_ids_string());
-        this.update_observers(MapStateChange.LINES);
+        this.update_observers(map_state_change(["lines"]));
     }
 
     public delete_all_lines(): void {
@@ -942,7 +964,7 @@ export class MapState {
         this.lines = [];
         this.lines_hash.clear();
         this.storage.set("lines", null);
-        this.update_observers(MapStateChange.LINES);
+        this.update_observers(map_state_change(["lines"]));
     }
 
     public update_line_attributes(id: number, attributes: Partial<ILineProperties>): void {
@@ -972,7 +994,7 @@ export class MapState {
         }
 
         if (updated) {
-            this.update_observers(MapStateChange.LINES);
+            this.update_observers(map_state_change(["lines"]));
         }
     }
 
@@ -994,7 +1016,7 @@ export class MapState {
 
         this.lines.splice(new_index, 0, this.lines.splice(old_index, 1)[0]);
         this.storage.set("lines", this.get_line_ids_string());
-        this.update_observers(MapStateChange.LINES);
+        this.update_observers(map_state_change(["lines"]));
     }
 
     public show_line(line: Line): void {
@@ -1028,13 +1050,13 @@ export class MapState {
         this.settings_marker_filled = settings.filled;
         this.storage.set_bool("settings.marker.filled", this.settings_marker_filled);
 
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public set_draggable_markers(value: boolean): void {
         this.settings_marker_draggable = value;
         this.storage.set_bool("settings.marker.draggable", this.settings_marker_draggable);
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public draggable_markers(): boolean {
@@ -1044,7 +1066,7 @@ export class MapState {
     public set_filled_markers(value: boolean): void {
         this.settings_marker_filled = value;
         this.storage.set_bool("settings.marker.filled", this.settings_marker_filled);
-        this.update_observers(MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["markers"]));
     }
 
     public filled_markers(): boolean {
@@ -1061,7 +1083,7 @@ export class MapState {
         this.settings_line_color = settings.color;
         this.storage.set_color("settings.line.color", this.settings_line_color);
 
-        this.update_observers(MapStateChange.LINES);
+        this.update_observers(map_state_change(["lines"]));
     }
 
     public set_display_distance(d: boolean): void {
@@ -1071,7 +1093,7 @@ export class MapState {
             this.settings_line_display_distance,
         );
 
-        this.update_observers(MapStateChange.LINES);
+        this.update_observers(map_state_change(["lines"]));
     }
 
     public to_gpx(): string {
@@ -1255,7 +1277,7 @@ export class MapState {
             Line.reset_ids(lines.length);
         }
         this.storage.set("lines", this.get_line_ids_string());
-        this.update_observers(MapStateChange.LINES | MapStateChange.MARKERS);
+        this.update_observers(map_state_change(["lines", "markers"]));
 
         this.app.leaflet.fit_objects();
     }
@@ -1638,7 +1660,7 @@ export class MapState {
 
         this.recompute_lines();
         this.store();
-        this.update_observers(MapStateChange.EVERYTHING);
+        this.update_observers(map_state_change(ALL_MAP_STATE_PARTS));
     }
 
     public from_json(data: unknown): boolean {

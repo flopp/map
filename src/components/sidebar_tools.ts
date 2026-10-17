@@ -1,5 +1,5 @@
 import {App} from "./app";
-import {MapStateChange} from "./map_state";
+import type {MapStateChange} from "./map_state";
 import {SidebarItem} from "./sidebar_item";
 import {create_element} from "./utilities";
 
@@ -108,8 +108,8 @@ export class SidebarTools extends SidebarItem {
         });
     }
 
-    public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & MapStateChange.LANGUAGE) === MapStateChange.NOTHING) {
+    public update_state(changes: MapStateChange): void {
+        if (!changes.parts.has("language")) {
             return;
         }
 

@@ -1,4 +1,5 @@
 import {App} from "./app";
+import type {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {Version} from "./version";
 
@@ -46,7 +47,7 @@ export class VersionCheck extends MapStateObserver {
             });
     }
 
-    public update_state(_changes: number, _marker_id: number = -1): void {
+    public update_state(_changes: MapStateChange): void {
         const now_s = Date.now() / 1000;
         if (now_s < this.last_check_s + this.interval_s) {
             return;

@@ -5,7 +5,7 @@ import I18nextBrowserLanguageDetector from "i18next-browser-languagedetector";
 import resources from "../lang";
 
 import {App} from "./app";
-import {MapStateChange} from "./map_state";
+import {map_state_change, MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 
 export class Language extends MapStateObserver {
@@ -41,8 +41,8 @@ export class Language extends MapStateObserver {
             });
     }
 
-    public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & MapStateChange.LANGUAGE) === MapStateChange.NOTHING) {
+    public update_state(changes: MapStateChange): void {
+        if (!changes.parts.has("language")) {
             return;
         }
 
@@ -91,7 +91,7 @@ export class Language extends MapStateObserver {
             .forEach((element: Element): void => {
                 this.localizeElement(element as HTMLElement);
             });
-        this.app.map_state.update_observers(MapStateChange.LANGUAGE);
+        this.app.map_state.update_observers(map_state_change(["language"]));
     }
 
     public localizeElement(element: HTMLElement): void {

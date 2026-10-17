@@ -44,14 +44,17 @@ notifications depends on construction order.
 
 Most scalar setters update an in-memory field, write the corresponding
 `localStorage` value through [`Storage`](../src/components/storage.ts), and
-call `update_observers()` with a `MapStateChange` bit flag. Marker and line
-operations generally follow the same pattern. Some operations also display a
-user notification through `App`.
+call `update_observers()` with a typed change object. Marker and line operations
+generally follow the same pattern. Some operations also display a user
+notification through `App`.
 
-`MapStateChange` flags allow observers to update only relevant UI. For marker
-and line changes, `update_observers()` also recomputes line distances and
-bearings and adds the `LINES` flag if those derived values changed. The
-optional marker ID supports targeted marker updates.
+The change object names affected state parts rather than encoding them as a
+numeric bitmask. For marker changes, an optional marker ID allows observers to
+update one marker without using a sentinel value. For marker and line changes,
+`update_observers()` also recomputes line distances and bearings and includes
+`lines` when those derived values change. See
+[`map_state_changes.md`](./map_state_changes.md) for the change contract and
+the complete list of parts.
 
 [`MapStateObserver`](../src/components/map_state_observer.ts) registers
 subclasses with `MapState`. The main consumers include:
@@ -62,8 +65,8 @@ subclasses with `MapState`. The main consumers include:
 - Sidebar components, which render marker and line lists and map controls.
 - `Language`, which reacts to language changes and localizes the UI.
 
-The observer callbacks are synchronous. They receive a change mask and,
-optionally, a marker ID; they read the current state from `App.map_state`.
+The observer callbacks are synchronous. They receive a typed change object and
+read the current state from `App.map_state`.
 
 ## Persistence and interchange
 

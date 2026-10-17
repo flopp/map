@@ -14,7 +14,7 @@ import {
     create_text_input,
     parse_float,
 } from "./utilities";
-import {MapStateChange} from "./map_state";
+import {ALL_MAP_STATE_PARTS, map_state_change, MapStateChange} from "./map_state";
 
 export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;
@@ -68,7 +68,7 @@ export class SidebarMarkers extends SidebarItem {
             },
         });
 
-        this.update_state(MapStateChange.EVERYTHING);
+        this.update_state(map_state_change(ALL_MAP_STATE_PARTS));
     }
 
     private update_div(marker: Marker, div: HTMLDivElement): void {
@@ -94,8 +94,8 @@ export class SidebarMarkers extends SidebarItem {
         }
     }
 
-    public update_state(changes: number, marker_id: number = -1): void {
-        if ((changes & MapStateChange.MARKERS) === MapStateChange.NOTHING) {
+    public update_state(changes: MapStateChange): void {
+        if (!changes.parts.has("markers")) {
             return;
         }
 
@@ -104,7 +104,8 @@ export class SidebarMarkers extends SidebarItem {
         const container = document.querySelector("#markers")!;
         let scrollTo: Element | null = null;
 
-        if (marker_id !== -1) {
+        if (changes.marker_id !== undefined) {
+            const marker_id = changes.marker_id;
             const marker = this.app.map_state.get_marker(marker_id);
             let div = document.querySelector(`#marker-${marker_id}`);
             if (marker === null) {

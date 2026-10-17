@@ -5,7 +5,7 @@ import {Color} from "./color";
 import {Distance, DistanceFormat} from "./distance";
 import {Line} from "./line";
 import {LineSettingsDialog} from "./line_settings_dialog";
-import {MapStateChange} from "./map_state";
+import type {MapStateChange} from "./map_state";
 import {Marker} from "./marker";
 import {SidebarItem} from "./sidebar_item";
 import {
@@ -62,18 +62,18 @@ export class SidebarLines extends SidebarItem {
         });
     }
 
-    public update_state(changes: number, _marker_id: number = -1): void {
+    public update_state(changes: MapStateChange): void {
         if (
-            (changes &
-                (MapStateChange.LINES | MapStateChange.LANGUAGE | MapStateChange.MARKERS)) ===
-            0
+            !changes.parts.has("lines") &&
+            !changes.parts.has("language") &&
+            !changes.parts.has("markers")
         ) {
             return;
         }
 
         const markers = this.get_markers();
 
-        if ((changes & MapStateChange.LANGUAGE) !== 0) {
+        if (changes.parts.has("language")) {
             // The language has changed
             // => remove all lines from the sidebar, such that they are all re-added.
             for (const div of document.querySelectorAll("#lines > .line")) {
@@ -215,11 +215,15 @@ export class SidebarLines extends SidebarItem {
         const center = create_element("div", ["line-center"]);
         const from = create_select_input("data-from");
         from.select.onchange = (): void => {
-            this.app.map_state.update_line_attributes(line.get_id(), {marker1: parse_int(from.select.value) ?? -1});
+            this.app.map_state.update_line_attributes(line.get_id(), {
+                marker1: parse_int(from.select.value) ?? -1,
+            });
         };
         const to = create_select_input("data-to");
         to.select.onchange = (): void => {
-            this.app.map_state.update_line_attributes(line.get_id(), {marker2: parse_int(to.select.value) ?? -1});
+            this.app.map_state.update_line_attributes(line.get_id(), {
+                marker2: parse_int(to.select.value) ?? -1,
+            });
         };
         center.append(from.div);
         center.append(to.div);

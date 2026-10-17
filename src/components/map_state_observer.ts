@@ -1,4 +1,5 @@
 import {App} from "./app.js";
+import type {MapStateChange} from "./map_state.js";
 
 export class MapStateObserver {
     public app: App;
@@ -8,7 +9,7 @@ export class MapStateObserver {
         app.map_state.register_observer(this);
     }
 
-    public update_state(_changes: number, _marker_id: number = -1): void {
+    public update_state(_change: MapStateChange): void {
         throw new Error("not implemented");
     }
 }

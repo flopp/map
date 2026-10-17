@@ -1,5 +1,5 @@
 import {App} from "./app";
-import {MapStateChange} from "./map_state";
+import type {MapStateChange} from "./map_state";
 import {MapType, maptype2human, maptype2string, string2maptype} from "./map_type";
 import {SidebarItem} from "./sidebar_item";
 
@@ -53,13 +53,16 @@ export class SidebarLayers extends SidebarItem {
         };
     }
 
-    public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & MapStateChange.MAPTYPE) !== 0 && this.app.map_state.map_type !== null) {
+    public update_state(changes: MapStateChange): void {
+        if (changes.parts.has("map_type") && this.app.map_state.map_type !== null) {
             this.base_layer_select.value = maptype2string(this.app.map_state.map_type);
         }
 
-        if ((changes & (MapStateChange.MAPTYPE | MapStateChange.HILLSHADING)) !== 0) {
+        if (changes.parts.has("map_type") || changes.parts.has("hillshading")) {
             this.hillshading_checkbox.checked = this.app.map_state.hillshading;
+        }
+        if (changes.parts.has("german_npa")) {
+            this.german_npa_checkbox.checked = this.app.map_state.german_npa;
         }
     }
 }

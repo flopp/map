@@ -1,5 +1,5 @@
 import {App} from "./app";
-import {MapStateChange} from "./map_state";
+import {map_state_change, MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {SidebarHero} from "./sidebar_hero";
 import {SidebarInfo} from "./sidebar_info";
@@ -56,7 +56,7 @@ export class Sidebar extends MapStateObserver {
             },
         );
 
-        this.update_state(MapStateChange.SIDEBAR | MapStateChange.MARKERS | MapStateChange.LINES);
+        this.update_state(map_state_change(["sidebar", "markers", "lines"]));
     }
 
     public toggle(name: string | null): void {
@@ -68,15 +68,15 @@ export class Sidebar extends MapStateObserver {
         }
     }
 
-    public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & MapStateChange.MARKERS) !== MapStateChange.NOTHING) {
+    public update_state(changes: MapStateChange): void {
+        if (changes.parts.has("markers")) {
             this._update_sidebar_count("markers", this.app.map_state.markers.length);
         }
-        if ((changes & MapStateChange.LINES) !== MapStateChange.NOTHING) {
+        if (changes.parts.has("lines")) {
             this._update_sidebar_count("lines", this.app.map_state.lines.length);
         }
 
-        if ((changes & MapStateChange.SIDEBAR) === MapStateChange.NOTHING) {
+        if (!changes.parts.has("sidebar")) {
             return;
         }
 

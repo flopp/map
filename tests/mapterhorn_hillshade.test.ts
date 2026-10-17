@@ -2,7 +2,7 @@ import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 
 import type {App} from "../src/components/app";
 import {Coordinates} from "../src/components/coordinates";
-import {MapState, MapStateChange} from "../src/components/map_state";
+import {map_state_change, MapState} from "../src/components/map_state";
 import {MapType} from "../src/components/map_type";
 import {MapStateObserver} from "../src/components/map_state_observer";
 import {mapterhorn_elevation_url} from "../src/components/mapterhorn_tiles";
@@ -98,6 +98,6 @@ describe("Mapterhorn hillshading", () => {
 
         state.set_hillshading(true);
 
-        expect(update_state).toHaveBeenCalledWith(MapStateChange.HILLSHADING, -1);
+        expect(update_state).toHaveBeenCalledWith(map_state_change(["hillshading"]));
     });
 });

@@ -7,7 +7,7 @@ import {Color} from "./color";
 import {Coordinates} from "./coordinates";
 import {Distance, DistanceFormat} from "./distance";
 import {Line} from "./line";
-import {MapStateChange} from "./map_state";
+import type {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
 import {MapType} from "./map_type";
 import {mapterhorn_elevation_url} from "./mapterhorn_tiles";
@@ -301,21 +301,24 @@ export class LeafletWrapper extends MapStateObserver {
         this.map.invalidateSize();
     }
 
-    public update_state(changes: number, marker_id: number = -1): void {
+    public update_state(changes: MapStateChange): void {
         /* update view */
-        if ((changes & MapStateChange.MAPTYPE) !== 0) {
+        if (changes.parts.has("map_type")) {
             this.set_map_type(this.app.map_state.map_type!);
+        }
+        if (changes.parts.has("map_type") || changes.parts.has("german_npa")) {
             this.set_german_npa(this.app.map_state.german_npa);
         }
-        if ((changes & MapStateChange.HILLSHADING) !== 0) {
+        if (changes.parts.has("hillshading")) {
             this.set_hillshading(this.app.map_state.hillshading);
         }
-        if ((changes & MapStateChange.VIEW) !== 0) {
+        if (changes.parts.has("center") || changes.parts.has("zoom")) {
             this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);
         }
 
-        if ((changes & MapStateChange.MARKERS) !== 0) {
-            if (marker_id !== -1) {
+        if (changes.parts.has("markers")) {
+            if (changes.marker_id !== undefined) {
+                const marker_id = changes.marker_id;
                 const marker = this.app.map_state.get_marker(marker_id);
                 const marker_obj = this.markers.get(marker_id);
                 if (marker === null) {
@@ -369,7 +372,7 @@ export class LeafletWrapper extends MapStateObserver {
             }
         }
 
-        if ((changes & (MapStateChange.LINES | MapStateChange.ZOOM)) !== 0) {
+        if (changes.parts.has("lines") || changes.parts.has("zoom")) {
             // Update and add lines; also update lines on zoom to redraw arrow heads!
             this.app.map_state.lines.forEach((line: Line): void => {
                 if (this.lines.has(line.get_id())) {

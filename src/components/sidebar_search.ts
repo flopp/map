@@ -1,6 +1,6 @@
 import {App} from "./app";
 import {Coordinates} from "./coordinates";
-import {MapStateChange} from "./map_state";
+import type {MapStateChange} from "./map_state";
 import {SidebarItem} from "./sidebar_item";
 import {create_element} from "./utilities";
 
@@ -55,11 +55,8 @@ export class SidebarSearch extends SidebarItem {
         this.clear_results();
     }
 
-    public update_state(changes: number, _marker_id: number = -1): void {
-        if (
-            (changes & (MapStateChange.CENTER | MapStateChange.MARKERS)) ===
-            MapStateChange.NOTHING
-        ) {
+    public update_state(changes: MapStateChange): void {
+        if (!changes.parts.has("center") && !changes.parts.has("markers")) {
             return;
         }
 

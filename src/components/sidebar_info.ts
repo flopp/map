@@ -1,4 +1,5 @@
 import {App} from "./app";
+import type {MapStateChange} from "./map_state";
 import {SidebarItem} from "./sidebar_item";
 
 export class SidebarInfo extends SidebarItem {
@@ -10,7 +11,7 @@ export class SidebarInfo extends SidebarItem {
         });
     }
 
-    public update_state(_changes: number, _marker_id: number = -1): void {
+    public update_state(_changes: MapStateChange): void {
         // Nothing
     }
 }
