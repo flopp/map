@@ -173,8 +173,9 @@ export class SidebarMarkers extends SidebarItem {
     }
 
     private create_div(marker: Marker): HTMLElement {
+        const marker_id = marker.get_id();
         const div = create_element("div", ["marker"], {
-            id: `marker-${marker.get_id()}`,
+            id: `marker-${marker_id}`,
         });
         div.addEventListener("click", (event: MouseEvent): void => {
             if (
@@ -183,7 +184,7 @@ export class SidebarMarkers extends SidebarItem {
             ) {
                 return;
             }
-            this.app.leaflet.fit_coordinates([marker.coordinates]);
+            this.show_marker(marker_id);
         });
 
         const m = create_element("div", ["marker-display"]);
@@ -195,7 +196,7 @@ export class SidebarMarkers extends SidebarItem {
 
         const center = create_element("div", ["marker-center"]);
         const show_marker = (event: Event): void => {
-            this.app.leaflet.fit_coordinates([marker.coordinates]);
+            this.show_marker(marker_id);
             event.stopPropagation();
         };
         for (const cls of ["marker-name", "marker-coordinates"]) {
@@ -228,6 +229,10 @@ export class SidebarMarkers extends SidebarItem {
             ["is-info", "is-small"],
             ["icon16"],
             (event: Event) => {
+                const marker = this.app.map_state.get_marker(marker_id);
+                if (marker === null) {
+                    return;
+                }
                 const text = marker.coordinates.to_string(
                     this.app.map_state.settings_marker_coordinates_format,
                 );
@@ -246,7 +251,10 @@ export class SidebarMarkers extends SidebarItem {
             ["is-success", "is-small"],
             ["icon16"],
             (event: Event) => {
-                this.app.show_projection_dialog(marker);
+                const marker = this.app.map_state.get_marker(marker_id);
+                if (marker !== null) {
+                    this.app.show_projection_dialog(marker);
+                }
                 event.stopPropagation();
             },
         );
@@ -257,8 +265,12 @@ export class SidebarMarkers extends SidebarItem {
             ["is-warning", "is-small"],
             ["icon16"],
             (event: Event) => {
-                if (document.querySelector(`#marker-edit-${marker.get_id()}`) === null) {
-                    const edit_div = this.create_edit_div(marker);
+                const marker = this.app.map_state.get_marker(marker_id);
+                if (
+                    marker !== null &&
+                    document.querySelector(`#marker-edit-${marker_id}`) === null
+                ) {
+                    const edit_div = this.create_edit_div(marker_id);
                     div.appendChild(edit_div);
                     this.update_edit_values(marker, edit_div);
                     edit_div.scrollIntoView(false);
@@ -273,7 +285,7 @@ export class SidebarMarkers extends SidebarItem {
             ["is-danger", "is-small"],
             ["icon16"],
             (event: Event) => {
-                this.app.map_state.delete_marker(marker.get_id());
+                this.app.map_state.delete_marker(marker_id);
                 event.stopPropagation();
             },
         );
@@ -290,9 +302,16 @@ export class SidebarMarkers extends SidebarItem {
         return div;
     }
 
-    private create_edit_div(marker: Marker): HTMLDivElement {
+    private show_marker(marker_id: number): void {
+        const marker = this.app.map_state.get_marker(marker_id);
+        if (marker !== null) {
+            this.app.leaflet.fit_coordinates([marker.coordinates]);
+        }
+    }
+
+    private create_edit_div(marker_id: number): HTMLDivElement {
         const div = create_element("div", ["edit"], {
-            id: `marker-edit-${marker.get_id()}`,
+            id: `marker-edit-${marker_id}`,
         }) as HTMLDivElement;
 
         const name = create_text_input(
@@ -317,7 +336,7 @@ export class SidebarMarkers extends SidebarItem {
         );
 
         const submit_button = create_button(this.app.translate("general.submit"), (): void => {
-            this.submit_edit(marker, div);
+            this.submit_edit(marker_id, div);
         });
         const cancel_button = create_button(this.app.translate("general.cancel"), (): void => {
             div.remove();
@@ -344,7 +363,7 @@ export class SidebarMarkers extends SidebarItem {
             marker.color.to_hash_string();
     }
 
-    private submit_edit(marker: Marker, div: HTMLDivElement): void {
+    private submit_edit(marker_id: number, div: HTMLDivElement): void {
         const name = (div.querySelector("[data-name]") as HTMLInputElement).value;
         const coordinates = Coordinates.from_string(
             (div.querySelector("[data-coordinates]") as HTMLInputElement).value,
@@ -360,9 +379,13 @@ export class SidebarMarkers extends SidebarItem {
             return;
         }
 
+        if (this.app.map_state.get_marker(marker_id) === null) {
+            return;
+        }
+
         div.remove();
 
-        this.app.map_state.update_marker_attributes(marker.get_id(), {
+        this.app.map_state.update_marker_attributes(marker_id, {
             name,
             coordinates,
             radius,
