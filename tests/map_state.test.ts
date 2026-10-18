@@ -407,7 +407,7 @@ describe("MapState mutation side effects", () => {
 
         const imported = state.from_json({
             center: "N 50 E 10",
-            settings: {markers: {radius: -1}},
+            settings: {markers: {radius: "invalid"}},
         });
 
         expect(imported).toBe(false);
@@ -416,6 +416,19 @@ describe("MapState mutation side effects", () => {
         expect(state.get_marker(marker.get_id())).toBe(marker);
         expect(values).toEqual(persisted_values);
         expect(update_state).not.toHaveBeenCalled();
+    });
+
+    test("clamps negative marker radius in JSON state to zero", () => {
+        const state = new MapState(create_app());
+        state.settings_marker_radius = 10;
+
+        const imported = state.from_json({
+            settings: {markers: {radius: -1}},
+        });
+
+        expect(imported).toBe(true);
+        expect(state.settings_marker_radius).toBe(0);
+        expect(values.get("settings.marker.radius")).toBe("0");
     });
 
     test("accepts partial JSON imports but rejects malformed collections and duplicate IDs", () => {
